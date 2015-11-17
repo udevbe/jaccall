@@ -1,30 +1,32 @@
-package com.github.zubnix.jdyncall.api;
+package com.github.zubnix.runtime.api;
 
-public enum FieldType {
+public enum Type {
+    //type signatures match dyncall arg signature, except for struct and union.
+
     CHAR('c',
          byte.class),
     UNSIGNED_CHAR('C',
-         byte.class),
+                  byte.class),
 
     SHORT('s',
           short.class),
     UNSIGNED_SHORT('S',
-          short.class),
+                   short.class),
 
     INT('i',
         int.class),
     UNSIGNED_INT('I',
-        int.class),
+                 int.class),
 
     LONG('j',
          long.class),
     UNSIGNED_LONG('J',
-    long.class),
+                  long.class),
 
     LONG_LONG('l',
               long.class),
     UNSIGNED_LONG_LONG('L',
-              long.class),
+                       long.class),
 
     FLOAT('f',
           float.class),
@@ -32,10 +34,22 @@ public enum FieldType {
     DOUBLE('d',
            double.class),
 
+    /**
+     * Any pointer type.
+     */
     POINTER('p',
             long.class),
 
-    EMBED('e',
+    /**
+     * A struct by value.
+     */
+    STRUCT('x',
+           Object.class),
+
+    /**
+     * A union by value.
+     */
+    UNION('y',
           Object.class);
 
 
@@ -44,8 +58,8 @@ public enum FieldType {
     private final byte     signature;
     private final Class<?> javaType;
 
-    FieldType(final char signature,
-              final Class<?> javaType) {
+    Type(final char signature,
+         final Class<?> javaType) {
         this.signature = (byte) signature;
         this.javaType = javaType;
     }

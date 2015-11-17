@@ -1,13 +1,11 @@
-package com.github.zubnix.jdyncall.api;
-
+package com.github.zubnix.runtime.api;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+@Target({ElementType.METHOD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Lib {
-    String value();
+public @interface Ptr {
 }

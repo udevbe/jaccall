@@ -19,7 +19,7 @@ add_custom_command(
         COMMAND ${Java_JAVAH_EXECUTABLE} -verbose
         -classpath ../../../target/classes
         -d src
-        -jni com.github.zubnix.JNI
+        -jni com.github.zubnix.runtime.JNI
 )
 
 # generate libjaccall
