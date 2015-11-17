@@ -30,4 +30,24 @@ final class PointerLong extends Pointer<Long> {
         buffer.position(index);
         return buffer.get();
     }
+
+    @Override
+    protected void write(@Nonnull final ByteBuffer byteBuffer,
+                         @Nonnull final Long... val) {
+        writei(byteBuffer,
+               0,
+               val);
+    }
+
+    @Override
+    public void writei(@Nonnull final ByteBuffer byteBuffer,
+                       @Nonnegative final int index,
+                       final Long... val) {
+        final LongBuffer buffer = byteBuffer.asLongBuffer();
+        buffer.clear();
+        buffer.position(index);
+        for (Long aLong : val) {
+            buffer.put(aLong);
+        }
+    }
 }

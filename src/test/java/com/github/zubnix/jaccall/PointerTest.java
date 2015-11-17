@@ -706,22 +706,104 @@ public class PointerTest {
 
     @Test
     public void testWriteLong() throws Exception {
+        //given
+        long l0 = 0x4567890123456789L;
+        long l1 = 0x1234567890123456L;
 
+        try (Pointer<Long> longPointer = malloc(sizeof(l0) * 2).castPT(long.class)) {
+            //when
+            longPointer.write(l0,
+                              l1);
+            //then
+            assertThat(JNITestUtil.readByte(longPointer.address)).isEqualTo((byte) 0x89);
+            assertThat(JNITestUtil.readByte(longPointer.address + 1)).isEqualTo((byte) 0x67);
+            assertThat(JNITestUtil.readByte(longPointer.address + 2)).isEqualTo((byte) 0x45);
+            assertThat(JNITestUtil.readByte(longPointer.address + 3)).isEqualTo((byte) 0x23);
+            assertThat(JNITestUtil.readByte(longPointer.address + 4)).isEqualTo((byte) 0x01);
+            assertThat(JNITestUtil.readByte(longPointer.address + 5)).isEqualTo((byte) 0x89);
+            assertThat(JNITestUtil.readByte(longPointer.address + 6)).isEqualTo((byte) 0x67);
+            assertThat(JNITestUtil.readByte(longPointer.address + 7)).isEqualTo((byte) 0x45);
+
+            assertThat(JNITestUtil.readByte(longPointer.address + 8)).isEqualTo((byte) 0x56);
+            assertThat(JNITestUtil.readByte(longPointer.address + 9)).isEqualTo((byte) 0x34);
+            assertThat(JNITestUtil.readByte(longPointer.address + 10)).isEqualTo((byte) 0x12);
+            assertThat(JNITestUtil.readByte(longPointer.address + 11)).isEqualTo((byte) 0x90);
+            assertThat(JNITestUtil.readByte(longPointer.address + 12)).isEqualTo((byte) 0x78);
+            assertThat(JNITestUtil.readByte(longPointer.address + 13)).isEqualTo((byte) 0x56);
+            assertThat(JNITestUtil.readByte(longPointer.address + 14)).isEqualTo((byte) 0x34);
+            assertThat(JNITestUtil.readByte(longPointer.address + 15)).isEqualTo((byte) 0x12);
+        }
     }
 
     @Test
     public void testWriteLongAtIndex() throws Exception {
+        //given
+        final int index  = 3;
+        final int offset = index * 8;
 
+        long l0 = 0x4567890123456789L;
+        long l1 = 0x1234567890123456L;
+
+        try (Pointer<Long> longPointer = malloc((sizeof(l0) * 2) + offset).castPT(long.class)) {
+            //when
+            longPointer.writei(index,
+                               l0,
+                               l1);
+            //then
+            assertThat(JNITestUtil.readByte(longPointer.address + offset)).isEqualTo((byte) 0x89);
+            assertThat(JNITestUtil.readByte(longPointer.address + offset + 1)).isEqualTo((byte) 0x67);
+            assertThat(JNITestUtil.readByte(longPointer.address + offset + 2)).isEqualTo((byte) 0x45);
+            assertThat(JNITestUtil.readByte(longPointer.address + offset + 3)).isEqualTo((byte) 0x23);
+            assertThat(JNITestUtil.readByte(longPointer.address + offset + 4)).isEqualTo((byte) 0x01);
+            assertThat(JNITestUtil.readByte(longPointer.address + offset + 5)).isEqualTo((byte) 0x89);
+            assertThat(JNITestUtil.readByte(longPointer.address + offset + 6)).isEqualTo((byte) 0x67);
+            assertThat(JNITestUtil.readByte(longPointer.address + offset + 7)).isEqualTo((byte) 0x45);
+
+            assertThat(JNITestUtil.readByte(longPointer.address + offset + 8)).isEqualTo((byte) 0x56);
+            assertThat(JNITestUtil.readByte(longPointer.address + offset + 9)).isEqualTo((byte) 0x34);
+            assertThat(JNITestUtil.readByte(longPointer.address + offset + 10)).isEqualTo((byte) 0x12);
+            assertThat(JNITestUtil.readByte(longPointer.address + offset + 11)).isEqualTo((byte) 0x90);
+            assertThat(JNITestUtil.readByte(longPointer.address + offset + 12)).isEqualTo((byte) 0x78);
+            assertThat(JNITestUtil.readByte(longPointer.address + offset + 13)).isEqualTo((byte) 0x56);
+            assertThat(JNITestUtil.readByte(longPointer.address + offset + 14)).isEqualTo((byte) 0x34);
+            assertThat(JNITestUtil.readByte(longPointer.address + offset + 15)).isEqualTo((byte) 0x12);
+        }
     }
 
     @Test
     public void testWriteDouble() throws Exception {
+        //given
+        double d0 = 0x4567_8901_2345_6789L;
+        double d1 = 0x1234_5678_9012_3456L;
 
+        try (Pointer<Double> doublePointer = malloc(sizeof(d0) * 2).castPT(double.class)) {
+            //when
+            doublePointer.write(d0,
+                                d1);
+            //then
+            assertThat((float) JNITestUtil.readDouble(doublePointer.address)).isEqualTo((float) d0);
+            assertThat((float) JNITestUtil.readDouble(doublePointer.address + 8)).isEqualTo((float) d1);
+        }
     }
 
     @Test
     public void testWriteDoubleAtIndex() throws Exception {
+        //given
+        final int index  = 3;
+        final int offset = index * 8;
 
+        double d0 = 0x4567_8901_2345_6789L;
+        double d1 = 0x1234_5678_9012_3456L;
+
+        try (Pointer<Double> doublePointer = malloc((sizeof(d0) * 2) + offset).castPT(double.class)) {
+            //when
+            doublePointer.writei(index,
+                                 d0,
+                                 d1);
+            //then
+            assertThat((float) JNITestUtil.readDouble(doublePointer.address + offset)).isEqualTo((float) d0);
+            assertThat((float) JNITestUtil.readDouble(doublePointer.address + offset + 8)).isEqualTo((float) d1);
+        }
     }
 
     @Test

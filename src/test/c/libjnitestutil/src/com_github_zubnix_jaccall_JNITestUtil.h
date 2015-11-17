@@ -47,6 +47,14 @@ JNIEXPORT jbyte JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_readByte
 JNIEXPORT jfloat JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_readFloat
   (JNIEnv *, jclass, jlong);
 
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    readDouble
+ * Signature: (J)F
+ */
+JNIEXPORT jfloat JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_readDouble
+  (JNIEnv *, jclass, jlong);
+
 #ifdef __cplusplus
 }
 #endif

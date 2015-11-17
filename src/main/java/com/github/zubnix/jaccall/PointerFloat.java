@@ -29,4 +29,24 @@ final class PointerFloat extends Pointer<Float> {
         buffer.position(index);
         return buffer.get();
     }
+
+    @Override
+    protected void write(@Nonnull final ByteBuffer byteBuffer,
+                         @Nonnull final Float... val) {
+        writei(byteBuffer,
+               0,
+               val);
+    }
+
+    @Override
+    public void writei(@Nonnull final ByteBuffer byteBuffer,
+                       @Nonnegative final int index,
+                       final Float... val) {
+        final FloatBuffer buffer = byteBuffer.asFloatBuffer();
+        buffer.clear();
+        buffer.position(index);
+        for (Float aFloat : val) {
+            buffer.put(aFloat);
+        }
+    }
 }

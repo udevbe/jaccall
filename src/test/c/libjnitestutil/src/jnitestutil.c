@@ -67,3 +67,14 @@ jfloat
 JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_readFloat(JNIEnv *env, jclass clazz, jlong address){
     return (jlong)*((float*)(intptr_t)address);
 }
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    readDouble
+ * Signature: (J)F
+ */
+JNIEXPORT
+jfloat
+JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_readDouble(JNIEnv *en, jclass clazz, jlong address){
+    return (jlong)*((double*)(intptr_t)address);
+}

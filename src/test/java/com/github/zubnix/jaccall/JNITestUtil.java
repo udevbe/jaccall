@@ -57,4 +57,7 @@ public class JNITestUtil {
     public static native byte readByte(final long address);
 
     public static native float readFloat(final long address);
+
+    public static native float readDouble(final long address);
+
 }

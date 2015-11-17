@@ -8,6 +8,8 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 
+import static com.github.zubnix.jaccall.Size.sizeof;
+
 
 final class PointerPointer<T> extends Pointer<Pointer<T>> {
     PointerPointer(@Nonnull final Type type,
@@ -65,5 +67,40 @@ final class PointerPointer<T> extends Pointer<Pointer<T>> {
 
         return wrap(type,
                     val);
+    }
+
+    @SafeVarargs
+    @Override
+    protected final void write(@Nonnull final ByteBuffer byteBuffer,
+                               @Nonnull final Pointer<T>... val) {
+        writei(byteBuffer,
+               0,
+               val);
+    }
+
+    @SafeVarargs
+    @Override
+    public final void writei(@Nonnull final ByteBuffer byteBuffer,
+                             @Nonnegative final int index,
+                             final Pointer<T>... val) {
+        final long pointerSize = sizeof((Pointer) null);
+        if (pointerSize == 8) {
+            //64-bit
+            final LongBuffer buffer = byteBuffer.asLongBuffer();
+            buffer.clear();
+            buffer.position(index);
+            for (Pointer<?> pointer : val) {
+                buffer.put(pointer.castT(Long.class));
+            }
+        }
+        else if (pointerSize == 4) {
+            //32-bit
+            final IntBuffer buffer = byteBuffer.asIntBuffer();
+            buffer.clear();
+            buffer.position(index);
+            for (Pointer<?> pointer : val) {
+                buffer.put(pointer.castT(Integer.class));
+            }
+        }
     }
 }

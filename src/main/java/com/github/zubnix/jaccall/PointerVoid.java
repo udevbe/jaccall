@@ -24,4 +24,17 @@ final class PointerVoid extends Pointer<Void> {
               @Nonnull final ByteBuffer byteBuffer) {
         throw new IllegalStateException("Can not dereference void pointer.");
     }
+
+    @Override
+    protected void write(@Nonnull final ByteBuffer byteBuffer,
+                         @Nonnull final Void... val) {
+        throw new IllegalStateException("Can not write to void pointer.");
+    }
+
+    @Override
+    public void writei(@Nonnull final ByteBuffer byteBuffer,
+                       @Nonnegative final int index,
+                       final Void... val) {
+        throw new IllegalStateException("Can not write to void pointer.");
+    }
 }

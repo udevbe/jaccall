@@ -24,10 +24,30 @@ final class PointerChar extends Pointer<Character> {
 
     @Override
     Character dref(@Nonnegative final int index,
-                          @Nonnull final ByteBuffer byteBuffer) {
+                   @Nonnull final ByteBuffer byteBuffer) {
         final CharBuffer buffer = byteBuffer.asCharBuffer();
         buffer.rewind();
         buffer.position(index);
         return buffer.get();
+    }
+
+    @Override
+    protected void write(@Nonnull final ByteBuffer byteBuffer,
+                         @Nonnull final Character... val) {
+        writei(byteBuffer,
+               0,
+               val);
+    }
+
+    @Override
+    public void writei(@Nonnull final ByteBuffer byteBuffer,
+                       @Nonnegative final int index,
+                       final Character... val) {
+        final CharBuffer buffer = byteBuffer.asCharBuffer();
+        buffer.clear();
+        buffer.position(index);
+        for (Character character : val) {
+            buffer.put(character);
+        }
     }
 }

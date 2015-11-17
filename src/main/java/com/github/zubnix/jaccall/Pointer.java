@@ -8,12 +8,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.CharBuffer;
-import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 import java.nio.LongBuffer;
-import java.nio.ShortBuffer;
 
 import static com.github.zubnix.jaccall.Size.sizeof;
 
@@ -278,7 +273,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @return a new typed pointer object that will use new memory initialized with the given bytes.
      */
     @Nonnull
-    public static Pointer<Byte> ref(@Nonnull byte... val) {
+    public static Pointer<Byte> ref(@Nonnull Byte... val) {
 
 
         final int length = val.length;
@@ -302,7 +297,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @return a new typed pointer object that will use new memory initialized with the given shorts.
      */
     @Nonnull
-    public static Pointer<Short> ref(@Nonnull short... val) {
+    public static Pointer<Short> ref(@Nonnull Short... val) {
 
         final int length = val.length;
         if (length == 0) {
@@ -325,7 +320,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @return a new typed pointer object that will use new memory initialized with the given chars.
      */
     @Nonnull
-    public static Pointer<Character> ref(@Nonnull char... val) {
+    public static Pointer<Character> ref(@Nonnull Character... val) {
 
         final int length = val.length;
         if (length == 0) {
@@ -348,7 +343,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @return a new typed pointer object that will use new memory initialized with the given ints.
      */
     @Nonnull
-    public static Pointer<Integer> ref(@Nonnull int... val) {
+    public static Pointer<Integer> ref(@Nonnull Integer... val) {
 
         final int length = val.length;
         if (length == 0) {
@@ -371,7 +366,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @return a new typed pointer object that will use new memory initialized with the given floats.
      */
     @Nonnull
-    public static Pointer<Float> ref(@Nonnull float... val) {
+    public static Pointer<Float> ref(@Nonnull Float... val) {
 
         final int length = val.length;
         if (length == 0) {
@@ -394,7 +389,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @return a new typed pointer object that will use new memory initialized with the given longs.
      */
     @Nonnull
-    public static Pointer<Long> ref(@Nonnull long... val) {
+    public static Pointer<Long> ref(@Nonnull Long... val) {
 
         final int length = val.length;
         if (length == 0) {
@@ -410,7 +405,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     }
 
     @Nonnull
-    public static Pointer<Double> ref(@Nonnull double... val) {
+    public static Pointer<Double> ref(@Nonnull Double... val) {
 
         final int length = val.length;
         if (length == 0) {
@@ -583,215 +578,26 @@ public abstract class Pointer<T> implements AutoCloseable {
                     this.address);
     }
 
-    /*
-     * Byte
-     */
-    public void write(@Nonnull final byte... val) {
-        writei(0,
-               val);
+    public void write(@Nonnull final T... val) {
+        write(this.byteBuffer,
+              val);
     }
+
+    abstract void write(@Nonnull ByteBuffer byteBuffer,
+                        @Nonnull final T... val);
 
     public void writei(@Nonnegative final int index,
-                       final byte... val) {
-        this.byteBuffer.clear();
-        this.byteBuffer.position(index);
-        this.byteBuffer.put(val);
-    }
-
-    /*
-     * Short
-     */
-    public void write(@Nonnull final short... val) {
-        writei(0,
+                       final T... val) {
+        writei(byteBuffer,
+               index,
                val);
     }
 
-    public void writei(@Nonnegative final int index,
-                       final short... val) {
-        final ShortBuffer buffer = this.byteBuffer.asShortBuffer();
-        buffer.clear();
-        buffer.position(index);
-        buffer.put(val);
-    }
+    abstract void writei(@Nonnull ByteBuffer byteBuffer,
+                         @Nonnegative final int index,
+                         final T... val);
 
-    /*
-     * Character
-     */
-    public void write(@Nonnull final char... val) {
-        writei(0,
-               val);
-    }
-
-    public void writei(@Nonnegative final int index,
-                       final char... val) {
-        final CharBuffer buffer = this.byteBuffer.asCharBuffer();
-        buffer.clear();
-        buffer.position(index);
-        buffer.put(val);
-    }
-
-    /*
-     * Integer
-     */
-    public void write(@Nonnull final int... val) {
-        writei(0,
-               val);
-    }
-
-    public void writei(@Nonnegative final int index,
-                       final int... val) {
-        final IntBuffer buffer = this.byteBuffer.asIntBuffer();
-        buffer.clear();
-        buffer.position(index);
-        buffer.put(val);
-    }
-
-    /*
-     * Float
-     */
-    public void write(@Nonnull final float... val) {
-        writei(0,
-               val);
-    }
-
-    public void writei(@Nonnegative final int index,
-                       final float... val) {
-        final FloatBuffer buffer = this.byteBuffer.asFloatBuffer();
-        buffer.clear();
-        buffer.position(index);
-        buffer.put(val);
-    }
-
-    /*
-     * Long
-     */
-    public void write(@Nonnull final long... val) {
-        writei(0,
-               val);
-    }
-
-    public void writei(@Nonnegative final int index,
-                       final long... val) {
-        final LongBuffer buffer = this.byteBuffer.asLongBuffer();
-        buffer.clear();
-        buffer.position(index);
-        buffer.put(val);
-    }
-
-    /*
-     * Double
-     */
-    public void write(@Nonnull final double... val) {
-        writei(0,
-               val);
-    }
-
-    public void writei(@Nonnegative final int index,
-                       final double... val) {
-        final DoubleBuffer buffer = this.byteBuffer.asDoubleBuffer();
-        buffer.clear();
-        buffer.position(index);
-        buffer.put(val);
-    }
-
-    /*
-     * Pointer
-     */
-    public void write(@Nonnull final Pointer<?>... val) {
-        writei(0,
-               val);
-    }
-
-    public void writei(@Nonnegative final int index,
-                       @Nonnull final Pointer<?>... val) {
-        final long pointerSize = sizeof((Pointer) null);
-        if (pointerSize == 8) {
-            //64-bit
-            final LongBuffer buffer = this.byteBuffer.asLongBuffer();
-            buffer.clear();
-            buffer.position(index);
-            for (Pointer<?> pointer : val) {
-                buffer.put(pointer.castT(Long.class));
-            }
-        }
-        else if (pointerSize == 4) {
-            //32-bit
-            final IntBuffer buffer = this.byteBuffer.asIntBuffer();
-            buffer.clear();
-            buffer.position(index);
-            for (Pointer<?> pointer : val) {
-                buffer.put(pointer.castT(Integer.class));
-            }
-        }
-    }
-
-    /*
-     * CLong
-     */
-    public void write(@Nonnull final CLong... val) {
-        writei(0,
-               val);
-    }
-
-    public void writei(@Nonnegative final int index,
-                       @Nonnull final CLong... val) {
-        if (val.length == 0) {
-            return;
-        }
-
-        final long clongSize = sizeof((CLong) null);
-
-        if (clongSize == 8) {
-            //64-bit
-            final LongBuffer buffer = this.byteBuffer.asLongBuffer();
-            buffer.clear();
-            buffer.position(index);
-            for (CLong cLong : val) {
-                buffer.put(cLong.longValue());
-            }
-        }
-        else if (clongSize == 4) {
-            //32-bit
-            final IntBuffer buffer = this.byteBuffer.asIntBuffer();
-            buffer.clear();
-            buffer.position(index);
-            for (CLong cLong : val) {
-                buffer.put(cLong.intValue());
-            }
-        }
-    }
-
-    /*
-     * StructType
-     */
-
-    @SafeVarargs
-    public final <U extends StructType> void write(@Nonnull final U... val) {
-        writei(0,
-               val);
-    }
-
-
-    @SafeVarargs
-    public final <U extends StructType> void writei(@Nonnegative final int index,
-                                                    @Nonnull final U... val) {
-        if (val.length == 0) {
-            return;
-        }
-
-        this.byteBuffer.clear();
-        final long structTypeSize = sizeof(val[0].getClass());
-        this.byteBuffer.position((int) (index * structTypeSize));
-        for (StructType structType : val) {
-            structType.buffer()
-                      .rewind();
-            structType.buffer()
-                      .limit((int) structTypeSize);
-            this.byteBuffer.put(structType.buffer());
-        }
-    }
-
-    protected static Class<?> toClass(Type type) {
+    static Class<?> toClass(Type type) {
         final Class<?> rawType;
         if (type instanceof Class) {
             rawType = (Class<?>) type;
