@@ -13,6 +13,7 @@
 .metadata
 .gradle
 bin/
+/src/main/c/.idea
 tmp/
 *.tmp
 *.bak
