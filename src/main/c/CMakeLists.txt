@@ -2,7 +2,10 @@ project (JaCcall)
 
 cmake_minimum_required (VERSION 3.3)
 
+find_package(Java)
 find_package(JNI REQUIRED)
+
+include(UseJava)
 
 if (JNI_FOUND)
     message (STATUS "JNI_INCLUDE_DIRS=${JNI_INCLUDE_DIRS}")
@@ -11,16 +14,15 @@ if (JNI_FOUND)
     message (STATUS "JAVA_INCLUDE_PATH2=${JAVA_INCLUDE_PATH2}")
 endif()
 
-# generate JNIFoo.h stub
-set (_stubDir "${CMAKE_CURRENT_BINARY_DIR}")
 add_custom_command(
-        OUTPUT jni.h
+        OUTPUT src/jni.h
         COMMAND ${Java_JAVAH_EXECUTABLE} -verbose
         -classpath ../../../target/classes
+        -d src
         -jni com.github.zubnix.JNI
 )
 
 # generate libjaccall
 include_directories(${JAVA_INCLUDE_PATH} ${JAVA_INCLUDE_PATH2} src/main/c)
-add_library(jacall MODULE jni.h jni.c)
+add_library(jacall MODULE src/jni.c src/jni.h)
 target_link_libraries(jacall ${JNI_LIBRARIES})
