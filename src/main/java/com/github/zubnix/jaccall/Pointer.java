@@ -82,7 +82,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     }
 
     static <U> Pointer<U> wrap(@Nonnull final Type type,
-                                       final long address) {
+                               final long address) {
 
         final Class<?> rawType = toClass(type);
 
@@ -149,7 +149,7 @@ public abstract class Pointer<T> implements AutoCloseable {
                                                            Integer.MAX_VALUE));
         }
 
-        if (rawType.equals(Pointer.class)) {
+        if (Pointer.class.isAssignableFrom(rawType)) {
             return (Pointer<U>) new PointerPointer(type,
                                                    address,
                                                    JNI.wrap(address,
@@ -390,7 +390,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         return pointer;
     }
 
-    private final   long       address;
+    public final    long       address;
     @Nonnull
     private final   ByteBuffer byteBuffer;
     @Nonnull
@@ -425,7 +425,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code T value = foo.dref();}
-     * <p/>
+     * <p>
      * C equivalent:<br>
      * {@code T value = *foo}
      *
@@ -440,7 +440,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code T value = foo.dref(i);}
-     * <p/>
+     * <p>
      * C equivalent:<br>
      * {@code T value = foo[i]}
      *
@@ -459,7 +459,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code offsetFoo = foo.offset(i);}
-     * <p/>
+     * <p>
      * C equivalent:<br>
      * {@code offsetFoo = foo+i;}
      *

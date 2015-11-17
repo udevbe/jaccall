@@ -30,7 +30,18 @@ JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_byteArrayAsPointer(JNIEnv *en
 JNIEXPORT
 jlong
 JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_pointerOfPointer(JNIEnv *env, jclass clazz, jlong pointer){
-    void* ppointer = malloc(sizeof(void*));
+    void** ppointer = malloc(sizeof(void*));
     ppointer[0] = (void*)(intptr_t)pointer;
     return (jlong)(intptr_t)ppointer;
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    readCLong
+ * Signature: (J)J
+ */
+JNIEXPORT
+jlong
+JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_readCLong(JNIEnv *env, jclass clazz, jlong clong_pointer){
+    return (jlong)*((long*)(intptr_t)clong_pointer);
 }

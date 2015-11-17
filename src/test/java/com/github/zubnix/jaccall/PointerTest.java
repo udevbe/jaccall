@@ -1,13 +1,24 @@
 package com.github.zubnix.jaccall;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import static com.github.zubnix.jaccall.JNITestUtil.byteArrayAsPointer;
+import static com.github.zubnix.jaccall.JNITestUtil.pointerOfPointer;
+import static com.github.zubnix.jaccall.Pointer.wrap;
 import static com.google.common.truth.Truth.assertThat;
 
+@RunWith(JUnit4.class)
 public class PointerTest {
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void testWrapByteBuffer() throws Exception {
@@ -18,7 +29,7 @@ public class PointerTest {
         });
 
         //when
-        final Pointer<Void> voidPointer = Pointer.wrap(byteBuffer);
+        final Pointer<Void> voidPointer = wrap(byteBuffer);
 
         //then
         final long address = voidPointer.tCast(Long.class);
@@ -39,8 +50,8 @@ public class PointerTest {
                   .put(new int[]{int0, int1, int2});
 
         //when
-        final Pointer<Integer> intPointer = Pointer.wrap(Integer.class,
-                                                         byteBuffer);
+        final Pointer<Integer> intPointer = wrap(Integer.class,
+                                                 byteBuffer);
 
         //then
         final Integer integer0 = intPointer.dref();
@@ -56,17 +67,18 @@ public class PointerTest {
     @Test
     public void testWrapAddress() throws Exception {
         //given
-        final long pointer = JNITestUtil.byteArrayAsPointer(123,
-                                                            -94,
-                                                            43,
-                                                            58,
-                                                            0xFF);
+        final long pointer = byteArrayAsPointer(123,
+                                                -94,
+                                                43,
+                                                58,
+                                                0xFF);
 
         //when
-        final Pointer<Void> voidPointer = Pointer.wrap(pointer);
+        try (final Pointer<Void> voidPointer = wrap(pointer)) {
 
-        //then
-        assertThat(voidPointer.tCast(Long.class)).isEqualTo(pointer);
+            //then
+            assertThat(voidPointer.tCast(Long.class)).isEqualTo(pointer);
+        }
     }
 
     @Test
@@ -78,23 +90,22 @@ public class PointerTest {
         byte b3 = 58;
         byte b4 = (byte) 0xFF;
 
-        final long pointer = JNITestUtil.byteArrayAsPointer(b0,
-                                                            b1,
-                                                            b2,
-                                                            b3,
-                                                            b4);
-        final long pointerOfPointer = JNITestUtil.pointerOfPointer(pointer);
+        final long pointer = byteArrayAsPointer(b0,
+                                                b1,
+                                                b2,
+                                                b3,
+                                                b4);
+        final long pointerOfPointer        = pointerOfPointer(pointer);
+        final long pointerOfPointerPointer = pointerOfPointer(pointerOfPointer);
 
         //when
-        try (final Pointer<Byte> bytePointer = Pointer.wrap(Byte.class,
-                                                            pointer);
-
-             final Pointer<Pointer<Byte>> bytePointerPointer = Pointer.wrap(Byte.class,
-                                                                            pointer)
-                                                                      .ppCast();
-
-             final Pointer<Pointer> pointerPointer = Pointer.wrap(Pointer.class,
-                                                                  pointerOfPointer)) {
+        try (final Pointer<Byte> bytePointer = wrap(Byte.class,
+                                                    pointer);
+             final Pointer<Pointer<Pointer<Byte>>> bytePointerPointer = wrap(Byte.class,
+                                                                             pointerOfPointerPointer).ppCast()
+                                                                                                     .ppCast();
+             final Pointer<Pointer> pointerPointer = wrap(Pointer.class,
+                                                          pointerOfPointer)) {
 
             //then
             assertThat(bytePointer.dref()).isEqualTo(b0);
@@ -103,18 +114,33 @@ public class PointerTest {
             assertThat(bytePointer.dref(3)).isEqualTo(b3);
             assertThat(bytePointer.dref(4)).isEqualTo(b4);
 
-            //throws error complaining about incomplete type
-            final Object val = pointerPointer.dref()
-                                             .dref();
-        }
-        catch (Exception e) {
+            assertThat(bytePointerPointer.dref()
+                                         .dref()
+                                         .dref(4)).isEqualTo(b4);
 
+            //throws error complaining about incomplete type
+            expectedException.expect(IllegalStateException.class);
+            expectedException.expectMessage("Can not dereference void pointer.");
+            pointerPointer.dref()
+                          .dref();
         }
     }
 
     @Test
     public void testMalloc() throws Exception {
+        //given
+        final int   cLongSize = Size.sizeOf((CLong) null);
+        final CLong cLong     = new CLong(123456);
 
+        //when
+        try (final Pointer<CLong> cLongPointer = Pointer.malloc(cLongSize)
+                                                        .ptCast(CLong.class);) {
+            cLongPointer.write(cLong);
+
+            //then
+            final long nativeCLongRead = JNITestUtil.readCLong(cLongPointer.address);
+            assertThat(nativeCLongRead).isEqualTo(cLong.longValue());
+        }
     }
 
     @Test

@@ -44,9 +44,16 @@ final class PointerPointer extends Pointer<Pointer> {
             val = buffer.get();
         }
 
-        //FIXME handle untyped pointers
-        ParameterizedType parameterizedType = (ParameterizedType) this.type;
-        final Type        type              = parameterizedType.getActualTypeArguments()[0];
+        //handle untyped pointers
+        final Type type;
+        if (this.type instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) this.type;
+            type = parameterizedType.getActualTypeArguments()[0];
+        }
+        else {
+            //untyped pointer
+            type = Void.class;
+        }
 
         return wrap(type,
                     val);

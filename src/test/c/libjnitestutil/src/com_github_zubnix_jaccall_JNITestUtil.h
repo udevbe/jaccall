@@ -25,10 +25,10 @@ JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_pointerOfPoin
 
 /*
  * Class:     com_github_zubnix_jaccall_JNITestUtil
- * Method:    pointerOfCLong
+ * Method:    readCLong
  * Signature: (J)J
  */
-JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_pointerOfCLong
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_readCLong
   (JNIEnv *, jclass, jlong);
 
 #ifdef __cplusplus

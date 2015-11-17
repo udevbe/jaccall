@@ -94,7 +94,7 @@
                     <!-- runtime native lib -->
                     <execution>
                         <id>copy-resources</id>
-                        <phase>generate-test-sources</phase>
+                        <phase>process-classes</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
@@ -114,7 +114,7 @@
                     <!-- test native lib -->
                     <execution>
                         <id>copy-test-resources</id>
-                        <phase>generate-test-resources</phase>
+                        <phase>process-test-classes</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
