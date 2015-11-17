@@ -12,6 +12,7 @@ import java.nio.ByteOrder;
 import static com.github.zubnix.jaccall.JNITestUtil.byteArrayAsPointer;
 import static com.github.zubnix.jaccall.JNITestUtil.pointerOfPointer;
 import static com.github.zubnix.jaccall.Pointer.wrap;
+import static com.github.zubnix.jaccall.Size.sizeOf;
 import static com.google.common.truth.Truth.assertThat;
 
 @RunWith(JUnit4.class)
@@ -129,7 +130,7 @@ public class PointerTest {
     @Test
     public void testMalloc() throws Exception {
         //given
-        final int   cLongSize = Size.sizeOf((CLong) null);
+        final int   cLongSize = sizeOf((CLong) null);
         final CLong cLong     = new CLong(123456);
 
         //when
@@ -145,7 +146,19 @@ public class PointerTest {
 
     @Test
     public void testCalloc() throws Exception {
+        //given
+        final int intSize = sizeOf(0);
+        final int nroInts = 67;
 
+        //when
+        try (Pointer<Integer> intPointer = Pointer.calloc(nroInts,
+                                                          intSize)
+                                                  .ptCast(int.class);) {
+            //then
+            for (int i = 0; i < nroInts; i++) {
+                assertThat(intPointer.dref(i)).isEqualTo(0);
+            }
+        }
     }
 
     @Test
