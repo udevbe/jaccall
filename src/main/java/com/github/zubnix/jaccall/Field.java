@@ -19,7 +19,7 @@ public @interface Field {
      * Define an embedded struct or union.
      * <p>
      * Will only be interpreted in conjunction with {@link #type()} set to
-     * {@link CType#STRUCT} or {@link CType#UNION}.
+     * {@link CType#STRUCT}.
      *
      * @return A class annotated with {@link Struct}. If no annotation is found a compile time error is thrown.
      */

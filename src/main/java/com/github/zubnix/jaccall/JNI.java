@@ -77,19 +77,4 @@ public final class JNI {
     /*
      * <- std
      */
-
-    /*
-     * dyncall ->
-     */
-    public static native int dcStructSize(long dcStruct);
-
-    public static native long dcDefineStruct(@Nonnull String signature);
-
-    public static native long dcStruct_fields(long dcString);
-
-    public static native int dcField_offset(long dcFields,
-                                            int index);
-    /*
-     * <- dyncall
-     */
 }

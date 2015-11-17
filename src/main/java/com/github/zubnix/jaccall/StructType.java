@@ -8,6 +8,8 @@ import static java.nio.ByteBuffer.allocate;
 
 public abstract class StructType {
 
+    protected static int SIZE;
+
     private ByteBuffer buffer;
 
     protected ByteBuffer buffer() {

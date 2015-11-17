@@ -53,11 +53,11 @@ public final class Size {
     }
 
     public static int sizeof(@Nonnull Class<? extends StructType> structType) {
+        return 0;
+    }
 
-        final StructSignature structSignature = structType.getAnnotation(StructSignature.class);
-        if (structSignature == null) {
-            throw new IllegalArgumentException("Type does not have a StructSignature annotation.");
-        }
-        return JNI.dcStructSize(JNI.dcDefineStruct(structSignature.value()));
+    public static int newOffset(int align,
+                                int offset) {
+        return (offset + align - 1) & ~(align - 1);
     }
 }

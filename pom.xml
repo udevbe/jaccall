@@ -60,6 +60,7 @@
                 <version>${exec-maven-plugin.version}</version>
                 <executions>
                     <!-- generate runtime native lib -->
+                    <!-- TODO fail the build if compilation fails -->
                     <execution>
                         <id>jaccall-native</id>
                         <phase>process-classes</phase>
@@ -73,6 +74,7 @@
                     </execution>
 
                     <!-- generate test native lib -->
+                    <!-- TODO fail the build if compilation fails -->
                     <execution>
                         <id>test-native</id>
                         <phase>process-test-classes</phase>

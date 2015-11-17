@@ -2,70 +2,66 @@ package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnull;
 
+import static com.github.zubnix.jaccall.Size.sizeof;
+
 public enum CType {
     //type signatures match dyncall arg signature, except for struct and union.
 
-    CHAR('c',
+    CHAR(sizeof((Byte) null),
          byte.class),
-    UNSIGNED_CHAR('C',
+    UNSIGNED_CHAR(sizeof((Byte) null),
                   byte.class),
 
-    SHORT('s',
+    SHORT(sizeof((Short) null),
           short.class),
-    UNSIGNED_SHORT('S',
+    UNSIGNED_SHORT(sizeof((Short) null),
                    short.class),
 
-    INT('i',
+    INT(sizeof((Integer) null),
         int.class),
-    UNSIGNED_INT('I',
+    UNSIGNED_INT(sizeof((Integer) null),
                  int.class),
 
-    LONG('j',
+    LONG(sizeof((CLong) null),
          long.class),
-    UNSIGNED_LONG('J',
+    UNSIGNED_LONG(sizeof((CLong) null),
                   long.class),
 
-    LONG_LONG('l',
+    LONG_LONG(sizeof((Long) null),
               long.class),
     UNSIGNED_LONG_LONG('L',
                        long.class),
 
-    FLOAT('f',
+    FLOAT(sizeof((Float) null),
           float.class),
 
-    DOUBLE('d',
+    DOUBLE(sizeof((Double) null),
            double.class),
 
     /**
      * Any pointer type.
      */
-    POINTER('p',
+    POINTER(sizeof((Pointer<Void>) null),
             Void.class),
 
     /**
-     * A struct by value.
+     * A struct or union by value.
      */
-    STRUCT('x',
-           StructType.class),
+    STRUCT(-1,
+           StructType.class);
 
-    /**
-     * A union by value.
-     */
-    UNION('y',
-          StructType.class);
-
-    private final byte     signature;
+    private final int      size;
     @Nonnull
     private final Class<?> javaType;
 
-    CType(final char signature,
+    CType(final int size,
           @Nonnull final Class<?> javaType) {
-        this.signature = (byte) signature;
+        this.size = size;
         this.javaType = javaType;
     }
 
-    public int getSignature() {
-        return signature;
+    public int getSize() {
+        return this.size;
     }
 
     @Nonnull
