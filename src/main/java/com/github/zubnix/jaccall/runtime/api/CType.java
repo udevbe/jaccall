@@ -1,6 +1,6 @@
 package com.github.zubnix.jaccall.runtime.api;
 
-import com.github.zubnix.jaccall.runtime.DataType;
+import com.github.zubnix.jaccall.runtime.StructType;
 
 public enum CType {
     //type signatures match dyncall arg signature, except for struct and union.
@@ -46,13 +46,13 @@ public enum CType {
      * A struct by value.
      */
     STRUCT('x',
-           DataType.class),
+           StructType.class),
 
     /**
      * A union by value.
      */
     UNION('y',
-          DataType.class);
+          StructType.class);
 
 
     //LONG_DOUBLE;

@@ -2,7 +2,20 @@ package com.github.zubnix.jaccall.runtime.api;
 
 
 import com.github.zubnix.jaccall.runtime.JNI;
+import com.github.zubnix.jaccall.runtime.PointerByte;
+import com.github.zubnix.jaccall.runtime.PointerCLong;
+import com.github.zubnix.jaccall.runtime.PointerChar;
+import com.github.zubnix.jaccall.runtime.PointerDouble;
+import com.github.zubnix.jaccall.runtime.PointerFloat;
+import com.github.zubnix.jaccall.runtime.PointerInt;
+import com.github.zubnix.jaccall.runtime.PointerLong;
+import com.github.zubnix.jaccall.runtime.PointerPointer;
+import com.github.zubnix.jaccall.runtime.PointerShort;
+import com.github.zubnix.jaccall.runtime.PointerStruct;
+import com.github.zubnix.jaccall.runtime.PointerVoid;
+import com.github.zubnix.jaccall.runtime.StructType;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.ParameterizedType;
@@ -18,7 +31,7 @@ import java.nio.ShortBuffer;
 import static com.github.zubnix.jaccall.runtime.Size.sizeOf;
 
 
-public final class Pointer<T> implements AutoCloseable {
+public abstract class Pointer<T> implements AutoCloseable {
 
     public static Pointer<Void> wrap(@Nonnull final ByteBuffer byteBuffer) {
         if (!byteBuffer.isDirect()) {
@@ -42,10 +55,98 @@ public final class Pointer<T> implements AutoCloseable {
 
     public static <U> Pointer<U> wrap(@Nonnull final Type type,
                                       final long address) {
-        return new Pointer<>(type,
-                             address,
-                             JNI.wrap(address,
-                                      sizeOf(type)));
+
+        final Class<?> rawType = toClass(type);
+
+        if (rawType.equals(Void.class)) {
+            final long size = sizeOf((Void) null);
+            return (Pointer<U>) new PointerVoid(type,
+                                                address,
+                                                JNI.wrap(address,
+                                                         size));
+        }
+
+        if (rawType.equals(Byte.class) || rawType.equals(byte.class)) {
+            final long size = sizeOf((Byte) null);
+            return (Pointer<U>) new PointerByte(type,
+                                                address,
+                                                JNI.wrap(address,
+                                                         size));
+        }
+
+        if (rawType.equals(Short.class) || rawType.equals(short.class)) {
+            final long size = sizeOf((Short) null);
+            return (Pointer<U>) new PointerShort(type,
+                                                 address,
+                                                 JNI.wrap(address,
+                                                          size));
+        }
+
+        if (rawType.equals(Character.class) || rawType.equals(char.class)) {
+            final long size = sizeOf((Character) null);
+            return (Pointer<U>) new PointerChar(type,
+                                                address,
+                                                JNI.wrap(address,
+                                                         size));
+        }
+
+        if (rawType.equals(Integer.class) || rawType.equals(int.class)) {
+            final long size = sizeOf((Integer) null);
+            return (Pointer<U>) new PointerInt(type,
+                                               address,
+                                               JNI.wrap(address,
+                                                        size));
+        }
+
+        if (rawType.equals(Float.class) || rawType.equals(float.class)) {
+            final long size = sizeOf((Float) null);
+            return (Pointer<U>) new PointerFloat(type,
+                                                 address,
+                                                 JNI.wrap(address,
+                                                          size));
+        }
+
+        if (rawType.equals(Long.class) || rawType.equals(long.class)) {
+            final long size = sizeOf((Long) null);
+            return (Pointer<U>) new PointerLong(type,
+                                                address,
+                                                JNI.wrap(address,
+                                                         size));
+        }
+
+        if (rawType.equals(Double.class) || rawType.equals(double.class)) {
+            final long size = sizeOf((Double) null);
+            return (Pointer<U>) new PointerDouble(type,
+                                                  address,
+                                                  JNI.wrap(address,
+                                                           size));
+        }
+
+        if (rawType.equals(Pointer.class)) {
+            final long size = sizeOf((Pointer) null);
+            return (Pointer<U>) new PointerPointer(type,
+                                                   address,
+                                                   JNI.wrap(address,
+                                                            size));
+        }
+
+        if (StructType.class.isAssignableFrom(rawType)) {
+            final long size = sizeOf(rawType.getAnnotation(Struct.class));
+            return (Pointer<U>) new PointerStruct(type,
+                                                  address,
+                                                  JNI.wrap(address,
+                                                           size));
+        }
+
+        if (rawType.equals(CLong.class)) {
+            final long size = sizeOf((CLong) null);
+            return (Pointer<U>) new PointerCLong(type,
+                                                 address,
+                                                 JNI.wrap(address,
+                                                          size));
+        }
+
+        throw new IllegalArgumentException("Type " + rawType + " does not have a known native size.");
     }
 
     public static Pointer<Void> malloc(final long size) {
@@ -55,12 +156,8 @@ public final class Pointer<T> implements AutoCloseable {
     private static <U> Pointer<U> create(Class<U> type,
                                          long elementSize,
                                          int length) {
-        final long size    = elementSize * length;
-        final long address = JNI.malloc(size);
-        return new Pointer<>(type,
-                             address,
-                             JNI.wrap(address,
-                                      size));
+        return wrap(type,
+                    JNI.malloc(elementSize * length));
     }
 
     public static Pointer<Byte> ref(@Nonnull byte... val) {
@@ -156,13 +253,12 @@ public final class Pointer<T> implements AutoCloseable {
     private final long       address;
     @Nonnull
     private final ByteBuffer byteBuffer;
-
     @Nonnull
-    private final Type type;
+    private final Type       type;
 
-    Pointer(@Nonnull final Type type,
-            final long address,
-            @Nonnull final ByteBuffer byteBuffer) {
+    protected Pointer(@Nonnull final Type type,
+                      final long address,
+                      @Nonnull final ByteBuffer byteBuffer) {
         this.address = address;
         this.type = type;
         this.byteBuffer = byteBuffer.order(ByteOrder.nativeOrder());
@@ -194,21 +290,22 @@ public final class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code T value = foo.dref();}
-     * <p/>
+     * <p>
      * C equivalent:<br>
      * {@code T value = *foo}
      *
      * @return
      */
     public T dref() {
-        //TODO find a good read api+impl
-        return null;
+        return dref(this.byteBuffer);
     }
+
+    protected abstract T dref(@Nonnull ByteBuffer byteBuffer);
 
     /**
      * Java:<br>
      * {@code T value = foo.dref(i);}
-     * <p/>
+     * <p>
      * C equivalent:<br>
      * {@code T value = foo[i]}
      *
@@ -216,17 +313,18 @@ public final class Pointer<T> implements AutoCloseable {
      *
      * @return
      */
-    public T dref(int index) {
-
-        //TODO find a good read api+impl
-
-        return null;
+    public T dref(@Nonnegative int index) {
+        return dref(index,
+                    this.byteBuffer);
     }
+
+    protected abstract T dref(@Nonnegative int index,
+                              @Nonnull ByteBuffer byteBuffer);
 
     /**
      * Java:<br>
      * {@code offsetFoo = foo.offset(i);}
-     * <p/>
+     * <p>
      * C equivalent:<br>
      * {@code offsetFoo = foo+i;}
      *
@@ -354,7 +452,6 @@ public final class Pointer<T> implements AutoCloseable {
         final LongBuffer buffer = this.byteBuffer.asLongBuffer();
         buffer.clear();
         buffer.put(val);
-
     }
 
     public void write(final int index,
@@ -367,11 +464,11 @@ public final class Pointer<T> implements AutoCloseable {
 
     }
 
-    private Class<?> toClass(){
+    private Class<?> toClass() {
         return toClass(this.type);
     }
 
-    private Class<?> toClass(Type type){
+    private static Class<?> toClass(Type type) {
         final Class<?> rawType;
         if (type instanceof Class) {
             rawType = (Class<?>) type;
