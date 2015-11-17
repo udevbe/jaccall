@@ -216,7 +216,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<U> pointer = (Pointer<U>) create(componentType,
                                                        sizeof((CLong) null),
                                                        length);
-        pointer.writeCL(val);
+        pointer.write(val);
 
         return pointer;
     }
@@ -241,7 +241,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<U> pointer = (Pointer<U>) create(componentType,
                                                        sizeof(componentType),
                                                        length);
-        pointer.writeST(val);
+        pointer.write(val);
 
         return pointer;
     }
@@ -265,7 +265,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<U> pointer = (Pointer<U>) create(val[0].getClass(),
                                                        sizeof((Pointer) null),
                                                        length);
-        pointer.writeP(val);
+        pointer.write(val);
 
         return pointer;
     }
@@ -289,7 +289,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<Byte> pointer = create(Byte.class,
                                              sizeof((Byte) null),
                                              length);
-        pointer.writeB(val);
+        pointer.write(val);
 
         return pointer;
     }
@@ -312,7 +312,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<Short> pointer = create(Short.class,
                                               sizeof((Short) null),
                                               length);
-        pointer.writeS(val);
+        pointer.write(val);
 
         return pointer;
     }
@@ -335,7 +335,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<Character> pointer = create(Character.class,
                                                   sizeof((Character) null),
                                                   length);
-        pointer.writeC(val);
+        pointer.write(val);
 
         return pointer;
     }
@@ -358,7 +358,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<Integer> pointer = create(Integer.class,
                                                 sizeof((Integer) null),
                                                 length);
-        pointer.writeI(val);
+        pointer.write(val);
 
         return pointer;
     }
@@ -381,7 +381,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<Float> pointer = create(Float.class,
                                               sizeof((Float) null),
                                               length);
-        pointer.writeF(val);
+        pointer.write(val);
 
         return pointer;
     }
@@ -404,7 +404,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<Long> pointer = create(Long.class,
                                              sizeof((Long) null),
                                              length);
-        pointer.writeL(val);
+        pointer.write(val);
 
         return pointer;
     }
@@ -420,7 +420,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<Double> pointer = create(Double.class,
                                                sizeof((Double) null),
                                                length);
-        pointer.writeD(val);
+        pointer.write(val);
 
         return pointer;
     }
@@ -460,7 +460,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code T value = foo.dref();}
-     * <p/>
+     * <p>
      * C equivalent:<br>
      * {@code T value = *foo}
      *
@@ -475,7 +475,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code T value = foo.dref(i);}
-     * <p/>
+     * <p>
      * C equivalent:<br>
      * {@code T value = foo[i]}
      *
@@ -494,7 +494,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code offsetFoo = foo.offset(i);}
-     * <p/>
+     * <p>
      * C equivalent:<br>
      * {@code offsetFoo = foo+i;}
      *
@@ -586,13 +586,13 @@ public abstract class Pointer<T> implements AutoCloseable {
     /*
      * Byte
      */
-    public void writeB(@Nonnull final byte... val) {
-        writeIB(0,
-                val);
+    public void write(@Nonnull final byte... val) {
+        writei(0,
+               val);
     }
 
-    public void writeIB(@Nonnegative final int index,
-                        final byte... val) {
+    public void writei(@Nonnegative final int index,
+                       final byte... val) {
         this.byteBuffer.clear();
         this.byteBuffer.position(index);
         this.byteBuffer.put(val);
@@ -601,13 +601,13 @@ public abstract class Pointer<T> implements AutoCloseable {
     /*
      * Short
      */
-    public void writeS(@Nonnull final short... val) {
-        writeIS(0,
-                val);
+    public void write(@Nonnull final short... val) {
+        writei(0,
+               val);
     }
 
-    public void writeIS(@Nonnegative final int index,
-                        final short... val) {
+    public void writei(@Nonnegative final int index,
+                       final short... val) {
         final ShortBuffer buffer = this.byteBuffer.asShortBuffer();
         buffer.clear();
         buffer.position(index);
@@ -617,13 +617,13 @@ public abstract class Pointer<T> implements AutoCloseable {
     /*
      * Character
      */
-    public void writeC(@Nonnull final char... val) {
-        writeIC(0,
-                val);
+    public void write(@Nonnull final char... val) {
+        writei(0,
+               val);
     }
 
-    public void writeIC(@Nonnegative final int index,
-                        final char... val) {
+    public void writei(@Nonnegative final int index,
+                       final char... val) {
         final CharBuffer buffer = this.byteBuffer.asCharBuffer();
         buffer.clear();
         buffer.position(index);
@@ -633,13 +633,13 @@ public abstract class Pointer<T> implements AutoCloseable {
     /*
      * Integer
      */
-    public void writeI(@Nonnull final int... val) {
-        writeII(0,
-                val);
+    public void write(@Nonnull final int... val) {
+        writei(0,
+               val);
     }
 
-    public void writeII(@Nonnegative final int index,
-                        final int... val) {
+    public void writei(@Nonnegative final int index,
+                       final int... val) {
         final IntBuffer buffer = this.byteBuffer.asIntBuffer();
         buffer.clear();
         buffer.position(index);
@@ -649,13 +649,13 @@ public abstract class Pointer<T> implements AutoCloseable {
     /*
      * Float
      */
-    public void writeF(@Nonnull final float... val) {
-        writeIF(0,
-                val);
+    public void write(@Nonnull final float... val) {
+        writei(0,
+               val);
     }
 
-    public void writeIF(@Nonnegative final int index,
-                        final float... val) {
+    public void writei(@Nonnegative final int index,
+                       final float... val) {
         final FloatBuffer buffer = this.byteBuffer.asFloatBuffer();
         buffer.clear();
         buffer.position(index);
@@ -665,13 +665,13 @@ public abstract class Pointer<T> implements AutoCloseable {
     /*
      * Long
      */
-    public void writeL(@Nonnull final long... val) {
-        writeIL(0,
-                val);
+    public void write(@Nonnull final long... val) {
+        writei(0,
+               val);
     }
 
-    public void writeIL(@Nonnegative final int index,
-                        final long... val) {
+    public void writei(@Nonnegative final int index,
+                       final long... val) {
         final LongBuffer buffer = this.byteBuffer.asLongBuffer();
         buffer.clear();
         buffer.position(index);
@@ -681,13 +681,13 @@ public abstract class Pointer<T> implements AutoCloseable {
     /*
      * Double
      */
-    public void writeD(@Nonnull final double... val) {
-        writeID(0,
-                val);
+    public void write(@Nonnull final double... val) {
+        writei(0,
+               val);
     }
 
-    public void writeID(@Nonnegative final int index,
-                        final double... val) {
+    public void writei(@Nonnegative final int index,
+                       final double... val) {
         final DoubleBuffer buffer = this.byteBuffer.asDoubleBuffer();
         buffer.clear();
         buffer.position(index);
@@ -697,13 +697,13 @@ public abstract class Pointer<T> implements AutoCloseable {
     /*
      * Pointer
      */
-    public void writeP(@Nonnull final Pointer<?>... val) {
-        writeIP(0,
-                val);
+    public void write(@Nonnull final Pointer<?>... val) {
+        writei(0,
+               val);
     }
 
-    public void writeIP(@Nonnegative final int index,
-                        @Nonnull final Pointer<?>... val) {
+    public void writei(@Nonnegative final int index,
+                       @Nonnull final Pointer<?>... val) {
         final long pointerSize = sizeof((Pointer) null);
         if (pointerSize == 8) {
             //64-bit
@@ -728,13 +728,13 @@ public abstract class Pointer<T> implements AutoCloseable {
     /*
      * CLong
      */
-    public void writeCL(@Nonnull final CLong... val) {
-        writeICL(0,
-                 val);
+    public void write(@Nonnull final CLong... val) {
+        writei(0,
+               val);
     }
 
-    public void writeICL(@Nonnegative final int index,
-                         @Nonnull final CLong... val) {
+    public void writei(@Nonnegative final int index,
+                       @Nonnull final CLong... val) {
         if (val.length == 0) {
             return;
         }
@@ -766,15 +766,15 @@ public abstract class Pointer<T> implements AutoCloseable {
      */
 
     @SafeVarargs
-    public final <U extends StructType> void writeST(@Nonnull final U... val) {
-        writeIST(0,
-                 val);
+    public final <U extends StructType> void write(@Nonnull final U... val) {
+        writei(0,
+               val);
     }
 
 
     @SafeVarargs
-    public final <U extends StructType> void writeIST(@Nonnegative final int index,
-                                                      @Nonnull final U... val) {
+    public final <U extends StructType> void writei(@Nonnegative final int index,
+                                                    @Nonnull final U... val) {
         if (val.length == 0) {
             return;
         }

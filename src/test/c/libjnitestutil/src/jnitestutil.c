@@ -56,3 +56,14 @@ jbyte
 JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_readByte(JNIEnv *env, jclass clazz, jlong address){
     return (jlong)*((char*)(intptr_t)address);
 }
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    readFloat
+ * Signature: (J)F
+ */
+JNIEXPORT
+jfloat
+JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_readFloat(JNIEnv *env, jclass clazz, jlong address){
+    return (jlong)*((float*)(intptr_t)address);
+}
