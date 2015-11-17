@@ -1,5 +1,7 @@
 package com.github.zubnix.jaccall.runtime;
 
+import javax.annotation.Nonnull;
+
 public enum CType {
     //type signatures match dyncall arg signature, except for struct and union.
 
@@ -53,10 +55,11 @@ public enum CType {
           StructType.class);
 
     private final byte     signature;
+    @Nonnull
     private final Class<?> javaType;
 
     CType(final char signature,
-          final Class<?> javaType) {
+          @Nonnull final Class<?> javaType) {
         this.signature = (byte) signature;
         this.javaType = javaType;
     }
@@ -65,6 +68,7 @@ public enum CType {
         return signature;
     }
 
+    @Nonnull
     public Class<?> getJavaType() {
         return javaType;
     }

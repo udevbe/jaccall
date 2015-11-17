@@ -18,9 +18,8 @@ final class PointerLong extends Pointer<Long> {
 
     @Override
     public Long dref(@Nonnull final ByteBuffer byteBuffer) {
-        final LongBuffer buffer = byteBuffer.asLongBuffer();
-        buffer.rewind();
-        return buffer.get();
+        return dref(0,
+                    byteBuffer);
     }
 
     @Override

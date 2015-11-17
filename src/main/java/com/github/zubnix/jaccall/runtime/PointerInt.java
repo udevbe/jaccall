@@ -18,9 +18,8 @@ final class PointerInt extends Pointer<Integer> {
 
     @Override
     public Integer dref(@Nonnull final ByteBuffer byteBuffer) {
-        final IntBuffer buffer = byteBuffer.asIntBuffer();
-        buffer.rewind();
-        return buffer.get();
+        return dref(0,
+                    byteBuffer);
     }
 
     @Override

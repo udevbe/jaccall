@@ -17,9 +17,8 @@ final class PointerFloat extends Pointer<Float> {
 
     @Override
     public Float dref(@Nonnull final ByteBuffer byteBuffer) {
-        final FloatBuffer buffer = byteBuffer.asFloatBuffer();
-        buffer.rewind();
-        return buffer.get();
+        return dref(0,
+                    byteBuffer);
     }
 
     @Override

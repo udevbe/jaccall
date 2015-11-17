@@ -5,7 +5,7 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.nio.ByteBuffer;
 
-class JNI {
+public class JNI {
 
     /*
      * JNI ->
@@ -34,6 +34,15 @@ class JNI {
      * <- std
      */
 
+    /*
+     * dyncall ->
+     */
+    public static native long dcStructSize(long dcStruct);
+
+    public static native long dcDefineStruct(@Nonnull String signature);
+
+    public static native ByteBuffer dcStructFieldOffsets(final long dcStruct,
+                                                         @Nonnull final ByteBuffer offsets);
     /*
      * dyncall ->
      */

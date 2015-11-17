@@ -16,8 +16,8 @@ final class PointerByte extends Pointer<Byte> {
 
     @Override
     public Byte dref(@Nonnull final ByteBuffer byteBuffer) {
-        byteBuffer.rewind();
-        return byteBuffer.get();
+        return dref(0,
+                    byteBuffer);
     }
 
     @Override

@@ -45,12 +45,15 @@ public class Size {
         throw new IllegalArgumentException("Can not determine size of incomplete type Void.");
     }
 
-    public static long sizeOf(@Nonnull Struct struct) {
-        //TODO use jni'd dyncall to calculate struct/union size
-        return JNI.sizeOfStruct();
+    public static long sizeOf(@Nonnull StructSignature structSignature) {
+        return JNI.dcStructSize(JNI.dcDefineStruct(structSignature.value()));
     }
 
-    public static long sizeOf(@Nonnull StructType structType){
-        return structType.size();
+    public static long sizeOf(@Nonnull Class<? extends StructType> structType) {
+        final StructSignature structSignature = structType.getAnnotation(StructSignature.class);
+        if (structSignature == null) {
+            throw new IllegalArgumentException("Type does not have a StructSignature annotation.");
+        }
+        return sizeOf(structSignature);
     }
 }

@@ -18,9 +18,8 @@ final class PointerDouble extends Pointer<Double> {
 
     @Override
     public Double dref(@Nonnull final ByteBuffer byteBuffer) {
-        final DoubleBuffer buffer = byteBuffer.asDoubleBuffer();
-        buffer.rewind();
-        return buffer.get();
+        return dref(0,
+                    byteBuffer);
     }
 
     @Override

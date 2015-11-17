@@ -36,9 +36,9 @@ final class PointerStruct extends Pointer<StructType> {
     protected StructType dref(@Nonnegative final int index,
                               @Nonnull final ByteBuffer byteBuffer) {
         try {
-            final StructType structType = this.structClass.newInstance();
-            byteBuffer.position((int) (index * sizeOf(structType)));
+            byteBuffer.position((int) (index * sizeOf(this.structClass)));
             final ByteBuffer slice = byteBuffer.slice();
+            final StructType structType = this.structClass.newInstance();
             structType.buffer(slice);
             return structType;
         }

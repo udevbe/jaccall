@@ -18,9 +18,8 @@ final class PointerChar extends Pointer<Character> {
 
     @Override
     public Character dref(@Nonnull final ByteBuffer byteBuffer) {
-        final CharBuffer buffer = byteBuffer.asCharBuffer();
-        buffer.rewind();
-        return buffer.get();
+        return dref(0,
+                    byteBuffer);
     }
 
     @Override

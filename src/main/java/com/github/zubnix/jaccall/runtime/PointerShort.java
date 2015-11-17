@@ -20,9 +20,8 @@ public class PointerShort extends Pointer<Short> {
 
     @Override
     public Short dref(@Nonnull final ByteBuffer byteBuffer) {
-        final ShortBuffer buffer = byteBuffer.asShortBuffer();
-        buffer.rewind();
-        return buffer.get();
+        return dref(0,
+                    byteBuffer);
     }
 
     @Override

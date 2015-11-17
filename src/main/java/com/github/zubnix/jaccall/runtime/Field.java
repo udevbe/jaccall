@@ -1,8 +1,12 @@
 package com.github.zubnix.jaccall.runtime;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * A field of a {@link Struct} or {@link Union}.
  */
+@Retention(RetentionPolicy.SOURCE)
 public @interface Field {
     /**
      * The data type defined by this field.
