@@ -8,4 +8,11 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Ptr {
+    /**
+     * Programmer's aid to indicate what data the pointer is referencing.
+     * This value is not interpreted in any way.
+     *
+     * @return
+     */
+    Class<?> value() default Void.class;
 }

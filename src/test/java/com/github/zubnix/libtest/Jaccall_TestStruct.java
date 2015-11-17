@@ -24,7 +24,7 @@ abstract class Jaccall_TestStruct extends StructType {
         super(SIZE);
     }
 
-    public byte field() {
+    public byte field0() {
         return buffer().get(OFFSET_0);
     }
 

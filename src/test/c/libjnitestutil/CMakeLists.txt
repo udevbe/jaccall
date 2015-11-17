@@ -27,3 +27,5 @@ add_custom_command(
 include_directories(${JAVA_INCLUDE_PATH} ${JAVA_INCLUDE_PATH2} src)
 add_library(jnitestutil MODULE src/jnitestutil jni_header)
 target_link_libraries(jnitestutil ${JNI_LIBRARIES})
+
+
