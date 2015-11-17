@@ -7,24 +7,24 @@ import com.github.zubnix.jaccall.StructSignature;
 import com.github.zubnix.jaccall.StructType;
 
 import javax.annotation.Generated;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 
 //TODO auto generate this code from a compile time annotation processor
 @Generated("com.github.zubnix.jaccall.compiletime.StructGenerator")
 @StructSignature("wxyz")
 abstract class Jaccall_TestStruct extends StructType {
 
-    private static final long      DC_STRUCT     = JNI.dcDefineStruct(Jaccall_TestStruct.class.getAnnotation(StructSignature.class)
-                                                                                              .value());
-    private static final IntBuffer FIELD_OFFSETS = JNI.dcStructFieldOffsets(DC_STRUCT,
-                                                                            ByteBuffer.allocateDirect(8 * 4))
-                                                      .asIntBuffer();
+    private static final long DC_STRUCT        = JNI.dcDefineStruct(Jaccall_TestStruct.class.getAnnotation(StructSignature.class)
+                                                                                            .value());
+    private static final long DC_STRUCT_FIELDS = JNI.dcStruct_fields(DC_STRUCT);
 
-    private static final int OFFSET_0 = FIELD_OFFSETS.get();
-    private static final int OFFSET_1 = FIELD_OFFSETS.get();
-    private static final int OFFSET_2 = FIELD_OFFSETS.get();
-    private static final int OFFSET_3 = FIELD_OFFSETS.get();
+    private static final int OFFSET_0 = JNI.dcField_offset(DC_STRUCT_FIELDS,
+                                                           0);
+    private static final int OFFSET_1 = JNI.dcField_offset(DC_STRUCT_FIELDS,
+                                                           1);
+    private static final int OFFSET_2 = JNI.dcField_offset(DC_STRUCT_FIELDS,
+                                                           2);
+    private static final int OFFSET_3 = JNI.dcField_offset(DC_STRUCT_FIELDS,
+                                                           3);
 
     public byte field() {
         return buffer().get(OFFSET_0);
