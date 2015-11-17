@@ -741,8 +741,8 @@ public class PointerTest {
         final int index  = 3;
         final int offset = index * 8;
 
-        long l0 = 0x4567890123456789L;
-        long l1 = 0x1234567890123456L;
+        long l0 = 0x4567_8901_2345_6789L;
+        long l1 = 0x1234_5678_9012_3456L;
 
         try (Pointer<Long> longPointer = malloc((sizeof(l0) * 2) + offset).castPT(long.class)) {
             //when
@@ -808,22 +808,90 @@ public class PointerTest {
 
     @Test
     public void testWritePointer() throws Exception {
+        //given
+        long p0 = JNITestUtil.byteArrayAsPointer(0,
+                                                 0,
+                                                 0,
+                                                 0,
+                                                 0);
+        long p1 = JNITestUtil.byteArrayAsPointer(0,
+                                                 0,
+                                                 0,
+                                                 0,
+                                                 0);
 
+        try (Pointer<Pointer> floatPointer = malloc(sizeof(p0) * 2).castPT(Pointer.class)) {
+            //when
+            floatPointer.write(wrap(p0),
+                               wrap(p1));
+            //then
+            assertThat(JNITestUtil.readPointer(floatPointer.address)).isEqualTo(p0);
+            assertThat(JNITestUtil.readPointer(floatPointer.address + sizeof((Pointer) null))).isEqualTo(p1);
+        }
     }
 
     @Test
     public void testWritePointerAtIndex() throws Exception {
+        //given
+        final int index  = 3;
+        final int offset = index * sizeof((Pointer) null);
 
+        long p0 = JNITestUtil.byteArrayAsPointer(0,
+                                                 0,
+                                                 0,
+                                                 0,
+                                                 0);
+        long p1 = JNITestUtil.byteArrayAsPointer(0,
+                                                 0,
+                                                 0,
+                                                 0,
+                                                 0);
+
+        try (Pointer<Pointer> pointerPointer = malloc((sizeof(p0) * 2) + offset).castPT(Pointer.class)) {
+            //when
+            pointerPointer.writei(index,
+                                  wrap(p0),
+                                  wrap(p1));
+            //then
+            assertThat(JNITestUtil.readPointer(pointerPointer.address + offset)).isEqualTo(p0);
+            assertThat(JNITestUtil.readPointer(pointerPointer.address + offset + sizeof((Pointer) null))).isEqualTo(p1);
+        }
     }
 
     @Test
     public void testWriteCLong() throws Exception {
+        //given
+        CLong cl0 = new CLong(0x45678901);
+        CLong cl1 = new CLong(0x12345678);
 
+        try (Pointer<CLong> cLongPointer = malloc(sizeof(cl0) * 2).castPT(CLong.class)) {
+            //when
+            cLongPointer.write(cl0,
+                               cl1);
+            //then
+            assertThat(JNITestUtil.readCLong(cLongPointer.address)).isEqualTo(cl0.longValue());
+            assertThat(JNITestUtil.readCLong(cLongPointer.address + sizeof((CLong) null))).isEqualTo(cl1.longValue());
+        }
     }
 
     @Test
     public void testWriteCLongAtIndex() throws Exception {
+        //given
+        final int index  = 3;
+        final int offset = index * sizeof((CLong) null);
 
+        CLong cl0 = new CLong(0x45678901);
+        CLong cl1 = new CLong(0x12345678);
+
+        try (Pointer<CLong> cLongPointer = malloc((sizeof(cl0) * 2) + offset).castPT(CLong.class)) {
+            //when
+            cLongPointer.writei(index,
+                                cl0,
+                                cl1);
+            //then
+            assertThat(JNITestUtil.readCLong(cLongPointer.address + offset)).isEqualTo(cl0.longValue());
+            assertThat(JNITestUtil.readCLong(cLongPointer.address + offset + sizeof((CLong) null))).isEqualTo(cl1.longValue());
+        }
     }
 
     @Test

@@ -60,4 +60,6 @@ public class JNITestUtil {
 
     public static native float readDouble(final long address);
 
+    public static native long readPointer(final long address);
+
 }

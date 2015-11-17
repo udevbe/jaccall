@@ -78,3 +78,14 @@ jfloat
 JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_readDouble(JNIEnv *en, jclass clazz, jlong address){
     return (jlong)*((double*)(intptr_t)address);
 }
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    readPointer
+ * Signature: (J)J
+ */
+JNIEXPORT
+jlong
+JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_readPointer(JNIEnv *env, jclass clazz, jlong address){
+    return (jlong)(intptr_t)*((void**)(intptr_t)address);
+}

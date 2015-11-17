@@ -597,7 +597,7 @@ public abstract class Pointer<T> implements AutoCloseable {
                          @Nonnegative final int index,
                          final T... val);
 
-    static Class<?> toClass(Type type) {
+    protected static Class<?> toClass(Type type) {
         final Class<?> rawType;
         if (type instanceof Class) {
             rawType = (Class<?>) type;
