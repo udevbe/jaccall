@@ -1,8 +1,5 @@
 package com.github.zubnix.jaccall;
 
-
-import sun.nio.ch.DirectBuffer;
-
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -451,11 +448,6 @@ public abstract class Pointer<T> implements AutoCloseable {
         this.address = address;
         this.type = type;
         this.byteBuffer = byteBuffer.order(ByteOrder.nativeOrder());
-
-        //TODO remove this once we're confident enough about the stability of our pointer implementations
-        if (address != ((DirectBuffer) byteBuffer).address()) {
-            throw new Error("This is a bug. Advertised pointer address does not match direct byte buffer address.");
-        }
     }
 
     @Override
@@ -479,7 +471,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code T value = foo.dref();}
-     * <p/>
+     * <p>
      * C equivalent:<br>
      * {@code T value = *foo}
      *
@@ -494,7 +486,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code T value = foo.dref(i);}
-     * <p/>
+     * <p>
      * C equivalent:<br>
      * {@code T value = foo[i]}
      *
@@ -513,7 +505,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code offsetFoo = foo.offset(i);}
-     * <p/>
+     * <p>
      * C equivalent:<br>
      * {@code offsetFoo = foo+i;}
      *

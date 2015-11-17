@@ -72,35 +72,20 @@ final class JNI {
     static native int sizeOfPointer();
 
     static native int sizeOfCLong();
-
     /*
      * <- std
      */
+
     /*
      * linker ->
      */
-    static native void link(Class<?> header,/*class with native methods*/
-                            int nroSymbols,/* number of symbols*/
+    static native void link(String library, /* library path */
+                            Class<?> header,/*class with native methods*/
                             String[] symbols,/*method names*/
                             String[] jniSignatures,/*jni method signatures*/
-                            String[] jaccallSignatures,/*simplified c method signature*/
-                            long handle,/*handle to native lib*/
-                            long[] symbolAddress);/*address of symbol (function pointer)*/
+                            String[] jaccallSignatures/*simplified c method signature*/
+                           );
     /*
      * <- linker
      */
-
-    /*
-     * platform specific ->
-     */
-    static native long open(String filename);
-
-    static native long sym(long handle,
-                           String symbol);
-
-    static native int close(long handle);
-    /*
-     * <- platform specific
-     */
-
 }

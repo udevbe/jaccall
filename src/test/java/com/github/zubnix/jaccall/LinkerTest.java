@@ -55,8 +55,8 @@ public class LinkerTest {
     @Test
     public void testStaticMethodCall() {
         //given
-        Linker.link(Testing.class,
-                    libFilePath(),
+        Linker.link(libFilePath(),
+                    Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
         final Pointer<TestStruct> testStructPointer = malloc(TestStruct.SIZE).castp(TestStruct.class);

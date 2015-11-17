@@ -16,8 +16,8 @@ public final class Linker {
                                                                   .newInstance();
                     final String libName = libAnnotation.value();
                     //TODO libname resolving is platform depended
-                    link(header,
-                         "lib" + libName + ".so",
+                    link("lib" + libName + ".so",
+                         header,
                          linkSymbols);
 
                 }
@@ -28,26 +28,14 @@ public final class Linker {
         }
     }
 
-    public static void link(Class<?> header,
-                            String absoluteLibPath,
+    public static void link(String libraryPath,
+                            Class<?> header,
                             final LinkSymbols linkSymbols) {
 
-        final String[] symbols       = linkSymbols.symbols();
-        final int      nroSymbols    = symbols.length;
-        final long     handle        = JNI.open(absoluteLibPath);
-        final long[]   symbolAddress = new long[nroSymbols];
-
-        for (int i = 0; i < nroSymbols; i++) {
-            symbolAddress[i] = JNI.sym(handle,
-                                       symbols[i]);
-        }
-
-        JNI.link(header,
-                 nroSymbols,
-                 symbols,
+        JNI.link(libraryPath,
+                 header,
+                 linkSymbols.symbols(),
                  linkSymbols.jniSignatures(),
-                 linkSymbols.jaccallSignatures(),
-                 handle,
-                 symbolAddress);
+                 linkSymbols.jaccallSignatures());
     }
 }
