@@ -1,7 +1,5 @@
 package com.github.zubnix.jaccall.runtime.api;
 
-import com.github.zubnix.jaccall.runtime.StructType;
-
 public enum CType {
     //type signatures match dyncall arg signature, except for struct and union.
 

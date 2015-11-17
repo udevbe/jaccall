@@ -58,6 +58,14 @@ public abstract class Pointer<T> implements AutoCloseable {
 
         final Class<?> rawType = toClass(type);
 
+        if (StructType.class.isAssignableFrom(rawType)) {
+            final long size = sizeOf(rawType.getAnnotation(Struct.class));
+            return (Pointer<U>) new PointerStruct(type,
+                                                  address,
+                                                  JNI.wrap(address,
+                                                           size));
+        }
+
         if (rawType.equals(Void.class)) {
             final long size = sizeOf((Void) null);
             return (Pointer<U>) new PointerVoid(type,
@@ -130,14 +138,6 @@ public abstract class Pointer<T> implements AutoCloseable {
                                                             size));
         }
 
-        if (StructType.class.isAssignableFrom(rawType)) {
-            final long size = sizeOf(rawType.getAnnotation(Struct.class));
-            return (Pointer<U>) new PointerStruct(type,
-                                                  address,
-                                                  JNI.wrap(address,
-                                                           size));
-        }
-
         if (rawType.equals(CLong.class)) {
             final long size = sizeOf((CLong) null);
             return (Pointer<U>) new PointerCLong(type,
@@ -160,7 +160,41 @@ public abstract class Pointer<T> implements AutoCloseable {
                     JNI.malloc(elementSize * length));
     }
 
+    @SafeVarargs
+    @Nonnull
+    public static <U> Pointer<U> ref(@Nonnull U... val) {
+        final int length = val.length;
+        if (length == 0) {
+            throw new IllegalArgumentException("Cannot allocate zero length array.");
+        }
+
+        final Pointer<U> pointer = (Pointer<U>) create(val[0].getClass(),
+                                                       sizeOf((Pointer) null),
+                                                       length);
+        pointer.write(val);
+
+        return pointer;
+    }
+
+    @SafeVarargs
+    @Nonnull
+    public static <U extends Pointer> Pointer<U> ref(@Nonnull U... val) {
+        final int length = val.length;
+        if (length == 0) {
+            throw new IllegalArgumentException("Cannot allocate zero length array.");
+        }
+
+        final Pointer<U> pointer = (Pointer<U>) create(val[0].getClass(),
+                                                       sizeOf((Pointer) null),
+                                                       length);
+        pointer.write(val);
+
+        return pointer;
+    }
+
+    @Nonnull
     public static Pointer<Byte> ref(@Nonnull byte... val) {
+
 
         final int length = val.length;
         if (length == 0) {
@@ -175,6 +209,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         return pointer;
     }
 
+    @Nonnull
     public static Pointer<Short> ref(@Nonnull short... val) {
 
         final int length = val.length;
@@ -190,6 +225,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         return pointer;
     }
 
+    @Nonnull
     public static Pointer<Character> ref(@Nonnull char... val) {
 
         final int length = val.length;
@@ -205,6 +241,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         return pointer;
     }
 
+    @Nonnull
     public static Pointer<Integer> ref(@Nonnull int... val) {
 
         final int length = val.length;
@@ -220,6 +257,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         return pointer;
     }
 
+    @Nonnull
     public static Pointer<Float> ref(@Nonnull float... val) {
 
         final int length = val.length;
@@ -235,6 +273,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         return pointer;
     }
 
+    @Nonnull
     public static Pointer<Long> ref(@Nonnull long... val) {
 
         final int length = val.length;
@@ -337,12 +376,56 @@ public abstract class Pointer<T> implements AutoCloseable {
                     this.address + bytes);
     }
 
-    public <U> Pointer<U> cast(Class<U> type) {
+    /**
+     * type cast
+     *
+     * @param type
+     * @param <U>
+     *
+     * @return
+     */
+    public <U> U cast(Class<U> type) {
+        final ByteBuffer addressBuffer = ByteBuffer.allocate(8)
+                                                   .order(ByteOrder.nativeOrder());
+        final LongBuffer longBuffer = addressBuffer.asLongBuffer();
+        longBuffer.clear();
+        longBuffer.put(this.address);
+        addressBuffer.rewind();
+        return pCast(type).dref(addressBuffer);
+    }
+
+    /**
+     * Pointer type cast. Cast this pointer to a pointer of a different type.
+     *
+     * @param type
+     * @param <U>
+     *
+     * @return
+     */
+    public <U> Pointer<U> pCast(Class<U> type) {
         return wrap(type,
                     this.address);
     }
 
-    //TODO find a good write api+impl
+    /**
+     * Pointer-to-pointer cast. Cast this pointer to a pointer-to-pointer of the same type.
+     *
+     * @return
+     */
+    public Pointer<Pointer<T>> ppCast() {
+        final Class<? extends Pointer> thisClass = getClass();
+        return wrap(new ParameterizedType() {
+                        @Override
+                        public Type[] getActualTypeArguments() { return new Type[]{getType()}; }
+
+                        @Override
+                        public Type getRawType() { return thisClass; }
+
+                        @Override
+                        public Type getOwnerType() { return null; }
+                    },
+                    this.address);
+    }
 
     /*
      * Byte
@@ -461,11 +544,6 @@ public abstract class Pointer<T> implements AutoCloseable {
         buffer.clear();
         buffer.position(index);
         buffer.put(val);
-
-    }
-
-    private Class<?> toClass() {
-        return toClass(this.type);
     }
 
     private static Class<?> toClass(Type type) {

@@ -1,6 +1,5 @@
 package com.github.zubnix.libtest;
 
-import com.github.zubnix.jaccall.runtime.StructType;
 import com.github.zubnix.jaccall.runtime.api.CType;
 import com.github.zubnix.jaccall.runtime.api.Field;
 import com.github.zubnix.jaccall.runtime.api.Pointer;
@@ -21,7 +20,7 @@ class Jaccall_TestStruct extends StructType<TestStruct> {
         if (SIZE < 0) {
             SIZE = sizeOf(this);
         }
-        this.pointer = malloc(SIZE).cast(clazz);
+        this.pointer = malloc(SIZE).pCast(clazz);
     }
 
     @Override

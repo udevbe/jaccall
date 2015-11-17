@@ -1,7 +1,6 @@
 package com.github.zubnix.libtest;
 
 
-import com.github.zubnix.jaccall.runtime.StructType;
 import com.github.zubnix.jaccall.runtime.api.CType;
 import com.github.zubnix.jaccall.runtime.api.Field;
 import com.github.zubnix.jaccall.runtime.api.Pointer;
@@ -17,7 +16,7 @@ class Jaccall_TestStructEmbedded extends StructType<TestStruct.TestStructEmbedde
     private final Pointer<TestStruct.TestStructEmbedded> pointer;
 
     Jaccall_TestStructEmbedded(Class<TestStruct.TestStructEmbedded> clazz) {
-        this.pointer = malloc(sizeOf(this)).cast(clazz);
+        this.pointer = malloc(sizeOf(this)).pCast(clazz);
     }
 
     @Override
