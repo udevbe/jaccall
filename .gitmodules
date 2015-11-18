@@ -1,3 +1,0 @@
-[submodule "src/main/c/libffi"]
-	path = src/main/c/libffi
-	url = https://github.com/atgreen/libffi.git
