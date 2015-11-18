@@ -351,9 +351,6 @@ void jni_call_handler(ffi_cif *cif, void *ret, void **args, void *user_data) {
     for(; i < nargs; i++) {
         if(arg_types[i]->type == FFI_TYPE_STRUCT) {
             //struct by value
-//          void** struct_arg = args[i+2];
-//          void* struct_p = *struct_arg;
-//          args[i+2] = struct_p;
             args[i+2] = *((void**)args[i+2]);
         }
     }

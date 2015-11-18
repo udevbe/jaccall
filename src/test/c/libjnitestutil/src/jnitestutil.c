@@ -7,7 +7,7 @@
 struct teststruct {
  char field0;
  short field1;
- int field2;
+ int field2[3];
  int* field3;
 };
 
