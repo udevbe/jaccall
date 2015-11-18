@@ -2,9 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <dlfcn.h>
-
-//FIX with cmake configuration
-//#include <ffi.h>
+#include <ffi.h>
 
 #include "com_github_zubnix_jaccall_JNI.h"
 
@@ -137,7 +135,7 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env,
         jstring jaccallSignature = (jstring) (*env)->GetObjectArrayElement(env, jaccallSignatures, i);
         const char *jaccallstr = (*env)->GetStringUTFChars(env, jaccallSignature, 0);
 
-        //ffi_type* args[nro_args];
+        ffi_type* args[nro_args];
         int arg = 0;
         char arg_char;
         while((arg_char = jaccallstr[arg]) != ')') {
