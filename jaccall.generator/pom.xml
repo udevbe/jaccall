@@ -22,7 +22,7 @@
 
         <!-- test -->
         <compile-testing.version>0.6</compile-testing.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.11</junit.version>
 
         <!-- plugins -->
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
@@ -68,6 +68,7 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
+                    <compilerArgument>-proc:none</compilerArgument>
                 </configuration>
             </plugin>
         </plugins>
