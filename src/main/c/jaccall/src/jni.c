@@ -1,16 +1,18 @@
 #include <jni.h>
-#include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <dlfcn.h>
 #include <ffi.h>
+#include <assert.h>
 
 #include "com_github_zubnix_jaccall_JNI.h"
 
 struct jni_call_data {
-    ffi_cif* cif;
+    ffi_cif *cif;
     void *symaddr;
 };
+
+//#define DEBUG
 
 /*
  * Class:     com_github_zubnix_jaccall_JNI
@@ -93,15 +95,15 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_sizeOfCLong(JNIEnv *env, jclass clazz
 static inline
 void *
 find_libaddr(JNIEnv *env, jstring library) {
-    const char *libstr = (*env)->GetStringUTFChars(env, library, 0);
-    void *libaddr = dlopen(libstr, RTLD_NOW | RTLD_GLOBAL);
-    if (!libaddr) {
+    const char *lib_str = (*env)->GetStringUTFChars(env, library, 0);
+    void *lib_addr = dlopen(lib_str, RTLD_NOW | RTLD_GLOBAL);
+    if (!lib_addr) {
         fprintf(stderr, "dlopen error: %s\n", dlerror());
         exit(1);
     }
-    (*env)->ReleaseStringUTFChars(env, library, libstr);
+    (*env)->ReleaseStringUTFChars(env, library, lib_str);
 
-    return libaddr;
+    return lib_addr;
 }
 
 static inline
@@ -116,35 +118,35 @@ parse_struct(const char *jaccallstr,
     char struct_field;
 
     //get nro fields
-    while(in_struct){
+    while (in_struct) {
         struct_field = jaccallstr[*jaccall_str_index];
-        *(jaccall_str_index)++;
+        (*jaccall_str_index)++;
 
         if (in_struct == 1) {
             //not in a nested struct, so incr. field count
             nro_fields++;
         }
 
-        if(struct_field == 't') {
+        if (struct_field == 't') {
             //begin of nested struct
             in_struct++;
         }
-        if(struct_field == ']') {
+        if (struct_field == ']') {
             //end of nested or 'this' struct.
-            in_struct --;
+            in_struct--;
         }
     }
 
     //reset struct definition index
     *jaccall_str_index = mark;
 
-    ffi_type* struct_fields[nro_fields];
+    ffi_type **struct_fields = malloc(sizeof(ffi_type *) * nro_fields);
 
     //parse actual struct description
     int field_index = 0;
-    for(; field_index < nro_fields; field_index++) {
-        char struct_field = jaccallstr[*jaccall_str_index];
-        *(jaccall_str_index)++;
+    for (; field_index < nro_fields; field_index++) {
+        struct_field = jaccallstr[*jaccall_str_index];
+        (*jaccall_str_index)++;
 
         switch (struct_field) {
             case 'c':
@@ -173,13 +175,16 @@ parse_struct(const char *jaccallstr,
                 break;
             case 't':
                 //parse nested struct description
-                struct_description = (ffi_type*) malloc(sizeof(ffi_type));
+                struct_description = (ffi_type *) malloc(sizeof(ffi_type));
                 parse_struct(jaccallstr, jaccall_str_index, struct_description);
                 struct_fields[field_index] = struct_description;
                 break;
             case ']':
                 struct_fields[field_index] = NULL;
                 break;
+            default:
+                fprintf(stderr, "unsupported field description: %c\n", struct_field);
+                exit(1);
         }
     }
 
@@ -191,7 +196,8 @@ parse_struct(const char *jaccallstr,
 
 static inline
 void
-prep_ffi_arg(const char *jaccallstr, int* jaccall_str_index, ffi_type **arg){
+prep_ffi_arg(const char *jaccallstr, int *jaccall_str_index, ffi_type **arg) {
+
     char jaccall_arg;
     ffi_type *struct_description;
 
@@ -208,7 +214,7 @@ prep_ffi_arg(const char *jaccallstr, int* jaccall_str_index, ffi_type **arg){
     // 't...]'   struct -> @ByVal(SomeStruct.class) Long, @ByVal(SomeStruct.class) long,
 
     jaccall_arg = jaccallstr[*jaccall_str_index];
-    *(jaccall_str_index)++;
+    (*jaccall_str_index)++;
 
     switch (jaccall_arg) {
         case 'c':
@@ -240,10 +246,13 @@ prep_ffi_arg(const char *jaccallstr, int* jaccall_str_index, ffi_type **arg){
             break;
         case 't':
             //parse struct description
-            struct_description = (ffi_type*) malloc(sizeof(ffi_type));
+            struct_description = (ffi_type *) malloc(sizeof(ffi_type));
             parse_struct(jaccallstr, jaccall_str_index, struct_description);
             *arg = struct_description;
             break;
+        default:
+            fprintf(stderr, "unsupported argument description: %c\n", jaccall_arg);
+            exit(1);
     }
 }
 
@@ -252,7 +261,7 @@ void
 prep_ffi_args(const char *jaccallstr,
               int *jaccall_str_index,
               ffi_type **args,
-              size_t arg_size) {
+              int arg_size) {
     int arg_index = 0;
     for (; arg_index < arg_size; arg_index++) {
         prep_ffi_arg(jaccallstr, jaccall_str_index, &args[arg_index]);
@@ -260,23 +269,24 @@ prep_ffi_args(const char *jaccallstr,
 }
 
 static inline
-void prep_jni_cif(ffi_cif * jni_cif, const char* jni_sig, int arg_size) {
-    //prepare jni ffi_cif by parsing jni signature
+void prep_jni_cif(ffi_cif *jni_cif, const char *jni_sig, int arg_size) {
 
+    //prepare jni ffi_cif by parsing jni signature
     //compensate for jnienv & jobject/jclass arguments
-    int i = 2;
-    ffi_type **args = malloc((sizeof(ffi_type*) * (arg_size+ 2)));
+    ffi_type **args = malloc((sizeof(ffi_type *) * (arg_size + 2)));
     args[0] = &ffi_type_pointer;
     args[1] = &ffi_type_pointer;
 
-    ffi_type* return_type;
-    int parameter;
-    ffi_type *type;
-    for(; jni_sig; i++, jni_sig++) {
-        ffi_type* jni_type = malloc(sizeof(ffi_type));
-        char jni_sig_char = jni_sig[i];
+    ffi_type *return_type = NULL;
+    int parameter = 0;
+    ffi_type *type = NULL;
 
-        switch(jni_sig_char){
+    int i = 2;
+    while(*jni_sig){
+        char jni_sig_char = *jni_sig;
+        jni_sig++;
+
+        switch (jni_sig_char) {
             case 'B' :
                 type = &ffi_type_sint8;
                 break;
@@ -295,32 +305,43 @@ void prep_jni_cif(ffi_cif * jni_cif, const char* jni_sig, int arg_size) {
             case 'D' :
                 type = &ffi_type_double;
                 break;
+            case 'V' :
+                type = &ffi_type_void;
+                break;
             case '(' :
                 parameter++;
-                break;
+                continue;
             case ')' :
                 parameter--;
-                break;
+                continue;
+            default:
+                fprintf(stderr, "unsupported JNI argument: %c\n", jni_sig_char);
+                exit(1);
         }
 
-        if(parameter) {
+        assert(type);
+
+        if (parameter) {
             args[i] = type;
+            i++;
         } else /* return type*/ {
             return_type = type;
         }
+    }
 
-        ffi_status status = ffi_prep_cif(jni_cif, FFI_DEFAULT_ABI, (unsigned int) arg_size + 2, return_type, args);
-        if (status != FFI_OK) {
-            fprintf(stderr, "ffi_prep_cif failed: %d\n", status);
-            exit(1);
-        }
+    assert(return_type);
+
+    ffi_status status = ffi_prep_cif(jni_cif, FFI_DEFAULT_ABI, (unsigned int) arg_size + 2, return_type, args);
+    if (status != FFI_OK) {
+        fprintf(stderr, "ffi_prep_cif failed: %d\n", status);
+        exit(1);
     }
 }
 
 static
-void jni_call_handler(ffi_cif *cif, void *ret, void **args, void *user_data){
-    struct jni_call_data* call_data = user_data;
-    //FIXME we might have to manually iterate & cast each argument(?)
+void jni_call_handler(ffi_cif *cif, void *ret, void **args, void *user_data) {
+
+    struct jni_call_data *call_data = user_data;
     //skip 2 args (JNIEnv* & jclass/jobject)
     ffi_call(call_data->cif, FFI_FN(call_data->symaddr), ret, &args[2]);
 }
@@ -360,8 +381,8 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env,
         }
 
         //setup ffi call
-        size_t arg_size = (size_t) argSizes[i];
-        ffi_type **args = (ffi_type **)malloc(sizeof(ffi_type*) * arg_size);
+        int arg_size = argSizes[i];
+        ffi_type **args = (ffi_type **) malloc(sizeof(ffi_type *) * arg_size);
 
         jstring jaccallSignature = (jstring) (*env)->GetObjectArrayElement(env, jaccallSignatures, i);
 
@@ -370,10 +391,10 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env,
 
         prep_ffi_args(jaccallstr, &jaccall_str_index, args, arg_size);
 
-        ffi_type** return_type = (ffi_type**)malloc(sizeof(ffi_type*));
+        ffi_type **return_type = (ffi_type **) malloc(sizeof(ffi_type *));
         prep_ffi_arg(jaccallstr, &jaccall_str_index, return_type);
 
-        ffi_cif* cif = (ffi_cif*) malloc(sizeof(ffi_cif));
+        ffi_cif *cif = (ffi_cif *) malloc(sizeof(ffi_cif));
         ffi_status status = ffi_prep_cif(cif, FFI_DEFAULT_ABI, (unsigned int) arg_size, *return_type, args);
         if (status != FFI_OK) {
             fprintf(stderr, "ffi_prep_cif failed: %d\n", status);
@@ -381,34 +402,36 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env,
         }
 
         //setup ffi closure that calls our ffi_cif with arguments it gets from Java
-        void* jni_func;
-        ffi_closure * ffi_closure = ffi_closure_alloc(sizeof(ffi_closure), &jni_func);
+        void *jni_func;
+        ffi_closure *ffi_closure = ffi_closure_alloc(sizeof(ffi_closure), &jni_func);
+        if (ffi_closure) {
 
-        jstring jniSignature = (jstring) (*env)->GetObjectArrayElement(env, jniSignatures, i);
-        const char *jni_sig = (*env)->GetStringUTFChars(env, jniSignature, 0);
-        ffi_cif * jni_cif = malloc(sizeof(ffi_cif));
+            jstring jniSignature = (jstring) (*env)->GetObjectArrayElement(env, jniSignatures, i);
+            const char *jni_sig = (*env)->GetStringUTFChars(env, jniSignature, 0);
+            ffi_cif *jni_cif = malloc(sizeof(ffi_cif));
 
-        prep_jni_cif(jni_cif, jni_sig, arg_size);
+            prep_jni_cif(jni_cif, jni_sig, arg_size);
 
-        struct jni_call_data* call_data = malloc(sizeof(struct jni_call_data));
-        call_data->cif = cif;
-        call_data->symaddr = symaddr;
+            struct jni_call_data *call_data = malloc(sizeof(struct jni_call_data));
+            call_data->cif = cif;
+            call_data->symaddr = symaddr;
 
-        if(ffi_prep_closure_loc(ffi_closure,
-                                jni_cif,
-                                &jni_call_handler,
-                                call_data,
-                                jni_func)){
-            JNINativeMethod jniMethod = { .name = (char*) symstr, .signature = (char*) jni_sig, .fnPtr = jni_func };
-            jniMethods[i] = jniMethod;
-        } else {
-            //TODO more detailed error reporting
-            fprintf(stderr, "ffi_prep_closure_loc failed: %s\n", symstr);
+            status = ffi_prep_closure_loc(ffi_closure, jni_cif, &jni_call_handler, call_data, jni_func);
+            if (status == FFI_OK) {
+                JNINativeMethod jniMethod = {.name = (char *) symstr, .signature = (char *) jni_sig, .fnPtr = jni_func};
+                jniMethods[i] = jniMethod;
+            } else {
+                fprintf(stderr, "ffi_prep_closure_loc failed: %d\n", status);
+                exit(1);
+            }
+
+            (*env)->ReleaseStringUTFChars(env, jaccallSignature, jaccallstr);
+            //we dont' release the other strings as they are needed by jni itself.
+        }
+        else {
+            fprintf(stderr, "ffi_closure_alloc failed: %s\n", symstr);
             exit(1);
         }
-
-        (*env)->ReleaseStringUTFChars(env, jaccallSignature, jaccallstr);
-        //we dont' release the other strings as they are needed by jni itself.
     }
 
     (*env)->RegisterNatives(env, headerClazz, jniMethods, symbolsCount);

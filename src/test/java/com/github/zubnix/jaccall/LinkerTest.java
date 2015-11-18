@@ -78,7 +78,7 @@ public class LinkerTest {
         try (Pointer<TestStruct> tst = testStructPointer;
              Pointer<Integer> intp = nref(44)) {
 
-            byte newField0 = 11;
+            byte newField0 = 'a';
             short newField1 = 22;
             Pointer<Integer> newField2 = nref(3,
                                               33,

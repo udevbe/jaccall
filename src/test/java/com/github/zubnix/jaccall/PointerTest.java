@@ -240,34 +240,6 @@ public class PointerTest {
     }
 
     @Test
-    public void testNrefChar() throws Exception {
-        //given
-        char c0 = 0x1234;
-        char c1 = 0x3456;
-        char c2 = 0x5678;
-        char c3 = 0x7890;
-        char c4 = 0x9012;
-
-        //when
-        try (Pointer<Character> pointer = nref(c0,
-                                               c1,
-                                               c2,
-                                               c3,
-                                               c4);) {
-            //then
-            assertThat(pointer.address).isNotEqualTo(0L);
-//FIXME use jni to read values
-            //TODO add dref char
-
-            assertThat(pointer.dref()).isEqualTo(c0);
-            assertThat(pointer.dref(1)).isEqualTo(c1);
-            assertThat(pointer.dref(2)).isEqualTo(c2);
-            assertThat(pointer.dref(3)).isEqualTo(c3);
-            assertThat(pointer.dref(4)).isEqualTo(c4);
-        }
-    }
-
-    @Test
     public void testNrefInt() throws Exception {
         //given
         int i0 = 0x12345678;
@@ -588,48 +560,6 @@ public class PointerTest {
             shortPointer.writei(index,
                                 s0,
                                 s1);
-
-            //then
-            assertThat(JNITestUtil.readByte(shortPointer.address + offset)).isEqualTo((byte) 0x67);
-            assertThat(JNITestUtil.readByte(shortPointer.address + offset + 1)).isEqualTo((byte) 0x45);
-            assertThat(JNITestUtil.readByte(shortPointer.address + offset + 2)).isEqualTo((byte) 0x01);
-            assertThat(JNITestUtil.readByte(shortPointer.address + offset + 3)).isEqualTo((byte) 0x89);
-        }
-    }
-
-    @Test
-    public void testWriteChar() throws Exception {
-        //given
-        char c0 = 0x4567;
-        char c1 = 0x8901;
-
-        try (Pointer<Character> shortPointer = malloc((sizeof(c0) * 2)).castp(char.class)) {
-            //when
-            shortPointer.write(c0,
-                               c1);
-
-            //then
-            assertThat(JNITestUtil.readByte(shortPointer.address)).isEqualTo((byte) 0x67);
-            assertThat(JNITestUtil.readByte(shortPointer.address + 1)).isEqualTo((byte) 0x45);
-            assertThat(JNITestUtil.readByte(shortPointer.address + 2)).isEqualTo((byte) 0x01);
-            assertThat(JNITestUtil.readByte(shortPointer.address + 3)).isEqualTo((byte) 0x89);
-        }
-    }
-
-    @Test
-    public void testWriteCharAtIndex() throws Exception {
-        //given
-        final int index  = 3;
-        final int offset = index * 2;
-
-        char c0 = 0x4567;
-        char c1 = 0x8901;
-
-        try (Pointer<Character> shortPointer = malloc((sizeof(c0) * 2) + offset).castp(char.class)) {
-            //when
-            shortPointer.writei(index,
-                                c0,
-                                c1);
 
             //then
             assertThat(JNITestUtil.readByte(shortPointer.address + offset)).isEqualTo((byte) 0x67);
