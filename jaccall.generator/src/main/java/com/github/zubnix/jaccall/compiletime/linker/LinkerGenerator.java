@@ -1,21 +1,26 @@
-package com.github.zubnix.jaccall.compiletime;
+package com.github.zubnix.jaccall.compiletime.linker;
 
 
 import com.google.auto.common.BasicAnnotationProcessor;
 import com.google.auto.service.AutoService;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
+import java.util.Arrays;
 
 @AutoService(Processor.class)
 public class LinkerGenerator extends BasicAnnotationProcessor {
 
+    public ProcessingEnvironment getProcessingEnvironment() {
+        return this.processingEnv;
+    }
+
     @Override
     protected Iterable<? extends ProcessingStep> initSteps() {
-        //TODO process @Lib classes
 
-        //TODO check if all native methods have primitive only arguments and return types
-        //TODO check if all @Ptr annotations are placed on long return types or arguments
-        //TODO check if all ByVal annotations are placed on long return types or arguments
+        return Arrays.asList(new CheckWellFormedLib(this),new LinkSymbolsWriter(this));
+
+        //TODO process @Lib classes
 
         //TODO generate array with native method names
 
@@ -44,7 +49,6 @@ public class LinkerGenerator extends BasicAnnotationProcessor {
 
         //TODO generate class that extends LinksSymbols
         //name postfix = "_Jaccall_" + LinkSymbols.class.getSimpleName();
-
-        return null;
     }
+
 }

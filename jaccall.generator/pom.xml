@@ -16,6 +16,7 @@
 
     <properties>
         <!-- dependencies -->
+        <jaccall.runtime>1.0-SNAPSHOT</jaccall.runtime>
         <auto-common.version>0.4</auto-common.version>
         <auto-service.version>1.0-rc2</auto-service.version>
 
@@ -24,6 +25,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.github.zubnix</groupId>
+            <artifactId>jaccall.runtime</artifactId>
+            <version>${jaccall.runtime}</version>
+        </dependency>
         <dependency>
             <groupId>com.google.auto</groupId>
             <artifactId>auto-common</artifactId>
