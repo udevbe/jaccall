@@ -20,6 +20,10 @@
         <auto-common.version>0.4</auto-common.version>
         <auto-service.version>1.0-rc2</auto-service.version>
 
+        <!-- test -->
+        <compile-testing.version>0.6</compile-testing.version>
+        <junit.version>4.12</junit.version>
+
         <!-- plugins -->
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
     </properties>
@@ -40,6 +44,18 @@
             <artifactId>auto-service</artifactId>
             <version>${auto-service.version}</version>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.google.testing.compile</groupId>
+            <artifactId>compile-testing</artifactId>
+            <version>${compile-testing.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
