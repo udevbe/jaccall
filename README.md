@@ -23,7 +23,7 @@ Design goals:
  
 #### Comparison with other libraries
 
-Jaccall was born out of a frustration with existing solutions. Existing solutions have the nasty trade-off of having a complete but cumbersome API and slow runtime, or have excellent speed and good API but suffer from scope creep and lack armhf support.
+Jaccall was born out of a frustration with existing solutions. Existing solutions have the nasty trade-off of having a complete but cumbersome API and slow runtime, or have excellent speed and good API but suffer from scope creep while lacking armhf support.
 
 Jaccall tries to remedy this by strictly adhering to the KISS princicple.
 
@@ -52,8 +52,10 @@ To call a C method, we must create a Java class where we define what C method we
 #### An example
 
 C
-`libsomething.so`
-`some_header.h`
+
+library: `libsomething.so`
+
+header: `some_header.h`
 ```C
 struct test {
     char field0;
@@ -135,13 +137,31 @@ The drawback of this approach is that all returned struct-by-value data must be 
 Jaccall has a compile time step to perform both fail-fast compile time checks and Java source code generation.
 To aid the `Linker` in processing a natively mapped Java class, the `LinkerGenerator` does an initial pass over any `@Lib` annotated class to verify it's integrity and mapping rules. If this succeeds, it does a second pass and generates a `Foo_Jaccall_LinkSymbols.java` soure file for every `Foo.java` annotated with `@Lib`. This file should not be used by application code. This file contains linker data to aid the `Linker` in linking the required native Java methods to it's C counterpart.
 
-For every mapped method, 4 parts of linker data is generated.
+For every mapped method, 4 parts of linker data are generated.
 - The method name (the C symbol name).
 - The number of arguments.
 - A JNI signature.
 - A Jaccall signature.
 
 If we reiterate our first mapping example
+
+C `some_header.h`
+```C
+struct test {
+    char field0;
+    unsigned short field1;
+    int field2[3];
+    int *field3;
+};
+...
+struct test do_something(struct test* tst,
+                         char field0,
+                         unsigned short field1,
+                         int* field2,
+                         int* field3);
+```
+
+Java `SomeHeader.java`
 ```Java
 @ByVal(StructTest.class)
 public native long do_something(@Ptr(StructTest.class) long tst,
@@ -151,11 +171,27 @@ public native long do_something(@Ptr(StructTest.class) long tst,
                                 @Ptr(int.class) long field3);
 ```
 
-The linker data for this mapping would look like
+The generated linker data for this mapping:
+`SomeHeader_Jaccall_LinkSymbols.java`
+```Java
+...
+@Generated("com.github.zubnix.jaccall.compiletime.LinkerGenerator")
+public final class SomeHeader_Jaccall_LinkSymbols extends LinkSymbols {
+    public SomeHeader_Jaccall_LinkSymbols() {
+        super(new String[]{"do_something"},
+              new byte[]{5},
+              new String[]{"pcSpptcSiiip]"},
+              new String[]{"(JBSJJ)J"});
+    }
+}
+```
+
 - `"do_something"` The name of the method
 - `5` The number of arguments
 - `"(JBSJJ)J"` The JNI method signature.
 - `"pcSpptcSiiip]"` The Jaccall signature.
+
+Linker data of different methods matches on array index.
 
 The first 4 items are trivial. The Jaccall signature requires some explanation.
 
@@ -179,9 +215,18 @@ A Jaccall signature represents a method's arguments and return type in C. To acc
 | t...] | struct |
 | v | void |
 
+The struct signature is a special case as it needs to refine what members are part of it. This is done using the same Jaccall signature characters. Arrays types are mapped by repeating their specific type.
 
-
-MORE TODO
+A struct
+```C
+struct foo {
+    unsigned int bar[4];
+    struct baz {
+        void* qux;
+    }
+};
+```
+will thus be mapped as `tIIIItp]]`
 
 # Struct API
 TODO
