@@ -1,23 +1,44 @@
 Intro
 =====
 
-Experimental project for what is supposed to be a library similar to BridJ or JNA.
+Jaccall makes C libraries accessible from Java without the need to write any native code. It is project similar to JNA or BridJ.
 
-Goals are:
- - Simple usage.
- - Simple runtime API.
- - No config files.
- - Only C.
- - Linux only initially.
- - Support for Win/Lin/Mac - x86, x86_64, armsf, armhf.
- - Support for all common use cases: unions, callbacks, pointer-to-pointer, ...
- - Compile time annotation processor gathers all statically inferable information and generates runtime API independent code.
+Status: Incomplete
 
-Jaccall's does not try be Java, but instead tries to make C accessible in Java.
-This means:
+Jaccall's does not try to be Java, but instead tries to make C accessible in Java.
  - What you allocate, you must free yourself. watch out for memory leaks!
  - Cast to and from anything to anything. Watch out for cast mismatches!
  - Read and write to and from anything to anything. Watch out for segfaults!
+
+Design goals:
+ - Simple usage.
+ - Simple runtime API.
+ - No config files.
+ - C only.
+ - Support for Win/Lin/Mac/Android - x86, x86_64, armsf, armhf.
+ - Support for all common use cases: unions, callbacks, pointer-to-pointer, ...
+ 
+#### Comparison with other libraries
+
+Jaccall was born out of a frustration with existing solutions. Existing solutions have the nasty trade-off of being either complete but cumbersome API and slow runtime, or have excellent speed and good API but suffer from scope creep and lack support for armhf.
+
+Jaccall tries to remedy this by strictly adhering to the KISS princicple.
+
+# Overview
+
+- [Linker API](#linker-api)
+  - [An example](#an-example)
+  - [Mapping](#mapping)
+  - [By value By reference](#by-value-by-reference)
+  - [Internals](#internals)
+- [Struct API](#struct-api)
+- [Pointer API](#pointer-api)
+  - [A basic example](#a-basic-example)
+  - [Stack vs Heap](#stack-vs-heap)
+  - [Memory read write](#memory-read-write)
+  - [Arrays](#arrays)
+  - [Address manipulation](#address-manipulation)
+  - [Pointer types](#pointer-types)
 
 # Linker API
 
@@ -25,20 +46,23 @@ The linker API forms the basis of all native method invocation. Without it, you 
 
 To call a C method, we must create a Java class where we define what C method we are interested in, what they look like and where they can be found. This is done by mapping Java methods to C methods, and providing additional information through annotations.
 
-An example
+#### An example
 
 C
 `libsomething.so`
 `some_header.h`
 ```C
 struct test {
-...
+    char field0;
+    short field1;
+    int field2[3];
+    int *field3;
 };
 ...
 struct test do_something(struct test* tst,
                          char field0,
                          short field1,
-                         int[] field2,
+                         int* field2,
                          int* field3);
 ```
 
@@ -88,11 +112,42 @@ The Java primitive types `boolean` and `char` do not have a corresponding C type
 
 The class argument for `@Ptr` is optional.
 
-#### By value, by reference
+Arrays should be mapped as a pointer of the same type.
 
-Java does not support the notion of passing by reference or by value. By default, all method arguments are passed by value in Java, inlcuding POJOs which are actually pointers internally. This limits the size of a single argument in Java to 64-bit. As such, Jaccall can not pass or return a C struct by value. Jaccall works around this problem by allocating heap memory and copyin/reading struct-by-value data. Jaccall must then only pass a pointer to or from the native side. 
+#### By value By reference
 
-The drawback of this approach is that all returned struct-by-value data must still be freed manually!
+Java does not support the notion of passing by reference or by value. By default, all method arguments are passed by value in Java, inlcuding POJOs which are actually pointers internally. This limits the size of a single argument in Java to 64-bit. As such, Jaccall can not pass or return a C struct by value. Jaccall works around this problem by allocating heap memory and copyin/reading struct-by-value data. Jaccall must then only pass a pointer between Java and the native side. 
+
+The drawback of this approach is that all returned struct-by-value data must be freed manually!
+
+#### Internals
+
+Jaccall has a compile time step to perform both fail-fast compile time checks and Java source code generation.
+To aid the `Linker` in processing a natively mapped Java class, the `LinkerGenerator` does an initial pass over any `@Lib` annotated class to verify it's integrity and mapping rules. If this succeeds, it does a second pass and generates a `Foo_Jaccall_LinkSymbols.java` soure file for every `Foo.java` annotated with `@Lib`. This file should not be used by application code. This file contains linker data to aid the `Linker` in linking the required native Java methods to it's C counterpart.
+
+For every mapped method, 4 parts of linker data is generated.
+- The method name (the C symbol name).
+- The number of arguments.
+- A JNI signature.
+- A Jaccall signature.
+
+If we reiterate our first mapping example
+```Java
+@ByVal(StructTest.class)
+public native long do_something(@Ptr(StructTest.class) long tst,
+                                byte field0,
+                                short field1,
+                                @Ptr(int.class) long field2,
+                                @Ptr(int.class) long field3);
+```
+
+The linker data for this mapping would look like
+- `"do_something"` The name of the method
+- `5` The number of arguments
+- `"(JBSJJ)J"` The JNI method signature.
+- `"pcspptcsiiip]"` The Jaccall signature.
+
+The first 4 items are trivial. The Jaccall signature requires some explanation.
 
 MORE TODO
 
@@ -132,8 +187,7 @@ Pointer<Integer> int_p = void_p.castp(Integer.class);
 int_p.close();
 ```
 
-#### Stack vs Heap.
-
+#### Stack vs Heap
 
 C has the concept of stack and heap allocated memory. Unfortunately this doesn't translate well in Java. Jaccall tries to alleviate this by defining a `Pointer<...>` as an `AutoClosable`. Using Java's try-with-resource concept, we can mimic the concept of stack allocated memory.
 
@@ -168,7 +222,7 @@ It is important to notice that there is nothing special about `Pointer.nref(some
 Pointer.malloc(Size.sizeof(some_int)).castp(Integer.class).write(some_int);
 ```
 
-#### Memory read/write
+#### Memory read write
 
 Let's extend our first basic example and add some read and write operations.
 
