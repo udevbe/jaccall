@@ -12,7 +12,7 @@ public final class StructGenerator extends BasicAnnotationProcessor {
 
     @Override
     protected Iterable<? extends ProcessingStep> initSteps() {
-        return Arrays.asList(new CheckWellFormedStruct(this));
+        return Arrays.asList(new CheckWellFormedStruct(this), new StructWriter(this));
     }
 
     ProcessingEnvironment getProcessingEnvironment(){
