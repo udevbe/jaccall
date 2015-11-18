@@ -443,6 +443,38 @@ public class LinkSymbolsWriterTest {
     }
 
     @Test
+    public void testUnionByValParameterGeneration() {
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "import com.github.zubnix.jaccall.ByVal;\n" +
+                                                                          "import com.github.zubnix.jaccall.compiletime.linker.TestUnion;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    public static native void doStaticTest(@ByVal(TestUnion.class) long field0);\n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new LinkerGenerator());
+        //then
+        compileTester.compilesWithoutError()
+                     .and()
+                     .generatesSources(JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                       "package com.github.zubnix.libtest;\n" +
+                                                                       "\n" +
+                                                                       "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "\n" +
+                                                                       "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
+                                                                       "  public Testing_Jaccall_LinkSymbols() {\n" +
+                                                                       "    super(new String[]{\"doStaticTest\"},new byte[]{1},new String[]{\"ufcI]v\"},new String[]{\"(J)V\"});\n" +
+                                                                       "  }\n" +
+                                                                       "}"));
+    }
+
+    @Test
     public void testCharReturnTypeGeneration() {
         //given
         final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",

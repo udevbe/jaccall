@@ -108,7 +108,8 @@ find_libaddr(JNIEnv *env, jstring library) {
 
 static inline
 void
-parse_struct(const char *jaccallstr,
+parse_struct(char struct_type,
+             const char *jaccallstr,
              int *jaccall_str_index,
              ffi_type *struct_description) {
 
@@ -127,7 +128,7 @@ parse_struct(const char *jaccallstr,
             nro_fields++;
         }
 
-        if (struct_field == 't') {
+        if (struct_field == 't' || struct_field == 'u') {
             //begin of nested struct
             in_struct++;
         }
@@ -188,10 +189,11 @@ parse_struct(const char *jaccallstr,
             case 'p':
                 struct_fields[field_index] = &ffi_type_pointer;
                 break;
+            case 'u':
             case 't':
                 //parse nested struct description
                 struct_description = (ffi_type *) malloc(sizeof(ffi_type));
-                parse_struct(jaccallstr, jaccall_str_index, struct_description);
+                parse_struct(struct_field, jaccallstr, jaccall_str_index, struct_description);
                 struct_fields[field_index] = struct_description;
                 break;
             case ']':
@@ -207,6 +209,21 @@ parse_struct(const char *jaccallstr,
     struct_description->alignment = 0;
     struct_description->type = FFI_TYPE_STRUCT;
     struct_description->elements = struct_fields;
+
+    if (struct_type == 'u') {
+        field_index = 0;
+        for (; field_index < nro_fields; field_index++) {
+            ffi_cif cif;
+            if (ffi_prep_cif(&cif, FFI_DEFAULT_ABI, 0, struct_fields[field_index], NULL) == FFI_OK) {
+                if (struct_fields[field_index]->size > struct_description->size) {
+                    struct_description->size = struct_fields[field_index]->size;
+                }
+                if (struct_fields[field_index]->alignment > struct_description->alignment) {
+                    struct_description->alignment = struct_fields[field_index]->alignment;
+                }
+            }
+        }
+    }
 }
 
 static inline
@@ -215,18 +232,6 @@ prep_ffi_arg(const char *jaccallstr, int *jaccall_str_index, ffi_type **arg) {
 
     char jaccall_arg;
     ffi_type *struct_description;
-
-    //C types to Jaccall mapping
-    // 'c'	char -> Byte, byte
-    // 's'	short -> Short, short
-    // 'i'	int -> Integer, int
-    // 'j'	long -> CLong
-    // 'l'	long long -> Long, long
-    // 'f'	float -> Float, float
-    // 'd'	double -> Double, double
-    // 'p'	C pointer -> @Ptr Long, @Ptr long
-    // 'v'	void -> Void, void
-    // 't...]'   struct -> @ByVal(SomeStruct.class) Long, @ByVal(SomeStruct.class) long,
 
     jaccall_arg = jaccallstr[*jaccall_str_index];
     (*jaccall_str_index)++;
@@ -274,10 +279,11 @@ prep_ffi_arg(const char *jaccallstr, int *jaccall_str_index, ffi_type **arg) {
         case 'v':
             *arg = &ffi_type_void;
             break;
+        case 'u':
         case 't':
             //parse struct description
             struct_description = (ffi_type *) malloc(sizeof(ffi_type));
-            parse_struct(jaccallstr, jaccall_str_index, struct_description);
+            parse_struct(jaccall_arg, jaccallstr, jaccall_str_index, struct_description);
             *arg = struct_description;
             break;
         default:
@@ -312,7 +318,7 @@ void prep_jni_cif(ffi_cif *jni_cif, const char *jni_sig, int arg_size) {
     ffi_type *type = NULL;
 
     int i = 2;
-    while(*jni_sig){
+    while (*jni_sig) {
         char jni_sig_char = *jni_sig;
         jni_sig++;
 
@@ -376,21 +382,21 @@ void jni_call_handler(ffi_cif *cif, void *ret, void **args, void *user_data) {
 
     ffi_type **arg_types = call_data->cif->arg_types;
     unsigned int nargs = call_data->cif->nargs;
-    ffi_type* rtype = call_data->cif->rtype;
+    ffi_type *rtype = call_data->cif->rtype;
 
     int i = 0;
-    for(; i < nargs; i++) {
-        if(arg_types[i]->type == FFI_TYPE_STRUCT) {
+    for (; i < nargs; i++) {
+        if (arg_types[i]->type == FFI_TYPE_STRUCT) {
             //struct by value
-            args[i+2] = *((void**)args[i+2]);
+            args[i + 2] = *((void **) args[i + 2]);
         }
     }
 
-    if(rtype->type == FFI_TYPE_STRUCT){
+    if (rtype->type == FFI_TYPE_STRUCT) {
         //struct by value
-        void* rval = malloc(rtype->size);
+        void *rval = malloc(rtype->size);
         ffi_call(call_data->cif, FFI_FN(call_data->symaddr), rval, &args[2]);
-        *((void**)ret)=rval;
+        *((void **) ret) = rval;
     } else {
         ffi_call(call_data->cif, FFI_FN(call_data->symaddr), ret, &args[2]);
     }

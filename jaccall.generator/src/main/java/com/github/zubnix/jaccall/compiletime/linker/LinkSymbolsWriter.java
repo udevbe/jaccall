@@ -335,7 +335,6 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
                                               element);
         }
 
-        structByVal.append('t');
         for (final AnnotationMirror annotationMirror : structTypeType.asElement()
                                                                      .getAnnotationMirrors()) {
             if (annotationMirror.getAnnotationType()
@@ -343,8 +342,8 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
                                 .getSimpleName()
                                 .toString()
                                 .equals(STRUCT)) {
-                Boolean union;
 
+                Boolean union = false;
                 for (final Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> structAttribute : annotationMirror.getElementValues()
                                                                                                                                .entrySet()) {
                     if (structAttribute.getKey()
@@ -353,11 +352,23 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
                                        .equals("union")) {
                         union = (Boolean) structAttribute.getValue()
                                                          .getValue();
+                        break;
                     }
-                    else if (structAttribute.getKey()
-                                            .getSimpleName()
-                                            .toString()
-                                            .equals("value")) {
+                }
+
+                if (union) {
+                    structByVal.append('u');
+                }
+                else {
+                    structByVal.append('t');
+                }
+
+                for (final Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> structAttribute : annotationMirror.getElementValues()
+                                                                                                                               .entrySet()) {
+                    if (structAttribute.getKey()
+                                       .getSimpleName()
+                                       .toString()
+                                       .equals("value")) {
                         final List<? extends AnnotationValue> fieldAnnotations = (List<? extends AnnotationValue>) structAttribute.getValue()
                                                                                                                                   .getValue();
                         if (fieldAnnotations.isEmpty()) {
@@ -372,9 +383,10 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
                                               fieldAnnotations);
                     }
                 }
+
+                structByVal.append(']');
             }
         }
-        structByVal.append(']');
     }
 
     private void parseFieldAnnotations(final StringBuilder structByVal,
