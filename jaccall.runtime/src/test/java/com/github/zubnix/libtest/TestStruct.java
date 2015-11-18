@@ -14,7 +14,7 @@ import static com.github.zubnix.jaccall.CType.UNSIGNED_SHORT;
         @Field(type = UNSIGNED_SHORT,
                name = "field1"),
         @Field(type = INT,
-               cardinal = 3,
+               cardinality = 3,
                name = "field2"),
         @Field(type = POINTER,
                dataType = int.class,

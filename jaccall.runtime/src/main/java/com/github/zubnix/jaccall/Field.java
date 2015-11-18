@@ -17,11 +17,13 @@ public @interface Field {
 
     /**
      * The number of times the type of this field repeats. The cardinality is used to define the length of a nested
-     * array of type: {@link #type()}.
+     * array of type: {@link #type()}. When the cardinality is greater than one, the field will be represented as a pointer.
+     * <p/>
+     * A cardinality of < 1 will result in a compile time error.
      *
      * @return the number of times the the type of this field repeats inside the struct. Defaults to 1.
      */
-    int cardinal() default 1;
+    int cardinality() default 1;
 
     /**
      * Define an embedded struct or union.
