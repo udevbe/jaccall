@@ -9,13 +9,16 @@ import com.github.zubnix.jaccall.Struct;
 import com.github.zubnix.jaccall.Unsigned;
 import com.google.auto.common.BasicAnnotationProcessor;
 import com.google.common.collect.SetMultimap;
+import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
@@ -24,6 +27,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -143,8 +147,32 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
                                                      .addStatement(superStatement.toString())
                                                      .build();
 
-            //TODO add TypeSpec
-            //TODO JavaFile
+
+            TypeSpec typeSpec = TypeSpec.classBuilder(element.getSimpleName() + "_Jaccall_LinkSymbols")
+                                        .addModifiers(Modifier.PUBLIC)
+                                        .addModifiers(Modifier.FINAL)
+                                        .addMethod(constructor)
+                                        .build();
+
+            // 0 if we have a non top level type, or 1 if we do.
+            for (PackageElement packageElement : ElementFilter.packagesIn(Collections.singletonList(element.getEnclosingElement()))) {
+                JavaFile javaFile = JavaFile.builder(packageElement.getQualifiedName()
+                                                                   .toString(),
+                                                     typeSpec)
+                                            .build();
+                try {
+                    javaFile.writeTo(linkerGenerator.getProcessingEnvironment()
+                                                    .getFiler());
+                }
+                catch (IOException e) {
+                    linkerGenerator.getProcessingEnvironment()
+                                   .getMessager()
+                                   .printMessage(Diagnostic.Kind.ERROR,
+                                                 "Could not write linksymbols source file: \n" + javaFile.toString(),
+                                                 element);
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

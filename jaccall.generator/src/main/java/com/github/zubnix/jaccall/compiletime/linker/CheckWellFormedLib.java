@@ -6,6 +6,7 @@ import com.github.zubnix.jaccall.Lng;
 import com.github.zubnix.jaccall.Ptr;
 import com.github.zubnix.jaccall.Unsigned;
 import com.google.auto.common.BasicAnnotationProcessor;
+import com.google.auto.common.SuperficialValidation;
 import com.google.common.collect.SetMultimap;
 
 import javax.lang.model.element.Element;
@@ -34,13 +35,37 @@ public class CheckWellFormedLib implements BasicAnnotationProcessor.ProcessingSt
     @Override
     public void process(final SetMultimap<Class<? extends Annotation>, Element> elementsByAnnotation) {
         for (Element element : elementsByAnnotation.values()) {
-            TypeElement typeElement = (TypeElement) element;
+            if (SuperficialValidation.validateElement(element)) {
 
-            isClass(typeElement);
+                TypeElement typeElement = (TypeElement) element;
 
-            for (Element enclosedElement : typeElement.getEnclosedElements()) {
-                isWellFormedMethod(enclosedElement);
+                isClass(typeElement);
+                isNotNested(typeElement);
+
+                for (Element enclosedElement : typeElement.getEnclosedElements()) {
+                    isWellFormedMethod(enclosedElement);
+                }
             }
+            else {
+                linkerGenerator.getProcessingEnvironment()
+                               .getMessager()
+                               .printMessage(Diagnostic.Kind.ERROR,
+                                             "Could not resolve all required compile time type information.",
+                                             element);
+            }
+        }
+    }
+
+    private void isNotNested(final TypeElement typeElement) {
+        if (!typeElement.getEnclosingElement()
+                        .getKind()
+                        .equals(ElementKind.PACKAGE) || typeElement.getNestingKind()
+                                                                   .isNested()) {
+            linkerGenerator.getProcessingEnvironment()
+                           .getMessager()
+                           .printMessage(Diagnostic.Kind.ERROR,
+                                         "@Lib annotation should be placed on top level class types only.",
+                                         typeElement);
         }
     }
 
