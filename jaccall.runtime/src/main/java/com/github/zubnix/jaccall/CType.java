@@ -62,6 +62,7 @@ public enum CType {
            StructType.class,
            't');
 
+    //fields used at compile time
     private final int      size;
     @Nonnull
     private final Class<?> javaType;
@@ -73,19 +74,5 @@ public enum CType {
         this.size = size;
         this.javaType = javaType;
         this.signature = signature;
-    }
-
-
-    int getSize() {
-        return this.size;
-    }
-
-    @Nonnull
-    Class<?> getJavaType() {
-        return javaType;
-    }
-
-    public char getSignature() {
-        return this.signature;
     }
 }

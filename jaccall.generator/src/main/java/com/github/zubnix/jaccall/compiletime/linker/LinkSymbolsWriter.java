@@ -14,7 +14,6 @@ import com.squareup.javapoet.MethodSpec;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -22,6 +21,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import java.lang.annotation.Annotation;
@@ -34,12 +34,12 @@ import java.util.Set;
 public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingStep {
 
     private final LinkerGenerator linkerGenerator;
-    private final Elements        elementUtils;
     private final TypeMirror      unsignedType;
     private final TypeMirror      lngType;
     private final TypeMirror      ptrType;
     private final TypeMirror      byValType;
     private final TypeMirror      structType;
+    private final Elements        elementUtils;
 
     public LinkSymbolsWriter(final LinkerGenerator linkerGenerator) {
         this.linkerGenerator = linkerGenerator;
@@ -75,14 +75,11 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
             List<String> jniSignatures = new LinkedList<>();
 
             TypeElement typeElement = (TypeElement) element;
-            for (Element enclosedElement : typeElement.getEnclosedElements()) {
-                //gather link symbol information for each native method
-                if (enclosedElement.getKind()
-                                   .equals(ElementKind.METHOD) &&
-                    enclosedElement.getModifiers()
-                                   .contains(Modifier.NATIVE)) {
-                    ExecutableElement executableElement = (ExecutableElement) enclosedElement;
 
+            for (ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
+                //gather link symbol information for each native method
+                if (executableElement.getModifiers()
+                                     .contains(Modifier.NATIVE)) {
                     parseMethodName(executableElement,
                                     methodNames);
                     parseArgSize(executableElement,
@@ -124,6 +121,11 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
                                   .append(jniSignatures.get(i));
             }
 
+            methodNamesArray.append('}');
+            argSizesArray.append('}');
+            jaccallSignaturesArray.append('}');
+            jniSignaturesArray.append('}');
+
             StringBuilder superStatement = new StringBuilder();
             superStatement.append("super(")
                           .append(methodNamesArray.toString())
@@ -141,10 +143,8 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
                                                      .addStatement(superStatement.toString())
                                                      .build();
 
-
-            //TODO create new source file
-            //TODO write gathered link symbol information to new source file
-            //TODO flush source file
+            //TODO add TypeSpec
+            //TODO JavaFile
         }
     }
 
@@ -245,8 +245,7 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
                 }
                 else if (byVal != null) {
                     //it's a struct by value
-                    //return parseByVal(byVal);
-                    return "";
+                    return parseByVal(byVal);
                 }
                 else if (lng != null && unsigned != null) {
                     //it's an unsigned long long
@@ -287,7 +286,9 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
                                .getSimpleName()
                                .toString()
                                .equals("value")) {
-                final TypeMirror structClass = (TypeMirror) annotationEntry.getValue();
+                final AnnotationValue value = annotationEntry.getValue();
+                TypeMirror structClass = (TypeMirror) value.getValue();
+
                 parseStructFields(annotationEntry.getKey(),
                                   structByVal,
                                   structClass);
@@ -299,48 +300,128 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
     private void parseStructFields(final Element element,
                                    StringBuilder structByVal,
                                    final TypeMirror structClass) {
-        structByVal.append('t');
+        final DeclaredType structTypeType = (DeclaredType) structClass;
+        if (structTypeType.asElement()
+                          .getSimpleName()
+                          .toString()
+                          .equals("StructType")) {
+            linkerGenerator.getProcessingEnvironment()
+                           .getMessager()
+                           .printMessage(Diagnostic.Kind.ERROR,
+                                         "Declared struct type must be a subclass of 'com.github.zubnix.jaccall.StructType'.",
+                                         element);
+        }
 
-        //TODO use annotation mirrors instead
+        structByVal.append('t');
         for (AnnotationMirror annotationMirror : structClass.getAnnotationMirrors()) {
             if (annotationMirror.getAnnotationType()
                                 .equals(this.structType)) {
-                final Map<? extends ExecutableElement, ? extends AnnotationValue> structValues = annotationMirror.getElementValues();
+                Boolean union;
 
+                for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> structAttribute : annotationMirror.getElementValues()
+                                                                                                                         .entrySet()) {
+                    if (structAttribute.getKey()
+                                       .getSimpleName()
+                                       .toString()
+                                       .equals("union")) {
+                        union = (Boolean) structAttribute.getValue()
+                                                         .getValue();
+                    }
+                    else if (structAttribute.getKey()
+                                            .getSimpleName()
+                                            .toString()
+                                            .equals("value")) {
+                        List<? extends AnnotationValue> fieldAnnotations = (List<? extends AnnotationValue>) structAttribute.getValue()
+                                                                                                                            .getValue();
+                        if (fieldAnnotations.isEmpty()) {
+                            linkerGenerator.getProcessingEnvironment()
+                                           .getMessager()
+                                           .printMessage(Diagnostic.Kind.ERROR,
+                                                         "Emptry struct not allowed.",
+                                                         structAttribute.getKey());
+                        }
 
+                        parseFieldAnnotations(structByVal,
+                                              fieldAnnotations);
+                    }
+                }
             }
         }
+        structByVal.append(']');
+    }
 
-//
-//        final Struct structClassAnnotation = structClass.getAnnotation(Struct.class);
-//        for (Field field : structClassAnnotation.value()) {
-//            final int cardinality = field.cardinality();
-//            if (cardinality < 1) {
-//                linkerGenerator.getProcessingEnvironment()
-//                               .getMessager()
-//                               .printMessage(Diagnostic.Kind.ERROR,
-//                                             "Cardinality of struct field must be at least 1.",
-//                                             element);
-//            }
-//
-//            final CType type = field.type();
-//
-//            for (int i = 0; i < cardinality; i++) {
-//                if (type.equals(CType.STRUCT)) {
-//                    final TypeElement typeElement = elementUtils.getTypeElement(field.dataType()
-//                                                                                     .getName());
-//                    final TypeMirror structTypeMirror = typeElement.asType();
-//                    //parse embedded struct
-//                    parseStructFields(typeElement,
-//                                      structByVal,
-//                                      structTypeMirror);
-//                }
-//                else {
-//                    structByVal.append(type.getSignature());
-//                }
-//            }
-//        }
-//        structByVal.append(']');
+    private void parseFieldAnnotations(final StringBuilder structByVal,
+                                       final List<? extends AnnotationValue> fieldAnnotations) {
+        for (AnnotationValue fieldAnnotation : fieldAnnotations) {
+            AnnotationMirror fieldAnnotationMirror = (AnnotationMirror) fieldAnnotation.getValue();
+
+            VariableElement cType = null;
+            Integer cardinality = 0;
+            TypeMirror dataType = null;
+
+            for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> fieldAttribute : fieldAnnotationMirror.getElementValues()
+                                                                                                                         .entrySet()) {
+                if (fieldAttribute.getKey()
+                                  .getSimpleName()
+                                  .toString()
+                                  .equals("type")) {
+                    cType = (VariableElement) fieldAttribute.getValue()
+                                                            .getValue();
+                }
+                else if (fieldAttribute.getKey()
+                                       .getSimpleName()
+                                       .toString()
+                                       .equals("cardinality")) {
+                    cardinality = (Integer) fieldAttribute.getValue()
+                                                          .getValue();
+                    if (cardinality < 1) {
+                        linkerGenerator.getProcessingEnvironment()
+                                       .getMessager()
+                                       .printMessage(Diagnostic.Kind.ERROR,
+                                                     "Cardinality of struct field must be at least 1.",
+                                                     fieldAttribute.getKey());
+                    }
+                }
+                else if (fieldAttribute.getKey()
+                                       .getSimpleName()
+                                       .toString()
+                                       .equals("dataType")) {
+                    dataType = (TypeMirror) fieldAttribute.getValue()
+                                                          .getValue();
+                }
+
+
+                for (int i = 0; i < cardinality; i++) {
+                    parseFieldAnnotation(structByVal,
+                                         cType,
+                                         dataType);
+                }
+            }
+        }
+    }
+
+    private void parseFieldAnnotation(final StringBuilder structByVal,
+                                      final VariableElement cType,
+                                      final TypeMirror dataType) {
+
+        for (VariableElement variableElement : ElementFilter.fieldsIn(cType.getEnclosedElements())) {
+            if (variableElement.getSimpleName()
+                               .toString()
+                               .equals("signature")) {
+                String signature = variableElement.getConstantValue()
+                                                  .toString();
+                if (signature.equals("t")) {
+                    parseStructFields(variableElement,
+                                      structByVal,
+                                      dataType);
+                }
+                else {
+                    structByVal.append(signature);
+                }
+
+                break;
+            }
+        }
     }
 
     private void parseArgSize(final ExecutableElement executableElement,
