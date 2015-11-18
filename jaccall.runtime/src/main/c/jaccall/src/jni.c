@@ -205,24 +205,36 @@ parse_struct(char struct_type,
         }
     }
 
+    struct_description->type = FFI_TYPE_STRUCT;
     struct_description->size = 0;
     struct_description->alignment = 0;
-    struct_description->type = FFI_TYPE_STRUCT;
-    struct_description->elements = struct_fields;
 
-    if (struct_type == 'u') {
+    if (struct_type == 't') {
+        struct_description->elements = struct_fields;
+    }
+    else if (struct_type == 'u') {
+        //TODO unit test this. Not really convinced this libffi union mimic 'trick' works...
+
+        ffi_type **union_fields = malloc(sizeof(ffi_type *) * 2);
+        union_fields[1] = NULL;
+        struct_description->elements = union_fields;
+
         field_index = 0;
-        for (; field_index < nro_fields; field_index++) {
+        for (; struct_fields[field_index]; ++field_index) {
             ffi_cif cif;
             if (ffi_prep_cif(&cif, FFI_DEFAULT_ABI, 0, struct_fields[field_index], NULL) == FFI_OK) {
                 if (struct_fields[field_index]->size > struct_description->size) {
                     struct_description->size = struct_fields[field_index]->size;
+                    struct_description->elements[0] = struct_fields[field_index];
                 }
                 if (struct_fields[field_index]->alignment > struct_description->alignment) {
                     struct_description->alignment = struct_fields[field_index]->alignment;
                 }
             }
         }
+    } else {
+        fprintf(stderr, "unsupported struct type: %c - Expected 't' or 'u'.\n", struct_type);
+        exit(1);
     }
 }
 
