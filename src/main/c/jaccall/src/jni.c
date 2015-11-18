@@ -1,4 +1,5 @@
 #include <jni.h>
+#include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <dlfcn.h>
@@ -96,51 +97,112 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env,
                                                 jstring library,
                                                 jclass headerClazz,
                                                 jobjectArray symbols,
+                                                jbyteArray argumentSizes,
                                                 jobjectArray jniSignatures,
                                                 jobjectArray jaccallSignatures) {
+    //TODO split up this method & make it nicer
+
     //get handle to shared lib
     const char *libstr = (*env)->GetStringUTFChars(env, library, 0);
-    void* handle = dlopen(libstr,RTLD_NOW|RTLD_GLOBAL);
+    void *libaddr = dlopen(libstr, RTLD_NOW | RTLD_GLOBAL);
     (*env)->ReleaseStringUTFChars(env, library, libstr);
-    if (!handle) {
+    if (!libaddr) {
         fprintf(stderr, "dlopen error: %s\n", dlerror());
         exit(1);
     }
 
+    jbyte* argSizes = (*env)->GetByteArrayElements(env, argumentSizes, 0);
     int symbolsCount = (*env)->GetArrayLength(env, symbols);
     int i;
-    for (i=0; i<symbolsCount; i++) {
+    for (i = 0; i < symbolsCount; i++) {
         //lookup symbol
         jstring symbol = (jstring) (*env)->GetObjectArrayElement(env, symbols, i);
         const char *symstr = (*env)->GetStringUTFChars(env, symbol, 0);
-        void* symAddress = dlsym(handle,symstr);
+        void *symaddr = dlsym(libaddr, symstr);
         (*env)->ReleaseStringUTFChars(env, symbol, symstr);
-        char* err = dlerror();
+        char *err = dlerror();
         if (err) {
             fprintf(stderr, "dlsym failed: %s\n", err);
             exit(1);
         }
 
         //create ffi closure
-        //count number of args
-        jstring jniSignature = (jstring) (*env)->GetObjectArrayElement(env, jniSignatures, i);
-        const char *jnistr = (*env)->GetStringUTFChars(env, jniSignature, 0);
-        int nro_args = 0;
-        while(jnistr[nro_args+1] != ')') {
-            nro_args++;
-        }
-        (*env)->ReleaseStringUTFChars(env, jniSignature, jnistr);
 
         //fill in ffi_tye arg array
         jstring jaccallSignature = (jstring) (*env)->GetObjectArrayElement(env, jaccallSignatures, i);
         const char *jaccallstr = (*env)->GetStringUTFChars(env, jaccallSignature, 0);
 
-        ffi_type* args[nro_args];
+        size_t argSize = (size_t) argSizes[i];
+        ffi_type *args[(size_t) argSizes[i]];
         int arg = 0;
         char arg_char;
-        while((arg_char = jaccallstr[arg]) != ')') {
 
+        int j;
+        for (j = 0; j < argSize; j++) {
+            char jaccallArg = jaccallstr[j];
+
+        //C types to Jaccall mapping
+//        'c'	char -> Byte, byte
+//        's'	short -> Character, char, Short, short
+//        'i'	int -> Integer, int
+//        'j'	long -> CLong
+//        'l'	long long -> Long, long
+//        'f'	float -> Float, float
+//        'd'	double -> Double, double
+//        'p'	C pointer -> @Ptr Long, @Ptr long
+//        'v'	void -> Void, void
+//        't...]'   struct -> @ByVal(SomeStruct.class) Long, @ByVal(SomeStruct.class) long,
+            switch (jaccallArg) {
+                case 'c':
+                    args[j] = &ffi_type_sint8;
+                    break;
+                case 's':
+                    args[j] = &ffi_type_sint16;
+                    break;
+                case 'i':
+                    args[j] = &ffi_type_sint32;
+                    break;
+                case 'j':
+                    args[j] = &ffi_type_slong;
+                    break;
+                case 'l':
+                    args[j] = &ffi_type_sint64;
+                    break;
+                case 'f':
+                    args[j] = &ffi_type_float;
+                    break;
+                case 'd':
+                    args[j] = &ffi_type_double;
+                    break;
+                case 'p':
+                    args[j] = &ffi_type_pointer;
+                    break;
+                case 'v':
+                    args[j] = &ffi_type_void;
+                    break;
+                case 't':
+                    // Describe the struct to libffi. Elements are described by a
+                    // NULL-terminated array of pointers to ffi_type.
+
+                    //TODO do nested loop
+//                    ffi_type* dp_elements[] = {&ffi_type_sint, &ffi_type_double, NULL};
+//                    ffi_type dp_type = {.size = 0, .alignment = 0,
+//                            .type = FFI_TYPE_STRUCT, .elements = dp_elements};
+//
+//
+//                    args[j] = &ffi_type_;
+                    break;
+            }
         }
-        (*env)->ReleaseStringUTFChars(env, jniSignature, jnistr);
+
+//        while (*jaccallstr) {
+//
+//            switch (*jaccallstr) {
+//                case ')':
+//                    break;
+//            }
+//
+//        }
+        (*env)->ReleaseStringUTFChars(env, jaccallSignature, jaccallstr);
     }
 }

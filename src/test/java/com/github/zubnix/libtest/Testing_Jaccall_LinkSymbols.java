@@ -9,7 +9,8 @@ import javax.annotation.Generated;
 public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
     public Testing_Jaccall_LinkSymbols() {
         super(new String[]{"doTest", "doStaticTest"},
+              new byte[]{5, 5},
               new String[]{"pcsip)tcsip]", "pcsip)tcsip]"},
-              new String[]{"(JBCSIJ)J", "(JBCSIJ)J"});
+              new String[]{"(JBSIJ)J", "(JBSIJ)J"});
     }
 }

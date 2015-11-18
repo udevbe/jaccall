@@ -82,6 +82,7 @@ final class JNI {
     static native void link(String library, /* library path */
                             Class<?> header,/*class with native methods*/
                             String[] symbols,/*method names*/
+                            byte[] argumentSizes,/*number of arguments for each method*/
                             String[] jniSignatures,/*jni method signatures*/
                             String[] jaccallSignatures/*simplified c method signature*/
                            );

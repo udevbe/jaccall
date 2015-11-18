@@ -35,6 +35,7 @@ public final class Linker {
         JNI.link(libraryPath,
                  header,
                  linkSymbols.symbols(),
+                 linkSymbols.argumentSizes(),
                  linkSymbols.jniSignatures(),
                  linkSymbols.jaccallSignatures());
     }

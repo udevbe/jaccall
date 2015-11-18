@@ -19,3 +19,11 @@ struct test doTest(struct test* tst,
 
     return some_test;
 }
+
+struct test doStaticTest(struct test* tst,
+                   char field0,
+                   short field1,
+                   int field2,
+                   int* field3){
+    return doTest(tst,field0,field1,field2,field3);
+}
