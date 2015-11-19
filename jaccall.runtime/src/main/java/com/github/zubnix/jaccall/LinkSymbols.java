@@ -5,16 +5,16 @@ public class LinkSymbols {
 
     private final String[] symbols;
     private final byte[]   argumentSizes;
-    private final long[][] ffiTypes;
+    private final long[]   ffiCallInterfaces;
     private final String[] jniSignatures;
 
     public LinkSymbols(final String[] symbols,
                        final byte[] argumentSizes,
-                       final long[][] ffiTypes,
+                       final long[] ffiCallInterfaces,
                        final String[] jniSignatures) {
         this.symbols = symbols;
         this.argumentSizes = argumentSizes;
-        this.ffiTypes = ffiTypes;
+        this.ffiCallInterfaces = ffiCallInterfaces;
         this.jniSignatures = jniSignatures;
     }
 
@@ -22,13 +22,15 @@ public class LinkSymbols {
         return this.symbols;
     }
 
-    long[][] ffiTypes() {
-        return this.ffiTypes;
+    long[] ffiCallInterfaces() {
+        return this.ffiCallInterfaces;
     }
 
     String[] jniSignatures() {
         return this.jniSignatures;
     }
 
-    byte[] argumentSizes() { return this.argumentSizes; }
+    byte[] argumentSizes() {
+        return this.argumentSizes;
+    }
 }

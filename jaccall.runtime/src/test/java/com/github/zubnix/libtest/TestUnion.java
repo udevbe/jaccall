@@ -11,5 +11,5 @@ import com.github.zubnix.jaccall.Struct;
                 @Field(type = CType.FLOAT,
                        name = "field1"),
         })
-public class TestUnion extends TestUnion_Jaccall_StructType{
+public final class TestUnion extends TestUnion_Jaccall_StructType {
 }

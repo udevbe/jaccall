@@ -11,14 +11,16 @@ import javax.annotation.Generated;
 @Generated("com.github.zubnix.jaccall.compiletime.StructGenerator")
 abstract class TestStruct_Jaccall_StructType extends StructType {
 
-    public static final long FFI_TYPE = JNI.FFI_STRUCT_TYPE(JNI.FFI_TYPE('c'),
-                                                            JNI.FFI_TYPE('S'),
-                                                            JNI.FFI_TYPE('i'),
-                                                            JNI.FFI_TYPE('i'),
-                                                            JNI.FFI_TYPE('i'),
-                                                            JNI.FFI_TYPE('p'),
-                                                            TestStructEmbedded.FFI_TYPE);
-    public static final int  SIZE     = JNI.FFI_STRUCT_TYPE_SIZE(FFI_TYPE);
+    public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.ffi_type_sint8(),
+                                                            JNI.ffi_type_uint16(),
+                                                            JNI.ffi_type_sint32(),
+                                                            JNI.ffi_type_sint32(),
+                                                            JNI.ffi_type_sint32(),
+                                                            JNI.ffi_type_pointer()
+//            ,
+//                                                            TestStructEmbedded.FFI_TYPE
+                                                           );
+    public static final int  SIZE     = JNI.ffi_type_struct_size(FFI_TYPE);
 
     private static final int OFFSET_0 = 0;
     private static final int OFFSET_1 = newOffset(Size.sizeof((Short) null),
@@ -27,6 +29,7 @@ abstract class TestStruct_Jaccall_StructType extends StructType {
                                                   OFFSET_1 + Size.sizeof((Short) null));
     private static final int OFFSET_3 = newOffset(Size.sizeof((Pointer<?>) null),
                                                   OFFSET_2 + Size.sizeof((Integer) null) * 3);
+
 
     TestStruct_Jaccall_StructType() {
         super(SIZE);

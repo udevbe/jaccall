@@ -3,11 +3,11 @@ package com.github.zubnix.libtest;
 import com.github.zubnix.jaccall.JNI;
 import com.github.zubnix.jaccall.StructType;
 
-public class TestUnion_Jaccall_StructType extends StructType {
+public abstract class TestUnion_Jaccall_StructType extends StructType {
 
-    public static final long FFI_TYPE = JNI.FFI_UNION_TYPE(JNI.FFI_TYPE('s'),
-                                                           JNI.FFI_TYPE('f'));
-    public static final int  SIZE     = JNI.FFI_STRUCT_TYPE_SIZE(FFI_TYPE);
+    public static final long FFI_TYPE = JNI.ffi_type_union(JNI.ffi_type_sint16(),
+                                                           JNI.ffi_type_float());
+    public static final int  SIZE     = JNI.ffi_type_struct_size(FFI_TYPE);
 
     TestUnion_Jaccall_StructType() {
         super(SIZE);

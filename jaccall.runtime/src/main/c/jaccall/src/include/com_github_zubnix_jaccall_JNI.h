@@ -65,11 +65,155 @@ JNIEXPORT jint JNICALL Java_com_github_zubnix_jaccall_JNI_sizeOfCLong
 
 /*
  * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    ffi_type_void
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1void
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    ffi_type_sint8
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1sint8
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    ffi_type_uint8
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1uint8
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    ffi_type_sint16
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1sint16
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    ffi_type_uint16
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1uint16
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    ffi_type_sint32
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1sint32
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    ffi_type_uint32
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1uint32
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    ffi_type_slong
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1slong
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    ffi_type_ulong
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1ulong
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    ffi_type_sint64
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1sint64
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    ffi_type_uint64
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1uint64
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    ffi_type_float
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1float
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    ffi_type_double
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1double
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    ffi_type_pointer
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1pointer
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    ffi_type_struct
+ * Signature: ([J)J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1struct
+  (JNIEnv *, jclass, jlongArray);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    ffi_type_union
+ * Signature: ([J)J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1union
+  (JNIEnv *, jclass, jlongArray);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    ffi_type_struct_size
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1struct_1size
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    ffi_callInterface
+ * Signature: (J[J)J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1callInterface
+  (JNIEnv *, jclass, jlong, jlongArray);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
  * Method:    link
- * Signature: (Ljava/lang/String;Ljava/lang/Class;[Ljava/lang/String;[B[Ljava/lang/String;[Ljava/lang/String;)V
+ * Signature: (Ljava/lang/String;Ljava/lang/Class;[Ljava/lang/String;[B[Ljava/lang/String;[J)V
  */
 JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_link
-  (JNIEnv *, jclass, jstring, jclass, jobjectArray, jbyteArray, jobjectArray, jobjectArray);
+  (JNIEnv *, jclass, jstring, jclass, jobjectArray, jbyteArray, jobjectArray, jlongArray);
 
 #ifdef __cplusplus
 }

@@ -10,8 +10,5 @@ import com.github.zubnix.jaccall.Struct;
         @Field(type = CType.DOUBLE,
                name = "field1")
 })
-public class TestStructEmbedded extends Jaccall_TestStructEmbedded {
-    public TestStructEmbedded() {
-        super();
-    }
+public final class TestStructEmbedded extends Jaccall_TestStructEmbedded {
 }

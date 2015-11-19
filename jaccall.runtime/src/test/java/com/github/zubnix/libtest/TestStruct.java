@@ -25,8 +25,4 @@ import static com.github.zubnix.jaccall.CType.UNSIGNED_SHORT;
                name = "field4")
 })
 public final class TestStruct extends TestStruct_Jaccall_StructType {
-
-    public TestStruct() {
-        super();
-    }
 }
