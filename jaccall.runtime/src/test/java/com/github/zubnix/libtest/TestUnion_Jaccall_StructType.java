@@ -3,12 +3,10 @@ package com.github.zubnix.libtest;
 import com.github.zubnix.jaccall.Size;
 import com.github.zubnix.jaccall.StructType;
 
-/**
- * Created by zubzub on 11/19/15.
- */
 public class TestUnion_Jaccall_StructType extends StructType {
 
-    public static final int SIZE = Size.sizeof((byte) 0) > Size.sizeof((float) 0) ? Size.sizeof((byte) 0) : Size.sizeof((float) 0);
+    public static final int SIZE = MAX(Size.sizeof((byte) 0),
+                                       Size.sizeof((float) 0));
 
     TestUnion_Jaccall_StructType() {
         super(SIZE);
