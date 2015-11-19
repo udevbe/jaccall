@@ -339,4 +339,39 @@ public class CheckWellFormedStructTest {
                      .withErrorContaining("@Struct annotation should be placed on type that extends 'TestStruct_Jaccall_StructType' from package 'com.github.zubnix.jaccall.compiletime.linker'")
                      .in(fileObject);
     }
+
+    @Test
+    public void testStructDuplicateField() {
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.struct.TestStruct",
+                                                                          "package com.github.zubnix.jaccall.compiletime.linker;\n" +
+                                                                          "\n" +
+                                                                          "import com.github.zubnix.jaccall.CType;\n" +
+                                                                          "import com.github.zubnix.jaccall.Field;\n" +
+                                                                          "import com.github.zubnix.jaccall.Struct;\n" +
+                                                                          "\n" +
+                                                                          "import static com.github.zubnix.jaccall.CType.CHAR;\n" +
+                                                                          "import static com.github.zubnix.jaccall.CType.INT;\n" +
+                                                                          "import static com.github.zubnix.jaccall.CType.UNSIGNED_SHORT;\n" +
+                                                                          "\n" +
+                                                                          "@Struct(value = {\n" +
+                                                                          "             @Field(type = CHAR,\n" +
+                                                                          "                    name = \"field0\"),\n" +
+                                                                          "             @Field(type = UNSIGNED_SHORT,\n" +
+                                                                          "                    name = \"field2\"),\n" +
+                                                                          "             @Field(type = INT,\n" +
+                                                                          "                    cardinality = 3,\n" +
+                                                                          "                    name = \"field2\")\n" +
+                                                                          "              })\n" +
+                                                                          "public class TestStruct extends TestStruct_Jaccall_StructType {\n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new StructGenerator());
+        //then
+        compileTester.failsToCompile()
+                     .withErrorContaining("@Struct annotation has duplicated field name 'field2'.")
+                     .in(fileObject);
+    }
 }

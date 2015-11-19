@@ -20,6 +20,7 @@ import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
 import java.lang.annotation.Annotation;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,6 +50,52 @@ public final class CheckWellFormedStruct implements BasicAnnotationProcessor.Pro
             hasNonEmptyStructAnnotation(typeElement);
             doesNotHaveStaticSIZEField(typeElement);
             extendsGeneratedStructType(typeElement);
+            doesNotHaveSameNameFields(typeElement);
+        }
+    }
+
+    private void doesNotHaveSameNameFields(final TypeElement typeElement) {
+        for (final AnnotationMirror annotationMirror : typeElement.getAnnotationMirrors()) {
+            if (annotationMirror.getAnnotationType()
+                                .asElement()
+                                .getSimpleName()
+                                .toString()
+                                .equals(Struct.class.getSimpleName())) {
+                for (final Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : annotationMirror.getElementValues()
+                                                                                                                     .entrySet()) {
+                    if (entry.getKey()
+                             .getSimpleName()
+                             .toString()
+                             .equals("value")) {
+                        final List<? extends AnnotationValue> values = (List<? extends AnnotationValue>) entry.getValue()
+                                                                                                              .getValue();
+                        Set<String> fieldNames = new HashSet<>();
+                        for (AnnotationValue annotationValue : values) {
+                            final AnnotationMirror fieldMirror = (AnnotationMirror) annotationValue;
+                            for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> fieldValue : fieldMirror.getElementValues()
+                                                                                                                           .entrySet()) {
+                                if (fieldValue.getKey()
+                                              .getSimpleName()
+                                              .toString()
+                                              .equals("name")) {
+                                    final String fieldName = (String) fieldValue.getValue()
+                                                                                .getValue();
+                                    if (fieldNames.contains(fieldName)) {
+                                        this.structGenerator.getProcessingEnvironment()
+                                                            .getMessager()
+                                                            .printMessage(Diagnostic.Kind.ERROR,
+                                                                          "@Struct annotation has duplicated field name '" + fieldName + "'.",
+                                                                          typeElement);
+                                    }
+                                    else {
+                                        fieldNames.add(fieldName);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
