@@ -1,12 +1,13 @@
 package com.github.zubnix.libtest;
 
-import com.github.zubnix.jaccall.Size;
+import com.github.zubnix.jaccall.JNI;
 import com.github.zubnix.jaccall.StructType;
 
 public class TestUnion_Jaccall_StructType extends StructType {
 
-    public static final int SIZE = MAX(Size.sizeof((byte) 0),
-                                       Size.sizeof((float) 0));
+    public static final long FFI_TYPE = JNI.FFI_UNION_TYPE(JNI.FFI_TYPE('s'),
+                                                           JNI.FFI_TYPE('f'));
+    public static final int  SIZE     = JNI.FFI_STRUCT_TYPE_SIZE(FFI_TYPE);
 
     TestUnion_Jaccall_StructType() {
         super(SIZE);

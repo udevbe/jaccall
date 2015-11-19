@@ -7,16 +7,6 @@ import static java.nio.ByteBuffer.allocate;
 
 public abstract class StructType {
 
-    protected static int MAX(int... values) {
-        int max = 0;
-        for (int value : values) {
-            if (value > max) {
-                max = value;
-            }
-        }
-        return max;
-    }
-
     protected static int newOffset(final int align,
                                    final int offset) {
         return (offset + align - 1) & ~(align - 1);

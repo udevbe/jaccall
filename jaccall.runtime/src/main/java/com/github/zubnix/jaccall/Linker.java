@@ -37,6 +37,6 @@ public final class Linker {
                  linkSymbols.symbols(),
                  linkSymbols.argumentSizes(),
                  linkSymbols.jniSignatures(),
-                 linkSymbols.jaccallSignatures());
+                 linkSymbols.ffiTypes());
     }
 }

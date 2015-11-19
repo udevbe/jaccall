@@ -1,5 +1,6 @@
 package com.github.zubnix.libtest;
 
+import com.github.zubnix.jaccall.JNI;
 import com.github.zubnix.jaccall.Pointer;
 import com.github.zubnix.jaccall.Size;
 import com.github.zubnix.jaccall.StructType;
@@ -10,6 +11,15 @@ import javax.annotation.Generated;
 @Generated("com.github.zubnix.jaccall.compiletime.StructGenerator")
 abstract class TestStruct_Jaccall_StructType extends StructType {
 
+    public static final long FFI_TYPE = JNI.FFI_STRUCT_TYPE(JNI.FFI_TYPE('c'),
+                                                            JNI.FFI_TYPE('S'),
+                                                            JNI.FFI_TYPE('i'),
+                                                            JNI.FFI_TYPE('i'),
+                                                            JNI.FFI_TYPE('i'),
+                                                            JNI.FFI_TYPE('p'),
+                                                            TestStructEmbedded.FFI_TYPE);
+    public static final int  SIZE     = JNI.FFI_STRUCT_TYPE_SIZE(FFI_TYPE);
+
     private static final int OFFSET_0 = 0;
     private static final int OFFSET_1 = newOffset(Size.sizeof((Short) null),
                                                   OFFSET_0 + Size.sizeof((Byte) null));
@@ -17,8 +27,6 @@ abstract class TestStruct_Jaccall_StructType extends StructType {
                                                   OFFSET_1 + Size.sizeof((Short) null));
     private static final int OFFSET_3 = newOffset(Size.sizeof((Pointer<?>) null),
                                                   OFFSET_2 + Size.sizeof((Integer) null) * 3);
-
-    public static final int SIZE = OFFSET_3 + Size.sizeof((Pointer<?>) null);
 
     TestStruct_Jaccall_StructType() {
         super(SIZE);

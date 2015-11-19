@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
-final class JNI {
+public final class JNI {
 
     private static final String LIB_PREFIX  = "lib";
     private static final String LIB_NAME    = "jaccall";
@@ -72,19 +72,27 @@ final class JNI {
     static native int sizeOfPointer();
 
     static native int sizeOfCLong();
+
     /*
      * <- std
      */
-
     /*
      * linker ->
      */
+    public static native long FFI_TYPE(char jaccallType);
+
+    public static native long FFI_STRUCT_TYPE(long... ffiTypes);
+
+    public static native long FFI_UNION_TYPE(long... ffiTypes);
+
+    public static native int FFI_STRUCT_TYPE_SIZE(long ffiStructType);
+
     static native void link(String library, /* library path */
                             Class<?> header,/*class with native methods*/
                             String[] symbols,/*method names*/
                             byte[] argumentSizes,/*number of arguments for each method*/
                             String[] jniSignatures,/*jni method signatures*/
-                            String[] jaccallSignatures/*simplified c method signature*/
+                            long[][] ffiTypes/*array of ffi type pointers*/
                            );
     /*
      * <- linker
