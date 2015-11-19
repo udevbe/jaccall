@@ -71,7 +71,6 @@ find_libaddr(JNIEnv *env, jstring library) {
 
 static inline
 void prep_jni_cif(ffi_cif *jni_cif, const char *jni_sig, int arg_size) {
-
     //prepare jni ffi_cif by parsing jni signature
     //compensate for jnienv & jobject/jclass arguments
     ffi_type **args = malloc((sizeof(ffi_type *) * (arg_size + 2)));
@@ -193,8 +192,6 @@ JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env, jcla
                     "dlsym failed: %s\n", err);
             exit(1);
         }
-
-
 //setup ffi closure that calls our ffi_cif with arguments it gets from Java
         void *jni_func;
         ffi_closure *ffi_closure = ffi_closure_alloc(sizeof(ffi_closure), &jni_func);
@@ -325,7 +322,6 @@ JNIEXPORT
 jlong
 JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1pointer(JNIEnv *env, jclass clazz) {
     return (jlong) (intptr_t) &ffi_type_pointer;
-
 }
 
 JNIEXPORT
@@ -339,7 +335,7 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1struct(JNIEnv *env, jclass
     struct_fields[nro_fields] = NULL;
 
     int i = 0;
-    for (; struct_fields[i]; ++i) {
+    for (; i < nro_fields; i++) {
         struct_fields[i] = (ffi_type *) (intptr_t) struct_ctypes[i];
     }
 
@@ -347,6 +343,13 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1struct(JNIEnv *env, jclass
     struct_description->size = 0;
     struct_description->alignment = 0;
     struct_description->elements = struct_fields;
+
+    ffi_cif cif;
+    if (ffi_prep_cif(&cif, FFI_DEFAULT_ABI, 0, struct_description, NULL) != FFI_OK) {
+        fprintf(stderr,
+                "ffi_type struct failed.\n");
+        exit(1);
+    }
 
     return (jlong) (intptr_t) struct_description;
 }
@@ -396,21 +399,8 @@ JNIEXPORT
 jint
 JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1struct_1size(JNIEnv *env, jclass clazz,
                                                                    jlong ffi_struct_type) {
-
-    ffi_type * struct_description = (ffi_type *) (intptr_t) ffi_struct_type;
-
-    ffi_cif cif;
-    if (ffi_prep_cif(&cif, FFI_DEFAULT_ABI, 0, struct_description, NULL) != FFI_OK) {
-        fprintf(stderr,
-                "ffi_type struct failed.\n");
-        exit(1);
-    }
-
-    jint size = (jint) struct_description->size;
-    struct_description->size = 0;
-    struct_description->alignment = 0;
-
-    return size;
+    ffi_type *struct_description = (ffi_type *) (intptr_t) ffi_struct_type;
+    return (jint) struct_description->size;
 }
 
 JNIEXPORT

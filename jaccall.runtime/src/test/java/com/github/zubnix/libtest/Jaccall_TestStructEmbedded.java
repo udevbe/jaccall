@@ -10,8 +10,8 @@ import javax.annotation.Generated;
 @Generated("com.github.zubnix.jaccall.compiletime.StructGenerator")
 abstract class Jaccall_TestStructEmbedded extends StructType {
 
-    public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.ffi_type_float(),
-                                                            JNI.ffi_type_double());
+    public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_FLOAT,
+                                                            JNI.FFI_TYPE_DOUBLE);
     public static final int  SIZE     = JNI.ffi_type_struct_size(FFI_TYPE);
 
     private static final int OFFSET_0 = 0;

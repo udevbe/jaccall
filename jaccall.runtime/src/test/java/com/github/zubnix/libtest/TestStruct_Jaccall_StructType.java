@@ -11,15 +11,13 @@ import javax.annotation.Generated;
 @Generated("com.github.zubnix.jaccall.compiletime.StructGenerator")
 abstract class TestStruct_Jaccall_StructType extends StructType {
 
-    public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.ffi_type_sint8(),
-                                                            JNI.ffi_type_uint16(),
-                                                            JNI.ffi_type_sint32(),
-                                                            JNI.ffi_type_sint32(),
-                                                            JNI.ffi_type_sint32(),
-                                                            JNI.ffi_type_pointer()
-//            ,
-//                                                            TestStructEmbedded.FFI_TYPE
-                                                           );
+    public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_SINT8,
+                                                            JNI.FFI_TYPE_UINT16,
+                                                            JNI.FFI_TYPE_SINT32,
+                                                            JNI.FFI_TYPE_SINT32,
+                                                            JNI.FFI_TYPE_SINT32,
+                                                            JNI.FFI_TYPE_POINTER,
+                                                            TestStructEmbedded.FFI_TYPE);
     public static final int  SIZE     = JNI.ffi_type_struct_size(FFI_TYPE);
 
     private static final int OFFSET_0 = 0;

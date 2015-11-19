@@ -5,8 +5,8 @@ import com.github.zubnix.jaccall.StructType;
 
 public abstract class TestUnion_Jaccall_StructType extends StructType {
 
-    public static final long FFI_TYPE = JNI.ffi_type_union(JNI.ffi_type_sint16(),
-                                                           JNI.ffi_type_float());
+    public static final long FFI_TYPE = JNI.ffi_type_union(JNI.FFI_TYPE_SINT16,
+                                                           JNI.FFI_TYPE_FLOAT);
     public static final int  SIZE     = JNI.ffi_type_struct_size(FFI_TYPE);
 
     TestUnion_Jaccall_StructType() {
