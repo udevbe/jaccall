@@ -5,9 +5,9 @@ import com.github.zubnix.jaccall.Field;
 import com.github.zubnix.jaccall.Struct;
 
 @Struct(value = {
-        @Field(type = CType.FLOAT,
+        @Field(type = CType.LONG_LONG,
                name = "field0"),
-        @Field(type = CType.DOUBLE,
+        @Field(type = CType.FLOAT,
                name = "field1")
 })
 public final class TestStructEmbedded extends Jaccall_TestStructEmbedded {

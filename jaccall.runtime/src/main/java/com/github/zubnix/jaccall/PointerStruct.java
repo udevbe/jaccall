@@ -68,8 +68,6 @@ final class PointerStruct extends Pointer<StructType> {
         for (final StructType structType : val) {
             structType.buffer()
                       .rewind();
-            structType.buffer()
-                      .limit((int) structTypeSize);
             byteBuffer.put(structType.buffer());
         }
     }

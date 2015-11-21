@@ -64,46 +64,54 @@ public class LinkerTest {
         try (Pointer<TestStruct> tst = nref(new TestStruct());
              Pointer<Integer> intp = nref(44)) {
 
-            final byte newField0 = 'a';
-            final short newField1 = 22;
-            final int newField2_0 = 123;
-            final int newField2_1 = 456;
-            final int newField2_2 = 789;
+            final byte field0 = 'a';
+            final short field1 = 22;
+            final int field2_0 = 123;
+            final int field2_1 = 456;
+            final int field2_2 = 789;
 
-            final Pointer<Integer> newField2 = nref(newField2_0,
-                                                    newField2_1,
-                                                    newField2_2);
+            final Pointer<Integer> field2 = nref(field2_0,
+                                                 field2_1,
+                                                 field2_2);
 
-            final Pointer<Integer> newField3 = intp;
+            final Pointer<Integer> field3 = intp;
+            final long embedded_field0 = 1234567890L;
+            final float embedded_field1 = 9876543.21F;
 
             final Pointer<TestStruct> testStruct = wrap(TestStruct.class,
-                                                        Testing.doStaticTest2(tst.address,
-                                                                              newField0,
-                                                                              newField1,
-                                                                              newField2.address,
-                                                                              newField3.address));
+                                                        Testing.structTest2(tst.address,
+                                                                            field0,
+                                                                            field1,
+                                                                            field2.address,
+                                                                            field3.address,
+                                                                            embedded_field0,
+                                                                            embedded_field1));
 
             //then
             final TestStruct testStruct1 = testStruct.dref();
-            assertThat(testStruct1.field0()).isEqualTo(newField0);
-            assertThat(testStruct1.field1()).isEqualTo(newField1);
+            assertThat(testStruct1.field0()).isEqualTo(field0);
+            assertThat(testStruct1.field1()).isEqualTo(field1);
             assertThat(testStruct1.field2()
-                                  .dref(0)).isEqualTo(newField2_0);
+                                  .dref(0)).isEqualTo(field2_0);
             assertThat(testStruct1.field2()
-                                  .dref(1)).isEqualTo(newField2_1);
+                                  .dref(1)).isEqualTo(field2_1);
             assertThat(testStruct1.field2()
-                                  .dref(2)).isEqualTo(newField2_2);
-            assertThat(testStruct1.field3()).isEqualTo(newField3);
+                                  .dref(2)).isEqualTo(field2_2);
+            assertThat(testStruct1.field3()).isEqualTo(field3);
 
-            assertThat(testStruct1.field0()).isEqualTo(newField0);
-            assertThat(testStruct1.field1()).isEqualTo(newField1);
+            assertThat(testStruct1.field0()).isEqualTo(field0);
+            assertThat(testStruct1.field1()).isEqualTo(field1);
             assertThat(testStruct1.field2()
-                                  .dref(0)).isEqualTo(newField2_0);
+                                  .dref(0)).isEqualTo(field2_0);
             assertThat(testStruct1.field2()
-                                  .dref(1)).isEqualTo(newField2_1);
+                                  .dref(1)).isEqualTo(field2_1);
             assertThat(testStruct1.field2()
-                                  .dref(2)).isEqualTo(newField2_2);
-            assertThat(testStruct1.field3()).isEqualTo(newField3);
+                                  .dref(2)).isEqualTo(field2_2);
+            assertThat(testStruct1.field3()).isEqualTo(field3);
+            assertThat(testStruct1.field4()
+                                  .field0()).isEqualTo(embedded_field0);
+            assertThat(testStruct1.field4()
+                                  .field1()).isEqualTo(embedded_field1);
 
             testStruct.close();
         }
@@ -151,13 +159,17 @@ public class LinkerTest {
                                                     newField2_2);
 
             final Pointer<Integer> newField3 = intp;
+            final long embedded_field0 = 1234567890L;
+            final float embedded_field1 = 9876543.21F;
 
             final Pointer<TestStruct> testStructByValue = wrap(TestStruct.class,
-                                                               Testing.doStaticTest(tst.address,
-                                                                                    newField0,
-                                                                                    newField1,
-                                                                                    newField2.address,
-                                                                                    newField3.address));
+                                                               Testing.structTest(tst.address,
+                                                                                  newField0,
+                                                                                  newField1,
+                                                                                  newField2.address,
+                                                                                  newField3.address,
+                                                                                  embedded_field0,
+                                                                                  embedded_field1));
 
             //then
             final TestStruct testStruct1 = testStructByValue.dref();
@@ -199,9 +211,9 @@ public class LinkerTest {
         //when
         try (Pointer<TestUnion> tst = testUnionPointer) {
             final Pointer<TestUnion> unionPointer = wrap(TestUnion.class,
-                                                         Testing.doStaticUnionTest(tst.address,
-                                                                                   field0,
-                                                                                   field1));
+                                                         Testing.unionTest(tst.address,
+                                                                           field0,
+                                                                           field1));
 
             //then
             assertThat(tst.dref()
@@ -224,8 +236,8 @@ public class LinkerTest {
         //when
         try (Pointer<TestUnion> tst = testUnionPointer) {
             final Pointer<TestUnion> unionPointer = wrap(TestUnion.class,
-                                                         Testing.doStaticUnionTest2(tst.address,
-                                                                                    field0));
+                                                         Testing.unionTest2(tst.address,
+                                                                            field0));
 
             assertThat(Float.floatToIntBits(unionPointer.dref()
                                                         .field1())).isEqualTo(field0);

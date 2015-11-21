@@ -27,6 +27,8 @@ abstract class TestStruct_Jaccall_StructType extends StructType {
                                                   OFFSET_1 + Size.sizeof((Short) null));
     private static final int OFFSET_3 = newOffset(Size.sizeof((Pointer<?>) null),
                                                   OFFSET_2 + Size.sizeof((Integer) null) * 3);
+    private static final int OFFSET_4 = newOffset(Size.sizeof((Long)null),
+                                                  OFFSET_3 + Size.sizeof((Pointer<?>) null));
 
 
     TestStruct_Jaccall_StructType() {
@@ -34,38 +36,45 @@ abstract class TestStruct_Jaccall_StructType extends StructType {
     }
 
     public final byte field0() {
-        return buffer().get(OFFSET_0);
+        return readChar(OFFSET_0);
     }
 
     public final void field0(byte field0) {
-        buffer().put(OFFSET_0,
-                     field0);
+        writeChar(OFFSET_0,
+                  field0);
     }
 
     public final short field1() {
-        return buffer().getShort(OFFSET_1);
+        return readShort(OFFSET_1);
     }
 
     public final void field1(short field1) {
-        buffer().putShort(OFFSET_1,
-                          field1);
+        writeShort(OFFSET_1,
+                   field1);
     }
 
     public final Pointer<Integer> field2() {
-        return Pointer.wrap(Integer.class,
-                            buffer())
-                      .offset(OFFSET_2);
+        return readArray(OFFSET_2,
+                         Integer.class);
     }
 
     public final Pointer<Integer> field3() {
-        return Pointer.wrap(Integer.class,
-                            address(buffer(),
-                                    OFFSET_3));
+        return readPointer(OFFSET_3,
+                           Integer.class);
     }
 
     public final void field3(Pointer<Integer> field3) {
-        address(buffer(),
-                OFFSET_3,
-                field3);
+        writePointer(OFFSET_3,
+                     field3);
+    }
+
+    public final TestStructEmbedded field4() {
+        return readStructType(OFFSET_4,
+                              TestStructEmbedded.class);
+    }
+
+    public final void field4(TestStructEmbedded field4) {
+        writeStructType(OFFSET_4,
+                        field4);
     }
 }

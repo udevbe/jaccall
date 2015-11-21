@@ -2,65 +2,41 @@ package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnull;
 
-import static com.github.zubnix.jaccall.Size.sizeof;
-
 public enum CType {
-    CHAR(sizeof((Byte) null),
-         byte.class),
-    UNSIGNED_CHAR(sizeof((Byte) null),
-                  byte.class),
+    CHAR(byte.class),
+    UNSIGNED_CHAR(byte.class),
 
-    SHORT(sizeof((Short) null),
-          short.class),
-    UNSIGNED_SHORT(sizeof((Short) null),
-                   short.class),
+    SHORT(short.class),
+    UNSIGNED_SHORT(short.class),
 
-    INT(sizeof((Integer) null),
-        int.class),
-    UNSIGNED_INT(sizeof((Integer) null),
-                 int.class),
+    INT(int.class),
+    UNSIGNED_INT(int.class),
 
-    LONG(sizeof((CLong) null),
-         long.class),
-    UNSIGNED_LONG(sizeof((CLong) null),
-                  long.class),
+    LONG(long.class),
+    UNSIGNED_LONG(long.class),
 
-    LONG_LONG(sizeof((Long) null),
-              long.class),
-    UNSIGNED_LONG_LONG(sizeof((Long) null),
-                       long.class),
+    LONG_LONG(long.class),
+    UNSIGNED_LONG_LONG(long.class),
 
-    FLOAT(sizeof((Float) null),
-          float.class),
+    FLOAT(float.class),
 
-    DOUBLE(sizeof((Double) null),
-           double.class),
+    DOUBLE(double.class),
 
     /**
      * Any pointer type.
      */
-    POINTER(sizeof((Pointer<Void>) null),
-            Void.class),
+    POINTER(Void.class),
 
     /**
      * A struct or union by value.
      */
-    STRUCT(-1,
-           StructType.class);
+    STRUCT(StructType.class);
 
-    //fields used at compile time
-    private final int      size;
     @Nonnull
     private final Class<?> javaType;
 
-    CType(final int size,
-          @Nonnull final Class<?> javaType) {
-        this.size = size;
+    CType(@Nonnull final Class<?> javaType) {
         this.javaType = javaType;
-    }
-
-    public int getSize() {
-        return this.size;
     }
 
     @Nonnull
