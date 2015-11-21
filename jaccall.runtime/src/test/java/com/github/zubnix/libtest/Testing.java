@@ -30,6 +30,5 @@ public class Testing {
 
     @Ptr(TestUnion.class)
     public static native long doStaticUnionTest2(@ByVal(TestUnion.class) long tst,
-                                                 int field0,
-                                                 float field1);
+                                                 int field0);
 }

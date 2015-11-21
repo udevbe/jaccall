@@ -27,5 +27,4 @@ union testunion doStaticUnionTest(union testunion* tst,
                                   float field1);
 
 union testunion* doStaticUnionTest2(union testunion tst,
-                                    int field0,
-                                    float field1);
+                                    int field0);

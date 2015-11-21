@@ -2,6 +2,7 @@ package com.github.zubnix.jaccall;
 
 
 import com.github.zubnix.libtest.TestStruct;
+import com.github.zubnix.libtest.TestUnion;
 import com.github.zubnix.libtest.Testing;
 import com.github.zubnix.libtest.Testing_Jaccall_LinkSymbols;
 import org.junit.Test;
@@ -186,11 +187,49 @@ public class LinkerTest {
 
     @Test
     public void testUnionReturnByValuePassByReference() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
 
+        Pointer<TestUnion> testUnionPointer = malloc(TestUnion.SIZE).castp(TestUnion.class);
+        int                field0           = 123456789;
+        float              field1           = 9876.54F;
+
+        //when
+        try (Pointer<TestUnion> tst = testUnionPointer) {
+            final Pointer<TestUnion> unionPointer = wrap(TestUnion.class,
+                                                         Testing.doStaticUnionTest(tst.address,
+                                                                                   field0,
+                                                                                   field1));
+
+            //then
+            assertThat(tst.dref()
+                          .field0()).isEqualTo(field0);
+            assertThat(unionPointer.dref()
+                                   .field1()).isEqualTo(field1);
+        }
     }
 
     @Test
     public void testUnionReturnByReferencePassByValue() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
 
+        Pointer<TestUnion> testUnionPointer = malloc(TestUnion.SIZE).castp(TestUnion.class);
+        int                field0           = 123456789;
+
+        //when
+        try (Pointer<TestUnion> tst = testUnionPointer) {
+            final Pointer<TestUnion> unionPointer = wrap(TestUnion.class,
+                                                         Testing.doStaticUnionTest2(tst.address,
+                                                                                    field0));
+
+            assertThat(Float.floatToIntBits(unionPointer.dref()
+                                                        .field1())).isEqualTo(field0);
+            unionPointer.close();
+        }
     }
 }

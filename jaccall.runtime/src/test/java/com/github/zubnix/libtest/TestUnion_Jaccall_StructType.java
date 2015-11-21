@@ -14,7 +14,7 @@ public abstract class TestUnion_Jaccall_StructType extends StructType {
     }
 
     public final int field0() {
-        return buffer().get(0);
+        return buffer().getInt(0);
     }
 
     public final void field0(int field0) {

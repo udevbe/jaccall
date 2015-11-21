@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "testing.h"
 
 struct test doStaticTest(struct test *tst,
@@ -48,5 +49,26 @@ struct test *doStaticTest2(struct test tst,
     some_test->field2[2] = tst.field2[2];
     some_test->field3 = tst.field3;
 
+    return some_test;
+}
+
+union testunion doStaticUnionTest(union testunion* tst,
+                                  int field0,
+                                  float field1){
+    tst->field0 = field0;
+
+    union testunion some_test;
+    some_test.field1 = field1;
+
+    return some_test;
+
+}
+
+union testunion* doStaticUnionTest2(union testunion tst,
+                                    int field0){
+    tst.field0 = field0;
+
+    union testunion* some_test = malloc(sizeof(union testunion));
+    some_test->field1 = tst.field1;
     return some_test;
 }
