@@ -6,7 +6,7 @@ import com.github.zubnix.jaccall.Struct;
 
 @Struct(union = true,
         value = {
-                @Field(type = CType.SHORT,
+                @Field(type = CType.INT,
                        name = "field0"),
                 @Field(type = CType.FLOAT,
                        name = "field1"),

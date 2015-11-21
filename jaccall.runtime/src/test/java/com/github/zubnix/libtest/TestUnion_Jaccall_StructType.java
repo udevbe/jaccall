@@ -5,7 +5,7 @@ import com.github.zubnix.jaccall.StructType;
 
 public abstract class TestUnion_Jaccall_StructType extends StructType {
 
-    public static final long FFI_TYPE = JNI.ffi_type_union(JNI.FFI_TYPE_SINT16,
+    public static final long FFI_TYPE = JNI.ffi_type_union(JNI.FFI_TYPE_SINT32,
                                                            JNI.FFI_TYPE_FLOAT);
     public static final int  SIZE     = JNI.ffi_type_struct_size(FFI_TYPE);
 
@@ -13,13 +13,13 @@ public abstract class TestUnion_Jaccall_StructType extends StructType {
         super(SIZE);
     }
 
-    public final byte field0() {
+    public final int field0() {
         return buffer().get(0);
     }
 
-    public final void field0(byte field0) {
-        buffer().put(0,
-                     field0);
+    public final void field0(int field0) {
+        buffer().putInt(0,
+                        field0);
     }
 
     public final float field1() {

@@ -166,6 +166,45 @@ void jni_call_handler(ffi_cif *cif, void *ret, void **args, void *user_data) {
     }
 }
 
+static
+inline
+void create_closure(const char *symstr,
+                    void *symaddr,
+                    const char *jni_sig,
+                    jbyte argSize,
+                    ffi_cif *cif,
+                    JNINativeMethod *jniMethods_i) {
+    void *jni_func;
+    ffi_closure *closure = ffi_closure_alloc(sizeof(ffi_closure), &jni_func);
+    if (closure) {
+
+        ffi_cif *jni_cif = malloc(sizeof(ffi_cif));
+
+        prep_jni_cif(jni_cif, jni_sig, argSize);
+
+        struct jni_call_data *call_data = malloc(sizeof(struct jni_call_data));
+        call_data->cif = cif;
+        call_data->symaddr = symaddr;
+
+        ffi_status status = ffi_prep_closure_loc(closure, jni_cif, &jni_call_handler, call_data, jni_func);
+        if (status == FFI_OK) {
+            jniMethods_i->name = (char *) symstr;
+            jniMethods_i->signature = (char *) jni_sig;
+            jniMethods_i->fnPtr = jni_func;
+
+        } else {
+            fprintf(stderr,
+                    "ffi_prep_closure_loc failed: %d\n", status);
+            exit(1);
+        }
+    }
+    else {
+        fprintf(stderr,
+                "ffi_closure_alloc failed: %s\n", symstr);
+        exit(1);
+    }
+}
+
 JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env, jclass clazz, jstring library,
                                                                jclass headerClazz, jobjectArray symbols,
                                                                jbyteArray argumentSizes,
@@ -181,7 +220,7 @@ JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env, jcla
 
     int i = 0;
     for (; i < symbolsCount; i++) {
-//lookup symbol (function pointer)
+
         jstring symbol = (jstring) (*env)->GetObjectArrayElement(env, symbols, i);
         const char *symstr = (*env)->GetStringUTFChars(env, symbol, 0);
 
@@ -192,42 +231,18 @@ JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env, jcla
                     "dlsym failed: %s\n", err);
             exit(1);
         }
-//setup ffi closure that calls our ffi_cif with arguments it gets from Java
-        void *jni_func;
-        ffi_closure *ffi_closure = ffi_closure_alloc(sizeof(ffi_closure), &jni_func);
-        if (ffi_closure) {
 
-            jstring jniSignature = (jstring) (*env)->GetObjectArrayElement(env, jniSignatures, i);
-            const char *jni_sig = (*env)->GetStringUTFChars(env, jniSignature, 0);
-            ffi_cif *jni_cif = malloc(sizeof(ffi_cif));
+        jstring jniSignature = (jstring) (*env)->GetObjectArrayElement(env, jniSignatures, i);
+        const char *jni_sig = (*env)->GetStringUTFChars(env, jniSignature, 0);
+        jbyte argSize = argSizes[i];
+        ffi_cif *cif = (ffi_cif *) (intptr_t) ffi_cifs[i];
+        JNINativeMethod *jniMethods_i = &jniMethods[i];
 
-            prep_jni_cif(jni_cif, jni_sig, argSizes[i]);
-
-            struct jni_call_data *call_data = malloc(sizeof(struct jni_call_data));
-            call_data->cif = (ffi_cif *) (intptr_t) ffi_cifs[i];
-            call_data->symaddr = symaddr;
-
-            ffi_status status = ffi_prep_closure_loc(ffi_closure, jni_cif, &jni_call_handler, call_data, jni_func);
-            if (status == FFI_OK) {
-                JNINativeMethod jniMethod = {.name = (char *) symstr, .signature = (char *) jni_sig, .fnPtr = jni_func};
-                jniMethods[i] =
-                        jniMethod;
-            } else {
-                fprintf(stderr,
-                        "ffi_prep_closure_loc failed: %d\n", status);
-                exit(1);
-            }
-        }
-        else {
-            fprintf(stderr,
-                    "ffi_closure_alloc failed: %s\n", symstr);
-            exit(1);
-        }
+        create_closure(symstr, symaddr, jni_sig, argSize, cif, jniMethods_i);
     }
 
-    (*env)->
-            RegisterNatives(env, headerClazz, jniMethods, symbolsCount
-    );
+
+    (*env)->RegisterNatives(env, headerClazz, jniMethods, symbolsCount);
 }
 
 JNIEXPORT
