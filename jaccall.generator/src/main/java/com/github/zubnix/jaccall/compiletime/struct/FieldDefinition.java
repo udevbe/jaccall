@@ -1,51 +1,39 @@
 package com.github.zubnix.jaccall.compiletime.struct;
 
 
+import com.squareup.javapoet.CodeBlock;
+
 public class FieldDefinition {
 
 
-    private final String   ffiTypeCode;
-    private final Object[] ffiTypeCodeArgs;
-    private final String offsetCode;
-    private final Object[] offsetCodeArgs;
-    private final String   sizeOfCode;
-    private final Object[] sizeOfCodeArgs;
+    private final CodeBlock ffiTypeCode;
+    private final CodeBlock offsetCode;
+    private final CodeBlock sizeOfCode;
+    private final int       cardinality;
 
-    public FieldDefinition(final String ffiTypeCode,
-                           final Object[] ffiTypeCodeArgs,
-                           final String offsetCode,
-                           final Object[] offsetCodeArgs,
-                           final String sizeOfCode,
-                           final Object[] sizeOfCodeArgs) {
+    public FieldDefinition(final CodeBlock ffiTypeCode,
+                           final CodeBlock offsetCode,
+                           final CodeBlock sizeOfCode,
+                           final int cardinality) {
         this.ffiTypeCode = ffiTypeCode;
-        this.ffiTypeCodeArgs = ffiTypeCodeArgs;
         this.offsetCode = offsetCode;
-        this.offsetCodeArgs = offsetCodeArgs;
         this.sizeOfCode = sizeOfCode;
-        this.sizeOfCodeArgs = sizeOfCodeArgs;
+        this.cardinality = cardinality;
     }
 
-    public String getFfiTypeCode() {
+    public CodeBlock getFfiTypeCode() {
         return this.ffiTypeCode;
     }
 
-    public String getOffsetCode() {
+    public CodeBlock getOffsetCode() {
         return this.offsetCode;
     }
 
-    public Object[] getOffsetCodeArgs() {
-        return this.offsetCodeArgs;
-    }
-
-    public Object[] getFfiTypeCodeArgs() {
-        return this.ffiTypeCodeArgs;
-    }
-
-    public String getSizeOfCode() {
+    public CodeBlock getSizeOfCode() {
         return this.sizeOfCode;
     }
 
-    public Object[] getSizeOfCodeArgs() {
-        return this.sizeOfCodeArgs;
+    public int getCardinality() {
+        return this.cardinality;
     }
 }

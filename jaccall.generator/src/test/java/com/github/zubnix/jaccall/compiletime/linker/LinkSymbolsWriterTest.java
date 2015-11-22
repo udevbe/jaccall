@@ -35,10 +35,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},new byte[]{1},new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_VOID,JNI.FFI_TYPE_SINT8)},new String[]{\"(B)V\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 1\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_VOID, JNI.FFI_TYPE_SINT8)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"(B)V\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -67,13 +80,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{1},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_VOID,JNI.FFI_TYPE_UINT8)},\n" +
-                                                                       "        new String[]{\"(B)V\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 1\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_VOID, JNI.FFI_TYPE_UINT8)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"(B)V\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -101,13 +124,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{1},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_VOID,JNI.FFI_TYPE_SINT16)},\n" +
-                                                                       "        new String[]{\"(S)V\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 1\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_VOID, JNI.FFI_TYPE_SINT16)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"(S)V\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -136,13 +169,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{1},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_VOID,JNI.FFI_TYPE_UINT16)},\n" +
-                                                                       "        new String[]{\"(S)V\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 1\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_VOID, JNI.FFI_TYPE_UINT16)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"(S)V\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -170,13 +213,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{1},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_VOID,JNI.FFI_TYPE_SINT32)},\n" +
-                                                                       "        new String[]{\"(I)V\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 1\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_VOID, JNI.FFI_TYPE_SINT32)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"(I)V\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -205,13 +258,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{1},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_VOID,JNI.FFI_TYPE_UINT32)},\n" +
-                                                                       "        new String[]{\"(I)V\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 1\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_VOID, JNI.FFI_TYPE_UINT32)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"(I)V\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -239,13 +302,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{1},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_VOID,JNI.FFI_TYPE_SLONG)},\n" +
-                                                                       "        new String[]{\"(J)V\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 1\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_VOID, JNI.FFI_TYPE_SLONG)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"(J)V\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -274,13 +347,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{1},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_VOID,JNI.FFI_TYPE_ULONG)},\n" +
-                                                                       "        new String[]{\"(J)V\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 1\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_VOID, JNI.FFI_TYPE_ULONG)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"(J)V\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -309,13 +392,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{1},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_VOID,JNI.FFI_TYPE_SINT64)},\n" +
-                                                                       "        new String[]{\"(J)V\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 1\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_VOID, JNI.FFI_TYPE_SINT64)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"(J)V\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -345,13 +438,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{1},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_VOID,JNI.FFI_TYPE_UINT64)},\n" +
-                                                                       "        new String[]{\"(J)V\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 1\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_VOID, JNI.FFI_TYPE_UINT64)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"(J)V\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -379,13 +482,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{1},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_VOID,JNI.FFI_TYPE_FLOAT)},\n" +
-                                                                       "        new String[]{\"(F)V\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 1\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_VOID, JNI.FFI_TYPE_FLOAT)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"(F)V\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -413,13 +526,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{1},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_VOID,JNI.FFI_TYPE_DOUBLE)},\n" +
-                                                                       "        new String[]{\"(D)V\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 1\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_VOID, JNI.FFI_TYPE_DOUBLE)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"(D)V\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -448,13 +571,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{1},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_VOID,JNI.FFI_TYPE_POINTER)},\n" +
-                                                                       "        new String[]{\"(J)V\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 1\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_VOID, JNI.FFI_TYPE_POINTER)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"(J)V\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -485,13 +618,23 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import com.github.zubnix.jaccall.compiletime.linker.TestStruct;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{1},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_VOID,TestStruct.FFI_TYPE)},\n" +
-                                                                       "        new String[]{\"(J)V\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 1\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_VOID, TestStruct.FFI_TYPE)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"(J)V\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -522,13 +665,23 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import com.github.zubnix.jaccall.compiletime.linker.TestUnion;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{1},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_VOID,TestUnion.FFI_TYPE)},\n" +
-                                                                       "        new String[]{\"(J)V\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 1\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_VOID, TestUnion.FFI_TYPE)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"(J)V\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -556,13 +709,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{0},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_SINT8)},\n" +
-                                                                       "        new String[]{\"()B\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 0\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_SINT8)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"()B\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -592,13 +755,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{0},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_UINT8)},\n" +
-                                                                       "        new String[]{\"()B\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 0\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_UINT8)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"()B\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -626,13 +799,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{0},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_SINT16)},\n" +
-                                                                       "        new String[]{\"()S\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 0\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_SINT16)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"()S\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -662,13 +845,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{0},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_UINT16)},\n" +
-                                                                       "        new String[]{\"()S\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 0\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_UINT16)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"()S\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -696,13 +889,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{0},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_SINT32)},\n" +
-                                                                       "        new String[]{\"()I\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 0\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_SINT32)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"()I\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -732,13 +935,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{0},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_UINT32)},\n" +
-                                                                       "        new String[]{\"()I\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 0\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_UINT32)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"()I\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -766,13 +979,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{0},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_SLONG)},\n" +
-                                                                       "        new String[]{\"()J\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 0\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_SLONG)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"()J\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -802,13 +1025,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{0},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_ULONG)},\n" +
-                                                                       "        new String[]{\"()J\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 0\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_ULONG)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"()J\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -838,13 +1071,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{0},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_SINT64)},\n" +
-                                                                       "        new String[]{\"()J\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 0\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_SINT64)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"()J\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -875,13 +1118,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{0},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_UINT64)},\n" +
-                                                                       "        new String[]{\"()J\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 0\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_UINT64)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"()J\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -909,13 +1162,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{0},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_FLOAT)},\n" +
-                                                                       "        new String[]{\"()F\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 0\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_FLOAT)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"()F\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -943,13 +1206,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{0},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_DOUBLE)},\n" +
-                                                                       "        new String[]{\"()D\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 0\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_DOUBLE)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"()D\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -979,13 +1252,23 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{0},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_POINTER)},\n" +
-                                                                       "        new String[]{\"()J\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 0\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(JNI.FFI_TYPE_POINTER)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"()J\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -1017,13 +1300,23 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import com.github.zubnix.jaccall.compiletime.linker.TestStruct;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
-                                                                       "    super(new String[]{\"doStaticTest\"},\n" +
-                                                                       "        new byte[]{0},\n" +
-                                                                       "        new long[]{JNI.ffi_callInterface(TestStruct.FFI_TYPE)},\n" +
-                                                                       "        new String[]{\"()J\"});\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"doStaticTest\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*doStaticTest*/ 0\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*doStaticTest*/ JNI.ffi_callInterface(TestStruct.FFI_TYPE)\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*doStaticTest*/ \"()J\"\n" +
+                                                                       "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
@@ -1061,7 +1354,9 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import com.github.zubnix.jaccall.compiletime.linker.TestStruct;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
                                                                        "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +

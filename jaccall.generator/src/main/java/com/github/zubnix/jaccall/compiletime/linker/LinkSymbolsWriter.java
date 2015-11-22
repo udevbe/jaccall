@@ -11,11 +11,13 @@ import com.github.zubnix.jaccall.Struct;
 import com.github.zubnix.jaccall.Unsigned;
 import com.google.auto.common.BasicAnnotationProcessor;
 import com.google.common.collect.SetMultimap;
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
+import javax.annotation.Generated;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
@@ -169,8 +171,12 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
                                                                    statementTypes.toArray())
                                                      .build();
 
-
+            final AnnotationSpec annotationSpec = AnnotationSpec.builder(Generated.class)
+                                                                .addMember("value",
+                                                                           '"' + LinkerGenerator.class.getName() + '"')
+                                                                .build();
             final TypeSpec typeSpec = TypeSpec.classBuilder(element.getSimpleName() + "_Jaccall_LinkSymbols")
+                                              .addAnnotation(annotationSpec)
                                               .addModifiers(Modifier.PUBLIC)
                                               .addModifiers(Modifier.FINAL)
                                               .superclass(LinkSymbols.class)
