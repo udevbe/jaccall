@@ -2,7 +2,7 @@ package com.github.zubnix.jaccall.compiletime.linker;
 
 
 import com.github.zubnix.jaccall.ByVal;
-import com.github.zubnix.jaccall.CType;
+import com.github.zubnix.jaccall.JNI;
 import com.github.zubnix.jaccall.Lib;
 import com.github.zubnix.jaccall.LinkSymbols;
 import com.github.zubnix.jaccall.Lng;
@@ -11,6 +11,7 @@ import com.github.zubnix.jaccall.Struct;
 import com.github.zubnix.jaccall.Unsigned;
 import com.google.auto.common.BasicAnnotationProcessor;
 import com.google.common.collect.SetMultimap;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
@@ -61,10 +62,12 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
 
             final List<String> methodNames = new LinkedList<>();
             final List<Byte> argSizes = new LinkedList<>();
-            final List<String> jaccallSignatures = new LinkedList<>();
+            LinkedList<Object> statementTypes = new LinkedList<>();
+            final List<String> ffiSignatures = new LinkedList<>();
             final List<String> jniSignatures = new LinkedList<>();
 
             final TypeElement typeElement = (TypeElement) element;
+
 
             for (final ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
                 //gather link symbol information for each native method
@@ -74,8 +77,9 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
                                     methodNames);
                     parseArgSize(executableElement,
                                  argSizes);
-                    parseJaccallSignature(executableElement,
-                                          jaccallSignatures);
+                    parseFfiSignature(executableElement,
+                                      ffiSignatures,
+                                      statementTypes);
                     parseJniSignature(executableElement,
                                       jniSignatures);
                 }
@@ -90,34 +94,41 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
             methodNamesArray.append("new String[]{");
             final StringBuilder argSizesArray = new StringBuilder();
             argSizesArray.append("new byte[]{");
-            final StringBuilder jaccallSignaturesArray = new StringBuilder();
-            jaccallSignaturesArray.append("new String[]{");
+            final StringBuilder ffiSignaturesArray = new StringBuilder();
+            ffiSignaturesArray.append("new long[]{");
             final StringBuilder jniSignaturesArray = new StringBuilder();
             jniSignaturesArray.append("new String[]{");
 
+            //first element
             methodNamesArray.append('"')
                             .append(methodNames.get(0))
                             .append('"');
             argSizesArray.append(argSizes.get(0));
-            jaccallSignaturesArray.append('"')
-                                  .append(jaccallSignatures.get(0))
-                                  .append('"');
+            statementTypes.addFirst(JNI.class);
+            ffiSignaturesArray.append("$T.ffi_callInterface(")
+                              .append(ffiSignatures.get(0))
+                              .append(')');
             jniSignaturesArray.append('"')
                               .append(jniSignatures.get(0))
                               .append('"');
 
+            //subsequent elements
             for (int i = 1, methodNamesSize = methodNames.size(); i < methodNamesSize; i++) {
                 methodNamesArray.append(',')
+                                .append('\n')
                                 .append('"')
                                 .append(methodNames.get(i))
                                 .append('"');
                 argSizesArray.append(',')
+                             .append('\n')
                              .append(argSizes.get(i));
-                jaccallSignaturesArray.append(',')
-                                      .append('"')
-                                      .append(jaccallSignatures.get(i))
-                                      .append('"');
+                ffiSignaturesArray.append(',')
+                                  .append('\n')
+                                  .append("$T.ffi_callInterface(")
+                                  .append(ffiSignatures.get(i))
+                                  .append(')');
                 jniSignaturesArray.append(',')
+                                  .append('\n')
                                   .append('"')
                                   .append(jniSignatures.get(i))
                                   .append('"');
@@ -125,17 +136,18 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
 
             methodNamesArray.append('}');
             argSizesArray.append('}');
-            jaccallSignaturesArray.append('}');
+            ffiSignaturesArray.append('}');
             jniSignaturesArray.append('}');
 
 
             final MethodSpec constructor = MethodSpec.constructorBuilder()
                                                      .addModifiers(Modifier.PUBLIC)
                                                      .addStatement("super(" +
-                                                                   methodNamesArray.toString() + ','
-                                                                   + argSizesArray.toString() + ','
-                                                                   + jaccallSignaturesArray.toString() + ','
-                                                                   + jniSignaturesArray.toString() + ")")
+                                                                   methodNamesArray.toString() + ',' + '\n'
+                                                                   + argSizesArray.toString() + ',' + '\n'
+                                                                   + ffiSignaturesArray.toString() + ',' + '\n'
+                                                                   + jniSignaturesArray.toString() + ")",
+                                                                   statementTypes.toArray())
                                                      .build();
 
 
@@ -212,20 +224,30 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
     }
 
 
-    private void parseJaccallSignature(final ExecutableElement executableElement,
-                                       final List<String> jaccallSignatures) {
-        final StringBuilder jaccallSignature = new StringBuilder();
+    private void parseFfiSignature(final ExecutableElement executableElement,
+                                   final List<String> ffiSignatures,
+                                   final List<Object> statementTypes) {
+        final StringBuilder ffiSignature = new StringBuilder();
+
+        //return type
+        ffiSignature.append(parseFfiString(executableElement.getReturnType(),
+                                           executableElement,
+                                           statementTypes));
+
+        //arguments
         for (final VariableElement variableElement : executableElement.getParameters()) {
-            jaccallSignature.append(parseJaccallString(variableElement.asType(),
-                                                       variableElement));
+            ffiSignature.append(',')
+                        .append(parseFfiString(variableElement.asType(),
+                                               variableElement,
+                                               statementTypes));
         }
-        jaccallSignature.append(parseJaccallString(executableElement.getReturnType(),
-                                                   executableElement));
-        jaccallSignatures.add(jaccallSignature.toString());
+
+        ffiSignatures.add(ffiSignature.toString());
     }
 
-    private String parseJaccallString(final TypeMirror typeMirror,
-                                      final Element element) {
+    private String parseFfiString(final TypeMirror typeMirror,
+                                  final Element element,
+                                  final List<Object> statementTypes) {
 
         Map<? extends ExecutableElement, ? extends AnnotationValue> unsigned = null;
         Map<? extends ExecutableElement, ? extends AnnotationValue> lng      = null;
@@ -256,42 +278,54 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
         final TypeKind kind = typeMirror.getKind();
         switch (kind) {
             case BYTE:
-                return unsigned == null ? "c" : "C";
+                statementTypes.add(JNI.class);
+                return unsigned == null ? "$T.FFI_TYPE_SINT8" : "$T.FFI_TYPE_UINT8";
             case SHORT:
-                return unsigned == null ? "s" : "S";
+                statementTypes.add(JNI.class);
+                return unsigned == null ? "$T.FFI_TYPE_SINT16" : "$T.FFI_TYPE_UINT16";
             case INT:
-                return unsigned == null ? "i" : "I";
+                statementTypes.add(JNI.class);
+                return unsigned == null ? "$T.FFI_TYPE_SINT32" : "$T.FFI_TYPE_UINT32";
             case LONG:
                 if (ptr != null) {
                     //it's a pointer
-                    return "p";
+                    statementTypes.add(JNI.class);
+                    return "$T.FFI_TYPE_POINTER";
                 }
                 else if (byVal != null) {
                     //it's a struct by value
-                    return parseByVal(byVal);
+                    return parseByVal(byVal,
+                                      statementTypes);
                 }
                 else if (lng != null && unsigned != null) {
                     //it's an unsigned long long
-                    return "L";
+                    statementTypes.add(JNI.class);
+                    return "$T.FFI_TYPE_UINT64";
                 }
                 else if (lng != null) {
                     //it's a signed long long
-                    return "l";
+                    statementTypes.add(JNI.class);
+                    return "$T.FFI_TYPE_SINT64";
                 }
                 else if (unsigned != null) {
                     //it's an unsigned long
-                    return "J";
+                    statementTypes.add(JNI.class);
+                    return "$T.FFI_TYPE_ULONG";
                 }
                 else {
                     //it's an signed long
-                    return "j";
+                    statementTypes.add(JNI.class);
+                    return "$T.FFI_TYPE_SLONG";
                 }
             case FLOAT:
-                return "f";
+                statementTypes.add(JNI.class);
+                return "$T.FFI_TYPE_FLOAT";
             case DOUBLE:
-                return "d";
+                statementTypes.add(JNI.class);
+                return "$T.FFI_TYPE_DOUBLE";
             case VOID:
-                return "v";
+                statementTypes.add(JNI.class);
+                return "$T.FFI_TYPE_VOID";
             default:
                 this.linkerGenerator.getProcessingEnvironment()
                                     .getMessager()
@@ -302,7 +336,8 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
         }
     }
 
-    private String parseByVal(final Map<? extends ExecutableElement, ? extends AnnotationValue> byVal) {
+    private String parseByVal(final Map<? extends ExecutableElement, ? extends AnnotationValue> byVal,
+                              final List<Object> statementTypes) {
         final StringBuilder structByVal = new StringBuilder();
         for (final Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> annotationEntry : byVal.entrySet()) {
             if (annotationEntry.getKey()
@@ -314,7 +349,8 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
 
                 parseStructFields(annotationEntry.getKey(),
                                   structByVal,
-                                  structClass);
+                                  structClass,
+                                  statementTypes);
             }
         }
         return structByVal.toString();
@@ -322,12 +358,14 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
 
     private void parseStructFields(final Element element,
                                    final StringBuilder structByVal,
-                                   final TypeMirror structClass) {
-        final DeclaredType structTypeType = (DeclaredType) structClass;
-        if (structTypeType.asElement()
-                          .getSimpleName()
-                          .toString()
-                          .equals("StructType")) {
+                                   final TypeMirror structClass,
+                                   final List<Object> statementTypes) {
+        final DeclaredType structTypeType    = (DeclaredType) structClass;
+        final Element      structTypeElement = structTypeType.asElement();
+
+        final String structTypeName = structTypeElement.getSimpleName()
+                                                       .toString();
+        if (structTypeName.equals("StructType")) {
             this.linkerGenerator.getProcessingEnvironment()
                                 .getMessager()
                                 .printMessage(Diagnostic.Kind.ERROR,
@@ -335,132 +373,21 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
                                               element);
         }
 
-        for (final AnnotationMirror annotationMirror : structTypeType.asElement()
-                                                                     .getAnnotationMirrors()) {
-            if (annotationMirror.getAnnotationType()
-                                .asElement()
-                                .getSimpleName()
-                                .toString()
-                                .equals(STRUCT)) {
-
-                Boolean union = false;
-                for (final Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> structAttribute : annotationMirror.getElementValues()
-                                                                                                                               .entrySet()) {
-                    if (structAttribute.getKey()
-                                       .getSimpleName()
-                                       .toString()
-                                       .equals("union")) {
-                        union = (Boolean) structAttribute.getValue()
-                                                         .getValue();
-                        break;
-                    }
-                }
-
-                if (union) {
-                    structByVal.append('u');
-                }
-                else {
-                    structByVal.append('t');
-                }
-
-                for (final Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> structAttribute : annotationMirror.getElementValues()
-                                                                                                                               .entrySet()) {
-                    if (structAttribute.getKey()
-                                       .getSimpleName()
-                                       .toString()
-                                       .equals("value")) {
-                        final List<? extends AnnotationValue> fieldAnnotations = (List<? extends AnnotationValue>) structAttribute.getValue()
-                                                                                                                                  .getValue();
-                        if (fieldAnnotations.isEmpty()) {
-                            this.linkerGenerator.getProcessingEnvironment()
-                                                .getMessager()
-                                                .printMessage(Diagnostic.Kind.ERROR,
-                                                              "Emptry struct not allowed.",
-                                                              structAttribute.getKey());
-                        }
-
-                        parseFieldAnnotations(structByVal,
-                                              fieldAnnotations);
-                    }
-                }
-
-                structByVal.append(']');
-            }
+        final Set<PackageElement> packageElements = ElementFilter.packagesIn(Collections.singleton(structTypeElement.getEnclosingElement()));
+        if (packageElements.isEmpty()) {
+            this.linkerGenerator.getProcessingEnvironment()
+                                .getMessager()
+                                .printMessage(Diagnostic.Kind.ERROR,
+                                              "Declared struct type must be a top level type.",
+                                              element);
         }
-    }
 
-    private void parseFieldAnnotations(final StringBuilder structByVal,
-                                       final List<? extends AnnotationValue> fieldAnnotations) {
-        for (final AnnotationValue fieldAnnotation : fieldAnnotations) {
-            final AnnotationMirror fieldAnnotationMirror = (AnnotationMirror) fieldAnnotation.getValue();
-
-            VariableElement cType = null;
-            Integer cardinality = 1;
-            TypeMirror dataType = null;
-
-            for (final Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> fieldAttribute : fieldAnnotationMirror.getElementValues()
-                                                                                                                               .entrySet()) {
-                if (fieldAttribute.getKey()
-                                  .getSimpleName()
-                                  .toString()
-                                  .equals("type")) {
-
-                    cType = (VariableElement) fieldAttribute.getValue()
-                                                            .getValue();
-                }
-                else if (fieldAttribute.getKey()
-                                       .getSimpleName()
-                                       .toString()
-                                       .equals("cardinality")) {
-                    cardinality = (Integer) fieldAttribute.getValue()
-                                                          .getValue();
-                    if (cardinality < 1) {
-                        this.linkerGenerator.getProcessingEnvironment()
-                                            .getMessager()
-                                            .printMessage(Diagnostic.Kind.ERROR,
-                                                          "Cardinality of struct field must be at least 1.",
-                                                          fieldAttribute.getKey());
-                    }
-                }
-                else if (fieldAttribute.getKey()
-                                       .getSimpleName()
-                                       .toString()
-                                       .equals("dataType")) {
-                    dataType = (TypeMirror) fieldAttribute.getValue()
-                                                          .getValue();
-                }
-            }
-
-            for (int i = 0; i < cardinality; i++) {
-                parseFieldAnnotation(structByVal,
-                                     cType,
-                                     dataType);
-            }
-        }
-    }
-
-    private void parseFieldAnnotation(final StringBuilder structByVal,
-                                      final VariableElement cType,
-                                      final TypeMirror dataType) {
-
-        final char signature = CType.valueOf(cType.getSimpleName()
-                                                  .toString())
-                                    .getSignature();
-        if (signature == 't') {
-            if (dataType == null) {
-                this.linkerGenerator.getProcessingEnvironment()
-                                    .getMessager()
-                                    .printMessage(Diagnostic.Kind.ERROR,
-                                                  "Data type of struct must be specified.",
-                                                  cType);
-            }
-
-            parseStructFields(cType,
-                              structByVal,
-                              dataType);
-        }
-        else {
-            structByVal.append(signature);
+        for (PackageElement packageElement : packageElements) {
+            final String packageName = packageElement.getQualifiedName()
+                                                     .toString();
+            statementTypes.add(ClassName.get(packageName,
+                                             structTypeName));
+            structByVal.append("$T.FFI_TYPE");
         }
     }
 
