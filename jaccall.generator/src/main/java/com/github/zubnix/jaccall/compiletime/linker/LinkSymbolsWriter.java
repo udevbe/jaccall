@@ -62,13 +62,11 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
 
             final List<String> methodNames = new LinkedList<>();
             final List<Byte> argSizes = new LinkedList<>();
-            LinkedList<Object> statementTypes = new LinkedList<>();
+            final LinkedList<Object> statementTypes = new LinkedList<>();
             final List<String> ffiSignatures = new LinkedList<>();
             final List<String> jniSignatures = new LinkedList<>();
 
             final TypeElement typeElement = (TypeElement) element;
-
-
             for (final ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
                 //gather link symbol information for each native method
                 if (executableElement.getModifiers()
@@ -129,7 +127,7 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
                 methodNamesArray.append(',')
                                 .append('\n')
                                 .append('"')
-                                .append(methodNames.get(i))
+                                .append(methodName)
                                 .append('"');
                 argSizesArray.append(',')
                              .append('\n')
@@ -394,6 +392,9 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
                                               element);
         }
 
+        //TODO check if struct type element has a struct annotation
+        //structTypeElement.getAnnotationMirrors()
+
         final Set<PackageElement> packageElements = ElementFilter.packagesIn(Collections.singleton(structTypeElement.getEnclosingElement()));
         if (packageElements.isEmpty()) {
             this.linkerGenerator.getProcessingEnvironment()
@@ -403,7 +404,7 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
                                               element);
         }
 
-        for (PackageElement packageElement : packageElements) {
+        for (final PackageElement packageElement : packageElements) {
             final String packageName = packageElement.getQualifiedName()
                                                      .toString();
             statementTypes.add(ClassName.get(packageName,

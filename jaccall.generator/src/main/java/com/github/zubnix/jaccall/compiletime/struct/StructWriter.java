@@ -20,7 +20,6 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
     private final StructGenerator structGenerator;
 
     public StructWriter(final StructGenerator structGenerator) {
-
         this.structGenerator = structGenerator;
     }
 
@@ -34,7 +33,7 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
         //iterate fields and generate:
         // -offset
         // -determine correct java mapping for field & generate getter (and setter)
-        for (TypeElement typeElement : ElementFilter.typesIn(elementsByAnnotation.values())) {
+        for (final TypeElement typeElement : ElementFilter.typesIn(elementsByAnnotation.values())) {
             final List<? extends AnnotationMirror> annotationMirrors = typeElement.getAnnotationMirrors();
             parseStructAnnotations(typeElement,
                                    annotationMirrors);
@@ -43,27 +42,28 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
 
     private void parseStructAnnotations(final TypeElement typeElement,
                                         final List<? extends AnnotationMirror> annotationMirrors) {
-        for (AnnotationMirror annotationMirror : annotationMirrors) {
+        for (final AnnotationMirror annotationMirror : annotationMirrors) {
             if (annotationMirror.getAnnotationType()
                                 .asElement()
                                 .getSimpleName()
                                 .toString()
                                 .equals(Struct.class.getSimpleName())) {
-                for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : annotationMirror.getElementValues()
-                                                                                                               .entrySet()) {
+                for (final Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : annotationMirror.getElementValues()
+                                                                                                                     .entrySet()) {
                     if (entry.getKey()
                              .getSimpleName()
                              .toString()
                              .equals("value")) {
-                        List<? extends AnnotationValue> values = (List<? extends AnnotationValue>) entry.getValue()
-                                                                                                        .getValue();
-                        parseStructFields(typeElement,values);
+                        final List<? extends AnnotationValue> fields = (List<? extends AnnotationValue>) entry.getValue()
+                                                                                                              .getValue();
+                        parseStructFields(typeElement,
+                                          fields);
                     }
                     else if (entry.getKey()
                                   .getSimpleName()
                                   .toString()
                                   .equals("union")) {
-                        //TODO generate struct with zero offset for all fields if struct is true
+                        //TODO generate struct with zero offset for all fields if union is true
                     }
                 }
             }
@@ -73,7 +73,7 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
     }
 
     private void parseStructFields(final TypeElement typeElement,
-                                   final List<? extends AnnotationValue> values) {
+                                   final List<? extends AnnotationValue> fields) {
 
     }
 }
