@@ -9,6 +9,41 @@ import com.github.zubnix.jaccall.Unsigned;
 @Lib("testing")
 public class Testing {
 
+    public native byte charTest(byte value);
+
+    @Unsigned
+    public native byte unsignedCharTest(@Unsigned byte value);
+
+    public native short shortTest(short value);
+
+    @Unsigned
+    public native short unsignedShortTest(@Unsigned short value);
+
+    public native int intTest(int value);
+
+    @Unsigned
+    public native int unsignedIntTest(@Unsigned int value);
+
+    public native long longTest(long value);
+
+    @Unsigned
+    public native long unsignedLongTest(@Unsigned long value);
+
+    @Lng
+    public native long longLongTest(@Lng long value);
+
+    @Unsigned
+    @Lng
+    public native long unsignedLongLongTest(@Unsigned @Lng long value);
+
+    public native float floatTest(float value);
+
+    public native double doubleTest(double value);
+
+    @Ptr
+    public native long pointerTest(@Ptr long value);
+
+
     @ByVal(TestStruct.class)
     public static native long structTest(@Ptr(TestStruct.class) long tst,
                                          byte field0,

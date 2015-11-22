@@ -36,3 +36,29 @@ union testunion unionTest(union testunion *tst,
 
 union testunion *unionTest2(union testunion tst,
                             int field0);
+
+char charTest(char value);
+
+unsigned char unsignedCharTest(unsigned char value);
+
+short shortTest(short value);
+
+unsigned short unsignedShortTest(unsigned short value);
+
+int intTest(int value);
+
+unsigned int unsignedIntTest(unsigned int value);
+
+long longTest(long value);
+
+unsigned long unsignedLongTest(unsigned long value);
+
+long long longLongTest(long long value);
+
+unsigned long long unsignedLongLongTest(unsigned long long value);
+
+float floatTest(float value);
+
+double doubleTest(double value);
+
+void *pointerTest(void *value);

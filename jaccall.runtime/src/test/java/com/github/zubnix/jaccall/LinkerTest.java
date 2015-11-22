@@ -15,6 +15,7 @@ import java.io.InputStream;
 import static com.github.zubnix.jaccall.Pointer.malloc;
 import static com.github.zubnix.jaccall.Pointer.nref;
 import static com.github.zubnix.jaccall.Pointer.wrap;
+import static com.github.zubnix.jaccall.Size.sizeof;
 import static com.google.common.truth.Truth.assertThat;
 
 public class LinkerTest {
@@ -51,6 +52,198 @@ public class LinkerTest {
         }
         fos.close();
         libStream.close();
+    }
+
+    @Test
+    public void testChar() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        //when
+        byte       value    = Byte.MAX_VALUE;
+        final byte returned = new Testing().charTest(value);
+
+        //then
+        assertThat(value).isEqualTo(returned);
+    }
+
+    @Test
+    public void testUnsignedChar() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        //when
+        byte       value    = (byte) 0xFF;
+        final byte returned = new Testing().unsignedCharTest(value);
+
+        //then
+        assertThat(value).isEqualTo(returned);
+    }
+
+    @Test
+    public void testShort() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        //when
+        short       value    = Short.MAX_VALUE;
+        final short returned = new Testing().shortTest(value);
+
+        //then
+        assertThat(value).isEqualTo(returned);
+    }
+
+    @Test
+    public void testUnsignedShort() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        //when
+        short       value    = (short) 0xFFFF;
+        final short returned = new Testing().unsignedShortTest(value);
+
+        //then
+        assertThat(value).isEqualTo(returned);
+    }
+
+    @Test
+    public void testInt() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        //when
+        int       value    = Integer.MAX_VALUE;
+        final int returned = new Testing().intTest(value);
+
+        //then
+        assertThat(value).isEqualTo(returned);
+    }
+
+    @Test
+    public void testUnsignedInt() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        //when
+        int       value    = 0xFFFFFFFF;
+        final int returned = new Testing().unsignedIntTest(value);
+
+        //then
+        assertThat(value).isEqualTo(returned);
+    }
+
+    @Test
+    public void testLong() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        //when
+        long       value    = sizeof((CLong) null) == 8 ? Long.MAX_VALUE : Integer.MAX_VALUE;
+        final long returned = new Testing().longTest(value);
+
+        //then
+        assertThat(value).isEqualTo(returned);
+    }
+
+    @Test
+    public void testUnsignedLong() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        //when
+        long       value    = sizeof((CLong) null) == 8 ? 0xFFFFFFFFFFFFFFFFL : 0xFFFFFFFF;
+        final long returned = new Testing().unsignedLongTest(value);
+
+        //then
+        assertThat(value).isEqualTo(returned);
+    }
+
+    @Test
+    public void testLongLong() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        //when
+        long       value    = Long.MAX_VALUE;
+        final long returned = new Testing().longLongTest(value);
+
+        //then
+        assertThat(value).isEqualTo(returned);
+    }
+
+    @Test
+    public void testUnsignedLongLong() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        //when
+        long       value    = 0xFFFFFFFFFFFFFFFFL;
+        final long returned = new Testing().unsignedLongLongTest(value);
+
+        //then
+        assertThat(value).isEqualTo(returned);
+    }
+
+    @Test
+    public void testFloat() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+        //when
+        float       value    = Float.MAX_VALUE;
+        final float returned = new Testing().floatTest(value);
+
+        //then
+        assertThat(value).isEqualTo(returned);
+    }
+
+    @Test
+    public void testDouble() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+        //when
+        double       value    = Double.MAX_VALUE;
+        final double returned = new Testing().doubleTest(value);
+
+        //then
+        assertThat(value).isEqualTo(returned);
+    }
+
+    @Test
+    public void testPointer() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+        //when
+        long       value    = Long.MAX_VALUE;
+        final long returned = new Testing().pointerTest(value);
+
+        //then
+        assertThat(value).isEqualTo(returned);
     }
 
     @Test

@@ -83,3 +83,67 @@ union testunion *unionTest2(union testunion tst,
     some_test->field1 = tst.field1;
     return some_test;
 }
+
+char charTest(char value) {
+    return value;
+}
+
+unsigned char unsignedCharTest(unsigned char value) {
+    return value;
+
+}
+
+short shortTest(short value) {
+    return value;
+
+}
+
+unsigned short unsignedShortTest(unsigned short value) {
+    return value;
+
+}
+
+int intTest(int value) {
+    return value;
+
+}
+
+unsigned int unsignedIntTest(unsigned int value) {
+    return value;
+
+}
+
+long longTest(long value) {
+    return value;
+
+}
+
+unsigned long unsignedLongTest(unsigned long value) {
+    return value;
+
+}
+
+long long longLongTest(long long value) {
+    return value;
+
+}
+
+unsigned long long unsignedLongLongTest(unsigned long long value) {
+    return value;
+
+}
+
+float floatTest(float value) {
+    return value;
+
+}
+
+double doubleTest(double value) {
+    return value;
+
+}
+
+void *pointerTest(void *value) {
+    return value;
+
+}

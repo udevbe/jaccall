@@ -14,20 +14,20 @@ public abstract class TestUnion_Jaccall_StructType extends StructType {
     }
 
     public final int field0() {
-        return buffer().getInt(0);
+        return readInt(0);
     }
 
     public final void field0(int field0) {
-        buffer().putInt(0,
-                        field0);
+        writeInt(0,
+                 field0);
     }
 
     public final float field1() {
-        return buffer().getFloat(0);
+        return readFloat(0);
     }
 
-    public final void field1(float field0) {
-        buffer().putFloat(0,
-                          field0);
+    public final void field1(float field1) {
+        writeFloat(0,
+                   field1);
     }
 }
