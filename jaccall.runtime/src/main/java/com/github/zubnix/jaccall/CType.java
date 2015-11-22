@@ -27,5 +27,7 @@ public enum CType {
     /**
      * A struct or union by value.
      */
-    STRUCT;
+    STRUCT,
+
+    VOID;
 }

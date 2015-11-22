@@ -51,10 +51,10 @@ public final class JNI {
     /*
      * JNI ->
      */
-    static native ByteBuffer wrap(long address,
-                                  @Nonnegative long size);
+    public static native ByteBuffer wrap(long address,
+                                         @Nonnegative long size);
 
-    static native long unwrap(@Nonnull ByteBuffer byteBuffer);
+    public static native long unwrap(@Nonnull ByteBuffer byteBuffer);
     /*
      * <- JNI
      */
@@ -62,16 +62,16 @@ public final class JNI {
     /*
      * std ->
      */
-    static native long malloc(@Nonnegative int size);
+    public static native long malloc(@Nonnegative int size);
 
-    static native long calloc(@Nonnegative int nmemb,
-                              @Nonnegative int size);
+    public static native long calloc(@Nonnegative int nmemb,
+                                     @Nonnegative int size);
 
-    static native void free(long address);
+    public static native void free(long address);
 
-    static native int sizeOfPointer();
+    public static native int sizeOfPointer();
 
-    static native int sizeOfCLong();
+    public static native int sizeOfCLong();
 
     /*
      * <- std
@@ -81,45 +81,59 @@ public final class JNI {
      * FFI ->
      */
     public static final long FFI_TYPE_VOID = ffi_type_void();
+
     private static native long ffi_type_void();
 
     public static final long FFI_TYPE_SINT8 = ffi_type_sint8();
+
     private static native long ffi_type_sint8();
 
     public static final long FFI_TYPE_UINT8 = ffi_type_uint8();
+
     private static native long ffi_type_uint8();
 
     public static final long FFI_TYPE_SINT16 = ffi_type_sint16();
+
     private static native long ffi_type_sint16();
 
     public static final long FFI_TYPE_UINT16 = ffi_type_uint16();
+
     private static native long ffi_type_uint16();
 
     public static final long FFI_TYPE_SINT32 = ffi_type_sint32();
+
     private static native long ffi_type_sint32();
 
     public static final long FFI_TYPE_UINT32 = ffi_type_uint32();
+
     private static native long ffi_type_uint32();
 
     public static final long FFI_TYPE_SLONG = ffi_type_slong();
+
     private static native long ffi_type_slong();
 
     public static final long FFI_TYPE_ULONG = ffi_type_ulong();
+
     private static native long ffi_type_ulong();
 
     public static final long FFI_TYPE_SINT64 = ffi_type_sint64();
+
     private static native long ffi_type_sint64();
 
     public static final long FFI_TYPE_UINT64 = ffi_type_uint64();
+
     private static native long ffi_type_uint64();
 
     public static final long FFI_TYPE_FLOAT = ffi_type_float();
+
     private static native long ffi_type_float();
 
     public static final long FFI_TYPE_DOUBLE = ffi_type_double();
+
     private static native long ffi_type_double();
 
     public static final long FFI_TYPE_POINTER = ffi_type_pointer();
+
     private static native long ffi_type_pointer();
 
     public static native long ffi_type_struct(long... ffiTypes);
