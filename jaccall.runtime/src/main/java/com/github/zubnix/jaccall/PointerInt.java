@@ -32,8 +32,8 @@ final class PointerInt extends Pointer<Integer> {
     }
 
     @Override
-    protected void write(@Nonnull final ByteBuffer byteBuffer,
-                         @Nonnull final Integer... val) {
+    void write(@Nonnull final ByteBuffer byteBuffer,
+               @Nonnull final Integer... val) {
         writei(byteBuffer,
                0,
                val);

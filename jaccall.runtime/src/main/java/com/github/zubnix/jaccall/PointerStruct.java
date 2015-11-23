@@ -31,7 +31,7 @@ final class PointerStruct extends Pointer<StructType> {
     StructType dref(@Nonnegative final int index,
                     @Nonnull final ByteBuffer byteBuffer) {
         try {
-
+            //TODO it's probably ok to do this once and reuse the returned instance(?)
             final StructType structType = this.structClass.newInstance();
             final int structSize = sizeof(structType);
             byteBuffer.position(index * structSize);
@@ -47,17 +47,17 @@ final class PointerStruct extends Pointer<StructType> {
     }
 
     @Override
-    protected void write(@Nonnull final ByteBuffer byteBuffer,
-                         @Nonnull final StructType... val) {
+    void write(@Nonnull final ByteBuffer byteBuffer,
+               @Nonnull final StructType... val) {
         writei(byteBuffer,
                0,
                val);
     }
 
     @Override
-    public void writei(@Nonnull final ByteBuffer byteBuffer,
-                       @Nonnegative final int index,
-                       final StructType... val) {
+    void writei(@Nonnull final ByteBuffer byteBuffer,
+                @Nonnegative final int index,
+                final StructType... val) {
         if (val.length == 0) {
             return;
         }

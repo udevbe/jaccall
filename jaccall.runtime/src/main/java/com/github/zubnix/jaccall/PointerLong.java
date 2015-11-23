@@ -32,8 +32,8 @@ final class PointerLong extends Pointer<Long> {
     }
 
     @Override
-    protected void write(@Nonnull final ByteBuffer byteBuffer,
-                         @Nonnull final Long... val) {
+    void write(@Nonnull final ByteBuffer byteBuffer,
+               @Nonnull final Long... val) {
         writei(byteBuffer,
                0,
                val);

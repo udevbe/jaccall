@@ -31,8 +31,8 @@ public class PointerShort extends Pointer<Short> {
     }
 
     @Override
-    protected void write(@Nonnull final ByteBuffer byteBuffer,
-                         @Nonnull final Short... val) {
+    void write(@Nonnull final ByteBuffer byteBuffer,
+               @Nonnull final Short... val) {
         writei(byteBuffer,
                0,
                val);

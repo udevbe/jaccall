@@ -29,8 +29,8 @@ final class PointerByte extends Pointer<Byte> {
     }
 
     @Override
-    protected void write(@Nonnull final ByteBuffer byteBuffer,
-                         @Nonnull final Byte... val) {
+    void write(@Nonnull final ByteBuffer byteBuffer,
+               @Nonnull final Byte... val) {
         writei(byteBuffer,
                0,
                val);

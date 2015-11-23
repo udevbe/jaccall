@@ -71,8 +71,8 @@ final class PointerPointer<T> extends Pointer<Pointer<T>> {
 
     @SafeVarargs
     @Override
-    protected final void write(@Nonnull final ByteBuffer byteBuffer,
-                               @Nonnull final Pointer<T>... val) {
+    final void write(@Nonnull final ByteBuffer byteBuffer,
+                     @Nonnull final Pointer<T>... val) {
         writei(byteBuffer,
                0,
                val);

@@ -212,8 +212,16 @@ JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1callInterface
  * Method:    link
  * Signature: (Ljava/lang/String;Ljava/lang/Class;[Ljava/lang/String;[B[Ljava/lang/String;[J)V
  */
-JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_link
+JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_link__Ljava_lang_String_2Ljava_lang_Class_2_3Ljava_lang_String_2_3B_3Ljava_lang_String_2_3J
   (JNIEnv *, jclass, jstring, jclass, jobjectArray, jbyteArray, jobjectArray, jlongArray);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    link
+ * Signature: (Ljava/lang/Class;Ljava/lang/String;BLjava/lang/String;J)V
+ */
+JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_link__Ljava_lang_Class_2Ljava_lang_String_2BLjava_lang_String_2J
+  (JNIEnv *, jclass, jclass, jstring, jbyte, jstring, jlong);
 
 #ifdef __cplusplus
 }

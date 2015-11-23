@@ -1,18 +1,15 @@
 package com.github.zubnix.libtest;
 
-import com.github.zubnix.jaccall.CType;
+import com.github.zubnix.jaccall.ByVal;
 import com.github.zubnix.jaccall.Func;
-import com.github.zubnix.jaccall.Pointer;
+import com.github.zubnix.jaccall.FuncPtr;
+import com.github.zubnix.jaccall.Ptr;
+import com.github.zubnix.jaccall.Unsigned;
 
+@FuncPtr
+public interface TestFunction extends Func {
 
-@Func(ret = CType.INT,
-      args = {
-              CType.POINTER
-      })
-public class TestFunction extends TestFunction_Jaccall_CFunction {
-
-    @Override
-    public int _(final Pointer<?> arg0) {
-        return 0;
-    }
+    byte $(@Ptr long arg0,
+           @Unsigned int arg1,
+           @ByVal(TestStruct.class) long arg2);
 }

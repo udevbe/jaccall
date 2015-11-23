@@ -32,8 +32,8 @@ final class PointerDouble extends Pointer<Double> {
     }
 
     @Override
-    protected void write(@Nonnull final ByteBuffer byteBuffer,
-                         @Nonnull final Double... val) {
+    void write(@Nonnull final ByteBuffer byteBuffer,
+               @Nonnull final Double... val) {
         writei(byteBuffer,
                0,
                val);

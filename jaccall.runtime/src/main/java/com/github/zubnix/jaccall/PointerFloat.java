@@ -31,8 +31,8 @@ final class PointerFloat extends Pointer<Float> {
     }
 
     @Override
-    protected void write(@Nonnull final ByteBuffer byteBuffer,
-                         @Nonnull final Float... val) {
+    void write(@Nonnull final ByteBuffer byteBuffer,
+               @Nonnull final Float... val) {
         writei(byteBuffer,
                0,
                val);

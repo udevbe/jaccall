@@ -159,6 +159,12 @@ public final class JNI {
                             String[] jniSignatures,/*jni method signatures*/
                             long[] ffiCallInterfaces/*array of ffi type pointers*/
                            );
+
+    public static native void link(Class<?> wrapper,/*class with native method*/
+                                   String symbol,/*method name*/
+                                   byte argumentSize,/*number of arguments for the method*/
+                                   String jniSignature,/*jni method signature*/
+                                   long ffiCallInterface/*ffi call interface*/);
     /*
      * <- linker
      */

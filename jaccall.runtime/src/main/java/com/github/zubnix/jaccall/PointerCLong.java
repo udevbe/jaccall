@@ -46,8 +46,8 @@ final class PointerCLong extends Pointer<CLong> {
     }
 
     @Override
-    protected void write(@Nonnull final ByteBuffer byteBuffer,
-                         @Nonnull final CLong... val) {
+    void write(@Nonnull final ByteBuffer byteBuffer,
+               @Nonnull final CLong... val) {
         writei(byteBuffer,
                0,
                val);

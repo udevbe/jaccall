@@ -1,5 +1,6 @@
 package com.github.zubnix.jaccall;
 
+import com.github.zubnix.libtest.TestFunction;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
