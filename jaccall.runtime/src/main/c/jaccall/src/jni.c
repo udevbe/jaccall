@@ -375,8 +375,6 @@ JNIEXPORT
 jlong
 JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1union(JNIEnv *env, jclass clazz,
                                                             jlongArray ffi_types) {
-    //TODO unit test this. Not really convinced this libffi union mimic 'trick' works...
-
     ffi_type *struct_description = malloc(sizeof(ffi_type));
     jlong *struct_ctypes = (*env)->GetLongArrayElements(env, ffi_types, 0);
     int nro_fields = (*env)->GetArrayLength(env, ffi_types);
@@ -428,9 +426,7 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1callInterface(JNIEnv *env, jclas
     jlong *struct_ctypes = (*env)->GetLongArrayElements(env, ffi_types, 0);
     int nro_args = (*env)->GetArrayLength(env, ffi_types);
 
-    fprintf(stderr,"nro_args %i\n",nro_args);
-
-    ffi_type **args = nro_args ? malloc(sizeof(ffi_type *) * nro_args) : NULL;
+    ffi_type **args = malloc(sizeof(ffi_type *) * nro_args);
 
     int i = 0;
     for (; i < nro_args; i++) {
