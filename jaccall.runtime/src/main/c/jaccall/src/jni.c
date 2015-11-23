@@ -148,7 +148,7 @@ void jni_call_handler(ffi_cif *cif, void *ret, void **jargs, void *user_data) {
     unsigned int nargs = call_data->cif->nargs;
     ffi_type *rtype = call_data->cif->rtype;
 
-    void** args = nargs ? &jargs[2] : NULL;
+    void **args = nargs ? &jargs[2] : NULL;
 
     int i = 0;
     for (; i < nargs; i++) {
@@ -212,8 +212,6 @@ JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env, jcla
                                                                jbyteArray argumentSizes,
                                                                jobjectArray jniSignatures,
                                                                jlongArray ffiCallInterfaces) {
-
-//get handle to shared lib
     void *libaddr = find_libaddr(env, library);
     jbyte *argSizes = (*env)->GetByteArrayElements(env, argumentSizes, 0);
     jlong *ffi_cifs = (*env)->GetLongArrayElements(env, ffiCallInterfaces, 0);
@@ -444,16 +442,84 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1callInterface(JNIEnv *env, jclas
     return (jlong) (intptr_t) cif;
 }
 
-JNIEXPORT
-void
-JNICALL Java_com_github_zubnix_jaccall_JNI_linkFuncPtr (JNIEnv *env, jclass clazz, jclass wrapper, jstring symbol,
-                                                        jint arg_size, jstring jni_sig, jlong cif){
+static
+void func_ptr_handler(ffi_cif *jni_cif, void *ret, void **jargs, void *user_data) {
+
+    ffi_cif *cif = user_data;
+
+    ffi_type **arg_types = cif->arg_types;
+    unsigned int nargs = cif->nargs;
+    ffi_type *rtype = cif->rtype;
+
+    void *func_ptr = *((void **) jargs[2]);
+
+    void **args = nargs ? &jargs[3] : NULL;
+
+    int i = 0;
+    for (; i < nargs; i++) {
+        if (arg_types[i]->type == FFI_TYPE_STRUCT) {
+            //struct by value
+            args[i] = *((void **) args[i]);
+        }
+    }
+
+    if (rtype->type == FFI_TYPE_STRUCT) {
+        //struct by value
+        void *rval = malloc(rtype->size);
+        ffi_call(cif, FFI_FN(func_ptr), rval, args);
+        *((void **) ret) = rval;
+    } else {
+        ffi_call(cif, FFI_FN(func_ptr), ret, args);
+    }
 }
 
 static
-void callback_handler(ffi_cif *cif, void *ret, void **args, void *user_data) {
+inline
+void create_func_ptr_closure(const char *symstr,
+                             const char *jni_sig,
+                             jint argSize,
+                             ffi_cif *cif,
+                             JNINativeMethod *jniMethods) {
+    void *jni_func;
+    ffi_closure *closure = ffi_closure_alloc(sizeof(ffi_closure), &jni_func);
+    if (closure) {
 
+        ffi_cif *jni_cif = malloc(sizeof(ffi_cif));
+
+        prep_jni_cif(jni_cif, jni_sig, argSize);
+
+        ffi_status status = ffi_prep_closure_loc(closure, jni_cif, &func_ptr_handler, cif, jni_func);
+        if (status == FFI_OK) {
+            jniMethods->name = (char *) symstr;
+            jniMethods->signature = (char *) jni_sig;
+            jniMethods->fnPtr = jni_func;
+
+        } else {
+            fprintf(stderr,
+                    "ffi_prep_closure_loc failed: %d\n", status);
+            exit(1);
+        }
+    }
+    else {
+        fprintf(stderr,
+                "ffi_closure_alloc failed: %s\n", symstr);
+        exit(1);
+    }
 }
+
+JNIEXPORT
+void
+JNICALL Java_com_github_zubnix_jaccall_JNI_linkFuncPtr(JNIEnv *env, jclass clazz, jclass wrapper, jstring symbol,
+                                                       jint argSize, jstring jniSignature, jlong cif) {
+    const char *symstr = (*env)->GetStringUTFChars(env, symbol, 0);
+    const char *jni_sig = (*env)->GetStringUTFChars(env, jniSignature, 0);
+    JNINativeMethod *jniMethods = malloc(sizeof(JNINativeMethod));
+
+    create_func_ptr_closure(symstr, jni_sig, argSize, (ffi_cif *) (intptr_t) cif, jniMethods);
+
+    (*env)->RegisterNatives(env, wrapper, jniMethods, 1);
+}
+
 
 JNIEXPORT
 jlong
@@ -469,5 +535,5 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1closure(JNIEnv *env, jclass claz
 JNIEXPORT
 void
 JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1closure_1free(JNIEnv *env, jclass clazz, jlong closure) {
-    ffi_closure_free((void*)(intptr_t)closure);
+    //ffi_closure_free((void *) (intptr_t) closure);
 }

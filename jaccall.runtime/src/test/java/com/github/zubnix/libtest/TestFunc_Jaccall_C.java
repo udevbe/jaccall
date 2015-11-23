@@ -10,8 +10,8 @@ final class TestFunc_Jaccall_C extends PointerTestFunc {
     static {
         JNI.linkFuncPtr(TestFunc_Jaccall_C.class,
                         "_$",
-                        3,
-                        "(JIJ)B",
+                        4,
+                        "(JJIJ)B",
                         PointerTestFunc.FFI_CIF);
     }
 
