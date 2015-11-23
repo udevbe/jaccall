@@ -70,3 +70,9 @@ float floatTest(float value);
 double doubleTest(double value);
 
 void *pointerTest(void *value);
+
+void noArgsTest(void);
+
+typedef void(*funcptr)(void);
+
+funcptr noArgsFuncPtrTest(void);

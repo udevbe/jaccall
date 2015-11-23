@@ -148,6 +148,14 @@ void *pointerTest(void *value) {
 
 }
 
+void noArgsTest(void) {
+    //do nothing
+}
+
+funcptr noArgsFuncPtrTest(void) {
+    return &noArgsTest;
+}
+
 char function(struct test* arg0, unsigned int arg1, struct test arg2){
 
 }

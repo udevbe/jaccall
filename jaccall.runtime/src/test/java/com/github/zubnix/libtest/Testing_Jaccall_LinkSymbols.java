@@ -8,7 +8,6 @@ import javax.annotation.Generated;
 
 @Generated("com.github.zubnix.jaccall.compiletime.LinkerGenerator")
 public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
-
     public Testing_Jaccall_LinkSymbols() {
         super(new String[]{"charTest",
                            "unsignedCharTest",
@@ -27,6 +26,8 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                            "structTest2",
                            "unionTest",
                            "unionTest2",
+                           "noArgsTest",
+                           "noArgsFuncPtrTest",
                            "getFunctionPointerTest",
                            "functionPointerTest"},
               new byte[]{1,
@@ -47,8 +48,12 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                          3,
                          2,
                          0,
+                         0,
+                         0,
                          4},
-              new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_UINT8,
+              new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_SINT8,
+                                               JNI.FFI_TYPE_SINT8),
+                         JNI.ffi_callInterface(JNI.FFI_TYPE_UINT8,
                                                JNI.FFI_TYPE_UINT8),
                          JNI.ffi_callInterface(JNI.FFI_TYPE_SINT16,
                                                JNI.FFI_TYPE_SINT16),
@@ -95,7 +100,9 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                          JNI.ffi_callInterface(JNI.FFI_TYPE_POINTER,
                                                TestUnion.FFI_TYPE,
                                                JNI.FFI_TYPE_SINT32),
-                         JNI.ffi_callInterface(JNI.FFI_TYPE_SINT8),
+                         JNI.ffi_callInterface(JNI.FFI_TYPE_VOID),
+                         JNI.ffi_callInterface(JNI.FFI_TYPE_POINTER),
+                         JNI.ffi_callInterface(JNI.FFI_TYPE_POINTER),
                          JNI.ffi_callInterface(JNI.FFI_TYPE_SINT8,
                                                JNI.FFI_TYPE_POINTER,
                                                JNI.FFI_TYPE_POINTER,
@@ -118,6 +125,8 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                            "(JBSJJJF)J",
                            "(JIF)J",
                            "(JI)J",
+                           "()V",
+                           "()J",
                            "()J",
                            "(JJIJ)B"
               });
