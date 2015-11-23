@@ -604,7 +604,12 @@ java_func_ptr_handler(ffi_cif *jni_cif, void *ret, void **jargs, void *user_data
     for(; i < nargs; i++){
         //TODO cast to the correct *native* pointer type or we risk reading too much data when dereferencing(?).
         //TODO check if argument is a struct by value and get it's address.
-        //arguments[i] = *((jvalue*)jargs[i]);
+        if(jni_cif->arg_types[i]->type == FFI_TYPE_STRUCT){
+            arguments[i].j = (jlong)jargs[i];
+
+        } else {
+            arguments[i] = *((jvalue*)jargs[i]);
+        }
     }
 
     //TODO analyse cif for void/non void call & prepare **jargs for calling java method
@@ -618,8 +623,10 @@ java_func_ptr_handler(ffi_cif *jni_cif, void *ret, void **jargs, void *user_data
         case FFI_TYPE_SINT8:
             result.b = (*env)->CallByteMethodA(env, call_data->object, call_data->mid, arguments);
             break;
+            //TODO more return types
     }
 
+    //TODO handle struc type return
     *((jvalue *)ret) = result;
 
     if ((*env)->ExceptionCheck(env)) {
