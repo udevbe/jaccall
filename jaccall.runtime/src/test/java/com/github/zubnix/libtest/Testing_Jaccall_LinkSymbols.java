@@ -25,7 +25,9 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                            "structTest",
                            "structTest2",
                            "unionTest",
-                           "unionTest2"},
+                           "unionTest2",
+                           "noArgsTest",
+                           "noArgsFuncPtrTest"},
               new byte[]{1,
                          1,
                          1,
@@ -42,7 +44,9 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                          7,
                          7,
                          3,
-                         2},
+                         2,
+                         0,
+                         0},
               new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_SINT8,
                                                JNI.FFI_TYPE_SINT8),
                          JNI.ffi_callInterface(JNI.FFI_TYPE_UINT8,
@@ -91,7 +95,9 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                                                JNI.FFI_TYPE_FLOAT),
                          JNI.ffi_callInterface(JNI.FFI_TYPE_POINTER,
                                                TestUnion.FFI_TYPE,
-                                               JNI.FFI_TYPE_SINT32)},
+                                               JNI.FFI_TYPE_SINT32),
+                         JNI.ffi_callInterface(JNI.FFI_TYPE_VOID),
+                         JNI.ffi_callInterface(JNI.FFI_TYPE_POINTER)},
               new String[]{"(B)B",
                            "(B)B",
                            "(S)S",
@@ -108,7 +114,9 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                            "(JBSJJJF)J",
                            "(JBSJJJF)J",
                            "(JIF)J",
-                           "(JI)J"
+                           "(JI)J",
+                           "()V",
+                           "()J",
               });
     }
 }

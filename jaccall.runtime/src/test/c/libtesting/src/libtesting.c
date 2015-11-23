@@ -147,3 +147,11 @@ void *pointerTest(void *value) {
     return value;
 
 }
+
+void noArgsTest(void) {
+    //do nothing
+}
+
+funcptr noArgsFuncPtrTest(void) {
+    return &noArgsTest;
+}

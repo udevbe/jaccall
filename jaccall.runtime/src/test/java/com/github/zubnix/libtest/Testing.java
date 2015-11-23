@@ -70,4 +70,10 @@ public class Testing {
     @Ptr(TestUnion.class)
     public static native long unionTest2(@ByVal(TestUnion.class) long tst,
                                          int field0);
+
+    public native void noArgsTest();
+
+    @Ptr
+    public native long noArgsFuncPtrTest();
+
 }

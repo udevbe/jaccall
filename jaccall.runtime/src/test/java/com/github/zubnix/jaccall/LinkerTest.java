@@ -437,4 +437,32 @@ public class LinkerTest {
             unionPointer.close();
         }
     }
+
+    @Test
+    public void testNoArgs() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        //when
+        new Testing().noArgsTest();
+
+        //then
+        //no segfaults happen :)
+    }
+
+    @Test
+    public void testNoArgsFuncPtr() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        //when
+        final long funcPtr = new Testing().noArgsFuncPtrTest();
+
+        //then
+        assertThat(funcPtr).isNotEqualTo(0);
+    }
 }
