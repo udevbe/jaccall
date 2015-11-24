@@ -42,6 +42,7 @@ public final class CheckWellFormedStruct implements BasicAnnotationProcessor.Pro
     @Override
     public void process(final SetMultimap<Class<? extends Annotation>, Element> elementsByAnnotation) {
         for (final TypeElement typeElement : ElementFilter.typesIn(elementsByAnnotation.values())) {
+            //TODO should we allow non-top level structs and simply fail on name clash
             isTopLevel(typeElement);
             isClass(typeElement);
             isPublic(typeElement);

@@ -255,7 +255,6 @@ public class Testing {
         long $(@Ptr long value);
     }
 
-
     @ByVal(TestStruct.class)
     public static native long structTest(@Ptr(TestStruct.class) long tst,
                                          byte field0,
@@ -264,6 +263,18 @@ public class Testing {
                                          @Ptr(int.class) long field3,
                                          @Lng long embedded_field0,
                                          float embedded_field1);
+
+    @FuncPtr
+    interface StructTest {
+        @ByVal(TestStruct.class)
+        long $(@Ptr(TestStruct.class) long tst,
+               byte field0,
+               @Unsigned short field1,
+               @Ptr(int.class) long field2,
+               @Ptr(int.class) long field3,
+               @Lng long embedded_field0,
+               float embedded_field1);
+    }
 
     @Ptr(TestStruct.class)
     public static native long structTest2(@ByVal(TestStruct.class) long tst,
@@ -274,14 +285,41 @@ public class Testing {
                                           @Lng long embedded_field0,
                                           float embedded_field1);
 
+    @FuncPtr
+    interface StructTest2 {
+        @Ptr(TestStruct.class)
+        long $(@ByVal(TestStruct.class) long tst,
+               byte field0,
+               @Unsigned short field1,
+               @Ptr(int.class) long field2,
+               @Ptr(int.class) long field3,
+               @Lng long embedded_field0,
+               float embedded_field1);
+    }
+
     @ByVal(TestUnion.class)
     public static native long unionTest(@Ptr(TestUnion.class) long tst,
                                         int field0,
                                         float field1);
 
+    @FuncPtr
+    interface UnionTest {
+        @ByVal(TestUnion.class)
+        long $(@Ptr(TestUnion.class) long tst,
+               int field0,
+               float field1);
+    }
+
     @Ptr(TestUnion.class)
     public static native long unionTest2(@ByVal(TestUnion.class) long tst,
                                          int field0);
+
+    @FuncPtr
+    interface UnionTest2 {
+        @Ptr(TestUnion.class)
+        long $(@ByVal(TestUnion.class) long tst,
+               int field0);
+    }
 
     public native void noArgsTest();
 
