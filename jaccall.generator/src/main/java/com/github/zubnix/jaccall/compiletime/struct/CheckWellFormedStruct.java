@@ -42,10 +42,12 @@ public final class CheckWellFormedStruct implements BasicAnnotationProcessor.Pro
     @Override
     public void process(final SetMultimap<Class<? extends Annotation>, Element> elementsByAnnotation) {
         for (final TypeElement typeElement : ElementFilter.typesIn(elementsByAnnotation.values())) {
-            //TODO should we allow non-top level structs and simply fail on name clash
+            //TODO we should allow non-top level structs and simply fail on name clash
             isTopLevel(typeElement);
+
             isClass(typeElement);
             isPublic(typeElement);
+            isFinal(typeElement);
             isNotAbstract(typeElement);
             hasDefaultConstructor(typeElement);
             hasNonEmptyStructAnnotation(typeElement);
@@ -230,6 +232,17 @@ public final class CheckWellFormedStruct implements BasicAnnotationProcessor.Pro
                             .printMessage(Diagnostic.Kind.ERROR,
                                           "@Struct annotated type must contain a public no-arg constructor.",
                                           typeElement);
+    }
+
+    private void isFinal(final TypeElement typeElement) {
+        if (!typeElement.getModifiers()
+                        .contains(Modifier.FINAL)) {
+            this.structGenerator.getProcessingEnvironment()
+                                .getMessager()
+                                .printMessage(Diagnostic.Kind.ERROR,
+                                              "@Struct annotation must be placed on a final type.",
+                                              typeElement);
+        }
     }
 
     private void isPublic(final TypeElement typeElement) {

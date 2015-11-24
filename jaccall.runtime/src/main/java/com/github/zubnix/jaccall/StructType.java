@@ -2,8 +2,9 @@ package com.github.zubnix.jaccall;
 
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
-import static java.nio.ByteBuffer.allocate;
+import static java.nio.ByteBuffer.allocateDirect;
 
 public abstract class StructType {
 
@@ -22,7 +23,7 @@ public abstract class StructType {
 
     final ByteBuffer buffer() {
         if (this.buffer == null) {
-            buffer(allocate(this.size));
+            buffer(allocateDirect(this.size));
         }
         return this.buffer;
     }
@@ -30,6 +31,7 @@ public abstract class StructType {
     final void buffer(final ByteBuffer buffer) {
         buffer.rewind();
         buffer.clear();
+        buffer.order(ByteOrder.nativeOrder());
         this.buffer = buffer;
     }
 

@@ -602,18 +602,15 @@ public class FunctionPointerTest {
         tst.dref().field4().field0(embedded_field0);
         tst.dref().field4().field1(embedded_field1);
 
-        final TestStruct someTest = new TestStruct(){
-            {
-                field0(tst.dref().field0());
-                field1(tst.dref().field1());
-                field2().writei(0,tst.dref().field2().dref(0));
-                field2().writei(1,tst.dref().field2().dref(1));
-                field2().writei(2,tst.dref().field2().dref(2));
-                field3(tst.dref().field3());
-                field4().field0(tst.dref().field4().field0());
-                field4().field1(tst.dref().field4().field1());
-            }
-        };
+        final TestStruct someTest = new TestStruct();
+        someTest.field0(tst.dref().field0());
+        someTest.field1(tst.dref().field1());
+        someTest.field2().writei(0,tst.dref().field2().dref(0));
+        someTest.field2().writei(1,tst.dref().field2().dref(1));
+        someTest.field2().writei(2,tst.dref().field2().dref(2));
+        someTest.field3(tst.dref().field3());
+        someTest.field4().field0(tst.dref().field4().field0());
+        someTest.field4().field1(tst.dref().field4().field1());
 
         return Pointer.nref(someTest).address;
         //@formatter:on

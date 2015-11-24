@@ -27,7 +27,7 @@ public class StructWriterTest {
                                                                           "@Struct(value = {\n" +
                                                                           "             @Field(type = CHAR,\n" +
                                                                           "                    name = \"field0\")})\n" +
-                                                                          "public class TestStructChar extends TestStructChar_Jaccall_StructType{\n" +
+                                                                          "public final class TestStructChar extends TestStructChar_Jaccall_StructType{\n" +
                                                                           " \n" +
                                                                           "}");
         //when
@@ -81,7 +81,7 @@ public class StructWriterTest {
                                                                           "@Struct(value = {\n" +
                                                                           "             @Field(type = UNSIGNED_CHAR,\n" +
                                                                           "                    name = \"field0\")})\n" +
-                                                                          "public class TestStructUnsignedChar extends TestStructUnsignedChar_Jaccall_StructType{\n" +
+                                                                          "public final class TestStructUnsignedChar extends TestStructUnsignedChar_Jaccall_StructType{\n" +
                                                                           " \n" +
                                                                           "}");
         //when
@@ -135,7 +135,7 @@ public class StructWriterTest {
                                                                           "@Struct(value = {\n" +
                                                                           "             @Field(type = SHORT,\n" +
                                                                           "                    name = \"field0\")})\n" +
-                                                                          "public class TestStructShort extends TestStructShort_Jaccall_StructType{\n" +
+                                                                          "public final class TestStructShort extends TestStructShort_Jaccall_StructType{\n" +
                                                                           " \n" +
                                                                           "}");
         //when
@@ -190,7 +190,7 @@ public class StructWriterTest {
                                                                           "@Struct(value = {\n" +
                                                                           "             @Field(type = UNSIGNED_SHORT,\n" +
                                                                           "                    name = \"field0\")})\n" +
-                                                                          "public class TestStructUnsignedShort extends TestStructUnsignedShort_Jaccall_StructType{\n" +
+                                                                          "public final class TestStructUnsignedShort extends TestStructUnsignedShort_Jaccall_StructType{\n" +
                                                                           " \n" +
                                                                           "}");
         //when
@@ -245,7 +245,7 @@ public class StructWriterTest {
                                                                           "@Struct(value = {\n" +
                                                                           "             @Field(type = INT,\n" +
                                                                           "                    name = \"field0\")})\n" +
-                                                                          "public class TestStructInteger extends TestStructInteger_Jaccall_StructType{\n" +
+                                                                          "public final class TestStructInteger extends TestStructInteger_Jaccall_StructType{\n" +
                                                                           " \n" +
                                                                           "}");
         //when
@@ -300,7 +300,7 @@ public class StructWriterTest {
                                                                           "@Struct(value = {\n" +
                                                                           "             @Field(type = UNSIGNED_INT,\n" +
                                                                           "                    name = \"field0\")})\n" +
-                                                                          "public class TestStructUnsignedInteger extends TestStructUnsignedInteger_Jaccall_StructType{\n" +
+                                                                          "public final class TestStructUnsignedInteger extends TestStructUnsignedInteger_Jaccall_StructType{\n" +
                                                                           " \n" +
                                                                           "}");
         //when
