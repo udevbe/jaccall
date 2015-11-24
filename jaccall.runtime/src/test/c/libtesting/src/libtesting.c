@@ -221,3 +221,7 @@ float (*floatTestFunctionPointer(void))(float){
 double (*doubleTestFunctionPointer(void))(double){
     return &doubleTest;
 }
+
+void* (*pointerTestFunctionPointer(void))(void*){
+    return &pointerTest;
+}

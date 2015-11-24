@@ -9,6 +9,7 @@ import com.github.zubnix.libtest.PointerFooFunc;
 import com.github.zubnix.libtest.PointerIntFunc;
 import com.github.zubnix.libtest.PointerLongFunc;
 import com.github.zubnix.libtest.PointerLongLongFunc;
+import com.github.zubnix.libtest.PointerPointerFunc;
 import com.github.zubnix.libtest.PointerShortFunc;
 import com.github.zubnix.libtest.PointerUnsignedCharFunc;
 import com.github.zubnix.libtest.PointerUnsignedIntFunc;
@@ -460,7 +461,26 @@ public class FunctionPointerTest {
     public double doubleTest(final double value) { return value; }
 
     @Test
-    public void testPointerFunctionPointerFromJava() {}
+    public void testPointerFunctionPointerFromJava() {
+        //given
+        final PointerPointerFunc pointerLongTest = PointerPointerFunc.nref(new Testing.PointerFunc() {
+            @Override
+            public long $(final long value) {
+                return pointerTest(value);
+            }
+        });
+
+        final int value = 325364564;
+
+        //when
+        final long retVal = JNITestUtil.execPointerTest(pointerLongTest.address,
+                                                        value);
+
+        //then
+        assertThat(retVal).isEqualTo(value);
+    }
+
+    public long pointerTest(final long value) { return value; }
 
     @Test
     public void testStructFunctionPointerFromJava() {}
@@ -517,13 +537,13 @@ public class FunctionPointerTest {
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
-        final long            charTestFunctionPointer = new Testing().charTestFunctionPointer();
-        final PointerCharFunc pointerCharTest         = PointerCharFunc.wrapFunc(charTestFunctionPointer);
+        final long            pointer         = new Testing().charTestFunctionPointer();
+        final PointerCharFunc pointerCharFunc = PointerCharFunc.wrapFunc(pointer);
 
         final byte value = 123;
 
         //when
-        final byte retVal = pointerCharTest.$(value);
+        final byte retVal = pointerCharFunc.$(value);
 
         //then
         assertThat(retVal).isEqualTo(value);
@@ -536,13 +556,13 @@ public class FunctionPointerTest {
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
-        final long                    unsignedCharTestFunctionPointer = new Testing().unsignedCharTestFunctionPointer();
-        final PointerUnsignedCharFunc pointerCharTest                 = PointerUnsignedCharFunc.wrapFunc(unsignedCharTestFunctionPointer);
+        final long                    pointer                 = new Testing().unsignedCharTestFunctionPointer();
+        final PointerUnsignedCharFunc pointerUnsignedCharFunc = PointerUnsignedCharFunc.wrapFunc(pointer);
 
         final byte value = 123;
 
         //when
-        final byte retVal = pointerCharTest.$(value);
+        final byte retVal = pointerUnsignedCharFunc.$(value);
 
         //then
         assertThat(retVal).isEqualTo(value);
@@ -555,13 +575,13 @@ public class FunctionPointerTest {
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
-        final long             shortTestFunctionPointer = new Testing().shortTestFunctionPointer();
-        final PointerShortFunc pointerShortTest         = PointerShortFunc.wrapFunc(shortTestFunctionPointer);
+        final long             pointer          = new Testing().shortTestFunctionPointer();
+        final PointerShortFunc pointerShortFunc = PointerShortFunc.wrapFunc(pointer);
 
         final short value = 32536;
 
         //when
-        final short retVal = pointerShortTest.$(value);
+        final short retVal = pointerShortFunc.$(value);
 
         //then
         assertThat(retVal).isEqualTo(value);
@@ -574,13 +594,13 @@ public class FunctionPointerTest {
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
-        final long                     unsignedShortTestFunctionPointer = new Testing().unsignedShortTestFunctionPointer();
-        final PointerUnsignedShortFunc pointerUnsignedShortTest         = PointerUnsignedShortFunc.wrapFunc(unsignedShortTestFunctionPointer);
+        final long                     pointer                  = new Testing().unsignedShortTestFunctionPointer();
+        final PointerUnsignedShortFunc pointerUnsignedShortFunc = PointerUnsignedShortFunc.wrapFunc(pointer);
 
         final short value = 32536;
 
         //when
-        final short retVal = pointerUnsignedShortTest.$(value);
+        final short retVal = pointerUnsignedShortFunc.$(value);
 
         //then
         assertThat(retVal).isEqualTo(value);
@@ -593,13 +613,13 @@ public class FunctionPointerTest {
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
-        final long           intTestFunctionPointer = new Testing().intTestFunctionPointer();
-        final PointerIntFunc pointerIntTest         = PointerIntFunc.wrapFunc(intTestFunctionPointer);
+        final long           pointer        = new Testing().intTestFunctionPointer();
+        final PointerIntFunc pointerIntFunc = PointerIntFunc.wrapFunc(pointer);
 
         final int value = 32536987;
 
         //when
-        final int retVal = pointerIntTest.$(value);
+        final int retVal = pointerIntFunc.$(value);
 
         //then
         assertThat(retVal).isEqualTo(value);
@@ -612,13 +632,13 @@ public class FunctionPointerTest {
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
-        final long                   unsignedIntTestFunctionPointer = new Testing().unsignedIntTestFunctionPointer();
-        final PointerUnsignedIntFunc pointerIntTest                 = PointerUnsignedIntFunc.wrapFunc(unsignedIntTestFunctionPointer);
+        final long                   pointer                = new Testing().unsignedIntTestFunctionPointer();
+        final PointerUnsignedIntFunc pointerUnsignedIntFunc = PointerUnsignedIntFunc.wrapFunc(pointer);
 
         final int value = 32536987;
 
         //when
-        final int retVal = pointerIntTest.$(value);
+        final int retVal = pointerUnsignedIntFunc.$(value);
 
         //then
         assertThat(retVal).isEqualTo(value);
@@ -631,13 +651,13 @@ public class FunctionPointerTest {
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
-        final long            longTestFunctionPointer = new Testing().longTestFunctionPointer();
-        final PointerLongFunc pointerLongTest         = PointerLongFunc.wrapFunc(longTestFunctionPointer);
+        final long            pointer         = new Testing().longTestFunctionPointer();
+        final PointerLongFunc pointerLongFunc = PointerLongFunc.wrapFunc(pointer);
 
         final int value = 32536456;
 
         //when
-        final long retVal = pointerLongTest.$(value);
+        final long retVal = pointerLongFunc.$(value);
 
         //then
         assertThat(retVal).isEqualTo(value);
@@ -650,14 +670,14 @@ public class FunctionPointerTest {
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
-        final long                    longTestFunctionPointer = new Testing().unsignedLongTestFunctionPointer();
-        final PointerUnsignedLongFunc pointerLongTest         = PointerUnsignedLongFunc.wrapFunc(longTestFunctionPointer);
+        final long                    pointer                 = new Testing().unsignedLongTestFunctionPointer();
+        final PointerUnsignedLongFunc pointerUnsignedLongFunc = PointerUnsignedLongFunc.wrapFunc(pointer);
 
         final int value = 32536456;
 
         //when
 
-        final long retVal = pointerLongTest.$(value);
+        final long retVal = pointerUnsignedLongFunc.$(value);
 
         //then
         assertThat(retVal).isEqualTo(value);
@@ -670,13 +690,13 @@ public class FunctionPointerTest {
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
-        final long                longLongTestFunctionPointer = new Testing().longLongTestFunctionPointer();
-        final PointerLongLongFunc pointerLongLongFunc         = PointerLongLongFunc.wrapFunc(longLongTestFunctionPointer);
+        final long                pointer                               = new Testing().longLongTestFunctionPointer();
+        final PointerLongLongFunc poinpointerLongLongFuncerLongLongFunc = PointerLongLongFunc.wrapFunc(pointer);
 
         final long value = 325364567789456L;
 
         //when
-        final long retVal = pointerLongLongFunc.$(value);
+        final long retVal = poinpointerLongLongFuncerLongLongFunc.$(value);
 
         //then
         assertThat(retVal).isEqualTo(value);
@@ -689,13 +709,13 @@ public class FunctionPointerTest {
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
-        final long                        unsignedLongLongTestFunctionPointer = new Testing().unsignedLongLongTestFunctionPointer();
-        final PointerUnsignedLongLongFunc pointerUnsignedLongLongTest         = PointerUnsignedLongLongFunc.wrapFunc(unsignedLongLongTestFunctionPointer);
+        final long                        pointer                     = new Testing().unsignedLongLongTestFunctionPointer();
+        final PointerUnsignedLongLongFunc pointerUnsignedLongLongFunc = PointerUnsignedLongLongFunc.wrapFunc(pointer);
 
         final long value = 325364567789456L;
 
         //when
-        final long retVal = pointerUnsignedLongLongTest.$(value);
+        final long retVal = pointerUnsignedLongLongFunc.$(value);
 
         //then
         assertThat(retVal).isEqualTo(value);
@@ -708,13 +728,13 @@ public class FunctionPointerTest {
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
-        final long             floatTestFunctionPointer = new Testing().floatTestFunctionPointer();
-        final PointerFloatFunc pointerFloatTest         = PointerFloatFunc.wrapFunc(floatTestFunctionPointer);
+        final long             pointer          = new Testing().floatTestFunctionPointer();
+        final PointerFloatFunc pointerFloatFunc = PointerFloatFunc.wrapFunc(pointer);
 
         final float value = 32536456.123456F;
 
         //when
-        final float retVal = pointerFloatTest.$(value);
+        final float retVal = pointerFloatFunc.$(value);
 
         //then
         assertThat(retVal).isEqualTo(value);
@@ -727,20 +747,36 @@ public class FunctionPointerTest {
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
-        final long              doubleTestFunctionPointer = new Testing().doubleTestFunctionPointer();
-        final PointerDoubleFunc pointerFloatTest          = PointerDoubleFunc.wrapFunc(doubleTestFunctionPointer);
+        final long              pointer           = new Testing().doubleTestFunctionPointer();
+        final PointerDoubleFunc pointerDoubleFunc = PointerDoubleFunc.wrapFunc(pointer);
 
         final double value = 32536456159753.12345615975D;
 
         //when
-        final double retVal = pointerFloatTest.$(value);
+        final double retVal = pointerDoubleFunc.$(value);
 
         //then
         assertThat(retVal).isEqualTo(value);
     }
 
     @Test
-    public void testPointerFunctionPointerFromC() {}
+    public void testPointerFunctionPointerFromC() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        final long               pointer            = new Testing().pointerTestFunctionPointer();
+        final PointerPointerFunc pointerPointerFunc = PointerPointerFunc.wrapFunc(pointer);
+
+        final int value = 32536456;
+
+        //when
+        final long retVal = pointerPointerFunc.$(value);
+
+        //then
+        assertThat(retVal).isEqualTo(value);
+    }
 
     @Test
     public void testStructFunctionPointerFromC() {}

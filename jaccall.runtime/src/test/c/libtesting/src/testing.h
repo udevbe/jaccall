@@ -100,3 +100,5 @@ unsigned long long (*unsignedLongLongTestFunctionPointer(void))(unsigned long lo
 float (*floatTestFunctionPointer(void))(float);
 
 double (*doubleTestFunctionPointer(void))(double);
+
+void* (*pointerTestFunctionPointer(void))(void*);

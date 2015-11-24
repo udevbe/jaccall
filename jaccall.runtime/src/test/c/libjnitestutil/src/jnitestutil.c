@@ -228,3 +228,14 @@ jdouble
 JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execDoubleTest(JNIEnv *env, jclass clazz, jlong func_ptr, jdouble value){
     return ((double(*)(double))(intptr_t)func_ptr)((double)value);
 }
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execPointerTest
+ * Signature: (JJ)J
+ */
+JNIEXPORT
+jlong
+JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execPointerTest(JNIEnv *env, jclass clazz, jlong func_ptr, jlong value){
+    return (jlong)(intptr_t)((void*(*)(void*))(intptr_t)func_ptr)((void*)value);
+}

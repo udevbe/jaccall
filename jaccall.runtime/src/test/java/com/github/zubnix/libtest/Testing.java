@@ -171,7 +171,7 @@ public class Testing {
     public native long pointerTest(@Ptr long value);
 
     @Functor
-    interface PointerFunc {
+    public interface PointerFunc {
         @Ptr
         long $(@Ptr long value);
     }
