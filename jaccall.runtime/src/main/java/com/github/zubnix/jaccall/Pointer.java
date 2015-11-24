@@ -181,6 +181,23 @@ public abstract class Pointer<T> implements AutoCloseable {
     }
 
     /**
+     * Allocate size bytes and returns a typed pointer to
+     * the allocated memory.  The memory is not initialized.
+     *
+     * @param size
+     * @param type
+     *
+     * @return a new untyped pointer object that will use the newly allocated memory.
+     */
+    @Nonnull
+    public static <U> Pointer<U> malloc(@Nonnegative final int size,
+                                        @Nonnull final Class<U> type) {
+        return wrap(type,
+                    JNI.malloc(size));
+    }
+
+
+    /**
      * Allocate memory for an array of nmemb elements
      * of size bytes each and returns a pointer to the allocated memory.
      * The memory is set to zero.
@@ -194,6 +211,25 @@ public abstract class Pointer<T> implements AutoCloseable {
     public static Pointer<Void> calloc(@Nonnegative final int nmemb,
                                        @Nonnegative final int size) {
         return wrap(JNI.calloc(nmemb,
+                               size));
+    }
+
+    /**
+     * Allocate typed memory for an array of nmemb elements
+     * of size bytes each and returns a pointer to the allocated memory.
+     * The memory is set to zero.
+     *
+     * @param nmemb
+     * @param size
+     *
+     * @return a new untyped pointer object that will use the newly allocated memory.
+     */
+    @Nonnull
+    public static <U> Pointer<U> calloc(@Nonnegative final int nmemb,
+                                        @Nonnegative final int size,
+                                        @Nonnull final Class<U> type) {
+        return wrap(type,
+                    JNI.calloc(nmemb,
                                size));
     }
 
