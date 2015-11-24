@@ -1,20 +1,20 @@
 package com.github.zubnix.jaccall;
 
 
-import com.github.zubnix.libtest.PointerCharTest;
-import com.github.zubnix.libtest.PointerDoubleTest;
-import com.github.zubnix.libtest.PointerFloatTest;
-import com.github.zubnix.libtest.PointerIntTest;
-import com.github.zubnix.libtest.PointerLongLongTest;
-import com.github.zubnix.libtest.PointerLongTest;
-import com.github.zubnix.libtest.PointerShortTest;
-import com.github.zubnix.libtest.PointerTestFunc;
-import com.github.zubnix.libtest.PointerUnsignedCharTest;
-import com.github.zubnix.libtest.PointerUnsignedIntTest;
-import com.github.zubnix.libtest.PointerUnsignedLongLongTest;
-import com.github.zubnix.libtest.PointerUnsignedLongTest;
-import com.github.zubnix.libtest.PointerUnsignedShortTest;
-import com.github.zubnix.libtest.TestFunc;
+import com.github.zubnix.libtest.FooFunc;
+import com.github.zubnix.libtest.PointerCharFunc;
+import com.github.zubnix.libtest.PointerDoubleFunc;
+import com.github.zubnix.libtest.PointerFloatFunc;
+import com.github.zubnix.libtest.PointerFooFunc;
+import com.github.zubnix.libtest.PointerIntFunc;
+import com.github.zubnix.libtest.PointerLongFunc;
+import com.github.zubnix.libtest.PointerLongLongFunc;
+import com.github.zubnix.libtest.PointerShortFunc;
+import com.github.zubnix.libtest.PointerUnsignedCharFunc;
+import com.github.zubnix.libtest.PointerUnsignedIntFunc;
+import com.github.zubnix.libtest.PointerUnsignedLongFunc;
+import com.github.zubnix.libtest.PointerUnsignedLongLongFunc;
+import com.github.zubnix.libtest.PointerUnsignedShortFunc;
 import com.github.zubnix.libtest.TestStruct;
 import com.github.zubnix.libtest.TestUnion;
 import com.github.zubnix.libtest.Testing;
@@ -72,8 +72,8 @@ public class FunctionPointerTest {
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
-        final long            funcPtrAddr     = new Testing().getFunctionPointerTest();
-        final PointerTestFunc pointerTestFunc = PointerTestFunc.wrapFunc(funcPtrAddr);
+        final long           funcPtrAddr     = new Testing().getFunctionPointerTest();
+        final PointerFooFunc pointerTestFunc = PointerFooFunc.wrapFunc(funcPtrAddr);
 
         try (final Pointer<TestStruct> arg0 = Pointer.malloc(Size.sizeof(TestStruct.SIZE))
                                                      .castp(TestStruct.class);
@@ -114,8 +114,8 @@ public class FunctionPointerTest {
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
-        final PointerTestFunc pointerTestFunc = PointerTestFunc.nref(
-                new TestFunc() {
+        final PointerFooFunc pointerTestFunc = PointerFooFunc.nref(
+                new FooFunc() {
                     @Override
                     public byte $(@Ptr final long arg0,
                                   @Unsigned final int arg1,
@@ -185,9 +185,9 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void charTestFunctionPointerFromJava() {
+    public void testCharFunctionPointerFromJava() {
         //given
-        final PointerCharTest pointerCharTest = PointerCharTest.nref(new Testing.CharTest() {
+        final PointerCharFunc pointerCharTest = PointerCharFunc.nref(new Testing.CharFunc() {
             @Override
             public byte $(final byte value) {
                 return charTest(value);
@@ -209,9 +209,9 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void unsignedCharTestFunctionPointerFromJava() {
+    public void testUnsignedCharFunctionPointerFromJava() {
         //given
-        final PointerUnsignedCharTest pointerUnsignedCharTest = PointerUnsignedCharTest.nref(new Testing.UnsignedCharTest() {
+        final PointerUnsignedCharFunc pointerUnsignedCharTest = PointerUnsignedCharFunc.nref(new Testing.UnsignedCharFunc() {
             @Override
             public byte $(final byte value) {
                 return unsignedCharTest(value);
@@ -233,9 +233,9 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void shortTestFunctionPointerFromJava() {
+    public void testShortFunctionPointerFromJava() {
         //given
-        final PointerShortTest pointerShortTest = PointerShortTest.nref(new Testing.ShortTest() {
+        final PointerShortFunc pointerShortTest = PointerShortFunc.nref(new Testing.ShortFunc() {
             @Override
             public short $(final short value) {
                 return shortTest(value);
@@ -257,9 +257,9 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void unsignedShortTestFunctionPointerFromJava() {
+    public void testUnsignedShortFunctionPointerFromJava() {
         //given
-        final PointerUnsignedShortTest pointerUnsignedShortTest = PointerUnsignedShortTest.nref(new Testing.UnsignedShortTest() {
+        final PointerUnsignedShortFunc pointerUnsignedShortTest = PointerUnsignedShortFunc.nref(new Testing.UnsignedShortFunc() {
             @Override
             public short $(final short value) {
                 return unsignedShortTest(value);
@@ -281,9 +281,9 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void intTestFunctionPointerFromJava() {
+    public void testIntFunctionPointerFromJava() {
         //given
-        final PointerIntTest pointerIntTest = PointerIntTest.nref(new Testing.IntTest() {
+        final PointerIntFunc pointerIntTest = PointerIntFunc.nref(new Testing.IntFunc() {
             @Override
             public int $(final int value) {
                 return intTest(value);
@@ -303,9 +303,9 @@ public class FunctionPointerTest {
     public int intTest(final int value) { return value; }
 
     @Test
-    public void unsignedIntTestFunctionPointerFromJava() {
+    public void testUnsignedIntFunctionPointerFromJava() {
         //given
-        final PointerUnsignedIntTest pointerUnsignedIntTest = PointerUnsignedIntTest.nref(new Testing.UnsignedIntTest() {
+        final PointerUnsignedIntFunc pointerUnsignedIntTest = PointerUnsignedIntFunc.nref(new Testing.UnsignedIntFunc() {
             @Override
             public int $(final int value) {
                 return unsignedIntTest(value);
@@ -326,9 +326,9 @@ public class FunctionPointerTest {
 
 
     @Test
-    public void longTestFunctionPointerFromJava() {
+    public void testLongFunctionPointerFromJava() {
         //given
-        final PointerLongTest pointerLongTest = PointerLongTest.nref(new Testing.LongTest() {
+        final PointerLongFunc pointerLongTest = PointerLongFunc.nref(new Testing.LongFunc() {
             @Override
             public long $(final long value) {
                 return longTest(value);
@@ -348,9 +348,9 @@ public class FunctionPointerTest {
     public long longTest(final long value) { return value; }
 
     @Test
-    public void unsignedLongTestFunctionPointerFromJava() {
+    public void testUnsignedLongFunctionPointerFromJava() {
         //given
-        final PointerUnsignedLongTest pointerUnsignedLongTest = PointerUnsignedLongTest.nref(new Testing.UnsignedLongTest() {
+        final PointerUnsignedLongFunc pointerUnsignedLongTest = PointerUnsignedLongFunc.nref(new Testing.UnsignedLongFunc() {
             @Override
             public long $(final long value) {
                 return unsignedLongTest(value);
@@ -371,9 +371,9 @@ public class FunctionPointerTest {
 
 
     @Test
-    public void longLongTestFunctionPointerFromJava() {
+    public void testLongLongFunctionPointerFromJava() {
         //given
-        final PointerLongLongTest pointerLongTest = PointerLongLongTest.nref(new Testing.LongLongTest() {
+        final PointerLongLongFunc pointerLongTest = PointerLongLongFunc.nref(new Testing.LongLongFunc() {
             @Override
             public long $(final long value) {
                 return longLongTest(value);
@@ -393,9 +393,9 @@ public class FunctionPointerTest {
     public long longLongTest(final long value) { return value; }
 
     @Test
-    public void unsignedLongLongTestFunctionPointerFromJava() {
+    public void testUnsignedLongLongFunctionPointerFromJava() {
         //given
-        final PointerUnsignedLongLongTest pointerLongTest = PointerUnsignedLongLongTest.nref(new Testing.UnsignedLongLongTest() {
+        final PointerUnsignedLongLongFunc pointerLongTest = PointerUnsignedLongLongFunc.nref(new Testing.UnsignedLongLongFunc() {
             @Override
             public long $(final long value) {
                 return unsignedLongLongTest(value);
@@ -416,9 +416,9 @@ public class FunctionPointerTest {
 
 
     @Test
-    public void floatTestFunctionPointerFromJava() {
+    public void testFloatFunctionPointerFromJava() {
         //given
-        final PointerFloatTest pointerLongTest = PointerFloatTest.nref(new Testing.FloatTest() {
+        final PointerFloatFunc pointerLongTest = PointerFloatFunc.nref(new Testing.FloatFunc() {
             @Override
             public float $(final float value) {
                 return floatTest(value);
@@ -438,9 +438,9 @@ public class FunctionPointerTest {
     public float floatTest(final float value) { return value; }
 
     @Test
-    public void doubleTestFunctionPointerFromJava() {
+    public void testDoubleFunctionPointerFromJava() {
         //given
-        final PointerDoubleTest pointerLongTest = PointerDoubleTest.nref(new Testing.DoubleTest() {
+        final PointerDoubleFunc pointerLongTest = PointerDoubleFunc.nref(new Testing.DoubleFunc() {
             @Override
             public double $(final double value) {
                 return doubleTest(value);
@@ -460,19 +460,19 @@ public class FunctionPointerTest {
     public double doubleTest(final double value) { return value; }
 
     @Test
-    public void pointerTestFunctionPointerFromJava() {}
+    public void testPointerFunctionPointerFromJava() {}
 
     @Test
-    public void structTestFunctionPointerFromJava() {}
+    public void testStructFunctionPointerFromJava() {}
 
     @Test
-    public void structTest2FunctionPointerFromJava() {}
+    public void testStruct2FunctionPointerFromJava() {}
 
     @Test
-    public void unionTestFunctionPointerFromJava() {}
+    public void testUnionFunctionPointerFromJava() {}
 
     @Test
-    public void unionTest2FunctionPointerFromJava() {}
+    public void testUnion2FunctionPointerFromJava() {}
 
 
     @ByVal(TestStruct.class)
@@ -511,14 +511,14 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void charTestFunctionPointerFromC() {
+    public void testCharFunctionPointerFromC() {
         //given
         Linker.link(libFilePath(),
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
         final long            charTestFunctionPointer = new Testing().charTestFunctionPointer();
-        final PointerCharTest pointerCharTest         = PointerCharTest.wrapFunc(charTestFunctionPointer);
+        final PointerCharFunc pointerCharTest         = PointerCharFunc.wrapFunc(charTestFunctionPointer);
 
         final byte value = 123;
 
@@ -530,14 +530,14 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void unsignedCharTestFunctionPointerFromC() {
+    public void testUnsignedCharFunctionPointerFromC() {
         //given
         Linker.link(libFilePath(),
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
         final long                    unsignedCharTestFunctionPointer = new Testing().unsignedCharTestFunctionPointer();
-        final PointerUnsignedCharTest pointerCharTest                 = PointerUnsignedCharTest.wrapFunc(unsignedCharTestFunctionPointer);
+        final PointerUnsignedCharFunc pointerCharTest                 = PointerUnsignedCharFunc.wrapFunc(unsignedCharTestFunctionPointer);
 
         final byte value = 123;
 
@@ -549,14 +549,14 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void shortTestFunctionPointerFromC() {
+    public void testShortFunctionPointerFromC() {
         //given
         Linker.link(libFilePath(),
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
         final long             shortTestFunctionPointer = new Testing().shortTestFunctionPointer();
-        final PointerShortTest pointerShortTest         = PointerShortTest.wrapFunc(shortTestFunctionPointer);
+        final PointerShortFunc pointerShortTest         = PointerShortFunc.wrapFunc(shortTestFunctionPointer);
 
         final short value = 32536;
 
@@ -568,14 +568,14 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void unsignedShortTestFunctionPointerFromC() {
+    public void testUnsignedShortFunctionPointerFromC() {
         //given
         Linker.link(libFilePath(),
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
         final long                     unsignedShortTestFunctionPointer = new Testing().unsignedShortTestFunctionPointer();
-        final PointerUnsignedShortTest pointerUnsignedShortTest         = PointerUnsignedShortTest.wrapFunc(unsignedShortTestFunctionPointer);
+        final PointerUnsignedShortFunc pointerUnsignedShortTest         = PointerUnsignedShortFunc.wrapFunc(unsignedShortTestFunctionPointer);
 
         final short value = 32536;
 
@@ -587,14 +587,14 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void intTestFunctionPointerFromC() {
+    public void testIntFunctionPointerFromC() {
         //given
         Linker.link(libFilePath(),
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
         final long           intTestFunctionPointer = new Testing().intTestFunctionPointer();
-        final PointerIntTest pointerIntTest         = PointerIntTest.wrapFunc(intTestFunctionPointer);
+        final PointerIntFunc pointerIntTest         = PointerIntFunc.wrapFunc(intTestFunctionPointer);
 
         final int value = 32536987;
 
@@ -606,14 +606,14 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void unsignedIntTestFunctionPointerFromC() {
+    public void testUnsignedIntFunctionPointerFromC() {
         //given
         Linker.link(libFilePath(),
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
         final long                   unsignedIntTestFunctionPointer = new Testing().unsignedIntTestFunctionPointer();
-        final PointerUnsignedIntTest pointerIntTest                 = PointerUnsignedIntTest.wrapFunc(unsignedIntTestFunctionPointer);
+        final PointerUnsignedIntFunc pointerIntTest                 = PointerUnsignedIntFunc.wrapFunc(unsignedIntTestFunctionPointer);
 
         final int value = 32536987;
 
@@ -625,14 +625,14 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void longTestFunctionPointerFromC() {
+    public void testLongFunctionPointerFromC() {
         //given
         Linker.link(libFilePath(),
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
         final long            longTestFunctionPointer = new Testing().longTestFunctionPointer();
-        final PointerLongTest pointerLongTest         = PointerLongTest.wrapFunc(longTestFunctionPointer);
+        final PointerLongFunc pointerLongTest         = PointerLongFunc.wrapFunc(longTestFunctionPointer);
 
         final int value = 32536456;
 
@@ -644,14 +644,14 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void unsignedLongTestFunctionPointerFromC() {
+    public void testUnsignedLongFunctionPointerFromC() {
         //given
         Linker.link(libFilePath(),
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
         final long                    longTestFunctionPointer = new Testing().unsignedLongTestFunctionPointer();
-        final PointerUnsignedLongTest pointerLongTest         = PointerUnsignedLongTest.wrapFunc(longTestFunctionPointer);
+        final PointerUnsignedLongFunc pointerLongTest         = PointerUnsignedLongFunc.wrapFunc(longTestFunctionPointer);
 
         final int value = 32536456;
 
@@ -664,33 +664,33 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void longLongTestFunctionPointerFromC() {
+    public void testLongLongFunctionPointerFromC() {
         //given
         Linker.link(libFilePath(),
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
         final long                longLongTestFunctionPointer = new Testing().longLongTestFunctionPointer();
-        final PointerLongLongTest pointerLongLongTest         = PointerLongLongTest.wrapFunc(longLongTestFunctionPointer);
+        final PointerLongLongFunc pointerLongLongFunc         = PointerLongLongFunc.wrapFunc(longLongTestFunctionPointer);
 
         final long value = 325364567789456L;
 
         //when
-        final long retVal = pointerLongLongTest.$(value);
+        final long retVal = pointerLongLongFunc.$(value);
 
         //then
         assertThat(retVal).isEqualTo(value);
     }
 
     @Test
-    public void unsignedLongLongTestFunctionPointerFromC() {
+    public void testUnsignedLongLongFunctionPointerFromC() {
         //given
         Linker.link(libFilePath(),
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
         final long                        unsignedLongLongTestFunctionPointer = new Testing().unsignedLongLongTestFunctionPointer();
-        final PointerUnsignedLongLongTest pointerUnsignedLongLongTest         = PointerUnsignedLongLongTest.wrapFunc(unsignedLongLongTestFunctionPointer);
+        final PointerUnsignedLongLongFunc pointerUnsignedLongLongTest         = PointerUnsignedLongLongFunc.wrapFunc(unsignedLongLongTestFunctionPointer);
 
         final long value = 325364567789456L;
 
@@ -702,14 +702,14 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void floatTestFunctionPointerFromC() {
+    public void testFloatFunctionPointerFromC() {
         //given
         Linker.link(libFilePath(),
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
         final long             floatTestFunctionPointer = new Testing().floatTestFunctionPointer();
-        final PointerFloatTest pointerFloatTest         = PointerFloatTest.wrapFunc(floatTestFunctionPointer);
+        final PointerFloatFunc pointerFloatTest         = PointerFloatFunc.wrapFunc(floatTestFunctionPointer);
 
         final float value = 32536456.123456F;
 
@@ -721,14 +721,14 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void doubleTestFunctionPointerFromC() {
+    public void testDoubleFunctionPointerFromC() {
         //given
         Linker.link(libFilePath(),
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
         final long              doubleTestFunctionPointer = new Testing().doubleTestFunctionPointer();
-        final PointerDoubleTest pointerFloatTest          = PointerDoubleTest.wrapFunc(doubleTestFunctionPointer);
+        final PointerDoubleFunc pointerFloatTest          = PointerDoubleFunc.wrapFunc(doubleTestFunctionPointer);
 
         final double value = 32536456159753.12345615975D;
 
@@ -740,17 +740,17 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void pointerTestFunctionPointerFromC() {}
+    public void testPointerFunctionPointerFromC() {}
 
     @Test
-    public void structTestFunctionPointerFromC() {}
+    public void testStructFunctionPointerFromC() {}
 
     @Test
-    public void structTest2FunctionPointerFromC() {}
+    public void testStruct2FunctionPointerFromC() {}
 
     @Test
-    public void unionTestFunctionPointerFromC() {}
+    public void testUnionFunctionPointerFromC() {}
 
     @Test
-    public void unionTest2FunctionPointerFromC() {}
+    public void testUnion2FunctionPointerFromC() {}
 }

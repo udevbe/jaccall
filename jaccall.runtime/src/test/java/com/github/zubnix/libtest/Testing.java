@@ -64,7 +64,7 @@ public class Testing {
     @Ptr
     public native long getFunctionPointerTest();
 
-    public native byte functionPointerTest(@Ptr(TestFunc.class) long function,
+    public native byte functionPointerTest(@Ptr(FooFunc.class) long function,
                                            @Ptr(TestStruct.class) long arg0,
                                            @Unsigned int arg1,
                                            @ByVal(TestStruct.class) long arg2);
@@ -72,7 +72,7 @@ public class Testing {
     public native byte charTest(byte value);
 
     @Functor
-    public interface CharTest {
+    public interface CharFunc {
         byte $(byte value);
     }
 
@@ -80,7 +80,7 @@ public class Testing {
     public native byte unsignedCharTest(@Unsigned byte value);
 
     @Functor
-    public interface UnsignedCharTest {
+    public interface UnsignedCharFunc {
         @Unsigned
         byte $(@Unsigned byte value);
     }
@@ -88,7 +88,7 @@ public class Testing {
     public native short shortTest(short value);
 
     @Functor
-    public interface ShortTest {
+    public interface ShortFunc {
         short $(short value);
     }
 
@@ -96,7 +96,7 @@ public class Testing {
     public native short unsignedShortTest(@Unsigned short value);
 
     @Functor
-    public interface UnsignedShortTest {
+    public interface UnsignedShortFunc {
         @Unsigned
         short $(@Unsigned short value);
     }
@@ -104,7 +104,7 @@ public class Testing {
     public native int intTest(int value);
 
     @Functor
-    public interface IntTest {
+    public interface IntFunc {
         int $(int value);
     }
 
@@ -112,7 +112,7 @@ public class Testing {
     public native int unsignedIntTest(@Unsigned int value);
 
     @Functor
-    public interface UnsignedIntTest {
+    public interface UnsignedIntFunc {
 
         @Unsigned
         int $(@Unsigned int value);
@@ -121,7 +121,7 @@ public class Testing {
     public native long longTest(long value);
 
     @Functor
-    public interface LongTest {
+    public interface LongFunc {
         long $(long value);
     }
 
@@ -129,7 +129,7 @@ public class Testing {
     public native long unsignedLongTest(@Unsigned long value);
 
     @Functor
-    public interface UnsignedLongTest {
+    public interface UnsignedLongFunc {
         long $(@Unsigned long value);
     }
 
@@ -137,7 +137,7 @@ public class Testing {
     public native long longLongTest(@Lng long value);
 
     @Functor
-    public interface LongLongTest {
+    public interface LongLongFunc {
         @Lng
         long $(@Lng long value);
     }
@@ -147,7 +147,7 @@ public class Testing {
     public native long unsignedLongLongTest(@Unsigned @Lng long value);
 
     @Functor
-    public interface UnsignedLongLongTest {
+    public interface UnsignedLongLongFunc {
         @Unsigned
         @Lng
         long $(@Unsigned @Lng long value);
@@ -156,14 +156,14 @@ public class Testing {
     public native float floatTest(float value);
 
     @Functor
-    public interface FloatTest {
+    public interface FloatFunc {
         float $(float value);
     }
 
     public native double doubleTest(double value);
 
     @Functor
-    public interface DoubleTest {
+    public interface DoubleFunc {
         double $(double value);
     }
 
@@ -171,7 +171,7 @@ public class Testing {
     public native long pointerTest(@Ptr long value);
 
     @Functor
-    interface PointerTest {
+    interface PointerFunc {
         @Ptr
         long $(@Ptr long value);
     }
@@ -186,7 +186,7 @@ public class Testing {
                                          float embedded_field1);
 
     @Functor
-    interface StructTest {
+    interface StructFunc {
         @ByVal(TestStruct.class)
         long $(@Ptr(TestStruct.class) long tst,
                byte field0,
@@ -207,7 +207,7 @@ public class Testing {
                                           float embedded_field1);
 
     @Functor
-    interface StructTest2 {
+    interface StructFunc2 {
         @Ptr(TestStruct.class)
         long $(@ByVal(TestStruct.class) long tst,
                byte field0,
@@ -224,7 +224,7 @@ public class Testing {
                                         float field1);
 
     @Functor
-    interface UnionTest {
+    interface UnionFunc {
         @ByVal(TestUnion.class)
         long $(@Ptr(TestUnion.class) long tst,
                int field0,
@@ -236,7 +236,7 @@ public class Testing {
                                          int field0);
 
     @Functor
-    interface UnionTest2 {
+    interface UnionFunc2 {
         @Ptr(TestUnion.class)
         long $(@ByVal(TestUnion.class) long tst,
                int field0);
