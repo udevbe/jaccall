@@ -11,6 +11,7 @@ import com.github.zubnix.libtest.PointerLongFunc;
 import com.github.zubnix.libtest.PointerLongLongFunc;
 import com.github.zubnix.libtest.PointerPointerFunc;
 import com.github.zubnix.libtest.PointerShortFunc;
+import com.github.zubnix.libtest.PointerStructFunc;
 import com.github.zubnix.libtest.PointerUnsignedCharFunc;
 import com.github.zubnix.libtest.PointerUnsignedIntFunc;
 import com.github.zubnix.libtest.PointerUnsignedLongFunc;
@@ -27,6 +28,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static com.github.zubnix.jaccall.Pointer.malloc;
+import static com.github.zubnix.jaccall.Pointer.nref;
+import static com.github.zubnix.jaccall.Pointer.wrap;
 import static com.google.common.truth.Truth.assertThat;
 
 public class FunctionPointerTest {
@@ -351,7 +355,7 @@ public class FunctionPointerTest {
     @Test
     public void testUnsignedLongFunctionPointerFromJava() {
         //given
-        final PointerUnsignedLongFunc pointerUnsignedLongTest = PointerUnsignedLongFunc.nref(new Testing.UnsignedLongFunc() {
+        final PointerUnsignedLongFunc pointerUnsignedLongFunc = PointerUnsignedLongFunc.nref(new Testing.UnsignedLongFunc() {
             @Override
             public long $(final long value) {
                 return unsignedLongTest(value);
@@ -361,7 +365,7 @@ public class FunctionPointerTest {
         final int value = 325364564;
 
         //when
-        final long retVal = JNITestUtil.execUnsignedLongTest(pointerUnsignedLongTest.address,
+        final long retVal = JNITestUtil.execUnsignedLongTest(pointerUnsignedLongFunc.address,
                                                              value);
 
         //then
@@ -374,7 +378,7 @@ public class FunctionPointerTest {
     @Test
     public void testLongLongFunctionPointerFromJava() {
         //given
-        final PointerLongLongFunc pointerLongTest = PointerLongLongFunc.nref(new Testing.LongLongFunc() {
+        final PointerLongLongFunc pointerLongLongFunc = PointerLongLongFunc.nref(new Testing.LongLongFunc() {
             @Override
             public long $(final long value) {
                 return longLongTest(value);
@@ -384,7 +388,7 @@ public class FunctionPointerTest {
         final long value = 3253645644545632145L;
 
         //when
-        final long retVal = JNITestUtil.execLongLongTest(pointerLongTest.address,
+        final long retVal = JNITestUtil.execLongLongTest(pointerLongLongFunc.address,
                                                          value);
 
         //then
@@ -396,7 +400,7 @@ public class FunctionPointerTest {
     @Test
     public void testUnsignedLongLongFunctionPointerFromJava() {
         //given
-        final PointerUnsignedLongLongFunc pointerLongTest = PointerUnsignedLongLongFunc.nref(new Testing.UnsignedLongLongFunc() {
+        final PointerUnsignedLongLongFunc pointerUnsignedLongLongFunc = PointerUnsignedLongLongFunc.nref(new Testing.UnsignedLongLongFunc() {
             @Override
             public long $(final long value) {
                 return unsignedLongLongTest(value);
@@ -406,7 +410,7 @@ public class FunctionPointerTest {
         final long value = 3253645644545632145L;
 
         //when
-        final long retVal = JNITestUtil.execUnsignedLongLongTest(pointerLongTest.address,
+        final long retVal = JNITestUtil.execUnsignedLongLongTest(pointerUnsignedLongLongFunc.address,
                                                                  value);
 
         //then
@@ -419,7 +423,7 @@ public class FunctionPointerTest {
     @Test
     public void testFloatFunctionPointerFromJava() {
         //given
-        final PointerFloatFunc pointerLongTest = PointerFloatFunc.nref(new Testing.FloatFunc() {
+        final PointerFloatFunc pointerFloatFunc = PointerFloatFunc.nref(new Testing.FloatFunc() {
             @Override
             public float $(final float value) {
                 return floatTest(value);
@@ -429,7 +433,7 @@ public class FunctionPointerTest {
         final float value = 325364564.456789F;
 
         //when
-        final float retVal = JNITestUtil.execFloatTest(pointerLongTest.address,
+        final float retVal = JNITestUtil.execFloatTest(pointerFloatFunc.address,
                                                        value);
 
         //then
@@ -441,7 +445,7 @@ public class FunctionPointerTest {
     @Test
     public void testDoubleFunctionPointerFromJava() {
         //given
-        final PointerDoubleFunc pointerLongTest = PointerDoubleFunc.nref(new Testing.DoubleFunc() {
+        final PointerDoubleFunc pointerDoubleFunc = PointerDoubleFunc.nref(new Testing.DoubleFunc() {
             @Override
             public double $(final double value) {
                 return doubleTest(value);
@@ -451,7 +455,7 @@ public class FunctionPointerTest {
         final double value = 325364564753159.456789159753D;
 
         //when
-        final double retVal = JNITestUtil.execDoubleTest(pointerLongTest.address,
+        final double retVal = JNITestUtil.execDoubleTest(pointerDoubleFunc.address,
                                                          value);
 
         //then
@@ -463,7 +467,7 @@ public class FunctionPointerTest {
     @Test
     public void testPointerFunctionPointerFromJava() {
         //given
-        final PointerPointerFunc pointerLongTest = PointerPointerFunc.nref(new Testing.PointerFunc() {
+        final PointerPointerFunc pointerPointerFunc = PointerPointerFunc.nref(new Testing.PointerFunc() {
             @Override
             public long $(final long value) {
                 return pointerTest(value);
@@ -473,7 +477,7 @@ public class FunctionPointerTest {
         final int value = 325364564;
 
         //when
-        final long retVal = JNITestUtil.execPointerTest(pointerLongTest.address,
+        final long retVal = JNITestUtil.execPointerTest(pointerPointerFunc.address,
                                                         value);
 
         //then
@@ -483,7 +487,137 @@ public class FunctionPointerTest {
     public long pointerTest(final long value) { return value; }
 
     @Test
-    public void testStructFunctionPointerFromJava() {}
+    public void testStructFunctionPointerFromJava() {
+        //given
+        final PointerStructFunc pointerStructFunc = PointerStructFunc.nref(new Testing.StructFunc() {
+            @Override
+            public long $(final long tst,
+                          final byte field0,
+                          final short field1,
+                          final long field2,
+                          final long field3,
+                          final long embedded_field0,
+                          final float embedded_field1) {
+                return structTest(tst,
+                                  field0,
+                                  field1,
+                                  field2,
+                                  field3,
+                                  embedded_field0,
+                                  embedded_field1);
+            }
+        });
+
+        final Pointer<TestStruct> testStructPointer = malloc(TestStruct.SIZE).castp(TestStruct.class);
+        final TestStruct          testStruct        = testStructPointer.dref();
+
+        final byte             field0 = 10;
+        final short            field1 = 20;
+        final Pointer<Integer> field3 = nref(40);
+
+        testStruct.field0(field0);
+        testStruct.field1(field1);
+        testStruct.field2()
+                  .writei(1,
+                          1);
+        testStruct.field2()
+                  .writei(2,
+                          11);
+        testStruct.field2()
+                  .writei(3,
+                          111);
+        testStruct.field3(field3);
+
+        //when
+        try (Pointer<TestStruct> tst = testStructPointer;
+             Pointer<Integer> intp = nref(44)) {
+
+            final byte newField0 = 'a';
+            final short newField1 = 22;
+            final int newField2_0 = 123;
+            final int newField2_1 = 456;
+            final int newField2_2 = 789;
+
+            final Pointer<Integer> newField2 = nref(newField2_0,
+                                                    newField2_1,
+                                                    newField2_2);
+
+            final Pointer<Integer> newField3 = intp;
+            final long embedded_field0 = 1234567890L;
+            final float embedded_field1 = 9876543.21F;
+
+            final Pointer<TestStruct> testStructByValue = wrap(TestStruct.class,
+                                                               JNITestUtil.execStructTest(pointerStructFunc.address,
+                                                                                          tst.address,
+                                                                                          newField0,
+                                                                                          newField1,
+                                                                                          newField2.address,
+                                                                                          newField3.address,
+                                                                                          embedded_field0,
+                                                                                          embedded_field1));
+
+            //then
+            final TestStruct testStruct1 = testStructByValue.dref();
+            assertThat(testStruct1.field0()).isEqualTo(newField0);
+            assertThat(testStruct1.field1()).isEqualTo(newField1);
+            assertThat(testStruct1.field2()
+                                  .dref(0)).isEqualTo(newField2_0);
+            assertThat(testStruct1.field2()
+                                  .dref(1)).isEqualTo(newField2_1);
+            assertThat(testStruct1.field2()
+                                  .dref(2)).isEqualTo(newField2_2);
+            assertThat(testStruct1.field3()).isEqualTo(newField3);
+
+            assertThat(testStruct.field0()).isEqualTo(newField0);
+            assertThat(testStruct.field1()).isEqualTo(newField1);
+            assertThat(testStruct.field2()
+                                 .dref(0)).isEqualTo(newField2_0);
+            assertThat(testStruct.field2()
+                                 .dref(1)).isEqualTo(newField2_1);
+            assertThat(testStruct.field2()
+                                 .dref(2)).isEqualTo(newField2_2);
+            assertThat(testStruct.field3()).isEqualTo(newField3);
+
+            testStructByValue.close();
+        }
+    }
+
+    public long structTest(final long tstPointer,
+                           final byte field0,
+                           final short field1,
+                           final long field2Array,
+                           final long field3,
+                           final long embedded_field0,
+                           final float embedded_field1) {
+        //@formatter:off
+        final Pointer<TestStruct> tst = Pointer.wrap(TestStruct.class, tstPointer);
+
+        tst.dref().field0(field0);
+        tst.dref().field1(field1);
+        final Pointer<Integer> field2 = Pointer.wrap(Integer.class, field2Array);
+        tst.dref().field2().writei(0, field2.dref(0));
+        tst.dref().field2().writei(1, field2.dref(1));
+        tst.dref().field2().writei(2, field2.dref(2));
+        tst.dref().field3(Pointer.wrap(Integer.class, field3));
+        tst.dref().field4().field0(embedded_field0);
+        tst.dref().field4().field1(embedded_field1);
+
+        final TestStruct someTest = new TestStruct(){
+            {
+                field0(tst.dref().field0());
+                field1(tst.dref().field1());
+                field2().writei(0,tst.dref().field2().dref(0));
+                field2().writei(1,tst.dref().field2().dref(1));
+                field2().writei(2,tst.dref().field2().dref(2));
+                field3(tst.dref().field3());
+                field4().field0(tst.dref().field4().field0());
+                field4().field1(tst.dref().field4().field1());
+            }
+        };
+
+        return Pointer.nref(someTest).address;
+        //@formatter:on
+    }
 
     @Test
     public void testStruct2FunctionPointerFromJava() {}

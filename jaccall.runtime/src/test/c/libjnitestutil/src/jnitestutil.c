@@ -1,6 +1,7 @@
 #include <jni.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "com_github_zubnix_jaccall_JNITestUtil.h"
 
@@ -9,6 +10,17 @@ struct teststruct {
  short field1;
  int field2[3];
  int* field3;
+};
+
+struct test {
+    char field0;
+    short field1;
+    int field2[3];
+    int *field3;
+    struct test_embedded {
+        long long embedded_field0;
+        float embedded_field1;
+    } field4;
 };
 
 /*
@@ -238,4 +250,20 @@ JNIEXPORT
 jlong
 JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execPointerTest(JNIEnv *env, jclass clazz, jlong func_ptr, jlong value){
     return (jlong)(intptr_t)((void*(*)(void*))(intptr_t)func_ptr)((void*)value);
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execStructTest
+ * Signature: (JJBSJJJF)J
+ */
+JNIEXPORT
+jlong
+JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execStructTest(JNIEnv *env, jclass clazz, jlong func_ptr, jlong tst,
+                                                                  jbyte field0, jshort field1, jlong field2, jlong field3,
+                                                                  jlong embedded_field0, jfloat embedded_field1){
+    struct test result = ((struct test(*)(struct test *,char,short,int,int *,long long,float))(intptr_t)func_ptr)((struct test*)(intptr_t)tst,field0,field1,field2,field3,embedded_field0,embedded_field1);
+    void* ret_result = malloc(sizeof(struct test));
+    (jlong)(intptr_t)memcpy(ret_result, &result, sizeof(struct test));
+    return ret_result;
 }
