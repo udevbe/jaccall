@@ -33,6 +33,4 @@ public abstract class PointerStructFunc extends PointerFunc<PointerStructFunc> i
         }
         return new StructFunc_Jaccall_J(function);
     }
-
-
 }

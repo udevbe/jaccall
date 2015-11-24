@@ -617,7 +617,9 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void testStruct2FunctionPointerFromJava() {}
+    public void testStruct2FunctionPointerFromJava() {
+
+    }
 
     @Test
     public void testUnionFunctionPointerFromJava() {}
