@@ -4,8 +4,7 @@ import com.github.zubnix.runtime.api.Field;
 import com.github.zubnix.runtime.api.Struct;
 import com.github.zubnix.runtime.api.Type;
 
-@Struct(name = "JaccallTestStruct",
-        value = {
+@Struct(value = {
                 @Field(type = Type.CHAR,
                        name = "field0"),
                 @Field(type = Type.SHORT,
@@ -18,16 +17,15 @@ import com.github.zubnix.runtime.api.Type;
                        embed = StructTest.StructEmbedTest.class,
                        name = "field4")
         })
-public class StructTest extends JaccallTestStruct {
+public class StructTest extends Jaccall_StructTest {
 
-    @Struct(name = "JaccallEmbeddedTestStruct",
-            value = {
+    @Struct(value = {
                     @Field(type = Type.FLOAT,
                            name = "field0"),
                     @Field(type = Type.DOUBLE,
                            name = "field1")
             })
-    public static class StructEmbedTest extends JaccallTestStruct {
+    public static class StructEmbedTest extends Jaccall_StructEmbedTest {
 
     }
 }
