@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e;
 
 prep_build() {
     rm -rf build/;
@@ -7,8 +8,8 @@ prep_build() {
 
 build() {
     pushd build;
-    cmake ..
-    make
+    cmake ..;
+    make;
     popd;
 }
 
