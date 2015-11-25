@@ -1,7 +1,6 @@
-package com.github.zubnix.jaccall.compiletime.struct;
+package com.github.zubnix.jaccall.compiletime;
 
 
-import com.github.zubnix.jaccall.compiletime.JaccallGenerator;
 import com.google.testing.compile.CompileTester;
 import com.google.testing.compile.JavaFileObjects;
 import org.junit.Test;
@@ -787,7 +786,7 @@ public class StructWriterTest {
         final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.struct.TestStructStruct",
                                                                           "package com.github.zubnix.libtest.struct;\n" +
                                                                           "\n" +
-                                                                          "import com.github.zubnix.jaccall.compiletime.linker.TestStructEmbedded;\n" +
+                                                                          "import com.github.zubnix.jaccall.compiletime.TestStructEmbedded;\n" +
                                                                           "import com.github.zubnix.jaccall.CType;\n" +
                                                                           "import com.github.zubnix.jaccall.Field;\n" +
                                                                           "import com.github.zubnix.jaccall.Struct;\n" +
@@ -813,7 +812,7 @@ public class StructWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.StructType;\n" +
-                                                                       "import com.github.zubnix.jaccall.compiletime.linker.TestStructEmbedded;\n" +
+                                                                       "import com.github.zubnix.jaccall.compiletime.TestStructEmbedded;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
                                                                        "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
@@ -847,7 +846,7 @@ public class StructWriterTest {
                                                                           "import com.github.zubnix.jaccall.CType;\n" +
                                                                           "import com.github.zubnix.jaccall.Field;\n" +
                                                                           "import com.github.zubnix.jaccall.Struct;\n" +
-                                                                          "import com.github.zubnix.jaccall.compiletime.linker.TestStructEmbedded;\n" +
+                                                                          "import com.github.zubnix.jaccall.compiletime.TestStructEmbedded;\n" +
                                                                           "        @Struct({\n" +
                                                                           "                        @Field(name = \"charField\",\n" +
                                                                           "                               type = CType.CHAR),\n" +
@@ -896,7 +895,7 @@ public class StructWriterTest {
                                                                        "import com.github.zubnix.jaccall.Pointer;\n" +
                                                                        "import com.github.zubnix.jaccall.Size;\n" +
                                                                        "import com.github.zubnix.jaccall.StructType;\n" +
-                                                                       "import com.github.zubnix.jaccall.compiletime.linker.TestStructEmbedded;\n" +
+                                                                       "import com.github.zubnix.jaccall.compiletime.TestStructEmbedded;\n" +
                                                                        "import java.lang.Byte;\n" +
                                                                        "import java.lang.Double;\n" +
                                                                        "import java.lang.Float;\n" +

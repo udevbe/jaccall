@@ -1,4 +1,4 @@
-package com.github.zubnix.jaccall.compiletime.linker;
+package com.github.zubnix.jaccall.compiletime;
 
 
 import com.github.zubnix.jaccall.compiletime.JaccallGenerator;
@@ -600,7 +600,7 @@ public class LinkSymbolsWriterTest {
                                                                           "package com.github.zubnix.libtest;\n" +
                                                                           "import com.github.zubnix.jaccall.Lib;\n" +
                                                                           "import com.github.zubnix.jaccall.ByVal;\n" +
-                                                                          "import com.github.zubnix.jaccall.compiletime.linker.TestStruct;\n" +
+                                                                          "import com.github.zubnix.jaccall.compiletime.TestStruct;\n" +
                                                                           "\n" +
                                                                           "@Lib(\"testing\")\n" +
                                                                           "public class Testing {\n" +
@@ -618,7 +618,7 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
-                                                                       "import com.github.zubnix.jaccall.compiletime.linker.TestStruct;\n" +
+                                                                       "import com.github.zubnix.jaccall.compiletime.TestStruct;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
                                                                        "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
@@ -647,7 +647,7 @@ public class LinkSymbolsWriterTest {
                                                                           "package com.github.zubnix.libtest;\n" +
                                                                           "import com.github.zubnix.jaccall.Lib;\n" +
                                                                           "import com.github.zubnix.jaccall.ByVal;\n" +
-                                                                          "import com.github.zubnix.jaccall.compiletime.linker.TestUnion;\n" +
+                                                                          "import com.github.zubnix.jaccall.compiletime.TestUnion;\n" +
                                                                           "\n" +
                                                                           "@Lib(\"testing\")\n" +
                                                                           "public class Testing {\n" +
@@ -665,7 +665,7 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
-                                                                       "import com.github.zubnix.jaccall.compiletime.linker.TestUnion;\n" +
+                                                                       "import com.github.zubnix.jaccall.compiletime.TestUnion;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
                                                                        "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
@@ -1281,7 +1281,7 @@ public class LinkSymbolsWriterTest {
                                                                           "package com.github.zubnix.libtest;\n" +
                                                                           "import com.github.zubnix.jaccall.Lib;\n" +
                                                                           "import com.github.zubnix.jaccall.ByVal;\n" +
-                                                                          "import com.github.zubnix.jaccall.compiletime.linker.TestStruct;\n" +
+                                                                          "import com.github.zubnix.jaccall.compiletime.TestStruct;\n" +
                                                                           "\n" +
                                                                           "@Lib(\"testing\")\n" +
                                                                           "public class Testing {\n" +
@@ -1300,7 +1300,7 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
-                                                                       "import com.github.zubnix.jaccall.compiletime.linker.TestStruct;\n" +
+                                                                       "import com.github.zubnix.jaccall.compiletime.TestStruct;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
                                                                        "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
@@ -1332,7 +1332,7 @@ public class LinkSymbolsWriterTest {
                                                                           "import com.github.zubnix.jaccall.Unsigned;\n" +
                                                                           "import com.github.zubnix.jaccall.Ptr;\n" +
                                                                           "import com.github.zubnix.jaccall.Lng;\n" +
-                                                                          "import com.github.zubnix.jaccall.compiletime.linker.TestStruct;\n" +
+                                                                          "import com.github.zubnix.jaccall.compiletime.TestStruct;\n" +
                                                                           "\n" +
                                                                           "@Lib(\"testing\")\n" +
                                                                           "public class Testing {\n" +
@@ -1354,7 +1354,7 @@ public class LinkSymbolsWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
-                                                                       "import com.github.zubnix.jaccall.compiletime.linker.TestStruct;\n" +
+                                                                       "import com.github.zubnix.jaccall.compiletime.TestStruct;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
                                                                        "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +

@@ -1,4 +1,4 @@
-package com.github.zubnix.jaccall.compiletime.linker;
+package com.github.zubnix.jaccall.compiletime;
 
 import com.github.zubnix.jaccall.CType;
 import com.github.zubnix.jaccall.Field;

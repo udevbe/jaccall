@@ -36,7 +36,7 @@ import static com.github.zubnix.jaccall.Pointer.nref;
 import static com.github.zubnix.jaccall.Pointer.wrap;
 import static com.google.common.truth.Truth.assertThat;
 
-public class FunctionPointerTest {
+public class FunctorTest {
 
     private static final String LIB_PREFIX  = "lib";
     private static final String LIB_NAME    = "testing";

@@ -11,6 +11,7 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
@@ -157,6 +158,10 @@ final class FunctorWriter {
                                           .superclass(ClassName.get(packageName,
                                                                     factoryName))
                                           .addField(jniMethodId)
+                                          .addField(ClassName.get(element),
+                                                    "function",
+                                                    Modifier.PRIVATE,
+                                                    Modifier.FINAL)
                                           .addMethod(constructor)
                                           .addMethod($)
                                           .build();
@@ -248,7 +253,7 @@ final class FunctorWriter {
                                                              ClassName.get(packageName,
                                                                            cFunctorName),
                                                              "_$",
-                                                             parameters.size(),
+                                                             parameters.size() + 1,
                                                              new MethodParser(this.messager).parseJniSignature(executableElement)
                                                                                             .replace("(",
                                                                                                      "(J"))
@@ -315,6 +320,8 @@ final class FunctorWriter {
         final MethodSpec wrapFunc = MethodSpec.methodBuilder("wrapFunc")
                                               .addModifiers(Modifier.PUBLIC,
                                                             Modifier.STATIC)
+                                              .returns(ClassName.get(packageName,
+                                                                     factoryName))
                                               .addParameter(long.class,
                                                             "address")
                                               .addStatement("return new $T(address)",
@@ -325,6 +332,8 @@ final class FunctorWriter {
         final MethodSpec nref = MethodSpec.methodBuilder("nref")
                                           .addModifiers(Modifier.PUBLIC,
                                                         Modifier.STATIC)
+                                          .returns(ClassName.get(packageName,
+                                                                 factoryName))
                                           .addParameter(ClassName.get(element),
                                                         "function")
                                           .beginControlFlow("if(function instanceof $T)",
@@ -334,7 +343,7 @@ final class FunctorWriter {
                                                         ClassName.get(packageName,
                                                                       factoryName))
                                           .endControlFlow()
-                                          .addStatement("new $T(function)",
+                                          .addStatement("return new $T(function)",
                                                         ClassName.get(packageName,
                                                                       javaFunctorName))
                                           .build();
@@ -343,7 +352,9 @@ final class FunctorWriter {
                                           .addAnnotation(annotationSpec)
                                           .addModifiers(Modifier.PUBLIC,
                                                         Modifier.ABSTRACT)
-                                          .superclass(PointerFunc.class)
+                                          .superclass(ParameterizedTypeName.get(ClassName.get(PointerFunc.class),
+                                                                                ClassName.get(packageName,
+                                                                                              factoryName)))
                                           .addSuperinterface(TypeName.get(element.asType()))
                                           .addField(ffiCif)
                                           .addMethod(constructor)

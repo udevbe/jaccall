@@ -1,4 +1,4 @@
-package com.github.zubnix.jaccall.compiletime.functor;
+package com.github.zubnix.jaccall.compiletime;
 
 
 import com.github.zubnix.jaccall.compiletime.JaccallGenerator;
