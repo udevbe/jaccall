@@ -377,7 +377,116 @@ public class StructWriterTest {
 
     @Test
     public void testPointerField() {
-        //TODO
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.struct.TestStructPointer",
+                                                                          "package com.github.zubnix.libtest.struct;\n" +
+                                                                          "\n" +
+                                                                          "import com.github.zubnix.jaccall.CType;\n" +
+                                                                          "import com.github.zubnix.jaccall.Field;\n" +
+                                                                          "import com.github.zubnix.jaccall.Struct;\n" +
+                                                                          "\n" +
+                                                                          "import static com.github.zubnix.jaccall.CType.POINTER;\n" +
+                                                                          "\n" +
+                                                                          "@Struct(value = {\n" +
+                                                                          "             @Field(type = POINTER,\n" +
+                                                                          "                    name = \"field0\")})\n" +
+                                                                          "public final class TestStructPointer extends TestStructPointer_Jaccall_StructType{\n" +
+                                                                          " \n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new StructGenerator());
+        //then
+        compileTester.compilesWithoutError()
+                     .and()
+                     .generatesSources(JavaFileObjects.forSourceString("com.github.zubnix.libtest.struct.TestStructPointer_Jaccall_StructType",
+                                                                       "package com.github.zubnix.libtest.struct;\n" +
+                                                                       "\n" +
+                                                                       "import com.github.zubnix.jaccall.JNI;\n" +
+                                                                       "import com.github.zubnix.jaccall.Pointer;\n" +
+                                                                       "import com.github.zubnix.jaccall.StructType;\n" +
+                                                                       "import java.lang.Void;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
+                                                                       "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.struct.StructGenerator\")\n" +
+                                                                       "abstract class TestStructPointer_Jaccall_StructType extends StructType {\n" +
+                                                                       "  public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_POINTER);\n" +
+                                                                       "\n" +
+                                                                       "  public static final int SIZE = JNI.ffi_type_struct_size(FFI_TYPE);\n" +
+                                                                       "\n" +
+                                                                       "  private static final int OFFSET_0 = 0;\n" +
+                                                                       "\n" +
+                                                                       "  TestStructPointer_Jaccall_StructType() {\n" +
+                                                                       "    super(SIZE);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final Pointer<Void> field0() {\n" +
+                                                                       "    return readPointer(OFFSET_0, Void.class);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final void field0(final Pointer<Void> field0) {\n" +
+                                                                       "    writePointer(OFFSET_0, field0);\n" +
+                                                                       "  }\n" +
+                                                                       "}"));
+
+    }
+
+    @Test
+    public void testPointerToPointerToPointerField() {
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.struct.TestStructPointer",
+                                                                          "package com.github.zubnix.libtest.struct;\n" +
+                                                                          "\n" +
+                                                                          "import com.github.zubnix.jaccall.CType;\n" +
+                                                                          "import com.github.zubnix.jaccall.Field;\n" +
+                                                                          "import com.github.zubnix.jaccall.Struct;\n" +
+                                                                          "\n" +
+                                                                          "import static com.github.zubnix.jaccall.CType.POINTER;\n" +
+                                                                          "\n" +
+                                                                          "@Struct(value = {\n" +
+                                                                          "             @Field(type = POINTER,\n" +
+                                                                          "                    pointerDepth = 2,\n" +
+                                                                          "                    name = \"field0\")})\n" +
+                                                                          "public final class TestStructPointer extends TestStructPointer_Jaccall_StructType{\n" +
+                                                                          " \n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new StructGenerator());
+        //then
+        compileTester.compilesWithoutError()
+                     .and()
+                     .generatesSources(JavaFileObjects.forSourceString("com.github.zubnix.libtest.struct.TestStructPointer_Jaccall_StructType",
+                                                                       "package com.github.zubnix.libtest.struct;\n" +
+                                                                       "\n" +
+                                                                       "import com.github.zubnix.jaccall.JNI;\n" +
+                                                                       "import com.github.zubnix.jaccall.Pointer;\n" +
+                                                                       "import com.github.zubnix.jaccall.StructType;\n" +
+                                                                       "import java.lang.Void;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
+                                                                       "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.struct.StructGenerator\")\n" +
+                                                                       "abstract class TestStructPointer_Jaccall_StructType extends StructType {\n" +
+                                                                       "  public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_POINTER);\n" +
+                                                                       "\n" +
+                                                                       "  public static final int SIZE = JNI.ffi_type_struct_size(FFI_TYPE);\n" +
+                                                                       "\n" +
+                                                                       "  private static final int OFFSET_0 = 0;\n" +
+                                                                       "\n" +
+                                                                       "  TestStructPointer_Jaccall_StructType() {\n" +
+                                                                       "    super(SIZE);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final Pointer<Pointer<Pointer<Void>>> field0() {\n" +
+                                                                       "    return readPointer(OFFSET_0, Void.class).castpp().castpp();\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final void field0(final Pointer<Pointer<Pointer<Void>>> field0) {\n" +
+                                                                       "    writePointer(OFFSET_0, field0);\n" +
+                                                                       "  }\n" +
+                                                                       "}"));
 
     }
 
@@ -550,8 +659,8 @@ public class StructWriterTest {
                                                                        "    writePointer(OFFSET_7, pointerField);\n" +
                                                                        "  }\n" +
                                                                        "\n" +
-                                                                       "  public final Pointer<Pointer> pointerArrayField() {\n" +
-                                                                       "    return readArray(OFFSET_8, Pointer.class);\n" +
+                                                                       "  public final Pointer<Pointer<Void>> pointerArrayField() {\n" +
+                                                                       "    return readArray(OFFSET_8, Void.class).castpp();\n" +
                                                                        "  }\n" +
                                                                        "\n" +
                                                                        "  public final TestStructEmbedded structField() {\n" +

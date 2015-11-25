@@ -200,14 +200,4 @@ public abstract class StructType {
                       .offset(offset)
                       .castp(arrayType);
     }
-
-    @Nonnull
-    protected final <T> Pointer<Pointer<T>> readPointerArray(@Nonnegative final int offset,
-                                                             @Nonnull final Class<T> pointerType) {
-        return Pointer.wrap(Byte.class,
-                            buffer())
-                      .offset(offset)
-                      .castp(pointerType)
-                      .castpp();
-    }
 }

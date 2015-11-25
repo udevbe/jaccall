@@ -138,8 +138,8 @@ abstract class FieldsTestStruct_Jaccall_StructType extends StructType {
     }
 
     public final Pointer<Pointer<Void>> pointerArrayField() {
-        return readPointerArray(OFFSET_8,
-                                Void.class);
+        return readArray(OFFSET_8,
+                         Void.class).castpp();
     }
 
     public final TestStructEmbedded structField() {

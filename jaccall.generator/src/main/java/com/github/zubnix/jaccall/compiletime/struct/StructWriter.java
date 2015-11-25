@@ -196,6 +196,7 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
 
             VariableElement cType = null;
             Integer cardinality = 1;
+            Integer pointerDepth = 0;
             TypeMirror dataType = null;
             String name = null;
 
@@ -226,6 +227,20 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                 else if (fieldAttribute.getKey()
                                        .getSimpleName()
                                        .toString()
+                                       .equals("pointerDepth")) {
+                    pointerDepth = (Integer) fieldAttribute.getValue()
+                                                           .getValue();
+                    if (pointerDepth < 0) {
+                        this.structGenerator.getProcessingEnvironment()
+                                            .getMessager()
+                                            .printMessage(Diagnostic.Kind.ERROR,
+                                                          "Pointer depth can not be negative.",
+                                                          fieldAttribute.getKey());
+                    }
+                }
+                else if (fieldAttribute.getKey()
+                                       .getSimpleName()
+                                       .toString()
                                        .equals("dataType")) {
                     dataType = (TypeMirror) fieldAttribute.getValue()
                                                           .getValue();
@@ -244,6 +259,7 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                                  fieldDefinitions,
                                  cType,
                                  cardinality,
+                                 pointerDepth,
                                  dataType,
                                  union);
         }
@@ -254,6 +270,7 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                                       final LinkedList<FieldDefinition> fieldDefinitions,
                                       final VariableElement cType,
                                       final Integer cardinality,
+                                      final Integer pointerDepth,
                                       final TypeMirror dataType,
                                       final Boolean union) {
 
@@ -269,7 +286,8 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                                                            null,
                                                            "FFI_TYPE_SINT8",
                                                            union,
-                                                           cardinality));
+                                                           cardinality,
+                                                           pointerDepth));
                 break;
             }
             case UNSIGNED_CHAR: {
@@ -280,7 +298,8 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                                                            null,
                                                            "FFI_TYPE_UINT8",
                                                            union,
-                                                           cardinality));
+                                                           cardinality,
+                                                           pointerDepth));
                 break;
             }
             case SHORT: {
@@ -291,7 +310,8 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                                                            null,
                                                            "FFI_TYPE_SINT16",
                                                            union,
-                                                           cardinality));
+                                                           cardinality,
+                                                           pointerDepth));
                 break;
             }
             case UNSIGNED_SHORT: {
@@ -302,7 +322,8 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                                                            null,
                                                            "FFI_TYPE_UINT16",
                                                            union,
-                                                           cardinality));
+                                                           cardinality,
+                                                           pointerDepth));
                 break;
             }
             case INT: {
@@ -313,7 +334,8 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                                                            null,
                                                            "FFI_TYPE_SINT32",
                                                            union,
-                                                           cardinality));
+                                                           cardinality,
+                                                           pointerDepth));
                 break;
             }
             case UNSIGNED_INT: {
@@ -324,7 +346,8 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                                                            null,
                                                            "FFI_TYPE_UINT32",
                                                            union,
-                                                           cardinality));
+                                                           cardinality,
+                                                           pointerDepth));
                 break;
             }
             case LONG: {
@@ -335,7 +358,8 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                                                            null,
                                                            "FFI_TYPE_SLONG",
                                                            union,
-                                                           cardinality));
+                                                           cardinality,
+                                                           pointerDepth));
                 break;
             }
             case UNSIGNED_LONG: {
@@ -346,7 +370,8 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                                                            null,
                                                            "FFI_TYPE_ULONG",
                                                            union,
-                                                           cardinality));
+                                                           cardinality,
+                                                           pointerDepth));
                 break;
             }
             case LONG_LONG: {
@@ -357,7 +382,8 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                                                            null,
                                                            "FFI_TYPE_SINT64",
                                                            union,
-                                                           cardinality));
+                                                           cardinality,
+                                                           pointerDepth));
                 break;
             }
             case UNSIGNED_LONG_LONG: {
@@ -368,7 +394,8 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                                                            null,
                                                            "FFI_TYPE_UINT64",
                                                            union,
-                                                           cardinality));
+                                                           cardinality,
+                                                           pointerDepth));
                 break;
             }
             case FLOAT: {
@@ -379,7 +406,8 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                                                            null,
                                                            "FFI_TYPE_FLOAT",
                                                            union,
-                                                           cardinality));
+                                                           cardinality,
+                                                           pointerDepth));
                 break;
             }
             case DOUBLE: {
@@ -390,7 +418,8 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                                                            null,
                                                            "FFI_TYPE_DOUBLE",
                                                            union,
-                                                           cardinality));
+                                                           cardinality,
+                                                           pointerDepth));
                 break;
             }
             case POINTER: {
@@ -401,7 +430,8 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                                                            dataType,
                                                            "FFI_TYPE_POINTER",
                                                            union,
-                                                           cardinality));
+                                                           cardinality,
+                                                           pointerDepth));
                 break;
             }
             case STRUCT: {
@@ -610,7 +640,8 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                                                   final TypeMirror dataType,
                                                   final String ffiType,
                                                   final Boolean union,
-                                                  final Integer cardinality) {
+                                                  final Integer cardinality,
+                                                  Integer pointerDepth) {
         final CodeBlock sizeOfCode = CodeBlock.builder()
                                               .add("$T.sizeof(($T) null)",
                                                    Size.class,
@@ -645,29 +676,68 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
         final List<MethodSpec> accessors = new LinkedList<>();
 
         if (cardinality > 1) {
-            accessors.add(MethodSpec.methodBuilder(fieldName)
-                                    .addModifiers(Modifier.PUBLIC,
-                                                  Modifier.FINAL)
-                                    .returns(ParameterizedTypeName.get(Pointer.class,
-                                                                       javaType))
-                                    .addStatement("return readArray(OFFSET_$L, $T.class)",
-                                                  i,
-                                                  javaType)
-                                    .build());
+            if (Pointer.class.isAssignableFrom(javaType)) {
+                //array defines an implicit extra pointer depth
+                pointerDepth++;
+
+                TypeName dataTypeName = dataType == null ? ClassName.get(Void.class) : ClassName.get(dataType);
+                if (dataTypeName.isPrimitive()) {
+                    dataTypeName = dataTypeName.box();
+                }
+
+                ParameterizedTypeName pointerType = ParameterizedTypeName.get(ClassName.get(Pointer.class),
+                                                                              dataTypeName);
+
+                String statement = "return readArray(OFFSET_$L, $T.class)";
+                for (int j = 0; j < pointerDepth; j++) {
+                    pointerType = ParameterizedTypeName.get(ClassName.get(Pointer.class),
+                                                            pointerType);
+                    statement += ".castpp()";
+                }
+
+                accessors.add(MethodSpec.methodBuilder(fieldName)
+                                        .addModifiers(Modifier.PUBLIC,
+                                                      Modifier.FINAL)
+                                        .returns(pointerType)
+                                        .addStatement(statement,
+                                                      i,
+                                                      dataType)
+                                        .build());
+            }
+            else {
+                accessors.add(MethodSpec.methodBuilder(fieldName)
+                                        .addModifiers(Modifier.PUBLIC,
+                                                      Modifier.FINAL)
+                                        .returns(ParameterizedTypeName.get(Pointer.class,
+                                                                           javaType))
+                                        .addStatement("return readArray(OFFSET_$L, $T.class)",
+                                                      i,
+                                                      javaType)
+                                        .build());
+            }
         }
         else if (Pointer.class.isAssignableFrom(javaType)) {
-            TypeName dataTypeName = dataType == null ? ClassName.VOID : ClassName.get(dataType);
+            TypeName dataTypeName = dataType == null ? ClassName.get(Void.class) : ClassName.get(dataType);
             if (dataTypeName.isPrimitive()) {
                 dataTypeName = dataTypeName.box();
+            }
+
+            ParameterizedTypeName pointerType = ParameterizedTypeName.get(ClassName.get(Pointer.class),
+                                                                          dataTypeName);
+
+            String statement = "return readPointer(OFFSET_$L, $T.class)";
+            for (int j = 0; j < pointerDepth; j++) {
+                pointerType = ParameterizedTypeName.get(ClassName.get(Pointer.class),
+                                                        pointerType);
+                statement += ".castpp()";
             }
 
             //read
             accessors.add(MethodSpec.methodBuilder(fieldName)
                                     .addModifiers(Modifier.PUBLIC,
                                                   Modifier.FINAL)
-                                    .returns(ParameterizedTypeName.get(ClassName.get(Pointer.class),
-                                                                       dataTypeName))
-                                    .addStatement("return readPointer(OFFSET_$L, $T.class)",
+                                    .returns(pointerType)
+                                    .addStatement(statement,
                                                   i,
                                                   dataTypeName)
                                     .build());
@@ -675,8 +745,7 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
             accessors.add(MethodSpec.methodBuilder(fieldName)
                                     .addModifiers(Modifier.PUBLIC,
                                                   Modifier.FINAL)
-                                    .addParameter(ParameterizedTypeName.get(ClassName.get(Pointer.class),
-                                                                            dataTypeName),
+                                    .addParameter(pointerType,
                                                   CodeBlock.builder()
                                                            .add("$N",
                                                                 fieldName)
