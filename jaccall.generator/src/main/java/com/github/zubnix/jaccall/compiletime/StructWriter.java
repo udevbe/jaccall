@@ -31,6 +31,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.SimpleAnnotationValueVisitor7;
 import javax.tools.Diagnostic;
 import java.io.IOException;
 import java.util.Collections;
@@ -41,10 +42,46 @@ import java.util.Set;
 
 final class StructWriter {
 
+    private static final class GET_TYPE_MIRROR extends SimpleAnnotationValueVisitor7<TypeMirror, Void> {
+        @Override
+        public TypeMirror visitType(final TypeMirror typeMirror,
+                                    final Void aVoid) {
+            return typeMirror;
+        }
+    }
+
+    private static final class GET_STRING extends SimpleAnnotationValueVisitor7<String, Void> {
+        @Override
+        public String visitString(final String s,
+                                  final Void aVoid) {
+            return s;
+        }
+    }
+
+    private static final class GET_INT extends SimpleAnnotationValueVisitor7<Integer, Void> {
+        @Override
+        public Integer visitInt(final int i,
+                                final Void aVoid) {
+            return i;
+        }
+    }
+
+    private static final class GET_VAR_ELEMENT extends SimpleAnnotationValueVisitor7<VariableElement, Void> {
+        @Override
+        public VariableElement visitEnumConstant(final VariableElement variableElement,
+                                                 final Void aVoid) {
+            return variableElement;
+        }
+    }
+
+    private static final GET_TYPE_MIRROR GET_TYPE_MIRROR = new GET_TYPE_MIRROR();
+    private static final GET_STRING      GET_STRING      = new GET_STRING();
+    private static final GET_INT         GET_INT         = new GET_INT();
+    private static final GET_VAR_ELEMENT GET_VAR_ELEMENT = new GET_VAR_ELEMENT();
+
     private static final String STRUCT = Struct.class.getSimpleName();
     private final Messager messager;
     private final Filer    filer;
-
 
     StructWriter(final Messager messager,
                  final Filer filer) {
@@ -193,52 +230,44 @@ final class StructWriter {
             String name = null;
 
             for (final Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> fieldAttribute : fieldAnnotationMirror.getElementValues()
-                                                                                                                               .entrySet()) {
-                if (fieldAttribute.getKey()
-                                  .getSimpleName()
-                                  .toString()
-                                  .equals("type")) {
 
-                    cType = (VariableElement) fieldAttribute.getValue()
-                                                            .getValue();
-                }
-                else if (fieldAttribute.getKey()
-                                       .getSimpleName()
-                                       .toString()
-                                       .equals("cardinality")) {
-                    cardinality = (Integer) fieldAttribute.getValue()
-                                                          .getValue();
-                    if (cardinality < 1) {
-                        this.messager.printMessage(Diagnostic.Kind.ERROR,
-                                                   "Cardinality of struct field must be at least 1.",
-                                                   fieldAttribute.getKey());
-                    }
-                }
-                else if (fieldAttribute.getKey()
-                                       .getSimpleName()
-                                       .toString()
-                                       .equals("pointerDepth")) {
-                    pointerDepth = (Integer) fieldAttribute.getValue()
-                                                           .getValue();
-                    if (pointerDepth < 0) {
-                        this.messager.printMessage(Diagnostic.Kind.ERROR,
-                                                   "Pointer depth can not be negative.",
-                                                   fieldAttribute.getKey());
-                    }
-                }
-                else if (fieldAttribute.getKey()
-                                       .getSimpleName()
-                                       .toString()
-                                       .equals("dataType")) {
-                    dataType = (TypeMirror) fieldAttribute.getValue()
-                                                          .getValue();
-                }
-                else if (fieldAttribute.getKey()
-                                       .getSimpleName()
-                                       .toString()
-                                       .equals("name")) {
-                    name = (String) fieldAttribute.getValue()
-                                                  .getValue();
+
+                                                                                                                               .entrySet()) {
+                final AnnotationValue annotationValue = fieldAttribute.getValue();
+                final String fieldAttrName = fieldAttribute.getKey()
+                                                           .getSimpleName()
+                                                           .toString();
+                switch (fieldAttrName) {
+                    case "type":
+                        cType = annotationValue.accept(GET_VAR_ELEMENT,
+                                                       null);
+                        break;
+                    case "cardinality":
+                        cardinality = annotationValue.accept(GET_INT,
+                                                             null);
+                        if (cardinality < 1) {
+                            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                                       "Cardinality of struct field must be at least 1.",
+                                                       fieldAttribute.getKey());
+                        }
+                        break;
+                    case "pointerDepth":
+                        pointerDepth = annotationValue.accept(GET_INT,
+                                                              null);
+                        if (pointerDepth < 0) {
+                            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                                       "Pointer depth can not be negative.",
+                                                       fieldAttribute.getKey());
+                        }
+                        break;
+                    case "dataType":
+                        dataType = annotationValue.accept(GET_TYPE_MIRROR,
+                                                          null);
+                        break;
+                    case "name":
+                        name = annotationValue.accept(GET_STRING,
+                                                      null);
+                        break;
                 }
             }
 
