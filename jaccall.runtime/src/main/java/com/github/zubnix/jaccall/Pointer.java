@@ -329,6 +329,25 @@ public abstract class Pointer<T> implements AutoCloseable {
                                  val.buffer());
     }
 
+    @SafeVarargs
+    @Nonnull
+    public static <U extends StructType> Pointer<U> nref(@Nonnull final U... val) {
+
+        final int length = Objects.requireNonNull(val,
+                                                  "Argument val must not be null").length;
+        if (length == 0) {
+            throw new IllegalArgumentException("Cannot allocate zero length array.");
+        }
+
+        final Pointer<U> pointer = (Pointer<U>) createStack(val[0].getClass(),
+                                                            sizeof(val[0]),
+                                                            length);
+        pointer.write(length,
+                      val);
+
+        return pointer;
+    }
+
     /**
      * Create a pointer with newly allocated memory. The memory is initialized with the given pointers.
      * The memory is subject to Java's GC and as such should only be used in case where one would need stack

@@ -1,17 +1,23 @@
+struct test_embedded {
+        long long embedded_field0;
+        float embedded_field1;
+};
+
 struct test {
     char field0;
     short field1;
     int field2[3];
     int *field3;
-    struct test_embedded {
-        long long embedded_field0;
-        float embedded_field1;
-    } field4;
+    struct test_embedded field4;
 };
 
 union testunion {
     int field0;
     float field1;
+};
+
+struct fieldsTest {
+    //TODO
 };
 
 typedef char(*testFunc)(struct test*, unsigned int, struct test);
@@ -125,3 +131,17 @@ union testunion (*unionTestFunctionPointer(void))(union testunion *tst,
 
 union testunion* (*unionTest2FunctionPointer(void))(union testunion tst,
                                                     int embedded_field0);
+
+void writeFieldsTestStruct(struct fieldsTest*,
+                           char charField,
+                           short shortField,
+                           int intField,
+                           long longField,
+                           long long longLongField,
+                           float floatField,
+                           double doubleField,
+                           void* pointerField,
+                           void** pointerArrayField,
+                           struct test_embedded structField,
+                           struct test_embedded structArrayField[],
+                           int structArrayFieldSize);

@@ -46,7 +46,8 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                            "structTestFunctionPointer",
                            "structTest2FunctionPointer",
                            "unionTestFunctionPointer",
-                           "unionTest2FunctionPointer"
+                           "unionTest2FunctionPointer",
+                           "writeFieldsTestStruct"
               },
               new byte[]{1,
                          1,
@@ -85,7 +86,8 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                          0,
                          0,
                          0,
-                         0
+                         0,
+                         13
               },
               new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_SINT8,
                                                JNI.FFI_TYPE_SINT8),
@@ -160,7 +162,23 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                          JNI.ffi_callInterface(JNI.FFI_TYPE_POINTER),
                          JNI.ffi_callInterface(JNI.FFI_TYPE_POINTER),
                          JNI.ffi_callInterface(JNI.FFI_TYPE_POINTER),
-                         JNI.ffi_callInterface(JNI.FFI_TYPE_POINTER)
+                         JNI.ffi_callInterface(JNI.FFI_TYPE_POINTER),
+                         JNI.ffi_callInterface(JNI.FFI_TYPE_VOID,
+                                               JNI.FFI_TYPE_POINTER,
+                                               JNI.FFI_TYPE_SINT8,
+                                               JNI.FFI_TYPE_SINT16,
+                                               JNI.FFI_TYPE_SINT32,
+                                               JNI.FFI_TYPE_SLONG,
+                                               JNI.FFI_TYPE_SINT64,
+                                               JNI.FFI_TYPE_FLOAT,
+                                               JNI.FFI_TYPE_DOUBLE,
+                                               JNI.FFI_TYPE_POINTER,
+                                               JNI.FFI_TYPE_POINTER,
+                                               JNI.FFI_TYPE_POINTER,
+                                               JNI.FFI_TYPE_POINTER,
+                                               TestStructEmbedded.FFI_TYPE,
+                                               JNI.FFI_TYPE_POINTER,
+                                               JNI.FFI_TYPE_SINT32)
               },
               new String[]{"(B)B",
                            "(B)B",
@@ -199,7 +217,8 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                            "()J",
                            "()J",
                            "()J",
-                           "()J"
+                           "()J",
+                           "(JBSIJJFDJJJJI)V"
               });
     }
 }

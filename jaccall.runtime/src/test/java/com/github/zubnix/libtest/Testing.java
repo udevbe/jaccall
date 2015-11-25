@@ -71,6 +71,20 @@ public class Testing {
 
     public native byte charTest(byte value);
 
+    public native void writeFieldsTestStruct(final long fieldsTestStruct,
+                                             final byte charField,
+                                             final short shortField,
+                                             final int intField,
+                                             final long longField,
+                                             final long longLongField,
+                                             final float floatField,
+                                             final double doubleField,
+                                             final long pointerField,
+                                             final long pointerArrayField,
+                                             final long structField,
+                                             final long structArrayField,
+                                             final int structArrayFieldSize);
+
     @Functor
     public interface CharFunc {
         byte $(byte value);
