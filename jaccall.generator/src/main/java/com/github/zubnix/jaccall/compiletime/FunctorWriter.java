@@ -78,15 +78,102 @@ final class FunctorWriter {
                       cFunctorName,
                       typeElement,
                       executableElement);
-        writeJavaFunctor(javaFunctorName,
+        writeJavaFunctor(factoryName,
+                         javaFunctorName,
                          typeElement,
                          executableElement);
     }
 
-    private void writeJavaFunctor(final String javaFunctorName,
-                                  final TypeElement functorElement,
+    private void writeJavaFunctor(final String factoryName,
+                                  final String javaFunctorName,
+                                  final TypeElement element,
                                   final ExecutableElement executableElement) {
 
+        final AnnotationSpec annotationSpec = AnnotationSpec.builder(Generated.class)
+                                                            .addMember("value",
+                                                                       "$S",
+                                                                       JaccallGenerator.class.getName())
+                                                            .build();
+
+        final String packageName = this.elementUtils.getPackageOf(element)
+                                                    .toString();
+
+        final TypeMirror                returnType      = executableElement.getReturnType();
+        final LinkedList<ParameterSpec> $ParameterSpecs = new LinkedList<>();
+        final StringBuilder             parameterNames  = new StringBuilder();
+
+        final java.util.List<? extends VariableElement> parameters = executableElement.getParameters();
+        for (int i = 0; i < parameters.size(); i++) {
+            final VariableElement variableElement = parameters.get(i);
+            final String parameterName = variableElement.getSimpleName()
+                                                        .toString();
+            $ParameterSpecs.add(ParameterSpec.builder(ClassName.get(variableElement.asType()),
+                                                      parameterName)
+                                             .build());
+            if (i != 0) {
+                parameterNames.append(", ");
+            }
+            parameterNames.append(parameterName);
+        }
+
+        final CodeBlock $Statement = CodeBlock.builder()
+                                              .add(returnType.getKind()
+                                                             .equals(TypeKind.VOID) ? "" : "return ")
+                                              .add("this.function.$$($L)",
+                                                   parameterNames)
+                                              .build();
+        final MethodSpec $ = MethodSpec.methodBuilder("$")
+                                       .addModifiers(Modifier.PUBLIC)
+                                       .addAnnotation(Override.class)
+                                       .returns(ClassName.get(returnType))
+                                       .addParameters($ParameterSpecs)
+                                       .addStatement("$L",
+                                                     $Statement)
+                                       .build();
+
+        final MethodSpec constructor = MethodSpec.constructorBuilder()
+                                                 .addParameter(ClassName.get(element),
+                                                               "function")
+                                                 .addStatement("super($T.ffi_closure(FFI_CIF, function, JNI_METHOD_ID))",
+                                                               JNI.class)
+                                                 .addStatement("this.function = function")
+                                                 .build();
+
+        final FieldSpec jniMethodId = FieldSpec.builder(long.class,
+                                                        "JNI_METHOD_ID",
+                                                        Modifier.PRIVATE,
+                                                        Modifier.STATIC,
+                                                        Modifier.FINAL)
+                                               .initializer("$T.GetMethodID($T.class, $S, $S)",
+                                                            JNI.class,
+                                                            ClassName.get(element),
+                                                            "$",
+                                                            new MethodParser(this.messager).parseJniSignature(executableElement))
+                                               .build();
+
+        final TypeSpec typeSpec = TypeSpec.classBuilder(javaFunctorName)
+                                          .addAnnotation(annotationSpec)
+                                          .addModifiers(Modifier.FINAL)
+                                          .superclass(ClassName.get(packageName,
+                                                                    factoryName))
+                                          .addField(jniMethodId)
+                                          .addMethod(constructor)
+                                          .addMethod($)
+                                          .build();
+
+        final JavaFile javaFile = JavaFile.builder(packageName,
+                                                   typeSpec)
+                                          .skipJavaLangImports(true)
+                                          .build();
+        try {
+            javaFile.writeTo(this.filer);
+        }
+        catch (final IOException e) {
+            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                       "Could not write linksymbols source file: \n" + javaFile.toString(),
+                                       element);
+            e.printStackTrace();
+        }
     }
 
     private void writeCFunctor(final String factoryName,
@@ -135,6 +222,8 @@ final class FunctorWriter {
                                                    parameterNames)
                                               .build();
         final MethodSpec $ = MethodSpec.methodBuilder("$")
+                                       .addModifiers(Modifier.PUBLIC)
+                                       .addAnnotation(Override.class)
                                        .returns(ClassName.get(returnType))
                                        .addParameters($ParameterSpecs)
                                        .addStatement("$L",
