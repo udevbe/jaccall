@@ -45,29 +45,21 @@ final class PointerStruct extends Pointer<StructType> {
         }
     }
 
-    @Override
-    void write(@Nonnull final ByteBuffer byteBuffer,
-               @Nonnull final StructType... val) {
-        writei(byteBuffer,
-               0,
+    public void write(@Nonnull final StructType val) {
+        writei(0,
                val);
     }
 
     @Override
-    void writei(@Nonnull final ByteBuffer byteBuffer,
-                @Nonnegative final int index,
-                @Nonnull final StructType... val) {
-        if (val.length == 0) {
-            return;
-        }
+    public void writei(@Nonnegative final int index,
+                       @Nonnull final StructType val) {
 
-        byteBuffer.clear();
-        final long structTypeSize = sizeof(val[0]);
-        byteBuffer.position((int) (index * structTypeSize));
-        for (final StructType structType : val) {
-            structType.buffer()
-                      .rewind();
-            byteBuffer.put(structType.buffer());
-        }
+        this.byteBuffer.clear();
+        final long structTypeSize = sizeof(val);
+        this.byteBuffer.position((int) (index * structTypeSize));
+
+        val.buffer()
+           .rewind();
+        this.byteBuffer.put(val.buffer());
     }
 }

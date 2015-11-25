@@ -299,7 +299,10 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<CLong> pointer = (Pointer<CLong>) createStack(componentType,
                                                                     sizeof((CLong) null),
                                                                     length);
-        pointer.write(val);
+        for (int i = 0; i < length; i++) {
+            pointer.writei(i,
+                           val[i]);
+        }
 
         return pointer;
     }
@@ -352,7 +355,8 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<U> pointer = (Pointer<U>) createStack(val[0].getClass(),
                                                             sizeof((Pointer) null),
                                                             length);
-        pointer.write(val);
+        pointer.write(length,
+                      val);
 
         return pointer;
     }
@@ -380,7 +384,8 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<Byte> pointer = createStack(Byte.class,
                                                   sizeof((Byte) null),
                                                   length);
-        pointer.write(val);
+        pointer.write(length,
+                      val);
 
         return pointer;
     }
@@ -408,7 +413,8 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<Short> pointer = createStack(Short.class,
                                                    sizeof((Short) null),
                                                    length);
-        pointer.write(val);
+        pointer.write(length,
+                      val);
 
         return pointer;
     }
@@ -436,7 +442,8 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<Integer> pointer = createStack(Integer.class,
                                                      sizeof((Integer) null),
                                                      length);
-        pointer.write(val);
+        pointer.write(length,
+                      val);
 
         return pointer;
     }
@@ -464,7 +471,8 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<Float> pointer = createStack(Float.class,
                                                    sizeof((Float) null),
                                                    length);
-        pointer.write(val);
+        pointer.write(length,
+                      val);
 
         return pointer;
     }
@@ -492,7 +500,8 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<Long> pointer = createStack(Long.class,
                                                   sizeof((Long) null),
                                                   length);
-        pointer.write(val);
+        pointer.write(length,
+                      val);
 
         return pointer;
     }
@@ -520,7 +529,8 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<Double> pointer = createStack(Double.class,
                                                     sizeof((Double) null),
                                                     length);
-        pointer.write(val);
+        pointer.write(length,
+                      val);
 
         return pointer;
     }
@@ -721,26 +731,18 @@ public abstract class Pointer<T> implements AutoCloseable {
                     this.byteBuffer);
     }
 
-    @SafeVarargs
-    public final void write(@Nonnull final T... val) {
-        write(this.byteBuffer,
-              val);
+    public abstract void write(@Nonnull final T val);
+
+    public abstract void writei(@Nonnegative final int index,
+                                @Nonnull final T val);
+
+    private void write(final int length,
+                       final T[] vals) {
+        for (int i = 0; i < length; i++) {
+            writei(i,
+                   vals[i]);
+        }
     }
-
-    abstract void write(@Nonnull ByteBuffer byteBuffer,
-                        @Nonnull final T... val);
-
-    @SafeVarargs
-    public final void writei(@Nonnegative final int index,
-                             @Nonnull final T... val) {
-        writei(this.byteBuffer,
-               index,
-               val);
-    }
-
-    abstract void writei(@Nonnull ByteBuffer byteBuffer,
-                         @Nonnegative final int index,
-                         @Nonnull final T... val);
 
     @Nonnull
     static Class<?> toClass(@Nonnull final Type type) {

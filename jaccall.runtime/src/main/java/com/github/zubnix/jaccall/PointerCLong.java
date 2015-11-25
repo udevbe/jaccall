@@ -47,40 +47,30 @@ final class PointerCLong extends Pointer<CLong> {
     }
 
     @Override
-    void write(@Nonnull final ByteBuffer byteBuffer,
-               @Nonnull final CLong... val) {
-        writei(byteBuffer,
-               0,
+    public void write(@Nonnull final CLong val) {
+        writei(0,
                val);
     }
 
     @Override
-    public void writei(@Nonnull final ByteBuffer byteBuffer,
-                       @Nonnegative final int index,
-                       @Nonnull final CLong... val) {
-        if (val.length == 0) {
-            return;
-        }
+    public void writei(@Nonnegative final int index,
+                       @Nonnull final CLong val) {
 
         final long clongSize = sizeof((CLong) null);
 
         if (clongSize == 8) {
             //64-bit
-            final LongBuffer buffer = byteBuffer.asLongBuffer();
+            final LongBuffer buffer = this.byteBuffer.asLongBuffer();
             buffer.clear();
             buffer.position(index);
-            for (final CLong cLong : val) {
-                buffer.put(cLong.longValue());
-            }
+            buffer.put(val.longValue());
         }
         else if (clongSize == 4) {
             //32-bit
-            final IntBuffer buffer = byteBuffer.asIntBuffer();
+            final IntBuffer buffer = this.byteBuffer.asIntBuffer();
             buffer.clear();
             buffer.position(index);
-            for (final CLong cLong : val) {
-                buffer.put(cLong.intValue());
-            }
+            buffer.put(val.intValue());
         }
     }
 }

@@ -33,21 +33,16 @@ final class PointerByte extends Pointer<Byte> {
     }
 
     @Override
-    void write(@Nonnull final ByteBuffer byteBuffer,
-               @Nonnull final Byte... val) {
-        writei(byteBuffer,
-               0,
+    public void write(@Nonnull final Byte val) {
+        writei(0,
                val);
     }
 
     @Override
-    public void writei(@Nonnull final ByteBuffer byteBuffer,
-                       @Nonnegative final int index,
-                       @Nonnull final Byte... val) {
-        byteBuffer.clear();
-        byteBuffer.position(index);
-        for (final Byte aByte : val) {
-            byteBuffer.put(aByte);
-        }
+    public void writei(@Nonnegative final int index,
+                       @Nonnull final Byte val) {
+        this.byteBuffer.clear();
+        this.byteBuffer.position(index);
+        this.byteBuffer.put(val);
     }
 }

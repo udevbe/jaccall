@@ -26,18 +26,14 @@ public abstract class PointerFunc<T> extends Pointer<T> {
         throw new UnsupportedOperationException();
     }
 
-    @SafeVarargs
     @Override
-    final void write(@Nonnull final ByteBuffer byteBuffer,
-                     @Nonnull final T... val) {
+    public final void write(@Nonnull final T val) {
         throw new UnsupportedOperationException();
     }
 
-    @SafeVarargs
     @Override
-    final void writei(@Nonnull final ByteBuffer byteBuffer,
-                      @Nonnegative final int index,
-                      @Nonnull final T... val) {
+    public final void writei(@Nonnegative final int index,
+                             @Nonnull final T val) {
         throw new UnsupportedOperationException();
     }
 }

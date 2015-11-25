@@ -35,22 +35,17 @@ final class PointerInt extends Pointer<Integer> {
     }
 
     @Override
-    void write(@Nonnull final ByteBuffer byteBuffer,
-               @Nonnull final Integer... val) {
-        writei(byteBuffer,
-               0,
+    public void write(@Nonnull final Integer val) {
+        writei(0,
                val);
     }
 
     @Override
-    public void writei(@Nonnull final ByteBuffer byteBuffer,
-                       @Nonnegative final int index,
-                       @Nonnull final Integer... val) {
-        final IntBuffer buffer = byteBuffer.asIntBuffer();
+    public void writei(@Nonnegative final int index,
+                       @Nonnull final Integer val) {
+        final IntBuffer buffer = this.byteBuffer.asIntBuffer();
         buffer.clear();
         buffer.position(index);
-        for (final Integer integer : val) {
-            buffer.put(integer);
-        }
+        buffer.put(val);
     }
 }

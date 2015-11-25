@@ -48,23 +48,18 @@ class PointerString extends Pointer<String> {
     }
 
     @Override
-    void write(@Nonnull final ByteBuffer byteBuffer,
-               @Nonnull final String... val) {
-        writei(byteBuffer,
-               0,
+    public void write(@Nonnull final String val) {
+        writei(0,
                val);
     }
 
     @Override
-    void writei(@Nonnull final ByteBuffer byteBuffer,
-                @Nonnegative final int index,
-                @Nonnull final String... val) {
-        byteBuffer.position(index);
-        for (final String s : val) {
-            CHARSET_ENCODER.encode(CharBuffer.wrap(s),
-                                   byteBuffer,
-                                   true);
-            byteBuffer.put((byte) 0);
-        }
+    public void writei(@Nonnegative final int index,
+                       @Nonnull final String val) {
+        this.byteBuffer.position(index);
+        CHARSET_ENCODER.encode(CharBuffer.wrap(val),
+                               this.byteBuffer,
+                               true);
+        this.byteBuffer.put((byte) 0);
     }
 }

@@ -34,22 +34,17 @@ public class PointerShort extends Pointer<Short> {
     }
 
     @Override
-    void write(@Nonnull final ByteBuffer byteBuffer,
-               @Nonnull final Short... val) {
-        writei(byteBuffer,
-               0,
+    public void write(@Nonnull final Short val) {
+        writei(0,
                val);
     }
 
     @Override
-    public void writei(@Nonnull final ByteBuffer byteBuffer,
-                       @Nonnegative final int index,
-                       @Nonnull final Short... val) {
-        final ShortBuffer buffer = byteBuffer.asShortBuffer();
+    public void writei(@Nonnegative final int index,
+                       @Nonnull final Short val) {
+        final ShortBuffer buffer = this.byteBuffer.asShortBuffer();
         buffer.clear();
         buffer.position(index);
-        for (final Short aShort : val) {
-            buffer.put(aShort);
-        }
+        buffer.put(val);
     }
 }
