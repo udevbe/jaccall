@@ -8,7 +8,6 @@ import java.nio.ByteOrder;
 
 import static java.nio.ByteBuffer.allocateDirect;
 
-//TODO unit test all read+write struct operations
 public abstract class StructType {
 
     protected static int newOffset(final int align,
