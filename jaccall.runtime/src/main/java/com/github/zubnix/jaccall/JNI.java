@@ -146,6 +146,7 @@ public final class JNI {
 
     public static native long ffi_type_union(long... ffiTypes);
 
+    @Nonnegative
     public static native int ffi_type_struct_size(long ffiStructType);
 
     public static native long ffi_callInterface(long return_type,

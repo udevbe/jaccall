@@ -389,6 +389,50 @@ public class StructWriterTest {
 
     @Test
     public void testMixed() {
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.struct.FieldsTestStruct",
+                                                                          "package com.github.zubnix.libtest.struct;\n" +
+                                                                          "import com.github.zubnix.jaccall.CType;\n" +
+                                                                          "import com.github.zubnix.jaccall.Field;\n" +
+                                                                          "import com.github.zubnix.jaccall.Struct;\n" +
+                                                                          "import com.github.zubnix.jaccall.compiletime.linker.TestStructEmbedded;\n" +
+                                                                          "        @Struct({\n" +
+                                                                          "                        @Field(name = \"charField\",\n" +
+                                                                          "                               type = CType.CHAR),\n" +
+                                                                          "                        @Field(name = \"shortField\",\n" +
+                                                                          "                               type = CType.SHORT),\n" +
+                                                                          "                        @Field(name = \"intField\",\n" +
+                                                                          "                               type = CType.INT),\n" +
+                                                                          "                        @Field(name = \"longField\",\n" +
+                                                                          "                               type = CType.LONG),\n" +
+                                                                          "                        @Field(name = \"longLongField\",\n" +
+                                                                          "                               type = CType.LONG_LONG),\n" +
+                                                                          "                        @Field(name = \"floatField\",\n" +
+                                                                          "                               type = CType.FLOAT),\n" +
+                                                                          "                        @Field(name = \"doubleField\",\n" +
+                                                                          "                               type = CType.DOUBLE),\n" +
+                                                                          "                        @Field(name = \"pointerField\",\n" +
+                                                                          "                               type = CType.POINTER,\n" +
+                                                                          "                               dataType = Void.class),\n" +
+                                                                          "                        @Field(name = \"pointerArrayField\",\n" +
+                                                                          "                               type = CType.POINTER,\n" +
+                                                                          "                               dataType = Void.class,\n" +
+                                                                          "                               cardinality = 3),\n" +
+                                                                          "                        @Field(name = \"structField\",\n" +
+                                                                          "                               type = CType.STRUCT,\n" +
+                                                                          "                               dataType = TestStructEmbedded.class),\n" +
+                                                                          "                        @Field(name = \"structArrayField\",\n" +
+                                                                          "                               type = CType.STRUCT,\n" +
+                                                                          "                               dataType = TestStructEmbedded.class,\n" +
+                                                                          "                               cardinality = 3),\n" +
+                                                                          "                })\n" +
+                                                                          "        public final class FieldsTestStruct extends FieldsTestStruct_Jaccall_StructType {\n" +
+                                                                          "        }");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new StructGenerator());
+        //then
         //TODO
     }
 }
