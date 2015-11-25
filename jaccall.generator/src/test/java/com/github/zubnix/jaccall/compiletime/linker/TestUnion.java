@@ -16,6 +16,6 @@ import static com.github.zubnix.jaccall.CType.UNSIGNED_INT;
                 @Field(type = UNSIGNED_INT,
                        name = "field2"),
         })
-public class TestUnion extends TestUnion_Jaccall_StructType {
+public final class TestUnion extends TestUnion_Jaccall_StructType {
 
 }

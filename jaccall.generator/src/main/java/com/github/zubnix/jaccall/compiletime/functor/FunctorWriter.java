@@ -1,18 +1,14 @@
 package com.github.zubnix.jaccall.compiletime.functor;
 
 
-import com.github.zubnix.jaccall.Functor;
 import com.github.zubnix.jaccall.PointerFunc;
-import com.google.auto.common.BasicAnnotationProcessor;
 import com.google.auto.common.SuperficialValidation;
-import com.google.common.collect.SetMultimap;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import javax.annotation.Generated;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
@@ -20,11 +16,10 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.Set;
 
-final class FunctorWriter implements BasicAnnotationProcessor.ProcessingStep {
+final class FunctorWriter {
 
     private final FunctorGenerator functorGenerator;
 
@@ -33,18 +28,13 @@ final class FunctorWriter implements BasicAnnotationProcessor.ProcessingStep {
         this.functorGenerator = functorGenerator;
     }
 
-    @Override
-    public Set<? extends Class<? extends Annotation>> annotations() {
-        return Collections.singleton(Functor.class);
-    }
-
-    @Override
-    public void process(final SetMultimap<Class<? extends Annotation>, Element> elementsByAnnotation) {
-        for (final TypeElement typeElement : ElementFilter.typesIn(elementsByAnnotation.values())) {
+    public void process(final Set<? extends TypeElement> typeElements) {
+        for (final TypeElement typeElement : typeElements) {
             if (SuperficialValidation.validateElement(typeElement)) {
                 for (final ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
                     writeFunctorImplementation(typeElement,
                                                executableElement);
+                    break;
                 }
             }
             else {

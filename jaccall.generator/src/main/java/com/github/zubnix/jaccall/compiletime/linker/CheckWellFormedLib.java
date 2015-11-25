@@ -1,36 +1,30 @@
 package com.github.zubnix.jaccall.compiletime.linker;
 
-import com.github.zubnix.jaccall.Lib;
 import com.github.zubnix.jaccall.compiletime.MethodValidator;
-import com.google.auto.common.BasicAnnotationProcessor;
 import com.google.auto.common.SuperficialValidation;
-import com.google.common.collect.SetMultimap;
 
-import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
-import java.lang.annotation.Annotation;
-import java.util.Collections;
 import java.util.Set;
 
-final class CheckWellFormedLib implements BasicAnnotationProcessor.ProcessingStep {
+final class CheckWellFormedLib {
 
     private final LinkerGenerator linkerGenerator;
 
+    private boolean inError;
+
     CheckWellFormedLib(final LinkerGenerator linkerGenerator) {this.linkerGenerator = linkerGenerator;}
 
-    @Override
-    public Set<? extends Class<? extends Annotation>> annotations() {
-        return Collections.singleton(Lib.class);
+    public boolean isInError() {
+        return this.inError;
     }
 
-    @Override
-    public void process(final SetMultimap<Class<? extends Annotation>, Element> elementsByAnnotation) {
+    public void process(final Set<? extends TypeElement> typeElements) {
 
-        for (final TypeElement typeElement : ElementFilter.typesIn(elementsByAnnotation.values())) {
+        for (final TypeElement typeElement : typeElements) {
 
             if (SuperficialValidation.validateElement(typeElement)) {
 
@@ -41,8 +35,8 @@ final class CheckWellFormedLib implements BasicAnnotationProcessor.ProcessingSte
 
                 for (final ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
                     methodValidator.validateIfNative(executableElement);
+                    this.inError |= methodValidator.isInError();
                 }
-
             }
             else {
                 this.linkerGenerator.getProcessingEnvironment()
@@ -50,6 +44,7 @@ final class CheckWellFormedLib implements BasicAnnotationProcessor.ProcessingSte
                                     .printMessage(Diagnostic.Kind.ERROR,
                                                   "Could not resolve all required compile time type information.",
                                                   typeElement);
+                this.inError = true;
             }
         }
     }
@@ -64,6 +59,7 @@ final class CheckWellFormedLib implements BasicAnnotationProcessor.ProcessingSte
                                 .printMessage(Diagnostic.Kind.ERROR,
                                               "@Lib annotation should be placed on top level class types only.",
                                               typeElement);
+            this.inError = true;
         }
     }
 
@@ -75,6 +71,7 @@ final class CheckWellFormedLib implements BasicAnnotationProcessor.ProcessingSte
                                 .printMessage(Diagnostic.Kind.ERROR,
                                               "@Lib annotation should be placed on class type only.",
                                               typeElement);
+            this.inError = true;
         }
     }
 }

@@ -7,8 +7,6 @@ import com.github.zubnix.jaccall.Pointer;
 import com.github.zubnix.jaccall.Size;
 import com.github.zubnix.jaccall.Struct;
 import com.github.zubnix.jaccall.StructType;
-import com.google.auto.common.BasicAnnotationProcessor;
-import com.google.common.collect.SetMultimap;
 import com.google.common.primitives.Primitives;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
@@ -23,7 +21,6 @@ import com.squareup.javapoet.TypeSpec;
 import javax.annotation.Generated;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
@@ -34,14 +31,13 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-final class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
+final class StructWriter {
 
     private static final String STRUCT = Struct.class.getSimpleName();
 
@@ -51,14 +47,8 @@ final class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
         this.structGenerator = structGenerator;
     }
 
-    @Override
-    public Set<? extends Class<? extends Annotation>> annotations() {
-        return Collections.singleton(Struct.class);
-    }
-
-    @Override
-    public void process(final SetMultimap<Class<? extends Annotation>, Element> elementsByAnnotation) {
-        for (final TypeElement typeElement : ElementFilter.typesIn(elementsByAnnotation.values())) {
+    public void process(final Set<? extends TypeElement> typeElements) {
+        for (final TypeElement typeElement : typeElements) {
             parseStructFields(typeElement);
         }
     }

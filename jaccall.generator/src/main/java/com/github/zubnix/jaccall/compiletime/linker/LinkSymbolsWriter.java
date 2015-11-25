@@ -2,11 +2,8 @@ package com.github.zubnix.jaccall.compiletime.linker;
 
 
 import com.github.zubnix.jaccall.JNI;
-import com.github.zubnix.jaccall.Lib;
 import com.github.zubnix.jaccall.LinkSymbols;
 import com.github.zubnix.jaccall.compiletime.MethodParser;
-import com.google.auto.common.BasicAnnotationProcessor;
-import com.google.common.collect.SetMultimap;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.CodeBlock;
@@ -15,7 +12,6 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 import javax.annotation.Generated;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
@@ -23,12 +19,11 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-final class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingStep {
+final class LinkSymbolsWriter {
 
     private final LinkerGenerator linkerGenerator;
 
@@ -36,24 +31,17 @@ final class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingStep
         this.linkerGenerator = linkerGenerator;
     }
 
-    @Override
-    public Set<? extends Class<? extends Annotation>> annotations() {
-        return Collections.singleton(Lib.class);
-    }
-
-    @Override
-    public void process(final SetMultimap<Class<? extends Annotation>, Element> elementsByAnnotation) {
+    public void process(final Set<? extends TypeElement> typeElements) {
 
         final MethodParser methodParser = new MethodParser(this.linkerGenerator.getProcessingEnvironment());
 
-        for (final Element element : elementsByAnnotation.values()) {
+        for (final TypeElement typeElement : typeElements) {
 
             final CodeBlock.Builder methodNamesArray = CodeBlock.builder();
             final CodeBlock.Builder argSizesArray = CodeBlock.builder();
             final CodeBlock.Builder ffiSignaturesArray = CodeBlock.builder();
             final CodeBlock.Builder jniSignaturesArray = CodeBlock.builder();
 
-            final TypeElement typeElement = (TypeElement) element;
             final List<ExecutableElement> methodsIn = ElementFilter.methodsIn(typeElement.getEnclosedElements());
             for (int i = 0; i < methodsIn.size(); i++) {
                 final ExecutableElement executableElement = methodsIn.get(i);
@@ -103,7 +91,7 @@ final class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingStep
                                                                            "$S",
                                                                            LinkerGenerator.class.getName())
                                                                 .build();
-            final TypeSpec typeSpec = TypeSpec.classBuilder(element.getSimpleName() + "_Jaccall_LinkSymbols")
+            final TypeSpec typeSpec = TypeSpec.classBuilder(typeElement.getSimpleName() + "_Jaccall_LinkSymbols")
                                               .addAnnotation(annotationSpec)
                                               .addModifiers(Modifier.PUBLIC)
                                               .addModifiers(Modifier.FINAL)
@@ -111,7 +99,7 @@ final class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingStep
                                               .addMethod(constructor)
                                               .build();
 
-            for (final PackageElement packageElement : ElementFilter.packagesIn(Collections.singletonList(element.getEnclosingElement()))) {
+            for (final PackageElement packageElement : ElementFilter.packagesIn(Collections.singletonList(typeElement.getEnclosingElement()))) {
                 final JavaFile javaFile = JavaFile.builder(packageElement.getQualifiedName()
                                                                          .toString(),
                                                            typeSpec)
@@ -126,7 +114,7 @@ final class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingStep
                                         .getMessager()
                                         .printMessage(Diagnostic.Kind.ERROR,
                                                       "Could not write linksymbols source file: \n" + javaFile.toString(),
-                                                      element);
+                                                      typeElement);
                     e.printStackTrace();
                 }
             }

@@ -1,8 +1,6 @@
 package com.github.zubnix.jaccall.compiletime.struct;
 
 import com.github.zubnix.jaccall.Struct;
-import com.google.auto.common.BasicAnnotationProcessor;
-import com.google.common.collect.SetMultimap;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
@@ -18,30 +16,29 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
-import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-final class CheckWellFormedStruct implements BasicAnnotationProcessor.ProcessingStep {
+final class CheckWellFormedStruct {
 
     private final StructGenerator structGenerator;
+
+    private boolean inError;
 
     CheckWellFormedStruct(final StructGenerator structGenerator) {
 
         this.structGenerator = structGenerator;
     }
 
-    @Override
-    public Set<? extends Class<? extends Annotation>> annotations() {
-        return Collections.singleton(Struct.class);
+    public boolean isInError() {
+        return this.inError;
     }
 
-    @Override
-    public void process(final SetMultimap<Class<? extends Annotation>, Element> elementsByAnnotation) {
-        for (final TypeElement typeElement : ElementFilter.typesIn(elementsByAnnotation.values())) {
+    public void process(final Set<? extends TypeElement> typeElements) {
+        for (final TypeElement typeElement : typeElements) {
             //TODO we should allow non-top level structs and simply fail on name clash
             isTopLevel(typeElement);
 
@@ -52,7 +49,7 @@ final class CheckWellFormedStruct implements BasicAnnotationProcessor.Processing
             hasDefaultConstructor(typeElement);
             hasNonEmptyStructAnnotation(typeElement);
             doesNotHaveStaticSIZEField(typeElement);
-            extendsGeneratedStructType(typeElement);
+            //extendsGeneratedStructType(typeElement);
             doesNotHaveSameNameFields(typeElement);
         }
     }
@@ -72,11 +69,11 @@ final class CheckWellFormedStruct implements BasicAnnotationProcessor.Processing
                              .equals("value")) {
                         final List<? extends AnnotationValue> values = (List<? extends AnnotationValue>) entry.getValue()
                                                                                                               .getValue();
-                        Set<String> fieldNames = new HashSet<>();
-                        for (AnnotationValue annotationValue : values) {
+                        final Set<String> fieldNames = new HashSet<>();
+                        for (final AnnotationValue annotationValue : values) {
                             final AnnotationMirror fieldMirror = (AnnotationMirror) annotationValue;
-                            for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> fieldValue : fieldMirror.getElementValues()
-                                                                                                                           .entrySet()) {
+                            for (final Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> fieldValue : fieldMirror.getElementValues()
+                                                                                                                                 .entrySet()) {
                                 if (fieldValue.getKey()
                                               .getSimpleName()
                                               .toString()
@@ -89,6 +86,7 @@ final class CheckWellFormedStruct implements BasicAnnotationProcessor.Processing
                                                             .printMessage(Diagnostic.Kind.ERROR,
                                                                           "@Struct annotation has duplicated field name '" + fieldName + "'.",
                                                                           typeElement);
+                                        this.inError = true;
                                     }
                                     else {
                                         fieldNames.add(fieldName);
@@ -142,6 +140,7 @@ final class CheckWellFormedStruct implements BasicAnnotationProcessor.Processing
                                 .printMessage(Diagnostic.Kind.ERROR,
                                               "@Struct annotation should be placed on type that extends '" + expectedSuperTypeName + "' from package '" + expectedPackage + "'",
                                               typeElement);
+            this.inError = true;
         }
     }
 
@@ -153,6 +152,7 @@ final class CheckWellFormedStruct implements BasicAnnotationProcessor.Processing
                                 .printMessage(Diagnostic.Kind.ERROR,
                                               "@Struct annotation should be placed on top level class types only.",
                                               typeElement);
+            this.inError = true;
         }
     }
 
@@ -167,6 +167,7 @@ final class CheckWellFormedStruct implements BasicAnnotationProcessor.Processing
                                     .printMessage(Diagnostic.Kind.ERROR,
                                                   "@Struct type may not contain a static field with name SIZE.",
                                                   typeElement);
+                this.inError = true;
             }
         }
     }
@@ -192,6 +193,7 @@ final class CheckWellFormedStruct implements BasicAnnotationProcessor.Processing
                                                 .printMessage(Diagnostic.Kind.ERROR,
                                                               "@Struct annotation must have at least one field.",
                                                               typeElement);
+                            this.inError = true;
                         }
                     }
                 }
@@ -207,6 +209,7 @@ final class CheckWellFormedStruct implements BasicAnnotationProcessor.Processing
                                 .printMessage(Diagnostic.Kind.ERROR,
                                               "@Struct annotation can not be placed on an abstract type.",
                                               typeElement);
+            this.inError = true;
         }
     }
 
@@ -232,6 +235,7 @@ final class CheckWellFormedStruct implements BasicAnnotationProcessor.Processing
                             .printMessage(Diagnostic.Kind.ERROR,
                                           "@Struct annotated type must contain a public no-arg constructor.",
                                           typeElement);
+        this.inError = true;
     }
 
     private void isFinal(final TypeElement typeElement) {
@@ -242,6 +246,7 @@ final class CheckWellFormedStruct implements BasicAnnotationProcessor.Processing
                                 .printMessage(Diagnostic.Kind.ERROR,
                                               "@Struct annotation must be placed on a final type.",
                                               typeElement);
+            this.inError = true;
         }
     }
 
@@ -253,6 +258,7 @@ final class CheckWellFormedStruct implements BasicAnnotationProcessor.Processing
                                 .printMessage(Diagnostic.Kind.ERROR,
                                               "@Struct annotation must be placed on a public type.",
                                               typeElement);
+            this.inError = true;
         }
     }
 
@@ -264,6 +270,7 @@ final class CheckWellFormedStruct implements BasicAnnotationProcessor.Processing
                                 .printMessage(Diagnostic.Kind.ERROR,
                                               "@Struct annotation must be placed on a class type.",
                                               typeElement);
+            this.inError = true;
         }
     }
 }

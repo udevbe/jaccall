@@ -19,8 +19,14 @@ public class MethodValidator {
 
     private final ProcessingEnvironment processingEnvironment;
 
+    private boolean inError;
+
     public MethodValidator(final ProcessingEnvironment processingEnvironment) {
         this.processingEnvironment = processingEnvironment;
+    }
+
+    public boolean isInError() {
+        return this.inError;
     }
 
     public void validate(final ExecutableElement executableElement) {
@@ -90,6 +96,7 @@ public class MethodValidator {
                                       .printMessage(Diagnostic.Kind.ERROR,
                                                     charSequence,
                                                     element);
+            this.inError = true;
         }
     }
 
@@ -114,6 +121,7 @@ public class MethodValidator {
                                       .printMessage(Diagnostic.Kind.ERROR,
                                                     charSequence,
                                                     element);
+            this.inError = true;
         }
     }
 
@@ -135,6 +143,7 @@ public class MethodValidator {
                                       .printMessage(Diagnostic.Kind.ERROR,
                                                     "@ByVal annotation can not be placed in conjunction with @Unsigned annotation.",
                                                     element);
+            this.inError = true;
         }
     }
 
@@ -145,6 +154,7 @@ public class MethodValidator {
                                       .printMessage(Diagnostic.Kind.ERROR,
                                                     charSequence,
                                                     element);
+            this.inError = true;
         }
     }
 
@@ -166,7 +176,7 @@ public class MethodValidator {
                                       .printMessage(Diagnostic.Kind.ERROR,
                                                     charSequence,
                                                     element);
-
+            this.inError = true;
         }
     }
 
@@ -187,6 +197,7 @@ public class MethodValidator {
                                       .printMessage(Diagnostic.Kind.ERROR,
                                                     "Method should have supported primitive types only.",
                                                     element);
+            this.inError = true;
         }
     }
 
@@ -197,6 +208,7 @@ public class MethodValidator {
                                       .printMessage(Diagnostic.Kind.ERROR,
                                                     "Method should not have a primitive type 'boolean'.",
                                                     element);
+            this.inError = true;
         }
 
         if (kind.equals(TypeKind.CHAR)) {
@@ -204,6 +216,7 @@ public class MethodValidator {
                                       .printMessage(Diagnostic.Kind.ERROR,
                                                     "Method should not have a primitive type 'char'.",
                                                     element);
+            this.inError = true;
         }
     }
 }

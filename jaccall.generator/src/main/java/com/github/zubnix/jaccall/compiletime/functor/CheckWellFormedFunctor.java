@@ -1,22 +1,18 @@
 package com.github.zubnix.jaccall.compiletime.functor;
 
 
-import com.github.zubnix.jaccall.Functor;
 import com.github.zubnix.jaccall.compiletime.MethodValidator;
-import com.google.auto.common.BasicAnnotationProcessor;
 import com.google.auto.common.SuperficialValidation;
-import com.google.common.collect.SetMultimap;
 
-import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
-import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.Set;
 
-final class CheckWellFormedFunctor implements BasicAnnotationProcessor.ProcessingStep {
+final class CheckWellFormedFunctor {
+    private       boolean          inError;
     private final FunctorGenerator functorGenerator;
 
     CheckWellFormedFunctor(final FunctorGenerator functorGenerator) {
@@ -24,14 +20,12 @@ final class CheckWellFormedFunctor implements BasicAnnotationProcessor.Processin
         this.functorGenerator = functorGenerator;
     }
 
-    @Override
-    public Set<? extends Class<? extends Annotation>> annotations() {
-        return Collections.singleton(Functor.class);
+    public boolean isInError() {
+        return this.inError;
     }
 
-    @Override
-    public void process(final SetMultimap<Class<? extends Annotation>, Element> elementsByAnnotation) {
-        for (final TypeElement typeElement : ElementFilter.typesIn(elementsByAnnotation.values())) {
+    public void process(final Set<? extends TypeElement> typeElements) {
+        for (final TypeElement typeElement : typeElements) {
             if (SuperficialValidation.validateElement(typeElement)) {
                 isInterface(typeElement);
                 doesNotExtend(typeElement);
@@ -42,9 +36,11 @@ final class CheckWellFormedFunctor implements BasicAnnotationProcessor.Processin
                 for (final ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
                     hasDollarAsName(executableElement);
                     methodValidator.validate(executableElement);
+                    this.inError |= methodValidator.isInError();
                 }
             }
             else {
+                this.inError = true;
                 this.functorGenerator.getProcessingEnvironment()
                                      .getMessager()
                                      .printMessage(Diagnostic.Kind.ERROR,
@@ -58,6 +54,7 @@ final class CheckWellFormedFunctor implements BasicAnnotationProcessor.Processin
         if (!executableElement.getSimpleName()
                               .toString()
                               .equals("$")) {
+            this.inError = true;
             this.functorGenerator.getProcessingEnvironment()
                                  .getMessager()
                                  .printMessage(Diagnostic.Kind.ERROR,
@@ -69,6 +66,7 @@ final class CheckWellFormedFunctor implements BasicAnnotationProcessor.Processin
     private void doesNotExtend(final TypeElement typeElement) {
         if (typeElement.getInterfaces()
                        .size() > 0) {
+            this.inError = true;
             this.functorGenerator.getProcessingEnvironment()
                                  .getMessager()
                                  .printMessage(Diagnostic.Kind.ERROR,
@@ -81,6 +79,7 @@ final class CheckWellFormedFunctor implements BasicAnnotationProcessor.Processin
     private void isInterface(final TypeElement typeElement) {
         if (!typeElement.getKind()
                         .isInterface()) {
+            this.inError = true;
             this.functorGenerator.getProcessingEnvironment()
                                  .getMessager()
                                  .printMessage(Diagnostic.Kind.ERROR,
@@ -92,6 +91,7 @@ final class CheckWellFormedFunctor implements BasicAnnotationProcessor.Processin
     private void hasSingleMethod(final TypeElement typeElement) {
         if (ElementFilter.methodsIn(Collections.singleton(typeElement))
                          .size() != 1) {
+            this.inError = true;
             this.functorGenerator.getProcessingEnvironment()
                                  .getMessager()
                                  .printMessage(Diagnostic.Kind.ERROR,
