@@ -1,9 +1,9 @@
-package com.github.zubnix;
+package com.github.zubnix.libtest;
 
-import com.github.zubnix.runtime.api.Lib;
-import com.github.zubnix.runtime.api.Ptr;
-import com.github.zubnix.runtime.api.StructByVal;
-import com.github.zubnix.runtime.api.UnionByVal;
+import com.github.zubnix.jaccall.runtime.api.Lib;
+import com.github.zubnix.jaccall.runtime.api.Ptr;
+import com.github.zubnix.jaccall.runtime.api.StructByVal;
+import com.github.zubnix.jaccall.runtime.api.UnionByVal;
 
 @Lib("test")
 public class LibTest {

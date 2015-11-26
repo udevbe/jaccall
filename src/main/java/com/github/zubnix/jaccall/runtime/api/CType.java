@@ -1,6 +1,8 @@
-package com.github.zubnix.runtime.api;
+package com.github.zubnix.jaccall.runtime.api;
 
-public enum Type {
+import com.github.zubnix.jaccall.runtime.DataType;
+
+public enum CType {
     //type signatures match dyncall arg signature, except for struct and union.
 
     CHAR('c',
@@ -38,19 +40,19 @@ public enum Type {
      * Any pointer type.
      */
     POINTER('p',
-            long.class),
+            Void.class),
 
     /**
      * A struct by value.
      */
     STRUCT('x',
-           Object.class),
+           DataType.class),
 
     /**
      * A union by value.
      */
     UNION('y',
-          Object.class);
+          DataType.class);
 
 
     //LONG_DOUBLE;
@@ -58,8 +60,8 @@ public enum Type {
     private final byte     signature;
     private final Class<?> javaType;
 
-    Type(final char signature,
-         final Class<?> javaType) {
+    CType(final char signature,
+          final Class<?> javaType) {
         this.signature = (byte) signature;
         this.javaType = javaType;
     }

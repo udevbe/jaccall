@@ -1,4 +1,4 @@
-package com.github.zubnix.runtime.api;
+package com.github.zubnix.jaccall.runtime.api;
 
 
 import java.lang.annotation.ElementType;
