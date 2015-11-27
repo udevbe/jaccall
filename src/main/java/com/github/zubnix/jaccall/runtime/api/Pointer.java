@@ -5,6 +5,8 @@ import com.github.zubnix.jaccall.runtime.JNI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.CharBuffer;
@@ -27,7 +29,7 @@ public final class Pointer<T> implements AutoCloseable {
                     JNI.unwrap(byteBuffer));
     }
 
-    public static <U> Pointer<U> wrap(@Nonnull final Class<U> type,
+    public static <U> Pointer<U> wrap(@Nonnull final Type type,
                                       @Nonnull final ByteBuffer byteBuffer) {
         return wrap(type,
                     JNI.unwrap(byteBuffer));
@@ -38,7 +40,7 @@ public final class Pointer<T> implements AutoCloseable {
                     address);
     }
 
-    public static <U> Pointer<U> wrap(@Nonnull final Class<U> type,
+    public static <U> Pointer<U> wrap(@Nonnull final Type type,
                                       final long address) {
         return new Pointer<>(type,
                              address,
@@ -156,9 +158,9 @@ public final class Pointer<T> implements AutoCloseable {
     private final ByteBuffer byteBuffer;
 
     @Nonnull
-    private final Class<T> type;
+    private final Type type;
 
-    Pointer(@Nonnull final Class<T> type,
+    Pointer(@Nonnull final Type type,
             final long address,
             @Nonnull final ByteBuffer byteBuffer) {
         this.address = address;
@@ -187,7 +189,7 @@ public final class Pointer<T> implements AutoCloseable {
     public void close() { JNI.free(this.address); }
 
     @Nonnull
-    public Class<T> getType() { return this.type; }
+    public Type getType() { return this.type; }
 
     /**
      * Java:<br>
@@ -363,6 +365,25 @@ public final class Pointer<T> implements AutoCloseable {
         buffer.position(index);
         buffer.put(val);
 
+    }
+
+    private Class<?> toClass(){
+        return toClass(this.type);
+    }
+
+    private Class<?> toClass(Type type){
+        final Class<?> rawType;
+        if (type instanceof Class) {
+            rawType = (Class<?>) type;
+        }
+        else if (type instanceof ParameterizedType) {
+            return toClass(((ParameterizedType) type).getRawType());
+        }
+        else {
+            throw new UnsupportedOperationException("Type " + type + " is not supported.");
+        }
+
+        return rawType;
     }
 
 }

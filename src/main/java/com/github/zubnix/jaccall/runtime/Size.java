@@ -6,6 +6,8 @@ import com.github.zubnix.jaccall.runtime.api.Struct;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 public class Size {
 
@@ -52,51 +54,52 @@ public class Size {
         return JNI.sizeOfStruct();
     }
 
-    public static long sizeOf(@Nonnull Class<?> type) {
-        if (type.equals(Void.class)) {
+    public static long sizeOf(@Nonnull Class<?> rawType) {
+
+        if (rawType.equals(Void.class)) {
             return Long.MAX_VALUE;
         }
 
-        if (type.equals(Byte.class) || type.equals(byte.class)) {
+        if (rawType.equals(Byte.class) || rawType.equals(byte.class)) {
             return sizeOf((Byte) null);
         }
 
-        if (type.equals(Short.class) || type.equals(short.class)) {
+        if (rawType.equals(Short.class) || rawType.equals(short.class)) {
             return sizeOf((Short) null);
         }
 
-        if (type.equals(Character.class) || type.equals(char.class)) {
+        if (rawType.equals(Character.class) || rawType.equals(char.class)) {
             return sizeOf((Character) null);
         }
 
-        if (type.equals(Integer.class) || type.equals(int.class)) {
+        if (rawType.equals(Integer.class) || rawType.equals(int.class)) {
             return sizeOf((Integer) null);
         }
 
-        if (type.equals(Float.class) || type.equals(float.class)) {
+        if (rawType.equals(Float.class) || rawType.equals(float.class)) {
             return sizeOf((Float) null);
         }
 
-        if(type.equals(Long.class)||type.equals(long.class)){
-            return sizeOf((Long)null);
+        if (rawType.equals(Long.class) || rawType.equals(long.class)) {
+            return sizeOf((Long) null);
         }
 
-        if (type.equals(Double.class) || type.equals(double.class)) {
+        if (rawType.equals(Double.class) || rawType.equals(double.class)) {
             return sizeOf((Double) null);
         }
 
-        if (type.equals(Pointer.class)) {
+        if (rawType.equals(Pointer.class)) {
             return sizeOf((Pointer) null);
         }
 
-        if (DataType.class.isAssignableFrom(type)) {
-            return sizeOf(type.getAnnotation(Struct.class));
+        if (DataType.class.isAssignableFrom(rawType)) {
+            return sizeOf(rawType.getAnnotation(Struct.class));
         }
 
-        if (type.equals(CLong.class)) {
+        if (rawType.equals(CLong.class)) {
             return sizeOf((CLong) null);
         }
 
-        throw new IllegalArgumentException("Type " + type + " does not have a known native size.");
+        throw new IllegalArgumentException("Type " + rawType + " does not have a known native size.");
     }
 }
