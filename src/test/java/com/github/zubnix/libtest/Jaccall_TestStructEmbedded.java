@@ -28,6 +28,7 @@ class Jaccall_TestStructEmbedded extends DataType<TestStruct.TestStructEmbedded>
 
 
 
+
     @Struct(value = {
             @Field(type = CType.FLOAT,
                    name = "field0"),
