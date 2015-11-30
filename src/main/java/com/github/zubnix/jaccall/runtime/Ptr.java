@@ -1,11 +1,11 @@
-package com.github.zubnix.jaccall.runtime.api;
+package com.github.zubnix.jaccall.runtime;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.PARAMETER, ElementType.METHOD})
+@Target({ElementType.METHOD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface StructByVal {
+public @interface Ptr {
 }

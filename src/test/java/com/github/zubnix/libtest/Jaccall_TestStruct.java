@@ -1,35 +1,21 @@
 package com.github.zubnix.libtest;
 
-import com.github.zubnix.jaccall.runtime.api.CType;
-import com.github.zubnix.jaccall.runtime.api.Field;
-import com.github.zubnix.jaccall.runtime.api.Pointer;
+import com.github.zubnix.jaccall.runtime.Pointer;
+import com.github.zubnix.jaccall.runtime.Struct;
+import com.github.zubnix.jaccall.runtime.StructType;
 
 import javax.annotation.Generated;
 
 import static com.github.zubnix.jaccall.runtime.Size.sizeOf;
-import static com.github.zubnix.jaccall.runtime.api.Pointer.malloc;
 
-@Generated("com.github.zubnix.jaccall.compiletime.Generator")
-class Jaccall_TestStruct extends StructType<TestStruct> {
+@Generated("com.github.zubnix.jaccall.compiletime.StructGenerator")
+public class Jaccall_TestStruct extends StructType {
 
-    private static long SIZE = -1;
+    private static final long SIZE = sizeOf(TestStruct.class.getAnnotation(Struct.class));
 
-    private final Pointer<TestStruct> pointer;
-
-    Jaccall_TestStruct(final Class<TestStruct> clazz) {
-        if (SIZE < 0) {
-            SIZE = sizeOf(this);
-        }
-        this.pointer = malloc(SIZE).pCast(clazz);
-    }
-
-    @Override
-    protected Pointer<TestStruct> getAddress() {
-        return pointer;
-    }
+    //TODO how to dynamically determine field offset?
 
     public byte field() {
-
     }
 
     public void field0(byte field0) {
@@ -61,9 +47,8 @@ class Jaccall_TestStruct extends StructType<TestStruct> {
 
     }
 
-
-    @Field(type = CType.POINTER,
-           name = "field3") ,
-    @Field(type = CType.STRUCT,
-           dataType = TestStruct.TestStructEmbedded.class,
-           name = "field4") }
+    @Override
+    protected long size() {
+        return SIZE;
+    }
+}

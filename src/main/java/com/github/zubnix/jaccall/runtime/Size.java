@@ -1,13 +1,12 @@
 package com.github.zubnix.jaccall.runtime;
 
-import com.github.zubnix.jaccall.runtime.api.CLong;
-import com.github.zubnix.jaccall.runtime.api.Pointer;
-import com.github.zubnix.jaccall.runtime.api.Struct;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class Size {
+
+    private static final long POINTER_SIZE = JNI.sizeOfPointer();
+    private static final long CLONG_SIZE   = JNI.sizeOfCLong();
 
     public static long sizeOf(@Nullable final Byte b) { return 1; }
 
@@ -37,24 +36,21 @@ public class Size {
 
     public static long sizeOf(final double b) { return 8; }
 
-    public static long sizeOf(@Nullable final Pointer<?> pointer) { return JNI.sizeOfPointer(); }
+    public static long sizeOf(@Nullable final Pointer<?> pointer) { return POINTER_SIZE; }
 
-    public static long sizeOf(@Nullable final CLong cLong) { return JNI.sizeOfCLong(); }
+    public static long sizeOf(@Nullable final CLong cLong) { return CLONG_SIZE; }
 
     public static long sizeOf(@Nullable final Void val) {
-        //on gcc it's 1
-        return 1;
-    }
-
-    public static long sizeOf(@Nonnull final StructType<?> dataType) {
-        final Struct struct = dataType.getClass()
-                                      .getAnnotation(Struct.class);
-        return sizeOf(struct);
+        //on gcc it's 1, but that's because it's not following the standard
+        throw new IllegalArgumentException("Can not determine size of incomplete type Void.");
     }
 
     public static long sizeOf(@Nonnull Struct struct) {
         //TODO use jni'd dyncall to calculate struct/union size
-        //TODO can't we calculate the size by arch at compile time and add that information?
         return JNI.sizeOfStruct();
+    }
+
+    public static long sizeOf(@Nonnull StructType structType){
+        return structType.size();
     }
 }

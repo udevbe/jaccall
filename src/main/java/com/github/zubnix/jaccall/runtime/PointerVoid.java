@@ -1,26 +1,27 @@
 package com.github.zubnix.jaccall.runtime;
 
-import com.github.zubnix.jaccall.runtime.api.Pointer;
-
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 
-public class PointerVoid extends Pointer<Void> {
-    public PointerVoid(final Type type,
-                       final long address,
-                       final ByteBuffer byteBuffer) {
+final class PointerVoid extends Pointer<Void> {
+    PointerVoid(final Type type,
+                final long address,
+                final ByteBuffer byteBuffer) {
         super(type,
               address,
               byteBuffer);
     }
 
     @Override
-    public Void dref() {
-        return null;
+    protected Void dref(@Nonnull final ByteBuffer byteBuffer) {
+        throw new IllegalStateException("Can not dereference void pointer.");
     }
 
     @Override
-    public Void dref(final int index) {
-        return null;
+    protected Void dref(@Nonnegative final int index,
+                        @Nonnull final ByteBuffer byteBuffer) {
+        throw new IllegalStateException("Can not dereference void pointer.");
     }
 }

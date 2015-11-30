@@ -1,7 +1,5 @@
 package com.github.zubnix.jaccall.runtime;
 
-import com.github.zubnix.jaccall.runtime.api.Pointer;
-
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Type;

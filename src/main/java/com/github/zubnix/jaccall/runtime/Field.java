@@ -1,4 +1,4 @@
-package com.github.zubnix.jaccall.runtime.api;
+package com.github.zubnix.jaccall.runtime;
 
 /**
  * A field of a {@link Struct} or {@link Union}.

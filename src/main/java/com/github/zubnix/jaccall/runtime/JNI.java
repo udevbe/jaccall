@@ -2,17 +2,18 @@ package com.github.zubnix.jaccall.runtime;
 
 
 import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 import java.nio.ByteBuffer;
 
-public class JNI {
+class JNI {
 
     /*
      * JNI ->
      */
-    public static native ByteBuffer wrap(long address,
-                                         long size);
+    static native ByteBuffer wrap(long address,
+                                  @Nonnegative long size);
 
-    public static native long unwrap(ByteBuffer byteBuffer);
+    static native long unwrap(@Nonnull ByteBuffer byteBuffer);
     /*
      * <- JNI
      */
@@ -20,13 +21,15 @@ public class JNI {
     /*
      * std ->
      */
-    public static native long malloc(@Nonnegative long size);
+    static native long malloc(@Nonnegative long size);
 
-    public static native void free(final long address);
+    static native long calloc(@Nonnegative final long size);
 
-    public static native int sizeOfPointer();
+    static native void free(final long address);
 
-    public static native int sizeOfCLong();
+    static native int sizeOfPointer();
+
+    static native int sizeOfCLong();
     /*
      * <- std
      */

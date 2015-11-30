@@ -1,19 +1,5 @@
-package com.github.zubnix.jaccall.runtime.api;
+package com.github.zubnix.jaccall.runtime;
 
-
-import com.github.zubnix.jaccall.runtime.JNI;
-import com.github.zubnix.jaccall.runtime.PointerByte;
-import com.github.zubnix.jaccall.runtime.PointerCLong;
-import com.github.zubnix.jaccall.runtime.PointerChar;
-import com.github.zubnix.jaccall.runtime.PointerDouble;
-import com.github.zubnix.jaccall.runtime.PointerFloat;
-import com.github.zubnix.jaccall.runtime.PointerInt;
-import com.github.zubnix.jaccall.runtime.PointerLong;
-import com.github.zubnix.jaccall.runtime.PointerPointer;
-import com.github.zubnix.jaccall.runtime.PointerShort;
-import com.github.zubnix.jaccall.runtime.PointerStruct;
-import com.github.zubnix.jaccall.runtime.PointerVoid;
-import com.github.zubnix.jaccall.runtime.StructType;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -58,8 +44,9 @@ public abstract class Pointer<T> implements AutoCloseable {
 
         final Class<?> rawType = toClass(type);
 
-        if (StructType.class.isAssignableFrom(rawType)) {
-            final long size = sizeOf(rawType.getAnnotation(Struct.class));
+        final Struct struct = rawType.getAnnotation(Struct.class);
+        if (struct != null) {
+            final long size = sizeOf(struct);
             return (Pointer<U>) new PointerStruct(type,
                                                   address,
                                                   JNI.wrap(address,
@@ -153,6 +140,10 @@ public abstract class Pointer<T> implements AutoCloseable {
         return wrap(JNI.malloc(size));
     }
 
+    public static Pointer<Void> calloc(final long size) {
+        return wrap(JNI.calloc(size));
+    }
+
     private static <U> Pointer<U> create(Class<U> type,
                                          long elementSize,
                                          int length) {
@@ -162,14 +153,21 @@ public abstract class Pointer<T> implements AutoCloseable {
 
     @SafeVarargs
     @Nonnull
-    public static <U> Pointer<U> ref(@Nonnull U... val) {
+    public static <U extends StructType> Pointer<U> ref(@Nonnull U... val) {
         final int length = val.length;
         if (length == 0) {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
 
-        final Pointer<U> pointer = (Pointer<U>) create(val[0].getClass(),
-                                                       sizeOf((Pointer) null),
+        final Class<?> componentType = val.getClass()
+                                          .getComponentType();
+        final Struct struct = componentType.getAnnotation(Struct.class);
+        if (struct == null) {
+            throw new IllegalArgumentException("Array must be of type that has a Struct annotation.");
+        }
+
+        final Pointer<U> pointer = (Pointer<U>) create(componentType,
+                                                       sizeOf(struct),
                                                        length);
         pointer.write(val);
 
@@ -316,8 +314,6 @@ public abstract class Pointer<T> implements AutoCloseable {
     @Override
     public int hashCode() { return (int) (this.address ^ (this.address >>> 32)); }
 
-    public long address() { return this.address; }
-
     /**
      * Free the memory pointed to by this pointer.
      */
@@ -329,7 +325,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code T value = foo.dref();}
-     * <p>
+     * <p/>
      * C equivalent:<br>
      * {@code T value = *foo}
      *
@@ -344,7 +340,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code T value = foo.dref(i);}
-     * <p>
+     * <p/>
      * C equivalent:<br>
      * {@code T value = foo[i]}
      *
@@ -363,7 +359,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code offsetFoo = foo.offset(i);}
-     * <p>
+     * <p/>
      * C equivalent:<br>
      * {@code offsetFoo = foo+i;}
      *
@@ -384,14 +380,19 @@ public abstract class Pointer<T> implements AutoCloseable {
      *
      * @return
      */
-    public <U> U cast(Class<U> type) {
+    public <U> U tCast(Class<U> type) {
+        //fast path
+        if (type.equals(Long.class)) {
+            return (U) Long.valueOf(this.address);
+        }
+
         final ByteBuffer addressBuffer = ByteBuffer.allocate(8)
                                                    .order(ByteOrder.nativeOrder());
         final LongBuffer longBuffer = addressBuffer.asLongBuffer();
         longBuffer.clear();
         longBuffer.put(this.address);
         addressBuffer.rewind();
-        return pCast(type).dref(addressBuffer);
+        return ptCast(type).dref(addressBuffer);
     }
 
     /**
@@ -402,7 +403,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      *
      * @return
      */
-    public <U> Pointer<U> pCast(Class<U> type) {
+    public <U> Pointer<U> ptCast(Class<U> type) {
         return wrap(type,
                     this.address);
     }
@@ -531,22 +532,110 @@ public abstract class Pointer<T> implements AutoCloseable {
      * Pointer
      */
     public void write(final Pointer... val) {
-
-        final LongBuffer buffer = this.byteBuffer.asLongBuffer();
-        buffer.clear();
-        buffer.put(val);
+        final long pointerSize = sizeOf((Pointer) null);
+        if (pointerSize == 8) {
+            //64-bit
+            final LongBuffer buffer = this.byteBuffer.asLongBuffer();
+            buffer.clear();
+            for (Pointer pointer : val) {
+                buffer.put(pointer.<Long>tCast(Long.class));
+            }
+        }
+        else if (pointerSize == 4) {
+            //32-bit
+            final IntBuffer buffer = this.byteBuffer.asIntBuffer();
+            buffer.clear();
+            for (Pointer pointer : val) {
+                buffer.put(pointer.<Integer>tCast(Integer.class));
+            }
+        }
     }
 
     public void write(final int index,
                       final Pointer val) {
-
-        final LongBuffer buffer = this.byteBuffer.asLongBuffer();
-        buffer.clear();
-        buffer.position(index);
-        buffer.put(val);
+        final long pointerSize = sizeOf((Pointer) null);
+        if (pointerSize == 8) {
+            //64-bit
+            final LongBuffer buffer = this.byteBuffer.asLongBuffer();
+            buffer.clear();
+            buffer.position(index);
+            buffer.put(val.<Long>tCast(Long.class));
+        }
+        else if (pointerSize == 4) {
+            //32-bit
+            final IntBuffer buffer = this.byteBuffer.asIntBuffer();
+            buffer.clear();
+            buffer.position(index);
+            buffer.put(val.<Integer>tCast(Integer.class));
+        }
     }
 
-    private static Class<?> toClass(Type type) {
+    /*
+     * CLong
+     */
+    public void write(final CLong... val) {
+        final long clongSize = sizeOf((CLong) null);
+
+        if (clongSize == 8) {
+            //64-bit
+            final LongBuffer buffer = this.byteBuffer.asLongBuffer();
+            buffer.clear();
+            for (CLong cLong : val) {
+                buffer.put(cLong.longValue());
+            }
+        }
+        else if (clongSize == 4) {
+            //32-bit
+            final IntBuffer buffer = this.byteBuffer.asIntBuffer();
+            buffer.clear();
+            for (CLong cLong : val) {
+                buffer.put(cLong.intValue());
+            }
+        }
+    }
+
+    public void write(final int index,
+                      final CLong val) {
+        final long clongSize = sizeOf((CLong) null);
+
+        if (clongSize == 8) {
+            //64-bit
+            final LongBuffer buffer = this.byteBuffer.asLongBuffer();
+            buffer.clear();
+            buffer.position(index);
+            buffer.put(val.longValue());
+        }
+        else if (clongSize == 4) {
+            //32-bit
+            final IntBuffer buffer = this.byteBuffer.asIntBuffer();
+            buffer.clear();
+            buffer.position(index);
+            buffer.put(val.intValue());
+        }
+    }
+
+    /*
+     * StructType
+     */
+    public void write(final StructType... val) {
+        this.byteBuffer.clear();
+        for (StructType structType : val) {
+            structType.buffer()
+                      .rewind();
+            this.byteBuffer.put(structType.buffer());
+        }
+    }
+
+    public void write(final int index,
+                      final StructType val) {
+        this.byteBuffer.clear();
+        this.byteBuffer.position((int) (index * val.size()));
+        val.buffer()
+           .rewind();
+        this.byteBuffer.put(val.buffer());
+    }
+
+    protected static Class<?> toClass(Type type) {
         final Class<?> rawType;
         if (type instanceof Class) {
             rawType = (Class<?>) type;
@@ -560,5 +649,4 @@ public abstract class Pointer<T> implements AutoCloseable {
 
         return rawType;
     }
-
 }

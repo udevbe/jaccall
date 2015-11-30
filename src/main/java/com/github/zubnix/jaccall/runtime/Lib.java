@@ -1,13 +1,13 @@
-package com.github.zubnix.jaccall.runtime.api;
+package com.github.zubnix.jaccall.runtime;
+
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Struct {
-    boolean union() default false;
-    Field[] value();
+@Target(ElementType.TYPE)
+public @interface Lib {
+    String value();
 }

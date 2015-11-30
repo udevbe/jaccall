@@ -1,4 +1,4 @@
-package com.github.zubnix.jaccall.runtime.api;
+package com.github.zubnix.jaccall.runtime;
 
 
 public final class CLong extends Number {

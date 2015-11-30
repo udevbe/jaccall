@@ -1,4 +1,4 @@
-package com.github.zubnix.jaccall.runtime.api;
+package com.github.zubnix.jaccall.runtime;
 
 public enum CType {
     //type signatures match dyncall arg signature, except for struct and union.
@@ -51,9 +51,6 @@ public enum CType {
      */
     UNION('y',
           StructType.class);
-
-
-    //LONG_DOUBLE;
 
     private final byte     signature;
     private final Class<?> javaType;
