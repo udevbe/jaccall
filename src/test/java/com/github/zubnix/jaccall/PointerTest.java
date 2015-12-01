@@ -2,9 +2,6 @@ package com.github.zubnix.jaccall;
 
 import org.junit.Test;
 
-/**
- * Created by zubzub on 12/1/15.
- */
 public class PointerTest {
 
     @Test

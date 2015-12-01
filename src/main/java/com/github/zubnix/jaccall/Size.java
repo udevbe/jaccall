@@ -3,7 +3,10 @@ package com.github.zubnix.jaccall;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class Size {
+public final class Size {
+
+    private Size() {
+    }
 
     private static final int POINTER_SIZE = JNI.sizeOfPointer();
     private static final int CLONG_SIZE   = JNI.sizeOfCLong();
@@ -45,15 +48,12 @@ public class Size {
         throw new IllegalArgumentException("Can not determine size of incomplete type Void.");
     }
 
-    public static int sizeOf(@Nonnull StructSignature structSignature) {
-        return JNI.dcStructSize(JNI.dcDefineStruct(structSignature.value()));
-    }
-
     public static int sizeOf(@Nonnull Class<? extends StructType> structType) {
+
         final StructSignature structSignature = structType.getAnnotation(StructSignature.class);
         if (structSignature == null) {
             throw new IllegalArgumentException("Type does not have a StructSignature annotation.");
         }
-        return sizeOf(structSignature);
+        return JNI.dcStructSize(JNI.dcDefineStruct(structSignature.value()));
     }
 }

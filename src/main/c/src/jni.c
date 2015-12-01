@@ -3,6 +3,8 @@
 //
 
 #include <jni.h>
+#include <stdlib.h>
+#include <stdint.h>
 
 #include "com_github_zubnix_jaccall_JNI.h"
 
@@ -15,7 +17,8 @@ JNIEXPORT
 jobject
 JNICALL Java_com_github_zubnix_jaccall_JNI_wrap
   (JNIEnv *env, jclass clazz, jlong address, jlong size){
-  }
+    return (*env)->NewDirectByteBuffer(env, (void*)(intptr_t) address, (size_t)size);
+}
 
 /*
  * Class:     com_github_zubnix_jaccall_JNI
@@ -26,6 +29,7 @@ JNIEXPORT
 jlong
 JNICALL Java_com_github_zubnix_jaccall_JNI_unwrap
   (JNIEnv *env, jclass clazz, jobject byteBuffer){
+    return (jlong)(intptr_t)(*env)->GetDirectBufferAddress(env, byteBuffer);
   }
 
 
@@ -35,9 +39,10 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_unwrap
  * Signature: (J)I
  */
 JNIEXPORT
-jint
+jlong
 JNICALL Java_com_github_zubnix_jaccall_JNI_malloc
-  (JNIEnv *env, jclass clazz, jlong size){
+  (JNIEnv *env, jclass clazz, jint size){
+    return (jlong)(intptr_t)malloc((size_t)size);
    }
 
 /*
@@ -46,9 +51,10 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_malloc
  * Signature: (II)I
  */
 JNIEXPORT
-jint
+jlong
 JNICALL Java_com_github_zubnix_jaccall_JNI_calloc
   (JNIEnv *env, jclass clazz, jint nmemb, jint size){
+  return (jlong)(intptr_t)calloc((size_t)nmemb,(size_t)size);
    }
 
 /*
@@ -60,6 +66,7 @@ JNIEXPORT
 void
 JNICALL Java_com_github_zubnix_jaccall_JNI_free
   (JNIEnv *env, jclass clazz, jlong address){
+  free((void*)(intptr_t)address);
    }
 
 /*
@@ -71,6 +78,7 @@ JNIEXPORT
 jint
 JNICALL Java_com_github_zubnix_jaccall_JNI_sizeOfPointer
   (JNIEnv *env, jclass clazz){
+  return (jint)sizeof(void*);
     }
 
 /*
@@ -82,6 +90,7 @@ JNIEXPORT
 jint
 JNICALL Java_com_github_zubnix_jaccall_JNI_sizeOfCLong
   (JNIEnv *env, jclass clazz){
+  return (jint)sizeof(long);
     }
 
 /*

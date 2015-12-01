@@ -5,15 +5,18 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.nio.ByteBuffer;
 
-public class JNI {
+public final class JNI {
 
     static {
         //TODO load native lib
     }
 
+    private JNI() {
+    }
+
     /*
-     * JNI ->
-     */
+         * JNI ->
+         */
     static native ByteBuffer wrap(long address,
                                   @Nonnegative long size);
 
@@ -25,10 +28,10 @@ public class JNI {
     /*
      * std ->
      */
-    static native int malloc(@Nonnegative long size);
+    static native long malloc(@Nonnegative int size);
 
-    static native int calloc(@Nonnegative final int nmemb,
-                             @Nonnegative final int size);
+    static native long calloc(@Nonnegative final int nmemb,
+                              @Nonnegative final int size);
 
     static native void free(final long address);
 

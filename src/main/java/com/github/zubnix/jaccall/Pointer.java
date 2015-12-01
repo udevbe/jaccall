@@ -74,9 +74,8 @@ public abstract class Pointer<T> implements AutoCloseable {
 
         final Class<?> rawType = toClass(type);
 
-        final StructSignature struct = rawType.getAnnotation(StructSignature.class);
-        if (struct != null) {
-            final long size = Size.sizeOf(struct);
+        if (StructType.class.isAssignableFrom(rawType)) {
+            final long size = Size.sizeOf((Class<? extends StructType>) rawType);
             return (Pointer<U>) new PointerStruct(type,
                                                   address,
                                                   JNI.wrap(address,
@@ -195,7 +194,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     }
 
     private static <U> Pointer<U> create(Class<U> type,
-                                         long elementSize,
+                                         int elementSize,
                                          int length) {
         return wrap(type,
                     JNI.malloc(elementSize * length));
