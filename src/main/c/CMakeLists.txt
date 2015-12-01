@@ -24,5 +24,5 @@ add_custom_command(
 
 # generate libjaccall
 include_directories(${JAVA_INCLUDE_PATH} ${JAVA_INCLUDE_PATH2} src/main/c)
-add_library(jacall MODULE src/jni.c src/jni.h)
-target_link_libraries(jacall ${JNI_LIBRARIES})
+add_library(jaccall MODULE src/jni.c src/jni.h)
+target_link_libraries(jaccall ${JNI_LIBRARIES})

@@ -7,6 +7,10 @@ import java.nio.ByteBuffer;
 
 public class JNI {
 
+    static {
+        //TODO load native lib
+    }
+
     /*
      * JNI ->
      */
@@ -23,7 +27,7 @@ public class JNI {
      */
     static native int malloc(@Nonnegative long size);
 
-    static native int calloc(final int nmemb,
+    static native int calloc(@Nonnegative final int nmemb,
                              @Nonnegative final int size);
 
     static native void free(final long address);
