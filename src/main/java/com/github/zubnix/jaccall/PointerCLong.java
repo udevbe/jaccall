@@ -1,4 +1,4 @@
-package com.github.zubnix.jaccall.runtime;
+package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 
-import static com.github.zubnix.jaccall.runtime.Size.sizeOf;
+import static com.github.zubnix.jaccall.Size.sizeOf;
 
 
 final class PointerCLong extends Pointer<CLong> {
@@ -28,7 +28,7 @@ final class PointerCLong extends Pointer<CLong> {
     @Override
     CLong dref(@Nonnegative final int index,
                          @Nonnull final ByteBuffer byteBuffer) {
-        final long clongSize = sizeOf((CLong) null);
+        final long clongSize = Size.sizeOf((CLong) null);
         final long clong;
         if (clongSize == 8) {
             final LongBuffer buffer = byteBuffer.asLongBuffer();

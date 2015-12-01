@@ -1,4 +1,4 @@
-package com.github.zubnix.jaccall.runtime;
+package com.github.zubnix.jaccall;
 
 
 import javax.annotation.Nonnegative;
@@ -24,7 +24,7 @@ public class JNI {
     static native int malloc(@Nonnegative long size);
 
     static native int calloc(final int nmemb,
-                             @Nonnegative final long size);
+                             @Nonnegative final int size);
 
     static native void free(final long address);
 

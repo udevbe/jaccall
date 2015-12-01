@@ -227,6 +227,7 @@ Session.vim
 *.dll
 
 # Fortran module files
+/src/main/c/src/com_github_zubnix_jaccall_JNI.h
 *.mod
 
 # Compiled Static libraries
@@ -239,4 +240,3 @@ Session.vim
 *.exe
 *.out
 *.app
-

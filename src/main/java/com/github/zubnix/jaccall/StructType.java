@@ -1,9 +1,9 @@
-package com.github.zubnix.jaccall.runtime;
+package com.github.zubnix.jaccall;
 
 
 import java.nio.ByteBuffer;
 
-import static com.github.zubnix.jaccall.runtime.Size.sizeOf;
+import static com.github.zubnix.jaccall.Size.sizeOf;
 import static java.nio.ByteBuffer.allocate;
 
 public abstract class StructType {

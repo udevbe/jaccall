@@ -1,4 +1,4 @@
-package com.github.zubnix.jaccall.runtime;
+package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -1,4 +1,4 @@
-package com.github.zubnix.jaccall.runtime;
+package com.github.zubnix.jaccall;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,10 +1,10 @@
 package com.github.zubnix.libtest;
 
-import com.github.zubnix.jaccall.runtime.JNI;
-import com.github.zubnix.jaccall.runtime.Pointer;
-import com.github.zubnix.jaccall.runtime.Size;
-import com.github.zubnix.jaccall.runtime.StructSignature;
-import com.github.zubnix.jaccall.runtime.StructType;
+import com.github.zubnix.jaccall.JNI;
+import com.github.zubnix.jaccall.Pointer;
+import com.github.zubnix.jaccall.Size;
+import com.github.zubnix.jaccall.StructSignature;
+import com.github.zubnix.jaccall.StructType;
 
 import javax.annotation.Generated;
 import java.nio.ByteBuffer;

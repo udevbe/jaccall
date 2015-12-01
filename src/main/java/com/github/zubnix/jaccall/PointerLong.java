@@ -1,14 +1,14 @@
-package com.github.zubnix.jaccall.runtime;
+package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
+import java.nio.LongBuffer;
 
 
-final class PointerChar extends Pointer<Character> {
-    PointerChar(@Nonnull final Type type,
+final class PointerLong extends Pointer<Long> {
+    PointerLong(@Nonnull final Type type,
                 final long address,
                 @Nonnull final ByteBuffer byteBuffer) {
         super(type,
@@ -17,15 +17,15 @@ final class PointerChar extends Pointer<Character> {
     }
 
     @Override
-    Character dref(@Nonnull final ByteBuffer byteBuffer) {
+    Long dref(@Nonnull final ByteBuffer byteBuffer) {
         return dref(0,
                     byteBuffer);
     }
 
     @Override
-    Character dref(@Nonnegative final int index,
-                          @Nonnull final ByteBuffer byteBuffer) {
-        final CharBuffer buffer = byteBuffer.asCharBuffer();
+    Long dref(@Nonnegative final int index,
+              @Nonnull final ByteBuffer byteBuffer) {
+        final LongBuffer buffer = byteBuffer.asLongBuffer();
         buffer.rewind();
         buffer.position(index);
         return buffer.get();

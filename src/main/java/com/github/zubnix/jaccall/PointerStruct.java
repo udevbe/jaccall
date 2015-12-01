@@ -1,11 +1,11 @@
-package com.github.zubnix.jaccall.runtime;
+package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 
-import static com.github.zubnix.jaccall.runtime.Size.sizeOf;
+import static com.github.zubnix.jaccall.Size.sizeOf;
 
 final class PointerStruct extends Pointer<StructType> {
 
@@ -30,7 +30,7 @@ final class PointerStruct extends Pointer<StructType> {
     StructType dref(@Nonnegative final int index,
                     @Nonnull final ByteBuffer byteBuffer) {
         try {
-            final int structSize = sizeOf(this.structClass);
+            final int structSize = Size.sizeOf(this.structClass);
             byteBuffer.position(index * structSize);
             final StructType structType = this.structClass.newInstance();
             final ByteBuffer slice = byteBuffer.slice();

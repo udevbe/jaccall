@@ -1,4 +1,4 @@
-package com.github.zubnix.jaccall.runtime;
+package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 
-import static com.github.zubnix.jaccall.runtime.Size.sizeOf;
+import static com.github.zubnix.jaccall.Size.sizeOf;
 
 
 final class PointerPointer extends Pointer<Pointer<?>> {
@@ -42,7 +42,7 @@ final class PointerPointer extends Pointer<Pointer<?>> {
             buffer.position(index);
             val = buffer.get();
         }
-        return Pointer.wrap(this.type,
+        return wrap(this.type,
                             val);
     }
 }

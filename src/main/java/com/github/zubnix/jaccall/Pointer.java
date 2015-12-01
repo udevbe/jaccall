@@ -1,4 +1,4 @@
-package com.github.zubnix.jaccall.runtime;
+package com.github.zubnix.jaccall;
 
 
 import javax.annotation.Nonnegative;
@@ -13,8 +13,6 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 import java.nio.ShortBuffer;
-
-import static com.github.zubnix.jaccall.runtime.Size.sizeOf;
 
 
 public abstract class Pointer<T> implements AutoCloseable {
@@ -78,7 +76,7 @@ public abstract class Pointer<T> implements AutoCloseable {
 
         final StructSignature struct = rawType.getAnnotation(StructSignature.class);
         if (struct != null) {
-            final long size = sizeOf(struct);
+            final long size = Size.sizeOf(struct);
             return (Pointer<U>) new PointerStruct(type,
                                                   address,
                                                   JNI.wrap(address,
@@ -86,7 +84,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         if (rawType.equals(Void.class) || rawType.equals(void.class)) {
-            final long size = sizeOf((Void) null);
+            final long size = Size.sizeOf((Void) null);
             return (Pointer<U>) new PointerVoid(type,
                                                 address,
                                                 JNI.wrap(address,
@@ -94,7 +92,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         if (rawType.equals(Byte.class) || rawType.equals(byte.class)) {
-            final long size = sizeOf((Byte) null);
+            final long size = Size.sizeOf((Byte) null);
             return (Pointer<U>) new PointerByte(type,
                                                 address,
                                                 JNI.wrap(address,
@@ -102,7 +100,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         if (rawType.equals(Short.class) || rawType.equals(short.class)) {
-            final long size = sizeOf((Short) null);
+            final long size = Size.sizeOf((Short) null);
             return (Pointer<U>) new PointerShort(type,
                                                  address,
                                                  JNI.wrap(address,
@@ -110,7 +108,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         if (rawType.equals(Character.class) || rawType.equals(char.class)) {
-            final long size = sizeOf((Character) null);
+            final long size = Size.sizeOf((Character) null);
             return (Pointer<U>) new PointerChar(type,
                                                 address,
                                                 JNI.wrap(address,
@@ -118,7 +116,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         if (rawType.equals(Integer.class) || rawType.equals(int.class)) {
-            final long size = sizeOf((Integer) null);
+            final long size = Size.sizeOf((Integer) null);
             return (Pointer<U>) new PointerInt(type,
                                                address,
                                                JNI.wrap(address,
@@ -126,7 +124,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         if (rawType.equals(Float.class) || rawType.equals(float.class)) {
-            final long size = sizeOf((Float) null);
+            final long size = Size.sizeOf((Float) null);
             return (Pointer<U>) new PointerFloat(type,
                                                  address,
                                                  JNI.wrap(address,
@@ -134,7 +132,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         if (rawType.equals(Long.class) || rawType.equals(long.class)) {
-            final long size = sizeOf((Long) null);
+            final long size = Size.sizeOf((Long) null);
             return (Pointer<U>) new PointerLong(type,
                                                 address,
                                                 JNI.wrap(address,
@@ -142,7 +140,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         if (rawType.equals(Double.class) || rawType.equals(double.class)) {
-            final long size = sizeOf((Double) null);
+            final long size = Size.sizeOf((Double) null);
             return (Pointer<U>) new PointerDouble(type,
                                                   address,
                                                   JNI.wrap(address,
@@ -150,7 +148,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         if (rawType.equals(Pointer.class)) {
-            final long size = sizeOf((Pointer) null);
+            final long size = Size.sizeOf((Pointer) null);
             return (Pointer<U>) new PointerPointer(type,
                                                    address,
                                                    JNI.wrap(address,
@@ -158,7 +156,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         if (rawType.equals(CLong.class)) {
-            final long size = sizeOf((CLong) null);
+            final long size = Size.sizeOf((CLong) null);
             return (Pointer<U>) new PointerCLong(type,
                                                  address,
                                                  JNI.wrap(address,
@@ -191,7 +189,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @return a new untyped pointer object that will use the newly allocated memory.
      */
     public static Pointer<Void> calloc(@Nonnegative final int nmemb,
-                                       @Nonnegative final long size) {
+                                       @Nonnegative final int size) {
         return wrap(JNI.calloc(nmemb,
                                size));
     }
@@ -222,7 +220,7 @@ public abstract class Pointer<T> implements AutoCloseable {
 
         final Class<? extends StructType> componentType = val[0].getClass();
         final Pointer<U> pointer = (Pointer<U>) create(componentType,
-                                                       sizeOf(componentType),
+                                                       Size.sizeOf(componentType),
                                                        length);
         pointer.write(val);
 
@@ -246,7 +244,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         final Pointer<U> pointer = (Pointer<U>) create(val[0].getClass(),
-                                                       sizeOf((Pointer) null),
+                                                       Size.sizeOf((Pointer) null),
                                                        length);
         pointer.write(val);
 
@@ -270,7 +268,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         final Pointer<Byte> pointer = create(Byte.class,
-                                             sizeOf((Byte) null),
+                                             Size.sizeOf((Byte) null),
                                              length);
         pointer.write(val);
 
@@ -293,7 +291,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         final Pointer<Short> pointer = create(Short.class,
-                                              sizeOf((Short) null),
+                                              Size.sizeOf((Short) null),
                                               length);
         pointer.write(val);
 
@@ -316,7 +314,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         final Pointer<Character> pointer = create(Character.class,
-                                                  sizeOf((Character) null),
+                                                  Size.sizeOf((Character) null),
                                                   length);
         pointer.write(val);
 
@@ -339,7 +337,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         final Pointer<Integer> pointer = create(Integer.class,
-                                                sizeOf((Integer) null),
+                                                Size.sizeOf((Integer) null),
                                                 length);
         pointer.write(val);
 
@@ -362,7 +360,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         final Pointer<Float> pointer = create(Float.class,
-                                              sizeOf((Float) null),
+                                              Size.sizeOf((Float) null),
                                               length);
         pointer.write(val);
 
@@ -385,7 +383,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         final Pointer<Long> pointer = create(Long.class,
-                                             sizeOf((Long) null),
+                                             Size.sizeOf((Long) null),
                                              length);
         pointer.write(val);
 
@@ -656,7 +654,7 @@ public abstract class Pointer<T> implements AutoCloseable {
 
     public void write(@Nonnegative final int index,
                       @Nonnull final Pointer<?>... val) {
-        final long pointerSize = sizeOf((Pointer) null);
+        final long pointerSize = Size.sizeOf((Pointer) null);
         if (pointerSize == 8) {
             //64-bit
             final LongBuffer buffer = this.byteBuffer.asLongBuffer();
@@ -691,7 +689,7 @@ public abstract class Pointer<T> implements AutoCloseable {
             return;
         }
 
-        final long clongSize = sizeOf((CLong) null);
+        final long clongSize = Size.sizeOf((CLong) null);
 
         if (clongSize == 8) {
             //64-bit
@@ -732,7 +730,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         this.byteBuffer.clear();
-        final long structTypeSize = sizeOf(val[0].getClass());
+        final long structTypeSize = Size.sizeOf(val[0].getClass());
         this.byteBuffer.position((int) (index * structTypeSize));
         for (StructType structType : val) {
             structType.buffer()

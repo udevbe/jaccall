@@ -1,12 +1,12 @@
 package com.github.zubnix.libtest;
 
-import com.github.zubnix.jaccall.runtime.Field;
-import com.github.zubnix.jaccall.runtime.Struct;
+import com.github.zubnix.jaccall.Field;
+import com.github.zubnix.jaccall.Struct;
 
-import static com.github.zubnix.jaccall.runtime.CType.CHAR;
-import static com.github.zubnix.jaccall.runtime.CType.INT;
-import static com.github.zubnix.jaccall.runtime.CType.POINTER;
-import static com.github.zubnix.jaccall.runtime.CType.SHORT;
+import static com.github.zubnix.jaccall.CType.CHAR;
+import static com.github.zubnix.jaccall.CType.INT;
+import static com.github.zubnix.jaccall.CType.POINTER;
+import static com.github.zubnix.jaccall.CType.SHORT;
 
 @Struct(value = {
         @Field(type = CHAR,
