@@ -17,13 +17,13 @@ final class PointerDouble extends Pointer<Double> {
     }
 
     @Override
-    public Double dref(@Nonnull final ByteBuffer byteBuffer) {
+    Double dref(@Nonnull final ByteBuffer byteBuffer) {
         return dref(0,
                     byteBuffer);
     }
 
     @Override
-    public Double dref(@Nonnegative final int index,
+    Double dref(@Nonnegative final int index,
                        @Nonnull final ByteBuffer byteBuffer) {
         final DoubleBuffer buffer = byteBuffer.asDoubleBuffer();
         buffer.rewind();

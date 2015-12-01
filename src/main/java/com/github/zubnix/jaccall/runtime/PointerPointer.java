@@ -20,14 +20,14 @@ final class PointerPointer extends Pointer<Pointer<?>> {
     }
 
     @Override
-    protected Pointer<?> dref(@Nonnull final ByteBuffer byteBuffer) {
+    Pointer<?> dref(@Nonnull final ByteBuffer byteBuffer) {
         return dref(0,
                     byteBuffer);
     }
 
     @Override
-    protected Pointer<?> dref(@Nonnegative final int index,
-                              @Nonnull final ByteBuffer byteBuffer) {
+    Pointer<?> dref(@Nonnegative final int index,
+                    @Nonnull final ByteBuffer byteBuffer) {
         final long size = sizeOf((Pointer) null);
         final long val;
         if (size == 8) {

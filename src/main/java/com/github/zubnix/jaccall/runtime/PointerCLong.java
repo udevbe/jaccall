@@ -20,13 +20,13 @@ final class PointerCLong extends Pointer<CLong> {
     }
 
     @Override
-    protected CLong dref(@Nonnull final ByteBuffer byteBuffer) {
+    CLong dref(@Nonnull final ByteBuffer byteBuffer) {
         return dref(0,
                     byteBuffer);
     }
 
     @Override
-    protected CLong dref(@Nonnegative final int index,
+    CLong dref(@Nonnegative final int index,
                          @Nonnull final ByteBuffer byteBuffer) {
         final long clongSize = sizeOf((CLong) null);
         final long clong;

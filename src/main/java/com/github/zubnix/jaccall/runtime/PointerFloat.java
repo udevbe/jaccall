@@ -16,14 +16,14 @@ final class PointerFloat extends Pointer<Float> {
     }
 
     @Override
-    public Float dref(@Nonnull final ByteBuffer byteBuffer) {
+    Float dref(@Nonnull final ByteBuffer byteBuffer) {
         return dref(0,
                     byteBuffer);
     }
 
     @Override
-    public Float dref(@Nonnegative final int index,
-                      @Nonnull final ByteBuffer byteBuffer) {
+    Float dref(@Nonnegative final int index,
+               @Nonnull final ByteBuffer byteBuffer) {
         final FloatBuffer buffer = byteBuffer.asFloatBuffer();
         buffer.rewind();
         buffer.position(index);

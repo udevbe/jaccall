@@ -13,7 +13,7 @@ import java.nio.IntBuffer;
 //TODO auto generate this code from a compile time annotation processor
 @Generated("com.github.zubnix.jaccall.compiletime.StructGenerator")
 @StructSignature("wxyz")
-public class Jaccall_TestStruct extends StructType {
+abstract class Jaccall_TestStruct extends StructType {
 
     private static final long      DC_STRUCT     = JNI.dcDefineStruct(Jaccall_TestStruct.class.getAnnotation(StructSignature.class)
                                                                                               .value());

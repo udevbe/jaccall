@@ -21,9 +21,10 @@ public class JNI {
     /*
      * std ->
      */
-    static native long malloc(@Nonnegative long size);
+    static native int malloc(@Nonnegative long size);
 
-    static native long calloc(@Nonnegative final long size);
+    static native int calloc(final int nmemb,
+                             @Nonnegative final long size);
 
     static native void free(final long address);
 
@@ -37,13 +38,13 @@ public class JNI {
     /*
      * dyncall ->
      */
-    public static native long dcStructSize(long dcStruct);
+    public static native int dcStructSize(long dcStruct);
 
     public static native long dcDefineStruct(@Nonnull String signature);
 
     public static native ByteBuffer dcStructFieldOffsets(final long dcStruct,
                                                          @Nonnull final ByteBuffer offsets);
     /*
-     * dyncall ->
+     * <- dyncall
      */
 }

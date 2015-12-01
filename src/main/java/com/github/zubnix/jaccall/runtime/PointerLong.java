@@ -17,14 +17,14 @@ final class PointerLong extends Pointer<Long> {
     }
 
     @Override
-    public Long dref(@Nonnull final ByteBuffer byteBuffer) {
+    Long dref(@Nonnull final ByteBuffer byteBuffer) {
         return dref(0,
                     byteBuffer);
     }
 
     @Override
-    public Long dref(@Nonnegative final int index,
-                     @Nonnull final ByteBuffer byteBuffer) {
+    Long dref(@Nonnegative final int index,
+              @Nonnull final ByteBuffer byteBuffer) {
         final LongBuffer buffer = byteBuffer.asLongBuffer();
         buffer.rewind();
         buffer.position(index);

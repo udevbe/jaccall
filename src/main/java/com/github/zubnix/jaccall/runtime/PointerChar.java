@@ -17,13 +17,13 @@ final class PointerChar extends Pointer<Character> {
     }
 
     @Override
-    public Character dref(@Nonnull final ByteBuffer byteBuffer) {
+    Character dref(@Nonnull final ByteBuffer byteBuffer) {
         return dref(0,
                     byteBuffer);
     }
 
     @Override
-    public Character dref(@Nonnegative final int index,
+    Character dref(@Nonnegative final int index,
                           @Nonnull final ByteBuffer byteBuffer) {
         final CharBuffer buffer = byteBuffer.asCharBuffer();
         buffer.rewind();

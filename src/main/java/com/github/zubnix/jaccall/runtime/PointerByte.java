@@ -15,14 +15,14 @@ final class PointerByte extends Pointer<Byte> {
     }
 
     @Override
-    public Byte dref(@Nonnull final ByteBuffer byteBuffer) {
+    Byte dref(@Nonnull final ByteBuffer byteBuffer) {
         return dref(0,
                     byteBuffer);
     }
 
     @Override
-    public Byte dref(@Nonnegative final int index,
-                     @Nonnull final ByteBuffer buffer) {
+    Byte dref(@Nonnegative final int index,
+              @Nonnull final ByteBuffer buffer) {
         buffer.rewind();
         buffer.position(index);
         return buffer.get();

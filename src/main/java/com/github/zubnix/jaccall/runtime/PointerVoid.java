@@ -15,13 +15,13 @@ final class PointerVoid extends Pointer<Void> {
     }
 
     @Override
-    protected Void dref(@Nonnull final ByteBuffer byteBuffer) {
+    Void dref(@Nonnull final ByteBuffer byteBuffer) {
         throw new IllegalStateException("Can not dereference void pointer.");
     }
 
     @Override
-    protected Void dref(@Nonnegative final int index,
-                        @Nonnull final ByteBuffer byteBuffer) {
+    Void dref(@Nonnegative final int index,
+              @Nonnull final ByteBuffer byteBuffer) {
         throw new IllegalStateException("Can not dereference void pointer.");
     }
 }

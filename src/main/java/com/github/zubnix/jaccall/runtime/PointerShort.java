@@ -19,14 +19,14 @@ public class PointerShort extends Pointer<Short> {
     }
 
     @Override
-    public Short dref(@Nonnull final ByteBuffer byteBuffer) {
+    Short dref(@Nonnull final ByteBuffer byteBuffer) {
         return dref(0,
                     byteBuffer);
     }
 
     @Override
-    public Short dref(@Nonnegative final int index,
-                      @Nonnull final ByteBuffer byteBuffer) {
+    Short dref(@Nonnegative final int index,
+               @Nonnull final ByteBuffer byteBuffer) {
         final ShortBuffer buffer = byteBuffer.asShortBuffer();
         buffer.rewind();
         buffer.position(index);

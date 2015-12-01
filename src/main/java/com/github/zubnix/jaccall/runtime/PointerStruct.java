@@ -21,24 +21,20 @@ final class PointerStruct extends Pointer<StructType> {
     }
 
     @Override
-    protected StructType dref(@Nonnull final ByteBuffer byteBuffer) {
-        try {
-            final StructType structType = this.structClass.newInstance();
-            structType.buffer(byteBuffer);
-            return structType;
-        }
-        catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+    StructType dref(@Nonnull final ByteBuffer byteBuffer) {
+        return dref(0,
+                    byteBuffer);
     }
 
     @Override
-    protected StructType dref(@Nonnegative final int index,
-                              @Nonnull final ByteBuffer byteBuffer) {
+    StructType dref(@Nonnegative final int index,
+                    @Nonnull final ByteBuffer byteBuffer) {
         try {
-            byteBuffer.position((int) (index * sizeOf(this.structClass)));
-            final ByteBuffer slice = byteBuffer.slice();
+            final int structSize = sizeOf(this.structClass);
+            byteBuffer.position(index * structSize);
             final StructType structType = this.structClass.newInstance();
+            final ByteBuffer slice = byteBuffer.slice();
+            slice.limit(structSize);
             structType.buffer(slice);
             return structType;
         }

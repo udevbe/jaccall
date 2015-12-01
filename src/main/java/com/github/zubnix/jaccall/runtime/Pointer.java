@@ -19,6 +19,13 @@ import static com.github.zubnix.jaccall.runtime.Size.sizeOf;
 
 public abstract class Pointer<T> implements AutoCloseable {
 
+    /**
+     * Wrap byte buffer in a void pointer.
+     *
+     * @param byteBuffer A direct byte buffer
+     *
+     * @return a new untyped pointer object that will use the memory pointed to by the given direct byte buffer.
+     */
     public static Pointer<Void> wrap(@Nonnull final ByteBuffer byteBuffer) {
         if (!byteBuffer.isDirect()) {
             throw new IllegalArgumentException("ByteBuffer must be direct.");
@@ -28,17 +35,42 @@ public abstract class Pointer<T> implements AutoCloseable {
                     JNI.unwrap(byteBuffer));
     }
 
+    /**
+     * Wrap a byte buffer in a typed pointer.
+     *
+     * @param type       A type object (eg. class object) that represents the memory pointed to by given direct byte buffer.
+     * @param byteBuffer a direct byte buffer
+     * @param <U>        The Java type of the given type object.
+     *
+     * @return a new typed pointer object that will use the memory pointed to by the given direct byte buffer.
+     */
     public static <U> Pointer<U> wrap(@Nonnull final Type type,
                                       @Nonnull final ByteBuffer byteBuffer) {
         return wrap(type,
                     JNI.unwrap(byteBuffer));
     }
 
+    /**
+     * Wrap an address in a void pointer.
+     *
+     * @param address a valid memory address.
+     *
+     * @return a new untyped pointer object that will use the memory pointed to by the given address.
+     */
     public static Pointer<Void> wrap(final long address) {
         return wrap(Void.class,
                     address);
     }
 
+    /**
+     * Wrap an address in a typed pointer.
+     *
+     * @param type    A type object (eg. class object) that represents the memory pointed to by given address.
+     * @param address a valid memory address.
+     * @param <U>     The Java type of the given type object.
+     *
+     * @return a new typed pointer object that will use the memory pointed to by the given address.
+     */
     public static <U> Pointer<U> wrap(@Nonnull final Type type,
                                       final long address) {
 
@@ -53,7 +85,7 @@ public abstract class Pointer<T> implements AutoCloseable {
                                                            size));
         }
 
-        if (rawType.equals(Void.class)) {
+        if (rawType.equals(Void.class) || rawType.equals(void.class)) {
             final long size = sizeOf((Void) null);
             return (Pointer<U>) new PointerVoid(type,
                                                 address,
@@ -136,12 +168,32 @@ public abstract class Pointer<T> implements AutoCloseable {
         throw new IllegalArgumentException("Type " + rawType + " does not have a known native size.");
     }
 
-    public static Pointer<Void> malloc(final long size) {
+    /**
+     * Allocate size bytes and returns a pointer to
+     * the allocated memory.  The memory is not initialized.
+     *
+     * @param size
+     *
+     * @return a new untyped pointer object that will use the newly allocated memory.
+     */
+    public static Pointer<Void> malloc(@Nonnegative final int size) {
         return wrap(JNI.malloc(size));
     }
 
-    public static Pointer<Void> calloc(final long size) {
-        return wrap(JNI.calloc(size));
+    /**
+     * Allocate memory for an array of nmemb elements
+     * of size bytes each and returns a pointer to the allocated memory.
+     * The memory is set to zero.
+     *
+     * @param nmemb
+     * @param size
+     *
+     * @return a new untyped pointer object that will use the newly allocated memory.
+     */
+    public static Pointer<Void> calloc(@Nonnegative final int nmemb,
+                                       @Nonnegative final long size) {
+        return wrap(JNI.calloc(nmemb,
+                               size));
     }
 
     private static <U> Pointer<U> create(Class<U> type,
@@ -151,6 +203,15 @@ public abstract class Pointer<T> implements AutoCloseable {
                     JNI.malloc(elementSize * length));
     }
 
+
+    /**
+     * Create a new pointer object with newly allocated memory. The memory is initialized with the given structs.
+     *
+     * @param val One ore more structs. Each struct has to be of the same type.
+     * @param <U> The Java type of the struct.
+     *
+     * @return a new typed pointer object that will use new memory initialized with the given structs.
+     */
     @SafeVarargs
     @Nonnull
     public static <U extends StructType> Pointer<U> ref(@Nonnull U... val) {
@@ -159,9 +220,7 @@ public abstract class Pointer<T> implements AutoCloseable {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
 
-        final Class<? extends StructType> componentType = (Class<? extends StructType>) val.getClass()
-                                                                                           .getComponentType();
-
+        final Class<? extends StructType> componentType = val[0].getClass();
         final Pointer<U> pointer = (Pointer<U>) create(componentType,
                                                        sizeOf(componentType),
                                                        length);
@@ -170,6 +229,14 @@ public abstract class Pointer<T> implements AutoCloseable {
         return pointer;
     }
 
+    /**
+     * Create a new pointer object with newly allocated memory. The memory is initialized with the given pointers.
+     *
+     * @param val One ore more pointers. Each pointer has to be of the same type.
+     * @param <U> The Java type of the pointer.
+     *
+     * @return a new typed pointer object that will use new memory initialized with the given pointers.
+     */
     @SafeVarargs
     @Nonnull
     public static <U extends Pointer> Pointer<U> ref(@Nonnull U... val) {
@@ -186,6 +253,13 @@ public abstract class Pointer<T> implements AutoCloseable {
         return pointer;
     }
 
+    /**
+     * Create a new pointer object with newly allocated memory. The memory is initialized with the given bytes.
+     *
+     * @param val One ore more bytes.
+     *
+     * @return a new typed pointer object that will use new memory initialized with the given bytes.
+     */
     @Nonnull
     public static Pointer<Byte> ref(@Nonnull byte... val) {
 
@@ -203,6 +277,13 @@ public abstract class Pointer<T> implements AutoCloseable {
         return pointer;
     }
 
+    /**
+     * Create a new pointer object with newly allocated memory. The memory is initialized with the given shorts.
+     *
+     * @param val One ore more shorts.
+     *
+     * @return a new typed pointer object that will use new memory initialized with the given shorts.
+     */
     @Nonnull
     public static Pointer<Short> ref(@Nonnull short... val) {
 
@@ -219,6 +300,13 @@ public abstract class Pointer<T> implements AutoCloseable {
         return pointer;
     }
 
+    /**
+     * Create a new pointer object with newly allocated memory. The memory is initialized with the given chars.
+     *
+     * @param val One ore more chars.
+     *
+     * @return a new typed pointer object that will use new memory initialized with the given chars.
+     */
     @Nonnull
     public static Pointer<Character> ref(@Nonnull char... val) {
 
@@ -235,6 +323,13 @@ public abstract class Pointer<T> implements AutoCloseable {
         return pointer;
     }
 
+    /**
+     * Create a new pointer object with newly allocated memory. The memory is initialized with the given ints.
+     *
+     * @param val One ore more ints.
+     *
+     * @return a new typed pointer object that will use new memory initialized with the given ints.
+     */
     @Nonnull
     public static Pointer<Integer> ref(@Nonnull int... val) {
 
@@ -251,6 +346,13 @@ public abstract class Pointer<T> implements AutoCloseable {
         return pointer;
     }
 
+    /**
+     * Create a new pointer object with newly allocated memory. The memory is initialized with the given floats.
+     *
+     * @param val One ore more floats.
+     *
+     * @return a new typed pointer object that will use new memory initialized with the given floats.
+     */
     @Nonnull
     public static Pointer<Float> ref(@Nonnull float... val) {
 
@@ -267,6 +369,13 @@ public abstract class Pointer<T> implements AutoCloseable {
         return pointer;
     }
 
+    /**
+     * Create a new pointer object with newly allocated memory. The memory is initialized with the given longs.
+     *
+     * @param val One ore more longs.
+     *
+     * @return a new typed pointer object that will use new memory initialized with the given longs.
+     */
     @Nonnull
     public static Pointer<Long> ref(@Nonnull long... val) {
 
@@ -289,9 +398,9 @@ public abstract class Pointer<T> implements AutoCloseable {
     @Nonnull
     protected final Type       type;
 
-    protected Pointer(@Nonnull final Type type,
-                      final long address,
-                      @Nonnull final ByteBuffer byteBuffer) {
+    Pointer(@Nonnull final Type type,
+            final long address,
+            @Nonnull final ByteBuffer byteBuffer) {
         this.address = address;
         this.type = type;
         this.byteBuffer = byteBuffer.order(ByteOrder.nativeOrder());
@@ -318,7 +427,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code T value = foo.dref();}
-     * <p>
+     * <p/>
      * C equivalent:<br>
      * {@code T value = *foo}
      *
@@ -328,12 +437,12 @@ public abstract class Pointer<T> implements AutoCloseable {
         return dref(this.byteBuffer);
     }
 
-    protected abstract T dref(@Nonnull ByteBuffer byteBuffer);
+    abstract T dref(@Nonnull ByteBuffer byteBuffer);
 
     /**
      * Java:<br>
      * {@code T value = foo.dref(i);}
-     * <p>
+     * <p/>
      * C equivalent:<br>
      * {@code T value = foo[i]}
      *
@@ -346,13 +455,13 @@ public abstract class Pointer<T> implements AutoCloseable {
                     this.byteBuffer);
     }
 
-    protected abstract T dref(@Nonnegative int index,
-                              @Nonnull ByteBuffer byteBuffer);
+    abstract T dref(@Nonnegative int index,
+                    @Nonnull ByteBuffer byteBuffer);
 
     /**
      * Java:<br>
      * {@code offsetFoo = foo.offset(i);}
-     * <p>
+     * <p/>
      * C equivalent:<br>
      * {@code offsetFoo = foo+i;}
      *
@@ -374,12 +483,30 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @return
      */
     public <U> U tCast(@Nonnull Class<U> type) {
-        //fast path
-        if (type.equals(Long.class)) {
+        //primitive "fast" paths
+        if (type.equals(Long.class) || type.equals(long.class)) {
             return (U) Long.valueOf(this.address);
         }
-        if (type.equals(Integer.class)) {
+        if (type.equals(Double.class) || type.equals(double.class)) {
+            return (U) Double.valueOf(Double.longBitsToDouble(this.address));
+        }
+        if (type.equals(Integer.class) || type.equals(int.class)) {
             return (U) Integer.valueOf((int) this.address);
+        }
+        if (type.equals(Float.class) || type.equals(float.class)) {
+            return (U) Float.valueOf(Float.intBitsToFloat((int) this.address));
+        }
+        if (type.equals(Short.class) || type.equals(short.class)) {
+            return (U) Short.valueOf((short) this.address);
+        }
+        if (type.equals(Character.class) || type.equals(char.class)) {
+            return (U) Character.valueOf((char) this.address);
+        }
+        if (type.equals(Byte.class) || type.equals(byte.class)) {
+            return (U) Byte.valueOf((byte) this.address);
+        }
+        if (type.equals(Void.class) || type.equals(void.class)) {
+            throw new IllegalArgumentException("Can not cast to incomplete type void.");
         }
 
         final ByteBuffer addressBuffer = ByteBuffer.allocate(8)
@@ -428,12 +555,12 @@ public abstract class Pointer<T> implements AutoCloseable {
      * Byte
      */
     public void write(@Nonnull final byte... val) {
-        this.byteBuffer.clear();
-        this.byteBuffer.put(val);
+        write(0,
+              val);
     }
 
     public void write(@Nonnegative final int index,
-                      final byte val) {
+                      final byte... val) {
         this.byteBuffer.clear();
         this.byteBuffer.position(index);
         this.byteBuffer.put(val);
@@ -443,13 +570,12 @@ public abstract class Pointer<T> implements AutoCloseable {
      * Short
      */
     public void write(@Nonnull final short... val) {
-        final ShortBuffer buffer = this.byteBuffer.asShortBuffer();
-        buffer.clear();
-        buffer.put(val);
+        write(0,
+              val);
     }
 
     public void write(@Nonnegative final int index,
-                      final short val) {
+                      final short... val) {
         final ShortBuffer buffer = this.byteBuffer.asShortBuffer();
         buffer.clear();
         buffer.position(index);
@@ -460,13 +586,12 @@ public abstract class Pointer<T> implements AutoCloseable {
      * Character
      */
     public void write(@Nonnull final char... val) {
-        final CharBuffer buffer = this.byteBuffer.asCharBuffer();
-        buffer.clear();
-        buffer.put(val);
+        write(0,
+              val);
     }
 
     public void write(@Nonnegative final int index,
-                      final char val) {
+                      final char... val) {
         final CharBuffer buffer = this.byteBuffer.asCharBuffer();
         buffer.clear();
         buffer.position(index);
@@ -477,13 +602,12 @@ public abstract class Pointer<T> implements AutoCloseable {
      * Integer
      */
     public void write(@Nonnull final int... val) {
-        final IntBuffer buffer = this.byteBuffer.asIntBuffer();
-        buffer.clear();
-        buffer.put(val);
+        write(0,
+              val);
     }
 
     public void write(@Nonnegative final int index,
-                      final int val) {
+                      final int... val) {
         final IntBuffer buffer = this.byteBuffer.asIntBuffer();
         buffer.clear();
         buffer.position(index);
@@ -494,13 +618,12 @@ public abstract class Pointer<T> implements AutoCloseable {
      * Float
      */
     public void write(@Nonnull final float... val) {
-        final FloatBuffer buffer = this.byteBuffer.asFloatBuffer();
-        buffer.clear();
-        buffer.put(val);
+        write(0,
+              val);
     }
 
     public void write(@Nonnegative final int index,
-                      final float val) {
+                      final float... val) {
         final FloatBuffer buffer = this.byteBuffer.asFloatBuffer();
         buffer.clear();
         buffer.position(index);
@@ -511,13 +634,12 @@ public abstract class Pointer<T> implements AutoCloseable {
      * Integer
      */
     public void write(@Nonnull final long... val) {
-        final LongBuffer buffer = this.byteBuffer.asLongBuffer();
-        buffer.clear();
-        buffer.put(val);
+        write(0,
+              val);
     }
 
     public void write(@Nonnegative final int index,
-                      final long val) {
+                      final long... val) {
         final LongBuffer buffer = this.byteBuffer.asLongBuffer();
         buffer.clear();
         buffer.position(index);
@@ -528,41 +650,30 @@ public abstract class Pointer<T> implements AutoCloseable {
      * Pointer
      */
     public void write(@Nonnull final Pointer<?>... val) {
-        final long pointerSize = sizeOf((Pointer) null);
-        if (pointerSize == 8) {
-            //64-bit
-            final LongBuffer buffer = this.byteBuffer.asLongBuffer();
-            buffer.clear();
-            for (Pointer pointer : val) {
-                buffer.put((Long) pointer.tCast(Long.class));
-            }
-        }
-        else if (pointerSize == 4) {
-            //32-bit
-            final IntBuffer buffer = this.byteBuffer.asIntBuffer();
-            buffer.clear();
-            for (Pointer pointer : val) {
-                buffer.put((Integer) pointer.tCast(Integer.class));
-            }
-        }
+        write(0,
+              val);
     }
 
     public void write(@Nonnegative final int index,
-                      @Nonnull final Pointer<?> val) {
+                      @Nonnull final Pointer<?>... val) {
         final long pointerSize = sizeOf((Pointer) null);
         if (pointerSize == 8) {
             //64-bit
             final LongBuffer buffer = this.byteBuffer.asLongBuffer();
             buffer.clear();
             buffer.position(index);
-            buffer.put(val.<Long>tCast(Long.class));
+            for (Pointer<?> pointer : val) {
+                buffer.put(pointer.tCast(Long.class));
+            }
         }
         else if (pointerSize == 4) {
             //32-bit
             final IntBuffer buffer = this.byteBuffer.asIntBuffer();
             buffer.clear();
             buffer.position(index);
-            buffer.put(val.<Integer>tCast(Integer.class));
+            for (Pointer<?> pointer : val) {
+                buffer.put(pointer.tCast(Integer.class));
+            }
         }
     }
 
@@ -570,12 +681,23 @@ public abstract class Pointer<T> implements AutoCloseable {
      * CLong
      */
     public void write(@Nonnull final CLong... val) {
+        write(0,
+              val);
+    }
+
+    public void write(@Nonnegative final int index,
+                      @Nonnull final CLong... val) {
+        if (val.length == 0) {
+            return;
+        }
+
         final long clongSize = sizeOf((CLong) null);
 
         if (clongSize == 8) {
             //64-bit
             final LongBuffer buffer = this.byteBuffer.asLongBuffer();
             buffer.clear();
+            buffer.position(index);
             for (CLong cLong : val) {
                 buffer.put(cLong.longValue());
             }
@@ -584,51 +706,41 @@ public abstract class Pointer<T> implements AutoCloseable {
             //32-bit
             final IntBuffer buffer = this.byteBuffer.asIntBuffer();
             buffer.clear();
+            buffer.position(index);
             for (CLong cLong : val) {
                 buffer.put(cLong.intValue());
             }
         }
     }
 
-    public void write(@Nonnegative final int index,
-                      @Nonnull final CLong val) {
-        final long clongSize = sizeOf((CLong) null);
-
-        if (clongSize == 8) {
-            //64-bit
-            final LongBuffer buffer = this.byteBuffer.asLongBuffer();
-            buffer.clear();
-            buffer.position(index);
-            buffer.put(val.longValue());
-        }
-        else if (clongSize == 4) {
-            //32-bit
-            final IntBuffer buffer = this.byteBuffer.asIntBuffer();
-            buffer.clear();
-            buffer.position(index);
-            buffer.put(val.intValue());
-        }
-    }
-
     /*
      * StructType
      */
-    public void write(@Nonnull final StructType... val) {
+
+    @SafeVarargs
+    public final <U extends StructType> void write(@Nonnull final U... val) {
+        write(0,
+              val);
+    }
+
+
+    @SafeVarargs
+    public final <U extends StructType> void write(@Nonnegative final int index,
+                                                   @Nonnull final U... val) {
+        if (val.length == 0) {
+            return;
+        }
+
         this.byteBuffer.clear();
+        final long structTypeSize = sizeOf(val[0].getClass());
+        this.byteBuffer.position((int) (index * structTypeSize));
         for (StructType structType : val) {
             structType.buffer()
                       .rewind();
+            structType.buffer()
+                      .limit((int) structTypeSize);
             this.byteBuffer.put(structType.buffer());
         }
-    }
-
-    public void write(@Nonnegative final int index,
-                      @Nonnull final StructType val) {
-        this.byteBuffer.clear();
-        this.byteBuffer.position((int) (index * sizeOf(val.getClass())));
-        val.buffer()
-           .rewind();
-        this.byteBuffer.put(val.buffer());
     }
 
     protected static Class<?> toClass(Type type) {

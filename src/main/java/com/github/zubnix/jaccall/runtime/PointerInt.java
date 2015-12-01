@@ -17,14 +17,14 @@ final class PointerInt extends Pointer<Integer> {
     }
 
     @Override
-    public Integer dref(@Nonnull final ByteBuffer byteBuffer) {
+    Integer dref(@Nonnull final ByteBuffer byteBuffer) {
         return dref(0,
                     byteBuffer);
     }
 
     @Override
-    public Integer dref(@Nonnegative final int index,
-                        @Nonnull final ByteBuffer byteBuffer) {
+    Integer dref(@Nonnegative final int index,
+                 @Nonnull final ByteBuffer byteBuffer) {
         final IntBuffer buffer = byteBuffer.asIntBuffer();
         buffer.rewind();
         buffer.position(index);
