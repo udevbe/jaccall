@@ -216,6 +216,7 @@ Session.vim
 *.lo
 *.o
 *.obj
+/src/main/c/jaccall/build
 
 # Precompiled Headers
 *.gch
