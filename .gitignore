@@ -1,4 +1,4 @@
-/src/main/c/src/com_github_zubnix_JNI.h
+/src/main/c/jaccall/src/com_github_zubnix_JNI.h
 # Created by .ignore support plugin (hsz.mobi)
 ### Linux template
 *~
@@ -227,7 +227,7 @@ Session.vim
 *.dll
 
 # Fortran module files
-/src/main/c/src/com_github_zubnix_jaccall_JNI.h
+/src/main/c/jaccall/src/com_github_zubnix_jaccall_JNI.h
 *.mod
 
 # Compiled Static libraries
