@@ -33,6 +33,24 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <artifactId>exec-maven-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <executions>
+                    <execution>
+                        <id>jaccall-native</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <workingDirectory>${basedir}/src/main/c</workingDirectory>
+                            <executable>${basedir}/src/main/c/build.sh</executable>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>
