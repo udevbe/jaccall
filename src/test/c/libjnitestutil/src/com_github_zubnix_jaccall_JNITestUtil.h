@@ -9,11 +9,27 @@ extern "C" {
 #endif
 /*
  * Class:     com_github_zubnix_jaccall_JNITestUtil
- * Method:    stuff
- * Signature: ()J
+ * Method:    byteArrayAsPointer
+ * Signature: (IIIII)J
  */
-JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_stuff
-  (JNIEnv *, jclass);
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_byteArrayAsPointer
+  (JNIEnv *, jclass, jint, jint, jint, jint, jint);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    pointerOfPointer
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_pointerOfPointer
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    pointerOfCLong
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_pointerOfCLong
+  (JNIEnv *, jclass, jlong);
 
 #ifdef __cplusplus
 }

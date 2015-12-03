@@ -33,17 +33,8 @@ public abstract class Pointer<T> implements AutoCloseable {
                     JNI.unwrap(byteBuffer));
     }
 
-    /**
-     * Wrap a byte buffer in a typed pointer.
-     *
-     * @param type       A type object (eg. class object) that represents the memory pointed to by given direct byte buffer.
-     * @param byteBuffer a direct byte buffer
-     * @param <U>        The Java type of the given type object.
-     *
-     * @return a new typed pointer object that will use the memory pointed to by the given direct byte buffer.
-     */
-    public static <U> Pointer<U> wrap(@Nonnull final Type type,
-                                      @Nonnull final ByteBuffer byteBuffer) {
+    private static <U> Pointer<U> wrap(@Nonnull final Type type,
+                                       @Nonnull final ByteBuffer byteBuffer) {
         return wrap(type,
                     JNI.unwrap(byteBuffer));
     }
@@ -90,17 +81,8 @@ public abstract class Pointer<T> implements AutoCloseable {
                     address);
     }
 
-    /**
-     * Wrap an address in a typed pointer.
-     *
-     * @param type    A type object (eg. class object) that represents the memory pointed to by given address.
-     * @param address a valid memory address.
-     * @param <U>     The Java type of the given type object.
-     *
-     * @return a new typed pointer object that will use the memory pointed to by the given address.
-     */
-    public static <U> Pointer<U> wrap(@Nonnull final Type type,
-                                      final long address) {
+    static <U> Pointer<U> wrap(@Nonnull final Type type,
+                                       final long address) {
 
         final Class<?> rawType = toClass(type);
 

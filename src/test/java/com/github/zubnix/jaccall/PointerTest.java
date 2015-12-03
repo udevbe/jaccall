@@ -55,12 +55,61 @@ public class PointerTest {
 
     @Test
     public void testWrapAddress() throws Exception {
+        //given
+        final long pointer = JNITestUtil.byteArrayAsPointer(123,
+                                                            -94,
+                                                            43,
+                                                            58,
+                                                            0xFF);
 
+        //when
+        final Pointer<Void> voidPointer = Pointer.wrap(pointer);
+
+        //then
+        assertThat(voidPointer.tCast(Long.class)).isEqualTo(pointer);
     }
 
     @Test
     public void testWrapTypedAddress() throws Exception {
+        //given
+        byte b0 = 123;
+        byte b1 = -94;
+        byte b2 = 43;
+        byte b3 = 58;
+        byte b4 = (byte) 0xFF;
 
+        final long pointer = JNITestUtil.byteArrayAsPointer(b0,
+                                                            b1,
+                                                            b2,
+                                                            b3,
+                                                            b4);
+        final long pointerOfPointer = JNITestUtil.pointerOfPointer(pointer);
+
+        //when
+        try (final Pointer<Byte> bytePointer = Pointer.wrap(Byte.class,
+                                                            pointer);
+
+             final Pointer<Pointer<Byte>> bytePointerPointer = Pointer.wrap(Byte.class,
+                                                                            pointer)
+                                                                      .ppCast();
+
+             final Pointer<Pointer> pointerPointer = Pointer.wrap(Pointer.class,
+                                                                  pointerOfPointer)) {
+
+            //then
+            assertThat(bytePointer.dref()).isEqualTo(b0);
+            assertThat(bytePointer.dref(1)).isEqualTo(b1);
+            assertThat(bytePointer.dref(2)).isEqualTo(b2);
+            assertThat(bytePointer.dref(3)).isEqualTo(b3);
+            assertThat(bytePointer.dref(4)).isEqualTo(b4);
+
+            //throws error complaining about incomplete type
+            final Object val = pointerPointer.dref()
+                                             .dref();
+        }
+        catch (Exception e) {
+
+        }
     }
 
     @Test

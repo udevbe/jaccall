@@ -19,18 +19,10 @@ public final class JNI {
         final InputStream libStream = JNI.class.getClassLoader()
                                                .getResourceAsStream(LIB_PREFIX + LIB_NAME + LIB_POSTFIX);
         try {
-            final File tempFile = File.createTempFile(LIB_PREFIX + LIB_NAME,
-                                                      LIB_POSTFIX);
+            final File tempFile = File.createTempFile(LIB_NAME,
+                                                      null);
             tempFile.deleteOnExit();
-
-            if (!tempFile.createNewFile() && tempFile.delete()) {
-                tempFile.createNewFile();
-            }
-            else {
-                throw new Error("Attempt to unpack library failed as a file with path: "
-                                + tempFile.getAbsolutePath()
-                                + " already exists and could not be deleted.");
-            }
+            tempFile.createNewFile();
 
             unpack(libStream,
                    tempFile);

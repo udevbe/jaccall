@@ -44,7 +44,7 @@ final class PointerPointer extends Pointer<Pointer> {
             val = buffer.get();
         }
 
-        //TODO is this correct?
+        //FIXME handle untyped pointers
         ParameterizedType parameterizedType = (ParameterizedType) this.type;
         final Type        type              = parameterizedType.getActualTypeArguments()[0];
 

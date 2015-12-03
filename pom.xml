@@ -114,7 +114,7 @@
                     <!-- test native lib -->
                     <execution>
                         <id>copy-test-resources</id>
-                        <phase>test</phase>
+                        <phase>generate-test-resources</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
