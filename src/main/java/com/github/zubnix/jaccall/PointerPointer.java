@@ -2,6 +2,7 @@ package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -10,7 +11,7 @@ import java.nio.LongBuffer;
 import static com.github.zubnix.jaccall.Size.sizeOf;
 
 
-final class PointerPointer extends Pointer<Pointer<?>> {
+final class PointerPointer extends Pointer<Pointer> {
     PointerPointer(@Nonnull final Type type,
                    final long address,
                    @Nonnull final ByteBuffer byteBuffer) {
@@ -42,7 +43,12 @@ final class PointerPointer extends Pointer<Pointer<?>> {
             buffer.position(index);
             val = buffer.get();
         }
-        return wrap(this.type,
-                            val);
+
+        //TODO is this correct?
+        ParameterizedType parameterizedType = (ParameterizedType) this.type;
+        final Type        type              = parameterizedType.getActualTypeArguments()[0];
+
+        return wrap(type,
+                    val);
     }
 }
