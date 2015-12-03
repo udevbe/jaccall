@@ -216,7 +216,6 @@ Session.vim
 *.lo
 *.o
 *.obj
-/src/main/c/jaccall/build
 
 # Precompiled Headers
 *.gch
@@ -227,8 +226,16 @@ Session.vim
 *.dylib
 *.dll
 
-# Fortran module files
+#jni
 /src/main/c/jaccall/src/com_github_zubnix_jaccall_JNI.h
+/src/main/c/jaccall/build
+
+/src/test/c/libtest/build
+/src/test/c/libjniutil/src/com_github_zubnix_jaccall_JNITestUtil.h
+/src/test/c/libjniutil/build
+
+# Fortran module files
+
 *.mod
 
 # Compiled Static libraries

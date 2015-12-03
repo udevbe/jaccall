@@ -6,16 +6,19 @@
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>Java C call library</name>
-    <url>http://maven.apache.org</url>
 
 
     <properties>
         <!-- dependencies -->
         <jsr305.version>3.0.0</jsr305.version>
+
         <!-- test dependencies -->
         <junit.version>4.12</junit.version>
-        <!-- plugins -->
+        <truth.version>0.27</truth.version>
 
+        <!-- plugins -->
+        <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+        <exec-maven-plugin.version>1.4.0</exec-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -31,6 +34,12 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.google.truth</groupId>
+            <artifactId>truth</artifactId>
+            <version>${truth.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -38,7 +47,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
@@ -48,8 +57,9 @@
             <plugin>
                 <artifactId>exec-maven-plugin</artifactId>
                 <groupId>org.codehaus.mojo</groupId>
-                <version>1.4.0</version>
+                <version>${exec-maven-plugin.version}</version>
                 <executions>
+                    <!-- generate runtime native lib -->
                     <execution>
                         <id>jaccall-native</id>
                         <phase>process-classes</phase>
@@ -61,6 +71,19 @@
                             <executable>${basedir}/src/main/c/build.sh</executable>
                         </configuration>
                     </execution>
+
+                    <!-- generate test native lib -->
+                    <execution>
+                        <id>test-native</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <workingDirectory>${basedir}/src/test/c</workingDirectory>
+                            <executable>${basedir}/src/test/c/build.sh</executable>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 
@@ -68,9 +91,10 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>2.7</version>
                 <executions>
+                    <!-- runtime native lib -->
                     <execution>
                         <id>copy-resources</id>
-                        <phase>prepare-package</phase>
+                        <phase>generate-test-sources</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
@@ -81,6 +105,32 @@
                                     <directory>${basedir}/src/main/c/jaccall/build/</directory>
                                     <includes>
                                         <include>libjaccall.so</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+
+                    <!-- test native lib -->
+                    <execution>
+                        <id>copy-test-resources</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.testOutputDirectory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/src/test/c/libjnitestutil/build/</directory>
+                                    <includes>
+                                        <include>libjnitestutil.so</include>
+                                    </includes>
+                                </resource>
+                                <resource>
+                                    <directory>${basedir}/src/test/c/libtesting/build/</directory>
+                                    <includes>
+                                        <include>libtesting.so</include>
                                     </includes>
                                 </resource>
                             </resources>

@@ -2,16 +2,55 @@ package com.github.zubnix.jaccall;
 
 import org.junit.Test;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
+import static com.google.common.truth.Truth.assertThat;
+
 public class PointerTest {
 
     @Test
     public void testWrapByteBuffer() throws Exception {
+        //given
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(5);
+        byteBuffer.put(new byte[]{
+                1, 1, 2, 3, 5
+        });
 
+        //when
+        final Pointer<Void> voidPointer = Pointer.wrap(byteBuffer);
+
+        //then
+        final long address = voidPointer.tCast(Long.class);
+        assertThat(address).isNotEqualTo(0L);
     }
 
     @Test
     public void testWrapTypedByteBuffer() throws Exception {
+        //given
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4 * 3)
+                                          .order(ByteOrder.nativeOrder());
 
+        int int0 = 4;
+        int int1 = 5;
+        int int2 = -10;
+
+        byteBuffer.asIntBuffer()
+                  .put(new int[]{int0, int1, int2});
+
+        //when
+        final Pointer<Integer> intPointer = Pointer.wrap(Integer.class,
+                                                         byteBuffer);
+
+        //then
+        final Integer integer0 = intPointer.dref();
+        assertThat(integer0).isEqualTo(int0);
+
+        final Integer integer1 = intPointer.dref(1);
+        assertThat(integer1).isEqualTo(int1);
+
+        final Integer integer2 = intPointer.dref(2);
+        assertThat(integer2).isEqualTo(int2);
     }
 
     @Test
