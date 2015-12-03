@@ -49,6 +49,21 @@ public abstract class Pointer<T> implements AutoCloseable {
     }
 
     /**
+     * Wrap a byte buffer in a typed pointer.
+     *
+     * @param type       A class that represents the memory pointed to by given direct byte buffer.
+     * @param byteBuffer a direct byte buffer
+     * @param <U>        The Java type of the given type object.
+     *
+     * @return a new typed pointer object that will use the memory pointed to by the given direct byte buffer.
+     */
+    public static <U> Pointer<U> wrap(@Nonnull final Class<U> type,
+                                      @Nonnull final ByteBuffer byteBuffer) {
+        return wrap((Type) type,
+                    byteBuffer);
+    }
+
+    /**
      * Wrap an address in a void pointer.
      *
      * @param address a valid memory address.
@@ -57,6 +72,21 @@ public abstract class Pointer<T> implements AutoCloseable {
      */
     public static Pointer<Void> wrap(final long address) {
         return wrap(Void.class,
+                    address);
+    }
+
+    /**
+     * Wrap an address in a typed pointer.
+     *
+     * @param type    A class that represents the memory pointed to by given address.
+     * @param address a valid memory address.
+     * @param <U>     The Java type of the given type object.
+     *
+     * @return a new typed pointer object that will use the memory pointed to by the given address.
+     */
+    public static <U> Pointer<U> wrap(@Nonnull final Class<U> type,
+                                      final long address) {
+        return wrap((Type) type,
                     address);
     }
 
@@ -75,91 +105,80 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Class<?> rawType = toClass(type);
 
         if (StructType.class.isAssignableFrom(rawType)) {
-            final long size = Size.sizeOf((Class<? extends StructType>) rawType);
             return (Pointer<U>) new PointerStruct(type,
                                                   address,
                                                   JNI.wrap(address,
-                                                           size));
+                                                           Integer.MAX_VALUE));
         }
 
         if (rawType.equals(Void.class) || rawType.equals(void.class)) {
-            final long size = Size.sizeOf((Void) null);
             return (Pointer<U>) new PointerVoid(type,
                                                 address,
                                                 JNI.wrap(address,
-                                                         size));
+                                                         Integer.MAX_VALUE));
         }
 
         if (rawType.equals(Byte.class) || rawType.equals(byte.class)) {
-            final long size = Size.sizeOf((Byte) null);
             return (Pointer<U>) new PointerByte(type,
                                                 address,
                                                 JNI.wrap(address,
-                                                         size));
+                                                         Integer.MAX_VALUE));
         }
 
         if (rawType.equals(Short.class) || rawType.equals(short.class)) {
-            final long size = Size.sizeOf((Short) null);
             return (Pointer<U>) new PointerShort(type,
                                                  address,
                                                  JNI.wrap(address,
-                                                          size));
+                                                          Integer.MAX_VALUE));
         }
 
         if (rawType.equals(Character.class) || rawType.equals(char.class)) {
-            final long size = Size.sizeOf((Character) null);
             return (Pointer<U>) new PointerChar(type,
                                                 address,
                                                 JNI.wrap(address,
-                                                         size));
+                                                         Integer.MAX_VALUE));
         }
 
         if (rawType.equals(Integer.class) || rawType.equals(int.class)) {
-            final long size = Size.sizeOf((Integer) null);
             return (Pointer<U>) new PointerInt(type,
                                                address,
                                                JNI.wrap(address,
-                                                        size));
+                                                        Integer.MAX_VALUE));
         }
 
         if (rawType.equals(Float.class) || rawType.equals(float.class)) {
-            final long size = Size.sizeOf((Float) null);
             return (Pointer<U>) new PointerFloat(type,
                                                  address,
                                                  JNI.wrap(address,
-                                                          size));
+                                                          Integer.MAX_VALUE));
         }
 
         if (rawType.equals(Long.class) || rawType.equals(long.class)) {
-            final long size = Size.sizeOf((Long) null);
             return (Pointer<U>) new PointerLong(type,
                                                 address,
                                                 JNI.wrap(address,
-                                                         size));
+                                                         Integer.MAX_VALUE));
         }
 
         if (rawType.equals(Double.class) || rawType.equals(double.class)) {
-            final long size = Size.sizeOf((Double) null);
             return (Pointer<U>) new PointerDouble(type,
                                                   address,
                                                   JNI.wrap(address,
-                                                           size));
+                                                           Integer.MAX_VALUE));
         }
 
         if (rawType.equals(Pointer.class)) {
-            final long size = Size.sizeOf((Pointer) null);
             return (Pointer<U>) new PointerPointer(type,
                                                    address,
                                                    JNI.wrap(address,
-                                                            size));
+                                                            Integer.MAX_VALUE));
         }
 
         if (rawType.equals(CLong.class)) {
-            final long size = Size.sizeOf((CLong) null);
             return (Pointer<U>) new PointerCLong(type,
                                                  address,
                                                  JNI.wrap(address,
-                                                          size));
+                                                          Integer.MAX_VALUE));
         }
 
         throw new IllegalArgumentException("Type " + rawType + " does not have a known native size.");
