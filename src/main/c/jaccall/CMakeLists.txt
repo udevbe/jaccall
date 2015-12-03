@@ -14,6 +14,7 @@ if (JNI_FOUND)
     message (STATUS "JAVA_INCLUDE_PATH2=${JAVA_INCLUDE_PATH2}")
 endif()
 
+# generate jni header with javah
 add_custom_command(
         OUTPUT jni_header
         COMMAND ${Java_JAVAH_EXECUTABLE} -v
@@ -22,21 +23,22 @@ add_custom_command(
         -jni com.github.zubnix.jaccall.JNI
 )
 
-# add dyn[call|callback|load] libs
+# dyncall
 ADD_LIBRARY(dyncall STATIC IMPORTED)
 SET_TARGET_PROPERTIES(dyncall PROPERTIES IMPORTED_LOCATION ../../dyncall/build/dyncall/libdyncall_s.a)
 set(DYNCALL_INCLUDE_PATH "../dyncall/dyncall" CACHE FILEPATH "dyncall include path")
+message (STATUS "DYNCALL_INCLUDE_PATH=${DYNCALL_INCLUDE_PATH}")
 
+# dyncallback
 ADD_LIBRARY(dyncallback STATIC IMPORTED)
 SET_TARGET_PROPERTIES(dyncallback PROPERTIES IMPORTED_LOCATION ../../dyncall/build/dyncallback/libdyncallback_s.a)
 set(DYNCALLBACK_INCLUDE_PATH "../dyncall/dyncallback" CACHE FILEPATH "dyncallback include path")
+message (STATUS "DYNCALLBACK_INCLUDE_PATH=${DYNCALLBACK_INCLUDE_PATH}")
 
+# dynload]
 ADD_LIBRARY(dynload STATIC IMPORTED)
 SET_TARGET_PROPERTIES(dynload PROPERTIES IMPORTED_LOCATION ../../dyncall/build/dynload/libdynload_s.a)
 set(DYNLOAD_INCLUDE_PATH "../dyncall/dynload" CACHE FILEPATH "dynload include path")
-
-message (STATUS "DYNCALL_INCLUDE_PATH=${DYNCALL_INCLUDE_PATH}")
-message (STATUS "DYNCALLBACK_INCLUDE_PATH=${DYNCALLBACK_INCLUDE_PATH}")
 message (STATUS "DYNLOAD_INCLUDE_PATH=${DYNLOAD_INCLUDE_PATH}")
 
 # generate libjaccall
