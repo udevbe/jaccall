@@ -44,8 +44,8 @@ public final class Size {
     public static int sizeOf(@Nullable final CLong cLong) { return CLONG_SIZE; }
 
     public static int sizeOf(@Nullable final Void val) {
-        //on gcc it's 1, but that's because it's not following the standard
-        throw new IllegalArgumentException("Can not determine size of incomplete type Void.");
+        //on gcc it's 1
+        return 1;
     }
 
     public static int sizeOf(@Nonnull Class<? extends StructType> structType) {
