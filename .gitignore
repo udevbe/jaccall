@@ -230,9 +230,9 @@ Session.vim
 /src/main/c/jaccall/src/com_github_zubnix_jaccall_JNI.h
 /src/main/c/jaccall/build
 
-/src/test/c/libtest/build
-/src/test/c/libjniutil/src/com_github_zubnix_jaccall_JNITestUtil.h
-/src/test/c/libjniutil/build
+/src/test/c/libtesting/build
+/src/test/c/libjnitestutil/src/com_github_zubnix_jaccall_JNITestUtil.h
+/src/test/c/libjnitestutil/build
 
 # Fortran module files
 
