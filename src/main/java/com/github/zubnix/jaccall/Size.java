@@ -11,44 +11,44 @@ public final class Size {
     private static final int POINTER_SIZE = JNI.sizeOfPointer();
     private static final int CLONG_SIZE   = JNI.sizeOfCLong();
 
-    public static int sizeOf(@Nullable final Byte b) { return 1; }
+    public static int sizeof(@Nullable final Byte b) { return 1; }
 
-    public static int sizeOf(final byte b) { return 1; }
+    public static int sizeof(final byte b) { return 1; }
 
-    public static int sizeOf(@Nullable final Character b) { return 2; }
+    public static int sizeof(@Nullable final Character b) { return 2; }
 
-    public static int sizeOf(final char b) { return 2; }
+    public static int sizeof(final char b) { return 2; }
 
-    public static int sizeOf(@Nullable final Short b) { return 2; }
+    public static int sizeof(@Nullable final Short b) { return 2; }
 
-    public static int sizeOf(final short b) { return 2; }
+    public static int sizeof(final short b) { return 2; }
 
-    public static int sizeOf(@Nullable final Integer b) { return 4; }
+    public static int sizeof(@Nullable final Integer b) { return 4; }
 
-    public static int sizeOf(final int b) { return 4; }
+    public static int sizeof(final int b) { return 4; }
 
-    public static int sizeOf(@Nullable final Float b) { return 4; }
+    public static int sizeof(@Nullable final Float b) { return 4; }
 
-    public static int sizeOf(final float b) { return 4; }
+    public static int sizeof(final float b) { return 4; }
 
-    public static int sizeOf(@Nullable final Long b) { return 8; }
+    public static int sizeof(@Nullable final Long b) { return 8; }
 
-    public static int sizeOf(final long b) { return 8; }
+    public static int sizeof(final long b) { return 8; }
 
-    public static int sizeOf(@Nullable final Double b) { return 8; }
+    public static int sizeof(@Nullable final Double b) { return 8; }
 
-    public static int sizeOf(final double b) { return 8; }
+    public static int sizeof(final double b) { return 8; }
 
-    public static int sizeOf(@Nullable final Pointer<?> pointer) { return POINTER_SIZE; }
+    public static int sizeof(@Nullable final Pointer<?> pointer) { return POINTER_SIZE; }
 
-    public static int sizeOf(@Nullable final CLong cLong) { return CLONG_SIZE; }
+    public static int sizeof(@Nullable final CLong cLong) { return CLONG_SIZE; }
 
-    public static int sizeOf(@Nullable final Void val) {
+    public static int sizeof(@Nullable final Void val) {
         //on gcc it's 1
         return 1;
     }
 
-    public static int sizeOf(@Nonnull Class<? extends StructType> structType) {
+    public static int sizeof(@Nonnull Class<? extends StructType> structType) {
 
         final StructSignature structSignature = structType.getAnnotation(StructSignature.class);
         if (structSignature == null) {

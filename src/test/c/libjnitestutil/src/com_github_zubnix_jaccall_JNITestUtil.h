@@ -31,6 +31,14 @@ JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_pointerOfPoin
 JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_readCLong
   (JNIEnv *, jclass, jlong);
 
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    readByte
+ * Signature: (J)B
+ */
+JNIEXPORT jbyte JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_readByte
+  (JNIEnv *, jclass, jlong);
+
 #ifdef __cplusplus
 }
 #endif

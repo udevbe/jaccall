@@ -53,4 +53,6 @@ public class JNITestUtil {
     public static native long pointerOfPointer(long pointer);
 
     public static native long readCLong(final long address);
+
+    public static native byte readByte(final long address);
 }

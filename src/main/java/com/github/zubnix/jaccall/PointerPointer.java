@@ -8,10 +8,8 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 
-import static com.github.zubnix.jaccall.Size.sizeOf;
 
-
-final class PointerPointer extends Pointer<Pointer> {
+final class PointerPointer<T> extends Pointer<Pointer<T>> {
     PointerPointer(@Nonnull final Type type,
                    final long address,
                    @Nonnull final ByteBuffer byteBuffer) {
@@ -21,15 +19,15 @@ final class PointerPointer extends Pointer<Pointer> {
     }
 
     @Override
-    Pointer<?> dref(@Nonnull final ByteBuffer byteBuffer) {
+    Pointer<T> dref(@Nonnull final ByteBuffer byteBuffer) {
         return dref(0,
                     byteBuffer);
     }
 
     @Override
-    Pointer<?> dref(@Nonnegative final int index,
+    Pointer<T> dref(@Nonnegative final int index,
                     @Nonnull final ByteBuffer byteBuffer) {
-        final long size = sizeOf((Pointer) null);
+        final long size = Size.sizeof((Pointer) null);
         final long val;
         if (size == 8) {
             final LongBuffer buffer = byteBuffer.asLongBuffer();
@@ -45,9 +43,19 @@ final class PointerPointer extends Pointer<Pointer> {
         }
 
         //handle untyped pointers
-        final Type type;
+
+        final Type genericClass;
         if (this.type instanceof ParameterizedType) {
-            ParameterizedType parameterizedType = (ParameterizedType) this.type;
+            genericClass = this.type;
+        }
+        else {
+            final Class<?> classType = toClass(this.type);
+            genericClass = classType.getGenericSuperclass();
+        }
+
+        final Type type;
+        if (genericClass != null && genericClass instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) genericClass;
             type = parameterizedType.getActualTypeArguments()[0];
         }
         else {

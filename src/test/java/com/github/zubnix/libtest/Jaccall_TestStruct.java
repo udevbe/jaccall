@@ -55,7 +55,7 @@ abstract class Jaccall_TestStruct extends StructType {
     }
 
     public Pointer<Integer> field3() {
-        final long pointerSize = Size.sizeOf((Pointer) null);
+        final long pointerSize = Size.sizeof((Pointer) null);
         final long address;
 
         if (pointerSize == 8) {
@@ -70,15 +70,15 @@ abstract class Jaccall_TestStruct extends StructType {
     }
 
     public void field3(Pointer<Integer> field3) {
-        final long pointerSize = Size.sizeOf((Pointer) null);
+        final long pointerSize = Size.sizeof((Pointer) null);
 
         if (pointerSize == 8) {
             buffer().putLong(OFFSET_3,
-                             field3.tCast(Long.class));
+                             field3.castT(Long.class));
         }
         else {
             buffer().putInt(OFFSET_3,
-                            field3.tCast(Integer.class));
+                            field3.castT(Integer.class));
         }
     }
 }

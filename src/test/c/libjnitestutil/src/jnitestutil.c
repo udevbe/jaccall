@@ -45,3 +45,14 @@ jlong
 JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_readCLong(JNIEnv *env, jclass clazz, jlong clong_pointer){
     return (jlong)*((long*)(intptr_t)clong_pointer);
 }
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    readByte
+ * Signature: (J)B
+ */
+JNIEXPORT
+jbyte
+JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_readByte(JNIEnv *env, jclass clazz, jlong address){
+    return (jlong)*((char*)(intptr_t)address);
+}
