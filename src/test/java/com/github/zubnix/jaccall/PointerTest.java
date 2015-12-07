@@ -12,7 +12,7 @@ import static com.github.zubnix.jaccall.JNITestUtil.byteArrayAsPointer;
 import static com.github.zubnix.jaccall.JNITestUtil.pointerOfPointer;
 import static com.github.zubnix.jaccall.Pointer.calloc;
 import static com.github.zubnix.jaccall.Pointer.malloc;
-import static com.github.zubnix.jaccall.Pointer.ref;
+import static com.github.zubnix.jaccall.Pointer.nref;
 import static com.github.zubnix.jaccall.Pointer.wrap;
 import static com.github.zubnix.jaccall.Size.sizeof;
 import static com.google.common.truth.Truth.assertThat;
@@ -37,7 +37,7 @@ public class PointerTest {
         final Pointer<Void> voidPointer = wrap(byteBuffer);
 
         //then
-        final long address = voidPointer.castT(Long.class);
+        final long address = voidPointer.cast(Long.class);
         assertThat(address).isNotEqualTo(0L);
     }
 
@@ -58,6 +58,7 @@ public class PointerTest {
                                                  byteBuffer);
 
         //then
+        //FIXME use jni to read values
         final Integer integer0 = intPointer.dref();
         assertThat(integer0).isEqualTo(int0);
 
@@ -81,7 +82,7 @@ public class PointerTest {
         try (final Pointer<Void> voidPointer = wrap(pointer)) {
 
             //then
-            assertThat(voidPointer.castT(Long.class)).isEqualTo(pointer);
+            assertThat(voidPointer.cast(Long.class)).isEqualTo(pointer);
         }
     }
 
@@ -105,6 +106,7 @@ public class PointerTest {
                                                     pointer)) {
 
             //then
+            //FIXME use jni to read values
             assertThat(bytePointer.dref()).isEqualTo(b0);
             assertThat(bytePointer.dref(1)).isEqualTo(b1);
             assertThat(bytePointer.dref(2)).isEqualTo(b2);
@@ -120,7 +122,7 @@ public class PointerTest {
         final CLong cLong     = new CLong(123456);
 
         //when
-        try (final Pointer<CLong> cLongPointer = malloc(cLongSize).castPT(CLong.class);) {
+        try (final Pointer<CLong> cLongPointer = malloc(cLongSize).castp(CLong.class);) {
             cLongPointer.write(cLong);
 
             //then
@@ -138,22 +140,23 @@ public class PointerTest {
         //when
         try (Pointer<Long> longPointer = calloc(nroLongs,
                                                 longSize)
-                .castPT(long.class);) {
+                .castp(long.class);) {
             //then
             for (int i = 0; i < nroLongs; i++) {
+                //FIXME use jni to read values
                 assertThat(longPointer.dref(i)).isEqualTo(0);
             }
         }
     }
 
     @Test
-    public void testRefStructType() throws Exception {
+    public void testNrefStructType() throws Exception {
         //TODO
 //        throw new UnsupportedOperationException();
     }
 
     @Test
-    public void testRefPointer() throws Exception {
+    public void testNrefPointer() throws Exception {
         //given
         byte b0 = (byte) 0x8F;
         byte b1 = 0x7F;
@@ -170,8 +173,10 @@ public class PointerTest {
                                                pointer);
 
         //when
-        try (Pointer<Pointer<Byte>> bytePointerPointer = ref(bytePointer);) {
+        try (Pointer<Pointer<Byte>> bytePointerPointer = nref(bytePointer);) {
             //then
+            //FIXME use jni to read values
+            //TODO add dref Pointer
             assertThat(bytePointerPointer.dref().address).isEqualTo(pointer);
             assertThat(bytePointerPointer.dref()
                                          .dref(4)).isEqualTo(b4);
@@ -179,7 +184,7 @@ public class PointerTest {
     }
 
     @Test
-    public void testRefByte() throws Exception {
+    public void testNrefByte() throws Exception {
         //given
         byte b0 = (byte) 0x12;
         byte b1 = 0x34;
@@ -188,13 +193,15 @@ public class PointerTest {
         byte b4 = (byte) 0x90;
 
         //when
-        try (Pointer<Byte> pointer = ref(b0,
-                                         b1,
-                                         b2,
-                                         b3,
-                                         b4);) {
+        try (Pointer<Byte> pointer = nref(b0,
+                                          b1,
+                                          b2,
+                                          b3,
+                                          b4);) {
             //then
             assertThat(pointer.address).isNotEqualTo(0L);
+//FIXME use jni to read values
+            //TODO add dref byte
 
             assertThat(pointer.dref()).isEqualTo(b0);
             assertThat(pointer.dref(1)).isEqualTo(b1);
@@ -205,7 +212,7 @@ public class PointerTest {
     }
 
     @Test
-    public void testRefShort() throws Exception {
+    public void testNrefShort() throws Exception {
         //given
         short s0 = 0x1234;
         short s1 = 0x3456;
@@ -214,13 +221,15 @@ public class PointerTest {
         short s4 = (short) 0x9012;
 
         //when
-        try (Pointer<Short> pointer = ref(s0,
-                                          s1,
-                                          s2,
-                                          s3,
-                                          s4);) {
+        try (Pointer<Short> pointer = nref(s0,
+                                           s1,
+                                           s2,
+                                           s3,
+                                           s4);) {
             //then
             assertThat(pointer.address).isNotEqualTo(0L);
+//FIXME use jni to read values
+            //TODO add dref short
 
             assertThat(pointer.dref()).isEqualTo(s0);
             assertThat(pointer.dref(1)).isEqualTo(s1);
@@ -231,7 +240,7 @@ public class PointerTest {
     }
 
     @Test
-    public void testRefChar() throws Exception {
+    public void testNrefChar() throws Exception {
         //given
         char c0 = 0x1234;
         char c1 = 0x3456;
@@ -240,13 +249,15 @@ public class PointerTest {
         char c4 = 0x9012;
 
         //when
-        try (Pointer<Character> pointer = ref(c0,
-                                              c1,
-                                              c2,
-                                              c3,
-                                              c4);) {
+        try (Pointer<Character> pointer = nref(c0,
+                                               c1,
+                                               c2,
+                                               c3,
+                                               c4);) {
             //then
             assertThat(pointer.address).isNotEqualTo(0L);
+//FIXME use jni to read values
+            //TODO add dref char
 
             assertThat(pointer.dref()).isEqualTo(c0);
             assertThat(pointer.dref(1)).isEqualTo(c1);
@@ -257,7 +268,7 @@ public class PointerTest {
     }
 
     @Test
-    public void testRefInt() throws Exception {
+    public void testNrefInt() throws Exception {
         //given
         int i0 = 0x12345678;
         int i1 = 0x34567890;
@@ -266,13 +277,15 @@ public class PointerTest {
         int i4 = 0x90123456;
 
         //when
-        try (Pointer<Integer> pointer = ref(i0,
-                                            i1,
-                                            i2,
-                                            i3,
-                                            i4);) {
+        try (Pointer<Integer> pointer = nref(i0,
+                                             i1,
+                                             i2,
+                                             i3,
+                                             i4);) {
             //then
             assertThat(pointer.address).isNotEqualTo(0L);
+//FIXME use jni to read values
+            //TODO add dref int
 
             assertThat(pointer.dref()).isEqualTo(i0);
             assertThat(pointer.dref(1)).isEqualTo(i1);
@@ -283,7 +296,7 @@ public class PointerTest {
     }
 
     @Test
-    public void testRefFloat() throws Exception {
+    public void testNrefFloat() throws Exception {
         //given
         float f0 = 0x12345678;
         float f1 = 0x34567890;
@@ -292,13 +305,15 @@ public class PointerTest {
         float f4 = 0x90123456;
 
         //when
-        try (Pointer<Float> pointer = ref(f0,
-                                          f1,
-                                          f2,
-                                          f3,
-                                          f4);) {
+        try (Pointer<Float> pointer = nref(f0,
+                                           f1,
+                                           f2,
+                                           f3,
+                                           f4);) {
             //then
             assertThat(pointer.address).isNotEqualTo(0L);
+//FIXME use jni to read values
+            //TODO add dref float
 
             assertThat(pointer.dref()).isEqualTo(f0);
             assertThat(pointer.dref(1)).isEqualTo(f1);
@@ -309,7 +324,7 @@ public class PointerTest {
     }
 
     @Test
-    public void testRefLong() throws Exception {
+    public void testNrefLong() throws Exception {
         //given
         long l0 = 0x1234567890123456L;
         long l1 = 0x3456789012345678L;
@@ -318,13 +333,15 @@ public class PointerTest {
         long l4 = 0x9012345678901234L;
 
         //when
-        try (Pointer<Long> pointer = ref(l0,
-                                         l1,
-                                         l2,
-                                         l3,
-                                         l4);) {
+        try (Pointer<Long> pointer = nref(l0,
+                                          l1,
+                                          l2,
+                                          l3,
+                                          l4);) {
             //then
             assertThat(pointer.address).isNotEqualTo(0L);
+//FIXME use jni to read values
+            //TODO add dref long
 
             assertThat(pointer.dref()).isEqualTo(l0);
             assertThat(pointer.dref(1)).isEqualTo(l1);
@@ -335,7 +352,7 @@ public class PointerTest {
     }
 
     @Test
-    public void testRefDouble() throws Exception {
+    public void testNrefDouble() throws Exception {
         //given
         double d0 = 0x1234567890123456L;
         double d1 = 0x3456789012345678L;
@@ -344,13 +361,15 @@ public class PointerTest {
         double d4 = 0x9012345678901234L;
 
         //when
-        try (Pointer<Double> pointer = ref(d0,
-                                           d1,
-                                           d2,
-                                           d3,
-                                           d4);) {
+        try (Pointer<Double> pointer = nref(d0,
+                                            d1,
+                                            d2,
+                                            d3,
+                                            d4);) {
             //then
             assertThat(pointer.address).isNotEqualTo(0L);
+            //FIXME use jni to read values
+            //TODO add dref double
 
             assertThat(pointer.dref()).isEqualTo(d0);
             assertThat(pointer.dref(1)).isEqualTo(d1);
@@ -361,7 +380,7 @@ public class PointerTest {
     }
 
     @Test
-    public void testRefCLong() throws Exception {
+    public void testNrefCLong() throws Exception {
         //given
         CLong cl0 = new CLong(0x12345678);
         CLong cl1 = new CLong(0x34567890);
@@ -370,13 +389,15 @@ public class PointerTest {
         CLong cl4 = new CLong(0x90123456);
 
         //when
-        try (Pointer<CLong> pointer = ref(cl0,
-                                          cl1,
-                                          cl2,
-                                          cl3,
-                                          cl4);) {
+        try (Pointer<CLong> pointer = nref(cl0,
+                                           cl1,
+                                           cl2,
+                                           cl3,
+                                           cl4);) {
             //then
             assertThat(pointer.address).isNotEqualTo(0L);
+            //FIXME use jni to read values
+            //TODO add dref CLong
 
             assertThat(pointer.dref()).isEqualTo(cl0);
             assertThat(pointer.dref(1)).isEqualTo(cl1);
@@ -396,11 +417,11 @@ public class PointerTest {
         byte b4 = (byte) 0x90;
 
         //when
-        try (Pointer<Byte> bytePointer = ref(b0,
-                                             b1,
-                                             b2,
-                                             b3,
-                                             b4);) {
+        try (Pointer<Byte> bytePointer = nref(b0,
+                                              b1,
+                                              b2,
+                                              b3,
+                                              b4);) {
             final Pointer<Byte> offsetBytePointer = bytePointer.offset(3);
 
             //then
@@ -409,7 +430,7 @@ public class PointerTest {
     }
 
     @Test
-    public void testTCast() throws Exception {
+    public void testCast() throws Exception {
         //given
         byte b0 = (byte) 0x8F;
         byte b1 = 0x7F;
@@ -425,7 +446,7 @@ public class PointerTest {
 
         try (final Pointer<Void> voidPointer = wrap(pointer)) {
             //when
-            final int integer = voidPointer.castT(int.class);
+            final int integer = voidPointer.cast(int.class);
 
             //then
             assertThat(integer).isEqualTo((int) pointer);
@@ -433,7 +454,7 @@ public class PointerTest {
     }
 
     @Test
-    public void testPtCast() throws Exception {
+    public void testCastp() throws Exception {
         //given
         byte b0 = (byte) 0x8F;
         byte b1 = 0x7F;
@@ -450,7 +471,7 @@ public class PointerTest {
         try (final Pointer<Void> voidPointer = wrap(pointer)) {
 
             //when
-            final Pointer<Integer> integerPointer = voidPointer.castPT(int.class);
+            final Pointer<Integer> integerPointer = voidPointer.castp(int.class);
 
             //then
             assertThat(integerPointer.dref()).isEqualTo(0x00F77F8F);//b3+b2+b1+b0 (little endian)
@@ -458,7 +479,7 @@ public class PointerTest {
     }
 
     @Test
-    public void testPpCast() throws Exception {
+    public void testCastpp() throws Exception {
         //given
         byte b0 = (byte) 0x8F;
         byte b1 = 0x7F;
@@ -477,8 +498,8 @@ public class PointerTest {
 
         //when
         try (final Pointer<Pointer<Pointer<Byte>>> bytePointerPointer = wrap(Byte.class,
-                                                                             pointerOfPointerPointer).castPP()
-                                                                                                     .castPP();
+                                                                             pointerOfPointerPointer).castpp()
+                                                                                                     .castpp();
              final Pointer<Pointer> pointerPointer = wrap(Pointer.class,
                                                           pointerOfPointer)) {
 
@@ -501,7 +522,7 @@ public class PointerTest {
         byte b0 = 0x45;
         byte b1 = 0x67;
         byte b2 = 0x76;
-        try (Pointer<Byte> bytePointer = malloc(sizeof(b0) * 3).castPT(byte.class)) {
+        try (Pointer<Byte> bytePointer = malloc(sizeof(b0) * 3).castp(byte.class)) {
             //when
             bytePointer.write(b0,
                               b1,
@@ -521,7 +542,7 @@ public class PointerTest {
         byte      b0     = 0x45;
         byte      b1     = 0x67;
         byte      b2     = 0x76;
-        try (Pointer<Byte> bytePointer = malloc((sizeof(b0) * 3) + offset).castPT(byte.class)) {
+        try (Pointer<Byte> bytePointer = malloc((sizeof(b0) * 3) + offset).castp(byte.class)) {
             //when
             bytePointer.writei(index,
                                b0,
@@ -540,7 +561,7 @@ public class PointerTest {
         short s0 = 0x4567;
         short s1 = (short) 0x8901;
 
-        try (Pointer<Short> shortPointer = malloc(sizeof(s0) * 2).castPT(short.class)) {
+        try (Pointer<Short> shortPointer = malloc(sizeof(s0) * 2).castp(short.class)) {
             //when
             shortPointer.write(s0,
                                s1);
@@ -562,7 +583,7 @@ public class PointerTest {
         short s0 = 0x4567;
         short s1 = (short) 0x8901;
 
-        try (Pointer<Short> shortPointer = malloc((sizeof(s0) * 2) + offset).castPT(short.class)) {
+        try (Pointer<Short> shortPointer = malloc((sizeof(s0) * 2) + offset).castp(short.class)) {
             //when
             shortPointer.writei(index,
                                 s0,
@@ -582,7 +603,7 @@ public class PointerTest {
         char c0 = 0x4567;
         char c1 = 0x8901;
 
-        try (Pointer<Character> shortPointer = malloc((sizeof(c0) * 2)).castPT(char.class)) {
+        try (Pointer<Character> shortPointer = malloc((sizeof(c0) * 2)).castp(char.class)) {
             //when
             shortPointer.write(c0,
                                c1);
@@ -604,7 +625,7 @@ public class PointerTest {
         char c0 = 0x4567;
         char c1 = 0x8901;
 
-        try (Pointer<Character> shortPointer = malloc((sizeof(c0) * 2) + offset).castPT(char.class)) {
+        try (Pointer<Character> shortPointer = malloc((sizeof(c0) * 2) + offset).castp(char.class)) {
             //when
             shortPointer.writei(index,
                                 c0,
@@ -624,7 +645,7 @@ public class PointerTest {
         int i0 = 0x45678901;
         int i1 = 0x12345678;
 
-        try (Pointer<Integer> integerPointer = malloc(sizeof(i0) * 2).castPT(int.class)) {
+        try (Pointer<Integer> integerPointer = malloc(sizeof(i0) * 2).castp(int.class)) {
             //when
             integerPointer.write(i0,
                                  i1);
@@ -650,7 +671,7 @@ public class PointerTest {
         int i0 = 0x45678901;
         int i1 = 0x12345678;
 
-        try (Pointer<Integer> integerPointer = malloc((sizeof(i0) * 2) + offset).castPT(int.class)) {
+        try (Pointer<Integer> integerPointer = malloc((sizeof(i0) * 2) + offset).castp(int.class)) {
             //when
             integerPointer.writei(index,
                                   i0,
@@ -674,7 +695,7 @@ public class PointerTest {
         float f0 = 0x45678901;
         float f1 = 0x12345678;
 
-        try (Pointer<Float> floatPointer = malloc(sizeof(f0) * 2).castPT(float.class)) {
+        try (Pointer<Float> floatPointer = malloc(sizeof(f0) * 2).castp(float.class)) {
             //when
             floatPointer.write(f0,
                                f1);
@@ -693,7 +714,7 @@ public class PointerTest {
         float f0 = 0x45678901;
         float f1 = 0x12345678;
 
-        try (Pointer<Float> floatPointer = malloc(sizeof(f0) * 2).castPT(float.class)) {
+        try (Pointer<Float> floatPointer = malloc(sizeof(f0) * 2).castp(float.class)) {
             //when
             floatPointer.writei(index,
                                 f0,
@@ -710,7 +731,7 @@ public class PointerTest {
         long l0 = 0x4567890123456789L;
         long l1 = 0x1234567890123456L;
 
-        try (Pointer<Long> longPointer = malloc(sizeof(l0) * 2).castPT(long.class)) {
+        try (Pointer<Long> longPointer = malloc(sizeof(l0) * 2).castp(long.class)) {
             //when
             longPointer.write(l0,
                               l1);
@@ -744,7 +765,7 @@ public class PointerTest {
         long l0 = 0x4567_8901_2345_6789L;
         long l1 = 0x1234_5678_9012_3456L;
 
-        try (Pointer<Long> longPointer = malloc((sizeof(l0) * 2) + offset).castPT(long.class)) {
+        try (Pointer<Long> longPointer = malloc((sizeof(l0) * 2) + offset).castp(long.class)) {
             //when
             longPointer.writei(index,
                                l0,
@@ -776,7 +797,7 @@ public class PointerTest {
         double d0 = 0x4567_8901_2345_6789L;
         double d1 = 0x1234_5678_9012_3456L;
 
-        try (Pointer<Double> doublePointer = malloc(sizeof(d0) * 2).castPT(double.class)) {
+        try (Pointer<Double> doublePointer = malloc(sizeof(d0) * 2).castp(double.class)) {
             //when
             doublePointer.write(d0,
                                 d1);
@@ -795,7 +816,7 @@ public class PointerTest {
         double d0 = 0x4567_8901_2345_6789L;
         double d1 = 0x1234_5678_9012_3456L;
 
-        try (Pointer<Double> doublePointer = malloc((sizeof(d0) * 2) + offset).castPT(double.class)) {
+        try (Pointer<Double> doublePointer = malloc((sizeof(d0) * 2) + offset).castp(double.class)) {
             //when
             doublePointer.writei(index,
                                  d0,
@@ -820,7 +841,7 @@ public class PointerTest {
                                                  0,
                                                  0);
 
-        try (Pointer<Pointer> floatPointer = malloc(sizeof(p0) * 2).castPT(Pointer.class)) {
+        try (Pointer<Pointer> floatPointer = malloc(sizeof(p0) * 2).castp(Pointer.class)) {
             //when
             floatPointer.write(wrap(p0),
                                wrap(p1));
@@ -847,7 +868,7 @@ public class PointerTest {
                                                  0,
                                                  0);
 
-        try (Pointer<Pointer> pointerPointer = malloc((sizeof(p0) * 2) + offset).castPT(Pointer.class)) {
+        try (Pointer<Pointer> pointerPointer = malloc((sizeof(p0) * 2) + offset).castp(Pointer.class)) {
             //when
             pointerPointer.writei(index,
                                   wrap(p0),
@@ -864,7 +885,7 @@ public class PointerTest {
         CLong cl0 = new CLong(0x45678901);
         CLong cl1 = new CLong(0x12345678);
 
-        try (Pointer<CLong> cLongPointer = malloc(sizeof(cl0) * 2).castPT(CLong.class)) {
+        try (Pointer<CLong> cLongPointer = malloc(sizeof(cl0) * 2).castp(CLong.class)) {
             //when
             cLongPointer.write(cl0,
                                cl1);
@@ -883,7 +904,7 @@ public class PointerTest {
         CLong cl0 = new CLong(0x45678901);
         CLong cl1 = new CLong(0x12345678);
 
-        try (Pointer<CLong> cLongPointer = malloc((sizeof(cl0) * 2) + offset).castPT(CLong.class)) {
+        try (Pointer<CLong> cLongPointer = malloc((sizeof(cl0) * 2) + offset).castp(CLong.class)) {
             //when
             cLongPointer.writei(index,
                                 cl0,
@@ -891,6 +912,51 @@ public class PointerTest {
             //then
             assertThat(JNITestUtil.readCLong(cLongPointer.address + offset)).isEqualTo(cl0.longValue());
             assertThat(JNITestUtil.readCLong(cLongPointer.address + offset + sizeof((CLong) null))).isEqualTo(cl1.longValue());
+        }
+    }
+
+    @Test
+    public void testWriteCString() throws Exception {
+        //given
+        char[] chars = new char[]{'f', 'o', 'o', ' ', 'b', 'a', 'r'};
+        String s     = new String(chars);
+
+        try (Pointer<String> stringPointer = malloc(sizeof(s)).castp(String.class)) {
+            //when
+            stringPointer.write(s);
+            //then
+            assertThat(JNITestUtil.readByte(stringPointer.address)).isEqualTo((byte) chars[0]);
+            assertThat(JNITestUtil.readByte(stringPointer.address + 1)).isEqualTo((byte) chars[1]);
+            assertThat(JNITestUtil.readByte(stringPointer.address + 2)).isEqualTo((byte) chars[2]);
+            assertThat(JNITestUtil.readByte(stringPointer.address + 3)).isEqualTo((byte) chars[3]);
+            assertThat(JNITestUtil.readByte(stringPointer.address + 4)).isEqualTo((byte) chars[4]);
+            assertThat(JNITestUtil.readByte(stringPointer.address + 5)).isEqualTo((byte) chars[5]);
+            assertThat(JNITestUtil.readByte(stringPointer.address + 6)).isEqualTo((byte) chars[6]);
+            assertThat(JNITestUtil.readByte(stringPointer.address + 7)).isEqualTo((byte) 0);
+        }
+    }
+
+    @Test
+    public void testWriteCStringAtIndex() throws Exception {
+        //given
+        final int index  = 3;
+        final int offset = index;
+        char[]    chars  = new char[]{'f', 'o', 'o', ' ', 'b', 'a', 'r'};
+        String    s      = new String(chars);
+
+        try (Pointer<String> stringPointer = malloc(sizeof(s) + offset).castp(String.class)) {
+            //when
+            stringPointer.writei(index,
+                                 s);
+            //then
+            assertThat(JNITestUtil.readByte(stringPointer.address + offset)).isEqualTo((byte) 'f');
+            assertThat(JNITestUtil.readByte(stringPointer.address + offset + 1)).isEqualTo((byte) 'o');
+            assertThat(JNITestUtil.readByte(stringPointer.address + offset + 2)).isEqualTo((byte) 'o');
+            assertThat(JNITestUtil.readByte(stringPointer.address + offset + 3)).isEqualTo((byte) ' ');
+            assertThat(JNITestUtil.readByte(stringPointer.address + offset + 4)).isEqualTo((byte) 'b');
+            assertThat(JNITestUtil.readByte(stringPointer.address + offset + 5)).isEqualTo((byte) 'a');
+            assertThat(JNITestUtil.readByte(stringPointer.address + offset + 6)).isEqualTo((byte) 'r');
+            assertThat(JNITestUtil.readByte(stringPointer.address + offset + 7)).isEqualTo((byte) 0);
         }
     }
 

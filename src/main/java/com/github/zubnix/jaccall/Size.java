@@ -43,6 +43,10 @@ public final class Size {
 
     public static int sizeof(@Nullable final CLong cLong) { return CLONG_SIZE; }
 
+    public static int sizeof(@Nonnull final String val) {
+        return val.length() + 1;
+    }
+
     public static int sizeof(@Nullable final Void val) {
         //on gcc it's 1
         return 1;

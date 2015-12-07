@@ -74,11 +74,11 @@ abstract class Jaccall_TestStruct extends StructType {
 
         if (pointerSize == 8) {
             buffer().putLong(OFFSET_3,
-                             field3.castT(Long.class));
+                             field3.cast(Long.class));
         }
         else {
             buffer().putInt(OFFSET_3,
-                            field3.castT(Integer.class));
+                            field3.cast(Integer.class));
         }
     }
 }

@@ -90,7 +90,7 @@ final class PointerPointer<T> extends Pointer<Pointer<T>> {
             buffer.clear();
             buffer.position(index);
             for (Pointer<?> pointer : val) {
-                buffer.put(pointer.castT(Long.class));
+                buffer.put(pointer.cast(Long.class));
             }
         }
         else if (pointerSize == 4) {
@@ -99,7 +99,7 @@ final class PointerPointer<T> extends Pointer<Pointer<T>> {
             buffer.clear();
             buffer.position(index);
             for (Pointer<?> pointer : val) {
-                buffer.put(pointer.castT(Integer.class));
+                buffer.put(pointer.cast(Integer.class));
             }
         }
     }
