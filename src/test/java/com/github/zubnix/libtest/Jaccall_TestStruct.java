@@ -11,12 +11,18 @@ import javax.annotation.Generated;
 abstract class Jaccall_TestStruct extends StructType {
 
     private static final int OFFSET_0 = 0;
-    private static final int OFFSET_1 = Size.newOffset(Size.sizeof((Short) null),
-                                                       OFFSET_0 + Size.sizeof((Byte) null));
-    private static final int OFFSET_2 = Size.newOffset(Size.sizeof((Integer) null),
-                                                       OFFSET_1 + Size.sizeof((Short) null));
-    private static final int OFFSET_3 = Size.newOffset(Size.sizeof((Pointer<?>) null),
-                                                       OFFSET_2 + Size.sizeof((Integer) null));
+    private static final int OFFSET_1 = newOffset(Size.sizeof((Short) null),
+                                                  OFFSET_0 + Size.sizeof((Byte) null));
+    private static final int OFFSET_2 = newOffset(Size.sizeof((Integer) null),
+                                                  OFFSET_1 + Size.sizeof((Short) null));
+    private static final int OFFSET_3 = newOffset(Size.sizeof((Pointer<?>) null),
+                                                  OFFSET_2 + Size.sizeof((Integer) null));
+
+    public static final int SIZE = OFFSET_3 + Size.sizeof((Pointer<?>) null);
+
+    Jaccall_TestStruct() {
+        super(SIZE);
+    }
 
     public byte field() {
         return buffer().get(OFFSET_0);

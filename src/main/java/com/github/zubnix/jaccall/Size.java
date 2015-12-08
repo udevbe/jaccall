@@ -52,12 +52,7 @@ public final class Size {
         return 1;
     }
 
-    public static int sizeof(@Nonnull Class<? extends StructType> structType) {
-        return 0;
-    }
-
-    public static int newOffset(int align,
-                                int offset) {
-        return (offset + align - 1) & ~(align - 1);
+    public static int sizeof(@Nonnull StructType structType) {
+        return structType.size;
     }
 }

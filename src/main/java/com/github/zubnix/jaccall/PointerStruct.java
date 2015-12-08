@@ -30,9 +30,10 @@ final class PointerStruct extends Pointer<StructType> {
     StructType dref(@Nonnegative final int index,
                     @Nonnull final ByteBuffer byteBuffer) {
         try {
-            final int structSize = Size.sizeof(this.structClass);
-            byteBuffer.position(index * structSize);
+
             final StructType structType = this.structClass.newInstance();
+            final int structSize = sizeof(structType);
+            byteBuffer.position(index * structSize);
             final ByteBuffer slice = byteBuffer.slice();
             slice.limit(structSize);
             structType.buffer(slice);
@@ -60,7 +61,7 @@ final class PointerStruct extends Pointer<StructType> {
         }
 
         byteBuffer.clear();
-        final long structTypeSize = sizeof(val[0].getClass());
+        final long structTypeSize = sizeof(val[0]);
         byteBuffer.position((int) (index * structTypeSize));
         for (StructType structType : val) {
             structType.buffer()

@@ -241,7 +241,7 @@ public abstract class Pointer<T> implements AutoCloseable {
 
         final Class<? extends StructType> componentType = val[0].getClass();
         final Pointer<U> pointer = (Pointer<U>) create(componentType,
-                                                       sizeof(componentType),
+                                                       sizeof(val[0]),
                                                        length);
         pointer.write(val);
 
