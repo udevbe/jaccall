@@ -11,12 +11,6 @@ build() {
     make
 }
 
-pushd dyncall;
-prep_build;
-build;
-popd;
-popd;
-
 pushd jaccall;
 prep_build;
 build;
