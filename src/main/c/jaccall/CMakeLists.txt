@@ -7,13 +7,6 @@ find_package(JNI REQUIRED)
 
 include(UseJava)
 
-if (JNI_FOUND)
-    message (STATUS "JNI_INCLUDE_DIRS=${JNI_INCLUDE_DIRS}")
-    message (STATUS "JNI_LIBRARIES=${JNI_LIBRARIES}")
-    message (STATUS "JAVA_INCLUDE_PATH=${JAVA_INCLUDE_PATH}")
-    message (STATUS "JAVA_INCLUDE_PATH2=${JAVA_INCLUDE_PATH2}")
-endif()
-
 # generate jni header with javah
 add_custom_command(
         OUTPUT jni_header
@@ -25,5 +18,7 @@ add_custom_command(
 
 # generate libjaccall
 include_directories(${JAVA_INCLUDE_PATH} ${JAVA_INCLUDE_PATH2} src/main/c)
+add_library(libdl SHARED IMPORTED GLOBAL)
+add_library(libffi SHARED IMPORTED GLOBAL)
 add_library(jaccall MODULE src/jni.c jni_header)
-target_link_libraries(jaccall ${JNI_LIBRARIES})
+target_link_libraries(jaccall ${JNI_LIBRARIES} ffi dl)

@@ -77,4 +77,18 @@ public final class JNI {
     /*
      * <- std
      */
+
+    /*
+     * platform specific ->
+     */
+    static native long open(String filename);
+
+    static native long sym(long handle,
+                           String symbol);
+
+    static native int close(long handle);
+    /*
+     * <- platform specific
+     */
+
 }
