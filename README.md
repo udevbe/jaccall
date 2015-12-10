@@ -170,11 +170,19 @@ long some_native_address = ...;
 //wrap the address in a untyped pointer
 Pointer<Void> void_p = Pointer.wrap(some_native_address);
 //cast to a byte pointer
-Pointer<Byte> byte_p = voidPointer.castp(Byte.class);
+Pointer<Byte> byte_p = void_p.castp(Byte.class);
 //cast to a pointer-to-pointer
 Pointer<Pointer<Byte>> byte_pp = byte_p.castpp();
 //cast to a pointer-to-pointer-to-pointer
 Pointer<Pointer<Pointer<Byte>>> byte_ppp = byte_pp.castpp();
+```
+We can rewrite the above example more briefly
+```Java
+import static com.github.zubnix.jaccall.Pointer.*
+...
+long some_native_address = ...;
+//wrap in a pointer-to-pointer-to-char pointer
+Pointer<Pointer<Pointer<Byte>>> byte_ppp = wrap(Byte.class,some_native_address).castpp().castpp();
 ```
 
 MORE TODO
