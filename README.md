@@ -133,4 +133,30 @@ There are 3 different cast operations that can be performed on a pointer object.
  - a pointer cast, using `castp(Class<?>)`. Cast a pointer to a pointer of another type.
  - a pointer to pointer cast, using `castpp()`. Cast a pointer to a pointer of a pointer.
 
+Starting from our basic example
+```Java
+import static com.github.zubnix.jaccall.Pointer.*
+import static com.github.zubnix.jaccall.Size.*
+...
+int int_size = sizeof((Integer)null);
+Pointer<Void> void_p = malloc(int_size);
+
+//Perform a pointer cast, the resulting pointer can be used to read and write an integer.
+Pointer<Integer> int_p = void_p.castp(Integer.class);
+int_p.write(5);
+int int_value = int_p.dref();
+
+//Perform a pointer to pointer cast.
+Pointer<Pointer<Integer>> int_pp = int_p.castpp();
+//Dereferencing will cause a pointer object to be created with address 5, or possibly even segfault on a 64-bit system!
+Pointer<Integer> bad_int_p = int_pp.dref();
+
+//Perform an ordinary cast, some_long will now contain the address of our `int_p` pointer!
+long some_long = int_p.cast(Long.class);
+...
+int_p.close();
+```
+
+In most cases, an ordinary cast using `cast(Class<?>)` will not be needed.
+
 TODO
