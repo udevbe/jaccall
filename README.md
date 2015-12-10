@@ -55,8 +55,7 @@ int_p.close();
 #### Stack vs Heap.
 
 
-C has the concept of stack and heap allocated memory. Unfortunately this doesn't translate well in Java. Jaccall tries to alleviate this by defining a `Pointer<...>` as an `AutoClosable`.
-Using Java's try-with-resource concept, we can mimic the concept of stack allocated memory.
+C has the concept of stack and heap allocated memory. Unfortunately this doesn't translate well in Java. Jaccall tries to alleviate this by defining a `Pointer<...>` as an `AutoClosable`. Using Java's try-with-resource concept, we can mimic the concept of stack allocated memory.
 
 C
 ```C
@@ -68,8 +67,7 @@ int* int_p = &some_int;
 
 Using Jaccall this translates to
 ```Java
-//(Optional) Define a static import of the Pointer and Size classes 
-//to avoid prefixing all static method calls.
+//(Optional) Define a static import of the Pointer class to avoid prefixing all static method calls.
 import static com.github.zubnix.jaccall.Pointer.*
 ...
 //define an integer
@@ -81,6 +79,10 @@ try(Pointer<Integer> int_p = nref(some_int)){
 //`int_p` becomes invalid once try block ends.
 ```
 
-There are some notable differences between the C and Java example. In the C example, only one block of memory is used to define `some_int`, `int_p` is simply a reference to this memory. This block of memory is method scoped. Once the method exits, the memory is cleaned up. On the Java side however things are a bit different. A Java object (primitive) is defined as `some_int`. Next a new block of memory `int_p` is allocated on the heap, and the value of `some_int` is copied into it. Because we defined `int_p` inside a try-with-resources, it will be freed (with a call to `close()`) automatically once the try block ends.
+There are some notable differences between the C and Java example. In the C example, only one block of memory is used to define `some_int`, `int_p` is simply a reference to this memory. This block of memory is method scoped (stack allocated). Once the method exits, the memory is cleaned up. 
+
+On the Java side however things are a bit different. A Java object (primitive) is defined as `some_int`. Next a new block of memory `int_p` is allocated on the heap, and the value of `some_int` is copied into it. This operation is reflected in the call `Pointer.nref(some_int)`. Because we defined `int_p` inside a try-with-resources, it will be freed automatically with a call to `close()` once the try block ends.
+
+#### Memory allocation
 
 TODO
