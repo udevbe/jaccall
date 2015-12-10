@@ -47,6 +47,8 @@ public final class Linker {
 
     //TODO this is something we can infer at compile time but how to get to it at runtime?
     private static String getFFISignature(final Method method) {
+        //signature is of form: abc)d
+
         final Class<?>     returnType            = method.getReturnType();
         final Annotation[] returnTypeAnnotations = method.getAnnotations();
         //TODO checking if ByVal annotation is done on a method that returns `long` should be done at compile time.
@@ -68,65 +70,59 @@ public final class Linker {
         return sb.toString();
     }
 
-    private static char typeToSignature(Class<?> type,
-                                        final Annotation[] parameterAnnotation) {
-//        'B'	bool
-//        'c'	char
-//        'C'	unsigned char
-//        's'	short
-//        'S'	unsigned short
-//        'i'	int
-//        'I'	unsigned int
-//        'j'	long
-//        'J'	unsigned long
-//        'l'	long long
-//        'L'	unsigned long long
-//        'f'	float
-//        'd'	double
-//        'p'	C pointer
-//        'Z'	char*
-//        'x'	SEXP
-//        'v'	void
+    private static String typeToSignature(Class<?> type,
+                                          final Annotation[] parameterAnnotation) {
+        //C to Java mapping
+//        'c'	char -> Byte, byte
+//        's'	short -> Character, char, Short, short
+//        'i'	int -> Integer, int
+//        'j'	long -> CLong
+//        'l'	long long -> Long, long
+//        'f'	float -> Float, float
+//        'd'	double -> Double, double
+//        'p'	C pointer -> @Ptr Long, @Ptr long
+//        'v'	void -> Void, void
+//        't...]'   struct -> @ByVal(SomeStruct.class) Long, @ByVal(SomeStruct.class) long,
 
         if (type.equals(Integer.class) || type.equals(int.class)) {
-            return 'i';
+            return "i";
+        }
+
+        if (type.equals(Long.class) || type.equals(long.class)) {
+            for (Annotation annotation : parameterAnnotation) {
+                if (annotation instanceof Ptr) {
+                    return "p";
+                }
+                if (annotation instanceof ByVal) {
+                    ByVal byVal = (ByVal) annotation;
+                    //TODO do we really need the struct signature?
+                    return "t";
+                }
+            }
+            return "l";
         }
 
         if (type.equals(Float.class) || type.equals(float.class)) {
-            return 'f';
+            return "f";
         }
 
         if (type.equals(Byte.class) || type.equals(byte.class)) {
-            return 'c';
+            return "c";
         }
 
         if (type.equals(Short.class) ||
             type.equals(short.class) ||
             type.equals(Character.class) ||
             type.equals(char.class)) {
-            return 's';
-        }
-
-        if (type.equals(Long.class) || type.equals(long.class)) {
-            for (Annotation annotation : parameterAnnotation) {
-                if(annotation instanceof Ptr){
-                    return 'p';
-                }
-                if(annotation instanceof ByVal){
-                    return 't';
-                }
-            }
-
-
-            return ' ';
+            return "s";
         }
 
         if (type.equals(Double.class) || type.equals(double.class)) {
-            return 'd';
+            return "d";
         }
 
         if (type.equals(CLong.class)) {
-            return 'l';
+            return "j";
         }
 
         throw new IllegalArgumentException("Type " + type + " does not have a known native representation.");

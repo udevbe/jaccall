@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 public @interface Ptr {
     /**
      * Programmer's aid to indicate what data the pointer is referencing.
-     * This value is not interpreted in any way.
+     * This value is not interpreted in any way nor does it make any guarantee or do type checking.
      *
      * @return
      */
