@@ -1,7 +1,7 @@
 Intro
 =====
 
-Playground for what is supposed to be a library similar to BridJ or JNA.
+Experimental project for what is supposed to be a library similar to BridJ or JNA.
 
 Goals are:
  - Simple usage.
@@ -13,10 +13,10 @@ Goals are:
  - Support for all common use cases: unions, callbacks, pointer-to-pointer, ...
  - Compile time annotation processor gathers all statically inferable information and generates runtime API independent code.
 
-Jaccall's tries not to be Java, but instead tries to bring C to the world of Java.
+Jaccall's does not try be Java, but instead tries to make C accessible in Java.
 This means:
- - No automatic garbage collection. What you allocate, you must free yourself.
- - Cast to and from anything to anything.
+ - What you allocate, you must free yourself. watch out for memory leaks!
+ - Cast to and from anything to anything. Watch out for cast mismatches!
  - Read to and from anything to anything. Watch out for segfaults!
 
 Pointer API
