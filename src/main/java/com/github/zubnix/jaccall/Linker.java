@@ -4,7 +4,7 @@ package com.github.zubnix.jaccall;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-public final class JDL {
+public final class Linker {
 
     public static void link(Class<?>... lib) {
         for (Class<?> aClass : lib) {
@@ -18,8 +18,8 @@ public final class JDL {
     }
 
     public static void link(Class<?> lib,
-                            String filename) {
-        final long handle = JNI.open(filename);
+                            String nativeLibPath) {
+        final long handle = JNI.open(nativeLibPath);
         linkSymbols(handle,
                     lib);
     }

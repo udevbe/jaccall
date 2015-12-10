@@ -28,12 +28,16 @@ public class LibTestingTest {
             final File tempFile = File.createTempFile(LIB_NAME,
                                                       null);
             tempFile.deleteOnExit();
-            tempFile.createNewFile();
+            if (tempFile.createNewFile()) {
 
-            unpack(libStream,
-                   tempFile);
+                unpack(libStream,
+                       tempFile);
 
-            return tempFile.getAbsolutePath();
+                return tempFile.getAbsolutePath();
+            }
+            else {
+                throw new Error("Unable to extract native library to path " + tempFile);
+            }
         }
         catch (IOException e) {
             throw new Error(e);
@@ -57,8 +61,8 @@ public class LibTestingTest {
     @Test
     public void test() {
         //given
-        JDL.link(Testing.class,
-                 libFilePath());
+        Linker.link(Testing.class,
+                    libFilePath());
 
         final Pointer<TestStruct> testStructPointer = malloc(TestStruct.SIZE).castp(TestStruct.class);
         final TestStruct          testStruct        = testStructPointer.dref();
