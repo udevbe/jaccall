@@ -131,7 +131,7 @@ The data that can be written and read from a pointer object in Jaccall depends o
 There are 3 different cast operations that can be performed on a pointer object.
  - an ordinary cast, using `cast(Class<?>)`. Cast a pointer to any primitive or struct type.
  - a pointer cast, using `castp(Class<?>)`. Cast a pointer to a pointer of another type.
- - a pointer to pointer cast, using `castpp()`. Cast a pointer to a pointer of a pointer.
+ - a pointer to pointer cast, using `castpp()`. Cast a pointer to a pointer-to-pointer.
 
 Starting from our basic example
 ```Java
@@ -159,4 +159,22 @@ int_p.close();
 
 In most cases, an ordinary cast using `cast(Class<?>)` will not be needed.
 
-TODO
+Beware that when casting to a pointer-to-pointer using `castp(Pointer.class)`, you will end up with a `Pointer<Pointer<?>>` object. You will be able to dereference the `Pointer<Pointer<?>>` object to the underlying `Pointer<?>`, but you will not be able to write or dereference this resulting pointer as Jaccall does not know what type it should refer too. Internally Jaccall will represent the `Pointer<?>` object as a `Pointer<Void>`.
+
+It might not be immediatly obvious at first but using `castp(Class<?>)` and `castpp()` we can cast any pointer to any other type of pointer-to-pointer-to-pointer ad infinitum.
+
+Here's an example where we receive an address from a jni library. We know the address represents a `char***`, and as such want to create a `Pointer<Pointer<Pointer<Byte>>>`.
+```Java
+//get a native address from a jni library.
+long some_native_address = ...;
+//wrap the address in a untyped pointer
+Pointer<Void> void_p = Pointer.wrap(some_native_address);
+//cast to a byte pointer
+Pointer<Byte> byte_p = voidPointer.castp(Byte.class);
+//cast to a pointer-to-pointer
+Pointer<Pointer<Byte>> byte_pp = byte_p.castpp();
+//cast to a pointer-to-pointer-to-pointer
+Pointer<Pointer<Pointer<Byte>>> byte_ppp = byte_pp.castpp();
+```
+
+MORE TODO
