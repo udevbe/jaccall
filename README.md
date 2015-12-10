@@ -17,10 +17,9 @@ Jaccall's does not try be Java, but instead tries to make C accessible in Java.
 This means:
  - What you allocate, you must free yourself. watch out for memory leaks!
  - Cast to and from anything to anything. Watch out for cast mismatches!
- - Read to and from anything to anything. Watch out for segfaults!
+ - Read and write to and from anything to anything. Watch out for segfaults!
 
 # Pointer API
-===========
 
 #### A basic example
 
