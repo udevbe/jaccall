@@ -22,11 +22,14 @@ public final class JNI {
             final File tempFile = File.createTempFile(LIB_NAME,
                                                       null);
             tempFile.deleteOnExit();
-            tempFile.createNewFile();
-
-            unpack(libStream,
-                   tempFile);
-            System.load(tempFile.getAbsolutePath());
+            if (tempFile.createNewFile()) {
+                unpack(libStream,
+                       tempFile);
+                System.load(tempFile.getAbsolutePath());
+            }
+            else {
+                throw new Error("Unable to extract native library to path " + tempFile);
+            }
         }
         catch (IOException e) {
             throw new Error(e);
