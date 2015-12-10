@@ -28,16 +28,9 @@ public class LibTestingTest {
             final File tempFile = File.createTempFile(LIB_NAME,
                                                       null);
             tempFile.deleteOnExit();
-            if (tempFile.createNewFile()) {
-
-                unpack(libStream,
-                       tempFile);
-
-                return tempFile.getAbsolutePath();
-            }
-            else {
-                throw new Error("Unable to extract native library to path " + tempFile);
-            }
+            unpack(libStream,
+                   tempFile);
+            return tempFile.getAbsolutePath();
         }
         catch (IOException e) {
             throw new Error(e);
