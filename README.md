@@ -151,7 +151,7 @@ Pointer<Pointer<Integer>> int_pp = int_p.castpp();
 //Dereferencing will cause a pointer object to be created with address 5, or possibly even segfault on a 64-bit system!
 Pointer<Integer> bad_int_p = int_pp.dref();
 
-//Perform an ordinary cast, some_long will now contain the address of our `int_p` pointer!
+//Perform an ordinary cast, `some_long` will now contain the address of our `int_p` pointer!
 long some_long = int_p.cast(Long.class);
 ...
 int_p.close();
@@ -163,7 +163,7 @@ Beware that when casting to a pointer-to-pointer using `castp(Pointer.class)`, y
 
 It might not be immediatly obvious at first but using `castp(Class<?>)` and `castpp()` we can cast any pointer to any other type of pointer-to-pointer-to-pointer ad infinitum.
 
-Here's an example where we receive an address from a jni library. We know the address represents a `char***`, and as such want to create a `Pointer<Pointer<Pointer<Byte>>>`.
+An example where we receive an address from a jni library. We know the address represents a `char***`, and as such want to create a `Pointer<Pointer<Pointer<Byte>>>`.
 ```Java
 //get a native address from a jni library.
 long some_native_address = ...;
@@ -185,4 +185,52 @@ long some_native_address = ...;
 Pointer<Pointer<Pointer<Byte>>> byte_ppp = wrap(Byte.class,some_native_address).castpp().castpp();
 ```
 
-MORE TODO
+#### Arrays
+
+Up until now we've worked with single element pointers. Because a C array is actually a pointer, accessing a Jaccall pointer like a C array is surprisingly easy. Since our pointer object actually knows the size of the type it's refering to, indexed read and writes are straightforward.
+
+We reiterate our previous read/write example, only this time we allocate space for multiple integers.
+```Java
+import static com.github.zubnix.jaccall.Pointer.*
+import static com.github.zubnix.jaccall.Size.*
+...
+int int_size = sizeof((Integer)null);
+//allocate space for 3 integers
+Pointer<Void> void_p = malloc(int_size*3);
+//cast to an ordinary int pointer
+Pointer<Integer> int_p = void_p.castp(Integer.class);
+
+//write an int with value 5 to index 0.
+int_p.writei(0,5);
+//write an int with value 6 to index 1.
+int_p.writei(1,6);
+//write an int with value 7 to index 2.
+int_p.writei(2,6);
+
+//dereference the pointer at index 0
+int int_value_0 = int_p.dref(0);
+//dereference the pointer at index 1
+int int_value_1 = int_p.dref(0);
+//dereference the pointer at index 2
+int int_value_0 = int_p.dref(0);
+...
+int_p.close();
+```
+
+#### Address manipulation
+
+In C, one can read and change the actual address value of a pointer. In Jaccall this is no different. The pointer object exposes it's address either directly through an `address` field of type `long`, or it can be casted to a long.
+```Java
+Pointer<Void> void_pointer = ...
+//`void_pointer_address` now contains the actual address of `void_pointer`
+long void_pointer_adr = void_pointer.address;
+//`void_pointer_adr_cast` now contains exactly the same value as `void_pointer_adr`.
+long void_pointer_adr_cast = void_pointer.cast(Long.class)'
+```
+
+We can also easily offset a pointer address while keeping the type it points to.
+```Java
+Pointer<String> char_pointer = ...
+//`char_pointer_offset` address is now incremented by 2 compared to `char_pointer` address.
+Pointer<String> char_pointer_offset = char_pointer.offset(2);
+```
