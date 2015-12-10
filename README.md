@@ -18,8 +18,10 @@ This means:
  - What you allocate, you must free yourself. watch out for memory leaks!
  - Cast to and from anything to anything. Watch out for cast mismatches!
  - Read and write to and from anything to anything. Watch out for segfaults!
+ - 
 # Linker API
 TODO
+
 # Struct API
 TODO
 
