@@ -5,8 +5,6 @@ import javax.annotation.Nonnull;
 import static com.github.zubnix.jaccall.Size.sizeof;
 
 public enum CType {
-    //type signatures match dyncall arg signature, except for struct and union.
-
     CHAR(sizeof((Byte) null),
          byte.class),
     UNSIGNED_CHAR(sizeof((Byte) null),
