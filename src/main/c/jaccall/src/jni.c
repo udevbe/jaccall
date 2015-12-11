@@ -121,3 +121,22 @@ jint
 JNICALL Java_com_github_zubnix_jaccall_JNI_close(JNIEnv *env, jclass clazz, jlong handle){
     return (jint) dlclose((void*)(intptr_t)handle);
 }
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    link
+ * Signature: (Ljava/lang/Class;I[Ljava/lang/String;[Ljava/lang/String;[Ljava/lang/String;J[J)V
+ */
+JNIEXPORT
+void
+JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env,
+                                                jclass clazz,
+                                                jclass headerClazz,
+                                                jint nro_symbols,
+                                                jobjectArray symbols,
+                                                jobjectArray jniSignatures,
+                                                jobjectArray jaccallSignatures,
+                                                jlong handle,
+                                                jlongArray symbolAddress){
+    //TODO construct ffi closures that call native method & register them with jnienv registernatives.
+}

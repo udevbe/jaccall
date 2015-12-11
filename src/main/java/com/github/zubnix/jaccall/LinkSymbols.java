@@ -4,19 +4,26 @@ package com.github.zubnix.jaccall;
 public class LinkSymbols {
 
     private final String[] symbols;
-    private final String[] signatures;
+    private final String[] jaccallSignatures;
+    private final String[] jniSignatures;
 
     public LinkSymbols(String[] symbols,
-                       final String[] signatures) {
+                       final String[] jaccallSignatures,
+                       final String[] jniSignatures) {
         this.symbols = symbols;
-        this.signatures = signatures;
+        this.jaccallSignatures = jaccallSignatures;
+        this.jniSignatures = jniSignatures;
     }
 
     String[] symbols() {
         return this.symbols;
     }
 
-    String[] signatures() {
-        return this.signatures;
+    String[] jaccallSignatures() {
+        return this.jaccallSignatures;
+    }
+
+    String[] jniSignatures() {
+        return this.jniSignatures;
     }
 }

@@ -15,7 +15,7 @@ public final class Linker {
                                                                              POSTFIX)
                                                                   .newInstance();
                     final String libName = libAnnotation.value();
-                    //TODO libname resolving is platform dependend
+                    //TODO libname resolving is platform depended
                     link(header,
                          "lib" + libName + ".so",
                          linkSymbols);
@@ -32,14 +32,22 @@ public final class Linker {
                             String absoluteLibPath,
                             final LinkSymbols linkSymbols) {
 
-        final long     handle     = JNI.open(absoluteLibPath);
-        final String[] symbols    = linkSymbols.symbols();
-        final String[] signatures = linkSymbols.signatures();
-        for (int i = 0; i < symbols.length; i++) {
-            final String symbol = symbols[i];
-            final String signature = signatures[i];
-            final long symbolAddress = JNI.sym(handle,
-                                               symbol);
+        final String[] symbols       = linkSymbols.symbols();
+        final int      nroSymbols    = symbols.length;
+        final long     handle        = JNI.open(absoluteLibPath);
+        final long[]   symbolAddress = new long[nroSymbols];
+
+        for (int i = 0; i < nroSymbols; i++) {
+            symbolAddress[i] = JNI.sym(handle,
+                                       symbols[i]);
         }
+
+        JNI.link(header,
+                 nroSymbols,
+                 symbols,
+                 linkSymbols.jniSignatures(),
+                 linkSymbols.jaccallSignatures(),
+                 handle,
+                 symbolAddress);
     }
 }

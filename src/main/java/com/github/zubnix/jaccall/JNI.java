@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
-public final class JNI {
+final class JNI {
 
     private static final String LIB_PREFIX  = "lib";
     private static final String LIB_NAME    = "jaccall";
@@ -34,7 +34,7 @@ public final class JNI {
     private static void unpack(final InputStream libStream,
                                final File tempFile) throws IOException {
         final FileOutputStream fos    = new FileOutputStream(tempFile);
-        byte[]                 buffer = new byte[4096];
+        final byte[]           buffer = new byte[4096];
         int                    read   = -1;
         while ((read = libStream.read(buffer)) != -1) {
             fos.write(buffer,
@@ -49,8 +49,8 @@ public final class JNI {
     }
 
     /*
-         * JNI ->
-         */
+     * JNI ->
+     */
     static native ByteBuffer wrap(long address,
                                   @Nonnegative long size);
 
@@ -64,16 +64,30 @@ public final class JNI {
      */
     static native long malloc(@Nonnegative int size);
 
-    static native long calloc(@Nonnegative final int nmemb,
-                              @Nonnegative final int size);
+    static native long calloc(@Nonnegative int nmemb,
+                              @Nonnegative int size);
 
-    static native void free(final long address);
+    static native void free(long address);
 
     static native int sizeOfPointer();
 
     static native int sizeOfCLong();
+
     /*
      * <- std
+     */
+    /*
+     * linker ->
+     */
+    static native void link(Class<?> header,/*class with native methods*/
+                            int nroSymbols,/* number of symbols*/
+                            String[] symbols,/*method names*/
+                            String[] jniSignatures,/*jni method signatures*/
+                            String[] jaccallSignatures,/*simplified c method signature*/
+                            long handle,/*handle to native lib*/
+                            long[] symbolAddress);/*address of symbol (function pointer)*/
+    /*
+     * <- linker
      */
 
     /*
