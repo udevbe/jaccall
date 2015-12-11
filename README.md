@@ -20,7 +20,48 @@ This means:
  - Read and write to and from anything to anything. Watch out for segfaults!
 
 # Linker API
-TODO
+
+The linker API forms the basis of all native method invocation. Without it, you wouldn't be able to call any native methods. 
+
+To call a C method, we must create a Java class where we define what C method we are interested in, what they look like and where they can be found. This is done by mapping Java methods to C methods, and providing additional information through annotations.
+
+An example
+
+C
+```C
+struct test {
+    char field0;
+    short field1;
+    int field2;
+    int* field3;
+};
+struct test doTest(struct test* tst,
+                   char field0,
+                   short field1,
+                   int field2,
+                   int* field3);
+```
+
+Java
+```Java
+@Lib("testing")
+public class Testing {
+    @ByVal(TestStruct.class)
+    public native long doTest(@Ptr(TestStruct.class) long tst,
+                              byte field0,
+                              short field1,
+                              int field2,
+                              @Ptr(int.class) long field3);
+}
+```
+The class exposes the C header file to the Java side. However, simply exposing C functions is not enough. The linker needs to know how these symbols (methods) can be resolved. This is done by providing the `@Lib(...)` annotation. This annotation defines the library where the mapped symbols can be found.
+
+#### Mapping
+
+The Java mapping tries to match it's C counterpart as close as possible. There are however a few non intuitive exceptions. Let's have a look on how C types map to their Java counterpart.
+
+MORE TODO
+
 
 # Struct API
 TODO
