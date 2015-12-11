@@ -3,6 +3,7 @@ package com.github.zubnix.jaccall;
 
 import com.github.zubnix.libtest.TestStruct;
 import com.github.zubnix.libtest.Testing;
+import com.github.zubnix.libtest.Testing_Jaccall_LinkSymbols;
 import org.junit.Test;
 
 import java.io.File;
@@ -55,7 +56,8 @@ public class LibTestingTest {
     public void test() {
         //given
         Linker.link(Testing.class,
-                    libFilePath());
+                    libFilePath(),
+                    new Testing_Jaccall_LinkSymbols());
 
         final Pointer<TestStruct> testStructPointer = malloc(TestStruct.SIZE).castp(TestStruct.class);
         final TestStruct          testStruct        = testStructPointer.dref();
@@ -80,11 +82,11 @@ public class LibTestingTest {
             Pointer<Integer> newField3 = intp;
 
             final Pointer<TestStruct> testStructByValue = wrap(TestStruct.class,
-                                                               Testing.doTest(tst.address,
-                                                                              newField0,
-                                                                              newField1,
-                                                                              newField2,
-                                                                              newField3.address));
+                                                               Testing.doStaticTest(tst.address,
+                                                                                    newField0,
+                                                                                    newField1,
+                                                                                    newField2,
+                                                                                    newField3.address));
             //then
             final TestStruct testStruct1 = testStructByValue.dref();
             assertThat(testStruct1.field0()).isEqualTo(field0);
