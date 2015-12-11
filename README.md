@@ -210,9 +210,9 @@ int_p.writei(2,6);
 //dereference the pointer at index 0
 int int_value_0 = int_p.dref(0);
 //dereference the pointer at index 1
-int int_value_1 = int_p.dref(0);
+int int_value_1 = int_p.dref(1);
 //dereference the pointer at index 2
-int int_value_0 = int_p.dref(0);
+int int_value_0 = int_p.dref(2);
 ...
 int_p.close();
 ```
