@@ -6,64 +6,86 @@ import static com.github.zubnix.jaccall.Size.sizeof;
 
 public enum CType {
     CHAR(sizeof((Byte) null),
-         byte.class),
+         byte.class,
+         'c'),
     UNSIGNED_CHAR(sizeof((Byte) null),
-                  byte.class),
+                  byte.class,
+                  'c'),
 
     SHORT(sizeof((Short) null),
-          short.class),
+          short.class,
+          's'),
     UNSIGNED_SHORT(sizeof((Short) null),
-                   short.class),
+                   short.class,
+                   's'),
 
     INT(sizeof((Integer) null),
-        int.class),
+        int.class,
+        'i'),
     UNSIGNED_INT(sizeof((Integer) null),
-                 int.class),
+                 int.class,
+                 'i'),
 
     LONG(sizeof((CLong) null),
-         long.class),
+         long.class,
+         'j'),
     UNSIGNED_LONG(sizeof((CLong) null),
-                  long.class),
+                  long.class,
+                  'j'),
 
     LONG_LONG(sizeof((Long) null),
-              long.class),
-    UNSIGNED_LONG_LONG('L',
-                       long.class),
+              long.class,
+              'l'),
+    UNSIGNED_LONG_LONG(sizeof((Long) null),
+                       long.class,
+                       'l'),
 
     FLOAT(sizeof((Float) null),
-          float.class),
+          float.class,
+          'f'),
 
     DOUBLE(sizeof((Double) null),
-           double.class),
+           double.class,
+           'd'),
 
     /**
      * Any pointer type.
      */
     POINTER(sizeof((Pointer<Void>) null),
-            Void.class),
+            Void.class,
+            'p'),
 
     /**
      * A struct or union by value.
      */
     STRUCT(-1,
-           StructType.class);
+           StructType.class,
+           't');
 
     private final int      size;
     @Nonnull
     private final Class<?> javaType;
+    private final char     signature;
 
     CType(final int size,
-          @Nonnull final Class<?> javaType) {
+          @Nonnull final Class<?> javaType,
+          final char signature) {
         this.size = size;
         this.javaType = javaType;
+        this.signature = signature;
     }
 
-    public int getSize() {
+
+    int getSize() {
         return this.size;
     }
 
     @Nonnull
-    public Class<?> getJavaType() {
+    Class<?> getJavaType() {
         return javaType;
+    }
+
+    char getSignature() {
+        return this.signature;
     }
 }

@@ -2,8 +2,6 @@ package com.github.zubnix.jaccall;
 
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 public final class Linker {
 
@@ -26,50 +24,31 @@ public final class Linker {
     }
 
     private static void linkSymbols(final long handle,
-                                    final Class<?> aClass) {
-        final Method[] methods = aClass.getMethods();
-
-
-        for (Method method : methods) {
-            final int modifiers = method.getModifiers();
-            if (Modifier.isNative(modifiers) &&
-                Modifier.isStatic(modifiers)) {
-
-                final String symbol = method.getName();
-                final long address = JNI.sym(handle,
-                                             symbol);
-                final String signature = getFFISignature(method);
-
-                //TODO create method signatures for all methods and pass that to native side to setup libffi closures
+                                    final Class<?> lib) {
+        //find method signatures and symbol name from generated LinkSymbols class
+        try {
+            LinkSymbols linkSymbols = (LinkSymbols) lib.getClassLoader()
+                                                       .loadClass(lib.getName() +
+                                                                  "_Jaccall_" +
+                                                                  LinkSymbols.class.getSimpleName())
+                                                       .newInstance();
+            final String[] symbols = linkSymbols.symbols();
+            final String[] signatures = linkSymbols.signatures();
+            for (int i = 0; i < symbols.length; i++) {
+                final String symbol = symbols[i];
+                final String signature = signatures[i];
+                final long symbolAddress = JNI.sym(handle,
+                                                   symbol);
             }
+
+
+        }
+        catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            throw new Error(e);
         }
     }
 
-    //TODO this is something we can infer at compile time but how to get to it at runtime?
-    private static String getFFISignature(final Method method) {
-        //signature is of form: abc)d
-
-        final Class<?>     returnType            = method.getReturnType();
-        final Annotation[] returnTypeAnnotations = method.getAnnotations();
-        //TODO checking if ByVal annotation is done on a method that returns `long` should be done at compile time.
-
-        final Class<?>[]     parameterTypes       = method.getParameterTypes();
-        final Annotation[][] parameterAnnotations = method.getParameterAnnotations();
-        //TODO checking if any ByVal annotation is done on a method parameter of type `long` should be done at compile time.
-
-        final StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < parameterTypes.length; i++) {
-            sb.append(typeToSignature(parameterTypes[i],
-                                      parameterAnnotations[i]));
-        }
-        sb.append(')')
-          .append(typeToSignature(returnType,
-                                  returnTypeAnnotations));
-
-
-        return sb.toString();
-    }
-
+    //TODO move this to linksymbols generator
     private static String typeToSignature(Class<?> type,
                                           final Annotation[] parameterAnnotation) {
         //C to Java mapping

@@ -24,7 +24,7 @@ import static com.github.zubnix.jaccall.CType.SHORT;
 //                       dataType = TestStruct.TestStructEmbedded.class,
 //                       name = "field4")
 })
-public final class TestStruct extends Jaccall_TestStruct {
+public final class TestStruct extends TestStruct_Jaccall_StructType {
 
 
 //    @Struct(value = {

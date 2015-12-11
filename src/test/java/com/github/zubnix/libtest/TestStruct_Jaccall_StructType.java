@@ -8,7 +8,7 @@ import javax.annotation.Generated;
 
 //TODO auto generate this code from a compile time annotation processor
 @Generated("com.github.zubnix.jaccall.compiletime.StructGenerator")
-abstract class Jaccall_TestStruct extends StructType {
+abstract class TestStruct_Jaccall_StructType extends StructType {
 
     private static final int OFFSET_0 = 0;
     private static final int OFFSET_1 = newOffset(Size.sizeof((Short) null),
@@ -20,7 +20,7 @@ abstract class Jaccall_TestStruct extends StructType {
 
     public static final int SIZE = OFFSET_3 + Size.sizeof((Pointer<?>) null);
 
-    Jaccall_TestStruct() {
+    TestStruct_Jaccall_StructType() {
         super(SIZE);
     }
 
