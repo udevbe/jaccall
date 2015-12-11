@@ -187,12 +187,12 @@ Pointer<Pointer<Pointer<Byte>>> byte_ppp = wrap(Byte.class,some_native_address).
 
 #### Arrays
 
-Up until now we've worked with single element pointers. Because a C array is actually a pointer, accessing a Jaccall pointer like a C array is surprisingly easy. Since our pointer object actually knows the size of the type it's refering to, indexed read and writes are straightforward.
+Up until now we've worked with single element pointers. Because a C array can be represented as a pointer, accessing a C array is surprisingly easy. Our pointer object knows the size of the type it's refering to, which in turn makes indexed read and writes straightforward.
 
 We reiterate our previous read/write example, only this time we allocate space for multiple integers.
 ```Java
-import static com.github.zubnix.jaccall.Pointer.*
-import static com.github.zubnix.jaccall.Size.*
+import static com.github.zubnix.jaccall.Pointer.*;
+import static com.github.zubnix.jaccall.Size.*;
 ...
 int int_size = sizeof((Integer)null);
 //allocate space for 3 integers
@@ -215,6 +215,16 @@ int int_value_1 = int_p.dref(0);
 int int_value_0 = int_p.dref(0);
 ...
 int_p.close();
+```
+
+We can also use `Pointer.nref(...)` to allocate an array.
+```Java
+import static com.github.zubnix.jaccall.Pointer.*;
+...
+//nref uses a vararg parameter, so we can use it with both arrays and classic function arguments
+Pointer<Integer> int_p_varargs = nref(1,2,3,4,5);
+int[] array = {1,2,3,4,5);
+Pointer<Integer> int_p_array = nref(array);
 ```
 
 #### Address manipulation
