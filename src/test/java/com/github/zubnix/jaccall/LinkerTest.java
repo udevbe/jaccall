@@ -16,7 +16,7 @@ import static com.github.zubnix.jaccall.Pointer.nref;
 import static com.github.zubnix.jaccall.Pointer.wrap;
 import static com.google.common.truth.Truth.assertThat;
 
-public class LibTestingTest {
+public class LinkerTest {
 
     private static final String LIB_PREFIX  = "lib";
     private static final String LIB_NAME    = "testing";
@@ -53,7 +53,7 @@ public class LibTestingTest {
     }
 
     @Test
-    public void test() {
+    public void testStaticMethodCall() {
         //given
         Linker.link(Testing.class,
                     libFilePath(),
