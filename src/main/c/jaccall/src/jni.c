@@ -114,69 +114,81 @@ find_symaddr(JNIEnv *env, void *libaddr, jstring symbol) {
 
 static inline
 int
-prep_ffi_struct(const char *jaccallstr,
-                int jaccall_str_index,
-                int nro_fields,
-                ffi_type *struct_description) {
-    /*read jaccall string for struct field description, adapted ffi struct description, return number of struct fields
-    read from description*/
+parse_struct(const char *jaccallstr,
+             int jaccall_str_index,
+             ffi_type *struct_description) {
 
+    int mark = jaccall_str_index;
+    int nro_fields = 0;
+    int in_struct = 0;
+    char struct_field;
 
-    // Describe the struct to libffi. Elements are described by a
-    // NULL-terminated array of pointers to ffi_type.
+    //get nro fields
+    while(in_struct){
+        struct_field = jaccallstr[jaccall_str_index++];
 
-//                    ffi_type* dp_elements[] = {&ffi_type_sint, &ffi_type_double, NULL};
-//                    ffi_type dp_type = {.size = 0, .alignment = 0,
-//                            .type = FFI_TYPE_STRUCT, .elements = dp_elements};
-//
-//
-//                    args[j] = &ffi_type_;
-    ffi_type* struct_fiels[nro_fields];
+        if (in_struct == 1) {
+            //not in a nested struct, so incr. field count
+            nro_fields++;
+        }
+        if(struct_field == 't') {
+            //begin of a struct
+            in_struct++;
+        }
+        if(struct_field == ']') {
+            //end of nested or 'this' struct.
+            in_struct --;
+        }
+    }
 
+    //reset struct definition index
+    jaccall_str_index = mark;
+
+    ffi_type* struct_fields[nro_fields + 1];
+    struct_fields[nro_fields+1] = NULL;
+
+    //parse actual struct description
     int field_index = 0;
     for(; field_index < nro_fields;field_index++, jaccall_str_index++) {
         char struct_field = jaccallstr[jaccall_str_index];
         switch (struct_field) {
             case 'c':
-                struct_fiels[field_index] = &ffi_type_sint8;
+                struct_fields[field_index] = &ffi_type_sint8;
                 break;
             case 's':
-                struct_fiels[field_index] = &ffi_type_sint16;
+                struct_fields[field_index] = &ffi_type_sint16;
                 break;
             case 'i':
-                struct_fiels[field_index] = &ffi_type_sint32;
+                struct_fields[field_index] = &ffi_type_sint32;
                 break;
             case 'j':
-                struct_fiels[field_index] = &ffi_type_slong;
+                struct_fields[field_index] = &ffi_type_slong;
                 break;
             case 'l':
-                struct_fiels[field_index] = &ffi_type_sint64;
+                struct_fields[field_index] = &ffi_type_sint64;
                 break;
             case 'f':
-                struct_fiels[field_index] = &ffi_type_float;
+                struct_fields[field_index] = &ffi_type_float;
                 break;
             case 'd':
-                struct_fiels[field_index] = &ffi_type_double;
+                struct_fields[field_index] = &ffi_type_double;
                 break;
             case 'p':
-                struct_fiels[field_index] = &ffi_type_pointer;
+                struct_fields[field_index] = &ffi_type_pointer;
                 break;
             case 't':
-                //nested struct
-
-                struct_description = (ffi_type *) malloc(sizeof(ffi_type));
-                //continue reading to determine number of fields
-                int nro_sub_fields = 0;
-                while(jaccallstr[jaccall_str_index + nro_sub_fields] != ']'){
-                    nro_sub_fields++;
-                }
-                //parse struct description
-                jaccall_str_index += prep_ffi_struct(jaccallstr, jaccall_str_index, nro_sub_fields, struct_description);
-                //we've come out of the loop, so we're at the end of our struct definition
-                struct_fiels[field_index] = struct_description;
+                //parse nested struct description
+                struct_description = (ffi_type*) malloc(sizeof(ffi_type));
+                jaccall_str_index = parse_struct(jaccallstr, jaccall_str_index, struct_description);
+                struct_fields[field_index] = struct_description;
                 break;
         }
     }
+
+    struct_description->size = 0;
+    struct_description->alignment = 0;
+    struct_description->type = FFI_TYPE_STRUCT;
+    struct_description->elements = struct_fields;
 
     return jaccall_str_index;
 }
@@ -187,23 +199,31 @@ prep_ffi_args(const char *jaccallstr,
               ffi_type **args,
               size_t arg_size) {
 
-    //C types to Jaccall mapping
-//        'c'	char -> Byte, byte
-//        's'	short -> Character, char, Short, short
-//        'i'	int -> Integer, int
-//        'j'	long -> CLong
-//        'l'	long long -> Long, long
-//        'f'	float -> Float, float
-//        'd'	double -> Double, double
-//        'p'	C pointer -> @Ptr Long, @Ptr long
-//        'v'	void -> Void, void
-//        't...]'   struct -> @ByVal(SomeStruct.class) Long, @ByVal(SomeStruct.class) long,
     ffi_type *struct_description;
+    int arg_index;
+    int jaccall_str_index;
 
-    int arg_index = 0;
-    int jaccall_str_index = arg_index;
+    arg_index = 0;
+    jaccall_str_index = 0;
+
     for (; arg_index < arg_size; arg_index++, jaccall_str_index++) {
-        char jaccall_arg = jaccallstr[jaccall_str_index];
+        char jaccall_arg;
+
+        ffi_type* struct_description;
+
+    //C types to Jaccall mapping
+    // 'c'	char -> Byte, byte
+    // 's'	short -> Character, char, Short, short
+    // 'i'	int -> Integer, int
+    // 'j'	long -> CLong
+    // 'l'	long long -> Long, long
+    // 'f'	float -> Float, float
+    // 'd'	double -> Double, double
+    // 'p'	C pointer -> @Ptr Long, @Ptr long
+    // 'v'	void -> Void, void
+    // 't...]'   struct -> @ByVal(SomeStruct.class) Long, @ByVal(SomeStruct.class) long,
+
+        jaccall_arg = jaccallstr[jaccall_str_index];
         switch (jaccall_arg) {
             case 'c':
                 args[arg_index] = &ffi_type_sint8;
@@ -233,17 +253,10 @@ prep_ffi_args(const char *jaccallstr,
                 args[arg_index] = &ffi_type_void;
                 break;
             case 't':
-                struct_description = (ffi_type *) malloc(sizeof(ffi_type));
-                //continue reading to determine number of fields
-                int nro_fields = 0;
-                while(jaccallstr[jaccall_str_index+nro_fields]!=']'){
-                    nro_fields++;
-                }
                 //parse struct description
-                jaccall_str_index += prep_ffi_struct(jaccallstr, jaccall_str_index, nro_fields, struct_description);
-                //we've come out of the loop, so we're at the end of our struct definition
+                struct_description = (ffi_type*) malloc(sizeof(ffi_type));
+                jaccall_str_index = parse_struct(jaccallstr, jaccall_str_index, struct_description);
                 args[arg_index] = struct_description;
-
                 break;
         }
     }
@@ -265,26 +278,38 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env,
                                                 jobjectArray jniSignatures,
                                                 jobjectArray jaccallSignatures) {
     //get handle to shared lib
-    void *libaddr = find_libaddr(env, library);
-
-    jbyte *argSizes = (*env)->GetByteArrayElements(env, argumentSizes, 0);
-    int symbolsCount = (*env)->GetArrayLength(env, symbols);
-
+    void *libaddr;
+    jbyte *argSizes;
+    int symbolsCount;
     int i;
+
+    libaddr = find_libaddr(env, library);
+
+    argSizes = (*env)->GetByteArrayElements(env, argumentSizes, 0);
+    symbolsCount = (*env)->GetArrayLength(env, symbols);
+
     for (i = 0; i < symbolsCount; i++) {
         //lookup symbol
-        jstring symbol = (jstring) (*env)->GetObjectArrayElement(env, symbols, i);
-        void *symaddr = find_symaddr(env, libaddr, symbol);
+        jstring symbol;
+        void *symaddr;
+        size_t arg_size;
+        ffi_type **args;
+        jstring jaccallSignature;
+        const char *jaccallstr;
+
+        symbol = (jstring) (*env)->GetObjectArrayElement(env, symbols, i);
+        symaddr = find_symaddr(env, libaddr, symbol);
 
         //create ffi closure
 
         //fill in ffi_type arg array
-        jstring jaccallSignature = (jstring) (*env)->GetObjectArrayElement(env, jaccallSignatures, i);
+        arg_size = (size_t) argSizes[i];
+        args  = (ffi_type **)malloc(sizeof(ffi_type*)*arg_size);
 
-        size_t argSize = (size_t) argSizes[i];
-        ffi_type *args[argSize];
-        const char *jaccallstr = (*env)->GetStringUTFChars(env, jaccallSignature, 0);
-        prep_ffi_args(jaccallstr, args, argSize);
+        jaccallSignature = (jstring) (*env)->GetObjectArrayElement(env, jaccallSignatures, i);
+        jaccallstr = (*env)->GetStringUTFChars(env, jaccallSignature, 0);
+        prep_ffi_args(jaccallstr, args, arg_size);
         (*env)->ReleaseStringUTFChars(env, jaccallSignature, jaccallstr);
+        free(args);
     }
 }
