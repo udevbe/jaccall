@@ -113,26 +113,28 @@ find_symaddr(JNIEnv *env, void *libaddr, jstring symbol) {
 }
 
 static inline
-int
+void
 parse_struct(const char *jaccallstr,
-             int jaccall_str_index,
+             int *jaccall_str_index,
              ffi_type *struct_description) {
 
-    int mark = jaccall_str_index;
+    int mark = *jaccall_str_index;
     int nro_fields = 0;
-    int in_struct = 0;
+    int in_struct = 1;
     char struct_field;
 
     //get nro fields
     while(in_struct){
-        struct_field = jaccallstr[jaccall_str_index++];
+        struct_field = jaccallstr[*jaccall_str_index];
+        *(jaccall_str_index)++;
 
         if (in_struct == 1) {
             //not in a nested struct, so incr. field count
             nro_fields++;
         }
+
         if(struct_field == 't') {
-            //begin of a struct
+            //begin of nested struct
             in_struct++;
         }
         if(struct_field == ']') {
@@ -142,15 +144,16 @@ parse_struct(const char *jaccallstr,
     }
 
     //reset struct definition index
-    jaccall_str_index = mark;
+    *jaccall_str_index = mark;
 
-    ffi_type* struct_fields[nro_fields + 1];
-    struct_fields[nro_fields+1] = NULL;
+    ffi_type* struct_fields[nro_fields];
 
     //parse actual struct description
     int field_index = 0;
-    for(; field_index < nro_fields;field_index++, jaccall_str_index++) {
-        char struct_field = jaccallstr[jaccall_str_index];
+    for(; field_index < nro_fields; field_index++) {
+        char struct_field = jaccallstr[*jaccall_str_index];
+        *(jaccall_str_index)++;
+
         switch (struct_field) {
             case 'c':
                 struct_fields[field_index] = &ffi_type_sint8;
@@ -179,8 +182,11 @@ parse_struct(const char *jaccallstr,
             case 't':
                 //parse nested struct description
                 struct_description = (ffi_type*) malloc(sizeof(ffi_type));
-                jaccall_str_index = parse_struct(jaccallstr, jaccall_str_index, struct_description);
+                parse_struct(jaccallstr, jaccall_str_index, struct_description);
                 struct_fields[field_index] = struct_description;
+                break;
+            case ']':
+                struct_fields[field_index] = NULL;
                 break;
         }
     }
@@ -189,27 +195,13 @@ parse_struct(const char *jaccallstr,
     struct_description->alignment = 0;
     struct_description->type = FFI_TYPE_STRUCT;
     struct_description->elements = struct_fields;
-
-    return jaccall_str_index;
 }
 
 static inline
 void
-prep_ffi_args(const char *jaccallstr,
-              ffi_type **args,
-              size_t arg_size) {
-
+prep_ffi_arg(const char *jaccallstr, int* jaccall_str_index, ffi_type **arg){
+    char jaccall_arg;
     ffi_type *struct_description;
-    int arg_index;
-    int jaccall_str_index;
-
-    arg_index = 0;
-    jaccall_str_index = 0;
-
-    for (; arg_index < arg_size; arg_index++, jaccall_str_index++) {
-        char jaccall_arg;
-
-        ffi_type* struct_description;
 
     //C types to Jaccall mapping
     // 'c'	char -> Byte, byte
@@ -223,42 +215,55 @@ prep_ffi_args(const char *jaccallstr,
     // 'v'	void -> Void, void
     // 't...]'   struct -> @ByVal(SomeStruct.class) Long, @ByVal(SomeStruct.class) long,
 
-        jaccall_arg = jaccallstr[jaccall_str_index];
-        switch (jaccall_arg) {
-            case 'c':
-                args[arg_index] = &ffi_type_sint8;
-                break;
-            case 's':
-                args[arg_index] = &ffi_type_sint16;
-                break;
-            case 'i':
-                args[arg_index] = &ffi_type_sint32;
-                break;
-            case 'j':
-                args[arg_index] = &ffi_type_slong;
-                break;
-            case 'l':
-                args[arg_index] = &ffi_type_sint64;
-                break;
-            case 'f':
-                args[arg_index] = &ffi_type_float;
-                break;
-            case 'd':
-                args[arg_index] = &ffi_type_double;
-                break;
-            case 'p':
-                args[arg_index] = &ffi_type_pointer;
-                break;
-            case 'v':
-                args[arg_index] = &ffi_type_void;
-                break;
-            case 't':
-                //parse struct description
-                struct_description = (ffi_type*) malloc(sizeof(ffi_type));
-                jaccall_str_index = parse_struct(jaccallstr, jaccall_str_index, struct_description);
-                args[arg_index] = struct_description;
-                break;
-        }
+    jaccall_arg = jaccallstr[*jaccall_str_index];
+    *(jaccall_str_index)++;
+
+    switch (jaccall_arg) {
+        case 'c':
+            *arg = &ffi_type_sint8;
+            break;
+        case 's':
+            *arg = &ffi_type_sint16;
+            break;
+        case 'i':
+            *arg = &ffi_type_sint32;
+            break;
+        case 'j':
+            *arg = &ffi_type_slong;
+            break;
+        case 'l':
+            *arg = &ffi_type_sint64;
+            break;
+        case 'f':
+            *arg = &ffi_type_float;
+            break;
+        case 'd':
+            *arg = &ffi_type_double;
+            break;
+        case 'p':
+            *arg = &ffi_type_pointer;
+            break;
+        case 'v':
+            *arg = &ffi_type_void;
+            break;
+        case 't':
+            //parse struct description
+            struct_description = (ffi_type*) malloc(sizeof(ffi_type));
+            parse_struct(jaccallstr, jaccall_str_index, struct_description);
+            *arg = struct_description;
+            break;
+    }
+}
+
+static inline
+void
+prep_ffi_args(const char *jaccallstr,
+              int *jaccall_str_index,
+              ffi_type **args,
+              size_t arg_size) {
+    int arg_index = 0;
+    for (; arg_index < arg_size; arg_index++) {
+        prep_ffi_arg(jaccallstr, jaccall_str_index, &args[arg_index]);
     }
 }
 
@@ -278,38 +283,41 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env,
                                                 jobjectArray jniSignatures,
                                                 jobjectArray jaccallSignatures) {
     //get handle to shared lib
-    void *libaddr;
-    jbyte *argSizes;
-    int symbolsCount;
-    int i;
+    void *libaddr = find_libaddr(env, library);
+    jbyte *argSizes = (*env)->GetByteArrayElements(env, argumentSizes, 0);
+    int symbolsCount = (*env)->GetArrayLength(env, symbols);
+    int i = 0;
 
-    libaddr = find_libaddr(env, library);
+    for (; i < symbolsCount; i++) {
+        //lookup symbol (function pointer)
+        jstring symbol = (jstring) (*env)->GetObjectArrayElement(env, symbols, i);
+        void *symaddr = find_symaddr(env, libaddr, symbol);
 
-    argSizes = (*env)->GetByteArrayElements(env, argumentSizes, 0);
-    symbolsCount = (*env)->GetArrayLength(env, symbols);
+        //setup ffi call
+        size_t arg_size = (size_t) argSizes[i];
+        ffi_type **args = (ffi_type **)malloc(sizeof(ffi_type*) * arg_size);
 
-    for (i = 0; i < symbolsCount; i++) {
-        //lookup symbol
-        jstring symbol;
-        void *symaddr;
-        size_t arg_size;
-        ffi_type **args;
-        jstring jaccallSignature;
-        const char *jaccallstr;
+        jstring jaccallSignature = (jstring) (*env)->GetObjectArrayElement(env, jaccallSignatures, i);
 
-        symbol = (jstring) (*env)->GetObjectArrayElement(env, symbols, i);
-        symaddr = find_symaddr(env, libaddr, symbol);
+        const char *jaccallstr = (*env)->GetStringUTFChars(env, jaccallSignature, 0);
+        int jaccall_str_index = 0;
 
-        //create ffi closure
+        prep_ffi_args(jaccallstr, &jaccall_str_index, args, arg_size);
 
-        //fill in ffi_type arg array
-        arg_size = (size_t) argSizes[i];
-        args  = (ffi_type **)malloc(sizeof(ffi_type*)*arg_size);
+        ffi_type** return_type = (ffi_type**)malloc(sizeof(ffi_type*));
+        prep_ffi_arg(jaccallstr, &jaccall_str_index, return_type);
 
-        jaccallSignature = (jstring) (*env)->GetObjectArrayElement(env, jaccallSignatures, i);
-        jaccallstr = (*env)->GetStringUTFChars(env, jaccallSignature, 0);
-        prep_ffi_args(jaccallstr, args, arg_size);
         (*env)->ReleaseStringUTFChars(env, jaccallSignature, jaccallstr);
-        free(args);
+
+        ffi_cif* cif = (ffi_cif*) malloc(sizeof(ffi_cif));
+        ffi_status status = ffi_prep_cif(cif, FFI_DEFAULT_ABI, (unsigned int) arg_size, *return_type, args);
+        if (status != FFI_OK) {
+            fprintf(stderr, "ffi_prep_cif failed: %d\n", status);
+            exit(1);
+        }
+
+        //TODO setup ffi closure that calls our ffi_cif with arguments it gets from Java
     }
+
+    //TODO call jni registerNatives with our closure
 }
