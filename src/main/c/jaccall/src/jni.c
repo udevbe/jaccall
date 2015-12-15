@@ -95,26 +95,13 @@ void *
 find_libaddr(JNIEnv *env, jstring library) {
     const char *libstr = (*env)->GetStringUTFChars(env, library, 0);
     void *libaddr = dlopen(libstr, RTLD_NOW | RTLD_GLOBAL);
-    (*env)->ReleaseStringUTFChars(env, library, libstr);
     if (!libaddr) {
         fprintf(stderr, "dlopen error: %s\n", dlerror());
         exit(1);
     }
-    return libaddr;
-}
+    (*env)->ReleaseStringUTFChars(env, library, libstr);
 
-static inline
-void *
-find_symaddr(JNIEnv *env, void *libaddr, jstring symbol) {
-    const char *symstr = (*env)->GetStringUTFChars(env, symbol, 0);
-    void *symaddr = dlsym(libaddr, symstr);
-    (*env)->ReleaseStringUTFChars(env, symbol, symstr);
-    char *err = dlerror();
-    if (err) {
-        fprintf(stderr, "dlsym failed: %s\n", err);
-        exit(1);
-    }
-    return symaddr;
+    return libaddr;
 }
 
 static inline
@@ -281,11 +268,8 @@ static
 void jni_call_handler(ffi_cif *cif, void *ret, void **args, void *user_data){
     struct jni_call_data* call_data = user_data;
     //FIXME we might have to manually iterate & cast each argument(?)
-    ffi_call(call_data->cif,
-             FFI_FN(call_data->symaddr),
-             ret,
-             //skip 2 args (JNIEnv* & jclass/jobject)
-             &args[2]);
+    //skip 2 args (JNIEnv* & jclass/jobject)
+    ffi_call(call_data->cif, FFI_FN(call_data->symaddr), ret, &args[2]);
 }
 
 /*
@@ -307,12 +291,20 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env,
     void *libaddr = find_libaddr(env, library);
     jbyte *argSizes = (*env)->GetByteArrayElements(env, argumentSizes, 0);
     int symbolsCount = (*env)->GetArrayLength(env, symbols);
-    int i = 0;
+    JNINativeMethod *jniMethods = malloc(sizeof(JNINativeMethod) * symbolsCount);
 
+    int i = 0;
     for (; i < symbolsCount; i++) {
         //lookup symbol (function pointer)
         jstring symbol = (jstring) (*env)->GetObjectArrayElement(env, symbols, i);
-        void *symaddr = find_symaddr(env, libaddr, symbol);
+        const char *symstr = (*env)->GetStringUTFChars(env, symbol, 0);
+
+        void *symaddr = dlsym(libaddr, symstr);
+        char *err = dlerror();
+        if (err) {
+            fprintf(stderr, "dlsym failed: %s\n", err);
+            exit(1);
+        }
 
         //setup ffi call
         size_t arg_size = (size_t) argSizes[i];
@@ -328,8 +320,6 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env,
         ffi_type** return_type = (ffi_type**)malloc(sizeof(ffi_type*));
         prep_ffi_arg(jaccallstr, &jaccall_str_index, return_type);
 
-        (*env)->ReleaseStringUTFChars(env, jaccallSignature, jaccallstr);
-
         ffi_cif* cif = (ffi_cif*) malloc(sizeof(ffi_cif));
         ffi_status status = ffi_prep_cif(cif, FFI_DEFAULT_ABI, (unsigned int) arg_size, *return_type, args);
         if (status != FFI_OK) {
@@ -341,13 +331,11 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env,
         void* jni_func;
         ffi_closure * ffi_closure = ffi_closure_alloc(sizeof(ffi_closure), &jni_func);
 
-        jstring jniSignature = (jstring) (*env)->GetObjectArrayElement(env, jaccallSignatures, i);
+        jstring jniSignature = (jstring) (*env)->GetObjectArrayElement(env, jniSignatures, i);
         const char *jni_sig = (*env)->GetStringUTFChars(env, jniSignature, 0);
         ffi_cif * jni_cif = malloc(sizeof(ffi_cif));
 
         prep_jni_cif(jni_cif, jni_sig);
-
-        (*env)->ReleaseStringUTFChars(env, jniSignature, jni_sig);
 
         struct jni_call_data* call_data = malloc(sizeof(struct jni_call_data));
         call_data->cif = cif;
@@ -358,15 +346,17 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env,
                                 &jni_call_handler,
                                 call_data,
                                 jni_func)){
-             //TODO add jni_func & jni_sig to registernatives array
-
+            JNINativeMethod jniMethod = { .name = (char*) symstr, .signature = (char*) jni_sig, .fnPtr = jni_func };
+            jniMethods[i] = jniMethod;
         } else {
             //TODO more detailed error reporting
-            const char *symstr = (*env)->GetStringUTFChars(env, symbol, 0);
             fprintf(stderr, "ffi_prep_closure_loc failed: %s\n", symstr);
             exit(1);
         }
+
+        (*env)->ReleaseStringUTFChars(env, jaccallSignature, jaccallstr);
+        //we dont' release the other strings as they are needed by jni itself.
     }
 
-    //TODO call jni registerNatives with our closures array
+    (*env)->RegisterNatives(env, headerClazz, jniMethods, symbolsCount);
 }
