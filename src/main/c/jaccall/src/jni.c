@@ -7,6 +7,11 @@
 
 #include "com_github_zubnix_jaccall_JNI.h"
 
+struct jni_call_data {
+    ffi_cif* cif;
+    void *symaddr;
+};
+
 /*
  * Class:     com_github_zubnix_jaccall_JNI
  * Method:    wrap
@@ -267,6 +272,22 @@ prep_ffi_args(const char *jaccallstr,
     }
 }
 
+static inline
+void prep_jni_cif(ffi_cif * jni_cif, const char* jni_sig) {
+    //TODO prepare jni ffi_cif by parsing jni signature
+}
+
+static
+void jni_call_handler(ffi_cif *cif, void *ret, void **args, void *user_data){
+    struct jni_call_data* call_data = user_data;
+    //FIXME we might have to manually iterate & cast each argument(?)
+    ffi_call(call_data->cif,
+             FFI_FN(call_data->symaddr),
+             ret,
+             //skip 2 args (JNIEnv* & jclass/jobject)
+             &args[2]);
+}
+
 /*
  * Class:     com_github_zubnix_jaccall_JNI
  * Method:    link
@@ -316,8 +337,36 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env,
             exit(1);
         }
 
-        //TODO setup ffi closure that calls our ffi_cif with arguments it gets from Java
+        //setup ffi closure that calls our ffi_cif with arguments it gets from Java
+        void* jni_func;
+        ffi_closure * ffi_closure = ffi_closure_alloc(sizeof(ffi_closure), &jni_func);
+
+        jstring jniSignature = (jstring) (*env)->GetObjectArrayElement(env, jaccallSignatures, i);
+        const char *jni_sig = (*env)->GetStringUTFChars(env, jniSignature, 0);
+        ffi_cif * jni_cif = malloc(sizeof(ffi_cif));
+
+        prep_jni_cif(jni_cif, jni_sig);
+
+        (*env)->ReleaseStringUTFChars(env, jniSignature, jni_sig);
+
+        struct jni_call_data* call_data = malloc(sizeof(struct jni_call_data));
+        call_data->cif = cif;
+        call_data->symaddr = symaddr;
+
+        if(ffi_prep_closure_loc(ffi_closure,
+                                jni_cif,
+                                &jni_call_handler,
+                                call_data,
+                                jni_func)){
+             //TODO add jni_func & jni_sig to registernatives array
+
+        } else {
+            //TODO more detailed error reporting
+            const char *symstr = (*env)->GetStringUTFChars(env, symbol, 0);
+            fprintf(stderr, "ffi_prep_closure_loc failed: %s\n", symstr);
+            exit(1);
+        }
     }
 
-    //TODO call jni registerNatives with our closure
+    //TODO call jni registerNatives with our closures array
 }
