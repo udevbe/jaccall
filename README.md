@@ -292,9 +292,9 @@ A pointer object only supports a limited amount of Java types it can refer to. T
 
 Following types are supported
 
-
 | C | Java|
 -----|-----
+| void | Void or void |
 | char | Byte or byte | 
 | unsigned short or short | Short or short | 
 | unsgined int or int | Integer or int |
@@ -302,7 +302,9 @@ Following types are supported
 | unsigned long long or long long | Long or long | 
 | float | Float or float | 
 | double | Double or double | 
-| type* | Pointer | 
+| any_type* | Pointer | 
 | char* | String |
+
+Java primitives like boolean (Boolean) or char (Character) are not supported for the simple reason that they do not have a good C counterpart. A boolean type does not exist in C, and a Java char is actually an unsigned 16-bit integer that is used as an utf-16 character as opposed to C's 8-bit char type.
 
 TODO MORE
