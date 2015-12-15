@@ -62,9 +62,11 @@ public class LinkerTest {
         final Pointer<TestStruct> testStructPointer = malloc(TestStruct.SIZE).castp(TestStruct.class);
         final TestStruct          testStruct        = testStructPointer.dref();
 
-        byte             field0 = 10;
-        short            field1 = 20;
-        int              field2 = 30;
+        byte  field0 = 10;
+        short field1 = 20;
+        Pointer<Integer> field2 = nref(1,
+                                       11,
+                                       111);
         Pointer<Integer> field3 = nref(40);
 
         testStruct.field0(field0);
@@ -78,14 +80,16 @@ public class LinkerTest {
 
             byte newField0 = 11;
             short newField1 = 22;
-            int newField2 = 33;
+            Pointer<Integer> newField2 = nref(3,
+                                              33,
+                                              333);
             Pointer<Integer> newField3 = intp;
 
             final Pointer<TestStruct> testStructByValue = wrap(TestStruct.class,
                                                                Testing.doStaticTest(tst.address,
                                                                                     newField0,
                                                                                     newField1,
-                                                                                    newField2,
+                                                                                    newField2.address,
                                                                                     newField3.address));
             //then
             final TestStruct testStruct1 = testStructByValue.dref();

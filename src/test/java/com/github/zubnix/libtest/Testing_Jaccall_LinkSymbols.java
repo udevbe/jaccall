@@ -10,7 +10,7 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
     public Testing_Jaccall_LinkSymbols() {
         super(new String[]{"doTest", "doStaticTest"},
               new byte[]{5, 5},
-              new String[]{"pcsip)tcsip]", "pcsip)tcsip]"},
-              new String[]{"(JBSIJ)J", "(JBSIJ)J"});
+              new String[]{"pcspp)tcsiiip]", "pcspp)tcsiiip]"},
+              new String[]{"(JBSJJ)J", "(JBSJJ)J"});
     }
 }

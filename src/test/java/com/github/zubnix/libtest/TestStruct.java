@@ -14,6 +14,7 @@ import static com.github.zubnix.jaccall.CType.SHORT;
         @Field(type = SHORT,
                name = "field1"),
         @Field(type = INT,
+               cardinal = 3,
                name = "field2"),
         @Field(type = POINTER,
                dataType = int.class,

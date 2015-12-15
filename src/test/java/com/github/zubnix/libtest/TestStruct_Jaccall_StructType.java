@@ -42,41 +42,28 @@ abstract class TestStruct_Jaccall_StructType extends StructType {
                           field1);
     }
 
-    public int field2() {
-        return buffer().getInt(OFFSET_2);
+    public Pointer<Integer> field2() {
+        return Pointer.wrap(Integer.class,
+                            address(buffer(),
+                                    OFFSET_2));
     }
 
 
-    public void field2(int field2) {
-        buffer().putInt(OFFSET_2,
-                        field2);
+    public void field2(Pointer<Integer> field2) {
+        address(buffer(),
+                OFFSET_2,
+                field2);
     }
 
     public Pointer<Integer> field3() {
-        final long pointerSize = Size.sizeof((Pointer) null);
-        final long address;
-
-        if (pointerSize == 8) {
-            address = buffer().getLong(OFFSET_3);
-        }
-        else {
-            address = buffer().getInt(OFFSET_3);
-        }
-
         return Pointer.wrap(Integer.class,
-                            address);
+                            address(buffer(),
+                                    OFFSET_3));
     }
 
     public void field3(Pointer<Integer> field3) {
-        final long pointerSize = Size.sizeof((Pointer) null);
-
-        if (pointerSize == 8) {
-            buffer().putLong(OFFSET_3,
-                             field3.cast(Long.class));
-        }
-        else {
-            buffer().putInt(OFFSET_3,
-                            field3.cast(Integer.class));
-        }
+        address(buffer(),
+                OFFSET_3,
+                field3);
     }
 }
