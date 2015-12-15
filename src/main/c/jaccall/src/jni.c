@@ -197,7 +197,7 @@ prep_ffi_arg(const char *jaccallstr, int* jaccall_str_index, ffi_type **arg){
 
     //C types to Jaccall mapping
     // 'c'	char -> Byte, byte
-    // 's'	short -> Character, char, Short, short
+    // 's'	short -> Short, short
     // 'i'	int -> Integer, int
     // 'j'	long -> CLong
     // 'l'	long long -> Long, long
@@ -260,8 +260,61 @@ prep_ffi_args(const char *jaccallstr,
 }
 
 static inline
-void prep_jni_cif(ffi_cif * jni_cif, const char* jni_sig) {
-    //TODO prepare jni ffi_cif by parsing jni signature
+void prep_jni_cif(ffi_cif * jni_cif, const char* jni_sig, int arg_size) {
+    //prepare jni ffi_cif by parsing jni signature
+
+    //compensate for jnienv & jobject/jclass arguments
+    int i = 2;
+    ffi_type **args = malloc((sizeof(ffi_type*) * (arg_size+ 2)));
+    args[0] = &ffi_type_pointer;
+    args[1] = &ffi_type_pointer;
+
+    ffi_type* return_type;
+    int parameter;
+    ffi_type *type;
+    for(; jni_sig; i++, jni_sig++) {
+        ffi_type* jni_type = malloc(sizeof(ffi_type));
+        char jni_sig_char = jni_sig[i];
+
+        switch(jni_sig_char){
+            case 'B' :
+                type = &ffi_type_sint8;
+                break;
+            case 'S' :
+                type = &ffi_type_sint16;
+                break;
+            case 'I' :
+                type = &ffi_type_sint32;
+                break;
+            case 'J' :
+                type = &ffi_type_sint64;
+                break;
+            case 'F' :
+                type = &ffi_type_float;
+                break;
+            case 'D' :
+                type = &ffi_type_double;
+                break;
+            case '(' :
+                parameter++;
+                break;
+            case ')' :
+                parameter--;
+                break;
+        }
+
+        if(parameter) {
+            args[i] = type;
+        } else /* return type*/ {
+            return_type = type;
+        }
+
+        ffi_status status = ffi_prep_cif(jni_cif, FFI_DEFAULT_ABI, (unsigned int) arg_size + 2, return_type, args);
+        if (status != FFI_OK) {
+            fprintf(stderr, "ffi_prep_cif failed: %d\n", status);
+            exit(1);
+        }
+    }
 }
 
 static
@@ -335,7 +388,7 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env,
         const char *jni_sig = (*env)->GetStringUTFChars(env, jniSignature, 0);
         ffi_cif * jni_cif = malloc(sizeof(ffi_cif));
 
-        prep_jni_cif(jni_cif, jni_sig);
+        prep_jni_cif(jni_cif, jni_sig, arg_size);
 
         struct jni_call_data* call_data = malloc(sizeof(struct jni_call_data));
         call_data->cif = cif;
