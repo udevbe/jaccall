@@ -139,13 +139,6 @@ public abstract class Pointer<T> implements AutoCloseable {
                                                           Integer.MAX_VALUE));
         }
 
-        if (rawType.equals(Character.class) || rawType.equals(char.class)) {
-            return (Pointer<U>) new PointerChar(type,
-                                                address,
-                                                JNI.wrap(address,
-                                                         Integer.MAX_VALUE));
-        }
-
         if (rawType.equals(Long.class) || rawType.equals(long.class)) {
             return (Pointer<U>) new PointerLong(type,
                                                 address,
