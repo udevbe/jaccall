@@ -273,7 +273,7 @@ Pointer<Integer> int_p_array = nref(array);
 In C, one can read and change the actual address value of a pointer. In Jaccall this is no different. The pointer object exposes it's address either directly through an `address` field of type `long`, or it can be casted to a long.
 ```Java
 Pointer<Void> void_pointer = ...
-//`void_pointer_address` now contains the actual address of `void_pointer`
+//`void_pointer_adr` now contains the actual address of `void_pointer`
 long void_pointer_adr = void_pointer.address;
 //`void_pointer_adr_cast` now contains exactly the same value as `void_pointer_adr`.
 long void_pointer_adr_cast = void_pointer.cast(Long.class)'
@@ -285,3 +285,24 @@ Pointer<String> char_pointer = ...
 //`char_pointer_offset` address is now incremented by 2 compared to `char_pointer` address.
 Pointer<String> char_pointer_offset = char_pointer.offset(2);
 ```
+
+#### Pointer types
+
+A pointer object only supports a limited amount of Java types it can refer to. This is because it has to perform a mapping operation from the underlying C type to the equivalent Java type.
+
+Following types are supported
+
+
+| C | Java|
+-----|-----
+| char | Byte or byte | 
+| unsigned short or short | Short or short | 
+| unsgined int or int | Integer or int |
+| unsigned long or long | CLong | 
+| unsigned long long or long long | Long or long | 
+| float | Float or float | 
+| double | Double or double | 
+| type* | Pointer | 
+| char* | String |
+
+TODO MORE
