@@ -32,13 +32,16 @@ C
 `some_header.h`
 ```C
 struct test {
-...
+    char field0;
+    short field1;
+    int field2[3];
+    int *field3;
 };
 ...
 struct test do_something(struct test* tst,
                          char field0,
                          short field1,
-                         int[] field2,
+                         int* field2,
                          int* field3);
 ```
 
@@ -88,11 +91,42 @@ The Java primitive types `boolean` and `char` do not have a corresponding C type
 
 The class argument for `@Ptr` is optional.
 
+Arrays should be mapped as a pointer of the same type.
+
 #### By value, by reference
 
-Java does not support the notion of passing by reference or by value. By default, all method arguments are passed by value in Java, inlcuding POJOs which are actually pointers internally. This limits the size of a single argument in Java to 64-bit. As such, Jaccall can not pass or return a C struct by value. Jaccall works around this problem by allocating heap memory and copyin/reading struct-by-value data. Jaccall must then only pass a pointer to or from the native side. 
+Java does not support the notion of passing by reference or by value. By default, all method arguments are passed by value in Java, inlcuding POJOs which are actually pointers internally. This limits the size of a single argument in Java to 64-bit. As such, Jaccall can not pass or return a C struct by value. Jaccall works around this problem by allocating heap memory and copyin/reading struct-by-value data. Jaccall must then only pass a pointer between Java and the native side. 
 
-The drawback of this approach is that all returned struct-by-value data must still be freed manually!
+The drawback of this approach is that all returned struct-by-value data must be freed manually!
+
+#### Internals
+
+Jaccall has a compile time step to perform both fail-fast compile time checks and Java source code generation.
+To aid the `Linker` in processing a natively mapped Java class, the `LinkerGenerator` does an initial pass over any `@Lib` annotated class to verify it's integrity and mapping rules. If this succeeds, it does a second pass and generates a `Foo_Jaccall_LinkSymbols.java` soure file for every `Foo.java` annotated with `@Lib`. This file should not be used by application code. This file contains linker data to aid the `Linker` in linking the required native Java methods to it's C counterpart.
+
+For every mapped method, 4 parts of linker data is generated.
+- The method name (the C symbol name).
+- The number of arguments.
+- A JNI signature.
+- A Jaccall signature.
+
+If we reiterate our first mapping example
+```Java
+@ByVal(StructTest.class)
+public native long do_something(@Ptr(StructTest.class) long tst,
+                                byte field0,
+                                short field1,
+                                @Ptr(int.class) long field2,
+                                @Ptr(int.class) long field3);
+```
+
+The linker data for this mapping would look like
+- `"do_something"` The name of the method
+- `5` The number of arguments
+- `"(JBSJJ)J"` The JNI method signature.
+- `"pcspptcsiiip]"` The Jaccall signature.
+
+The first 4 items are trivial. The Jaccall signature requires some explanation.
 
 MORE TODO
 
