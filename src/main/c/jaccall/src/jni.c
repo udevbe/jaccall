@@ -343,7 +343,21 @@ void jni_call_handler(ffi_cif *cif, void *ret, void **args, void *user_data) {
 
     struct jni_call_data *call_data = user_data;
 
+    ffi_type **arg_types = call_data->cif->arg_types;
+    unsigned int nargs = call_data->cif->nargs;
     ffi_type* rtype = call_data->cif->rtype;
+
+    int i = 0;
+    for(; i < nargs; i++) {
+        if(arg_types[i]->type == FFI_TYPE_STRUCT) {
+            //struct by value
+//          void** struct_arg = args[i+2];
+//          void* struct_p = *struct_arg;
+//          args[i+2] = struct_p;
+            args[i+2] = *((void**)args[i+2]);
+        }
+    }
+
     if(rtype->type == FFI_TYPE_STRUCT){
         //struct by value
         void* rval = malloc(rtype->size);
@@ -361,8 +375,7 @@ void jni_call_handler(ffi_cif *cif, void *ret, void **args, void *user_data) {
  */
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env,
-                                                jclass clazz,
+JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env, jclass clazz,
                                                 jstring library,
                                                 jclass headerClazz,
                                                 jobjectArray symbols,

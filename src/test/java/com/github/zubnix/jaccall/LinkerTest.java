@@ -53,7 +53,12 @@ public class LinkerTest {
     }
 
     @Test
-    public void testStaticMethodCall() {
+    public void testReturnByReferencePassByValue() {
+        //TODO
+    }
+
+    @Test
+    public void testReturnByValuePassByReference() {
         //given
         Linker.link(libFilePath(),
                     Testing.class,
@@ -62,8 +67,8 @@ public class LinkerTest {
         final Pointer<TestStruct> testStructPointer = malloc(TestStruct.SIZE).castp(TestStruct.class);
         final TestStruct          testStruct        = testStructPointer.dref();
 
-        byte  field0 = 10;
-        short field1 = 20;
+        byte             field0 = 10;
+        short            field1 = 20;
         Pointer<Integer> field3 = nref(40);
 
         testStruct.field0(field0);
@@ -101,7 +106,6 @@ public class LinkerTest {
                                                                                     newField1,
                                                                                     newField2.address,
                                                                                     newField3.address));
-            System.err.println(TestStruct.SIZE);
 
             //then
             final TestStruct testStruct1 = testStructByValue.dref();
