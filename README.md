@@ -77,6 +77,8 @@ The Java mapping tries to match it's C counterpart as close as possible. There a
 | char | byte |
 | short | short |
 | int | int|
+| float | float |
+| double | double |
 | long | long |
 | long long | @Lng long |
 | struct foo | @ByVal(Foo.class) long |
