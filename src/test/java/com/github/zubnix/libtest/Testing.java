@@ -7,13 +7,6 @@ import com.github.zubnix.jaccall.Ptr;
 @Lib("testing")
 public class Testing {
     @ByVal(TestStruct.class)
-    public native long doTest(@Ptr(TestStruct.class) long tst,
-                              byte field0,
-                              short field1,
-                              @Ptr(int.class) long field2,
-                              @Ptr(int.class) long field3);
-
-    @ByVal(TestStruct.class)
     public static native long doStaticTest(@Ptr(TestStruct.class) long tst,
                                            byte field0,
                                            short field1,
