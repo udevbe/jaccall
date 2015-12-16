@@ -4,6 +4,7 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import static com.github.zubnix.jaccall.Size.sizeof;
 
@@ -34,7 +35,8 @@ final class PointerStruct extends Pointer<StructType> {
             final StructType structType = this.structClass.newInstance();
             final int structSize = sizeof(structType);
             byteBuffer.position(index * structSize);
-            final ByteBuffer slice = byteBuffer.slice();
+            final ByteBuffer slice = byteBuffer.slice()
+                                               .order(ByteOrder.nativeOrder());
             slice.limit(structSize);
             structType.buffer(slice);
             return structType;

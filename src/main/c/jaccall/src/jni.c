@@ -342,8 +342,16 @@ static
 void jni_call_handler(ffi_cif *cif, void *ret, void **args, void *user_data) {
 
     struct jni_call_data *call_data = user_data;
-    //skip 2 args (JNIEnv* & jclass/jobject)
-    ffi_call(call_data->cif, FFI_FN(call_data->symaddr), ret, &args[2]);
+
+    ffi_type* rtype = call_data->cif->rtype;
+    if(rtype->type == FFI_TYPE_STRUCT){
+        //struct by value
+        void* rval = malloc(rtype->size);
+        ffi_call(call_data->cif, FFI_FN(call_data->symaddr), rval, &args[2]);
+        *((void**)ret)=rval;
+    } else {
+        ffi_call(call_data->cif, FFI_FN(call_data->symaddr), ret, &args[2]);
+    }
 }
 
 /*

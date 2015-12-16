@@ -64,14 +64,19 @@ public class LinkerTest {
 
         byte  field0 = 10;
         short field1 = 20;
-        Pointer<Integer> field2 = nref(1,
-                                       11,
-                                       111);
         Pointer<Integer> field3 = nref(40);
 
         testStruct.field0(field0);
         testStruct.field1(field1);
-        testStruct.field2(field2);
+        testStruct.field2()
+                  .writei(1,
+                          1);
+        testStruct.field2()
+                  .writei(2,
+                          11);
+        testStruct.field2()
+                  .writei(3,
+                          111);
         testStruct.field3(field3);
 
         //when
@@ -80,9 +85,14 @@ public class LinkerTest {
 
             byte newField0 = 'a';
             short newField1 = 22;
-            Pointer<Integer> newField2 = nref(3,
-                                              33,
-                                              333);
+            int newField2_0 = 123;
+            int newField2_1 = 456;
+            int newField2_2 = 789;
+
+            Pointer<Integer> newField2 = nref(newField2_0,
+                                              newField2_1,
+                                              newField2_2);
+
             Pointer<Integer> newField3 = intp;
 
             final Pointer<TestStruct> testStructByValue = wrap(TestStruct.class,
@@ -91,17 +101,31 @@ public class LinkerTest {
                                                                                     newField1,
                                                                                     newField2.address,
                                                                                     newField3.address));
+            System.err.println(TestStruct.SIZE);
+
             //then
             final TestStruct testStruct1 = testStructByValue.dref();
-            assertThat(testStruct1.field0()).isEqualTo(field0);
-            assertThat(testStruct1.field1()).isEqualTo(field1);
-            assertThat(testStruct1.field2()).isEqualTo(field2);
-            assertThat(testStruct1.field3()).isEqualTo(field3);
+            assertThat(testStruct1.field0()).isEqualTo(newField0);
+            assertThat(testStruct1.field1()).isEqualTo(newField1);
+            assertThat(testStruct1.field2()
+                                  .dref(0)).isEqualTo(newField2_0);
+            assertThat(testStruct1.field2()
+                                  .dref(1)).isEqualTo(newField2_1);
+            assertThat(testStruct1.field2()
+                                  .dref(2)).isEqualTo(newField2_2);
+            assertThat(testStruct1.field3()).isEqualTo(newField3);
 
             assertThat(testStruct.field0()).isEqualTo(newField0);
-            assertThat(testStruct.field0()).isEqualTo(newField1);
-            assertThat(testStruct.field0()).isEqualTo(newField2);
-            assertThat(testStruct.field0()).isEqualTo(newField3);
+            assertThat(testStruct.field1()).isEqualTo(newField1);
+            assertThat(testStruct.field2()
+                                 .dref(0)).isEqualTo(newField2_0);
+            assertThat(testStruct.field2()
+                                 .dref(1)).isEqualTo(newField2_1);
+            assertThat(testStruct.field2()
+                                 .dref(2)).isEqualTo(newField2_2);
+            assertThat(testStruct.field3()).isEqualTo(newField3);
+
+            testStructByValue.close();
         }
     }
 }
