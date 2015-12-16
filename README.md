@@ -78,9 +78,17 @@ The Java mapping tries to match it's C counterpart as close as possible. There a
 | short | short |
 | int | int|
 | long | long |
-| long long | long |
+| long long | @Lng long |
 | struct foo | @ByVal(Foo.class) long |
 | foo* | @Ptr long|
+
+The Java primitive types `boolean` and `char` do not have a corresponding C type and are not allowed.
+
+#### By value, by reference
+
+Java does not support the notion of passing by reference or by value. By default, all method arguments are passed by value in Java, inlcuding POJOs which are actually pointers internally. This limits the size of a single argument in Java to 64-bit. As such, Jaccall can not pass or return a C struct by value. Jaccall works around this problem by allocating heap memory and copyin/reading struct-by-value data. Jaccall must then only pass a pointer to or from the native side. 
+
+The drawback of this approach is that all returned struct-by-value data must still be freed manually!
 
 MORE TODO
 
