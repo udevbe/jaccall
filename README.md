@@ -28,40 +28,60 @@ To call a C method, we must create a Java class where we define what C method we
 An example
 
 C
+`libsomething.so`
+`some_header.h`
 ```C
 struct test {
-    char field0;
-    short field1;
-    int field2;
-    int* field3;
+...
 };
-struct test doTest(struct test* tst,
-                   char field0,
-                   short field1,
-                   int field2,
-                   int* field3);
+...
+struct test do_something(struct test* tst,
+                         char field0,
+                         short field1,
+                         int[] field2,
+                         int* field3);
 ```
 
 Java
+`SomeHeader.java`
 ```Java
-@Lib("testing")
-public class Testing {
-    @ByVal(TestStruct.class)
-    public native long doTest(@Ptr(TestStruct.class) long tst,
-                              byte field0,
-                              short field1,
-                              int field2,
-                              @Ptr(int.class) long field3);
+@Lib("something")
+public class SomeHeader {
+    static {
+        Linker.link(SomeHeader.class);
+    }
+    
+    @ByVal(StructTest.class)
+    public native long do_something(@Ptr(StructTest.class) long tst,
+                                    byte field0,
+                                    short field1,
+                                    @Ptr(int.class) long field2,
+                                    @Ptr(int.class) long field3);
 }
 ```
-The class exposes the C header file to the Java side. However, simply exposing C functions is not enough. The linker needs to know how these symbols (methods) can be resolved. This is done by providing the `@Lib(...)` annotation. This annotation defines the library where the mapped symbols can be found.
+This Java class exposes the C header file `some_header.h` to the Java side and informs the linker where these symbols (methods) can be resolved. This is done by providing the `@Lib(...)` annotation who's value must match the name part of `libsomething.so`. This whole flow is triggered by calling `Linker.link(...)`.
+
+In order to pass data back and forth between Java and C, there are a few mapping rules to keep in mind.
+
+- Java method name must match C method name
+- Java method must be declared `native`
+- Java method must only consist of a specific set of primitives for both arguments and return type.
 
 #### Mapping
 
 The Java mapping tries to match it's C counterpart as close as possible. There are however a few non intuitive exceptions. Let's have a look on how C types map to their Java counterpart.
 
-MORE TODO
+| C | Java |
+|---|------|
+| char | byte |
+| short | short |
+| int | int|
+| long | long |
+| long long | long |
+| struct foo | @ByVal(Foo.class) long |
+| foo* | @Ptr long|
 
+MORE TODO
 
 # Struct API
 TODO
