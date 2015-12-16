@@ -65,6 +65,7 @@ In order to pass data back and forth between Java and C, there are a few mapping
 
 - Java method name must match C method name
 - Java method must be declared `native`
+- Java method must be declared `public`
 - Java method must only consist of a specific set of primitives for both arguments and return type.
 
 #### Mapping
