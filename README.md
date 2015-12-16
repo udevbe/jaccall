@@ -28,40 +28,73 @@ To call a C method, we must create a Java class where we define what C method we
 An example
 
 C
+`libsomething.so`
+`some_header.h`
 ```C
 struct test {
-    char field0;
-    short field1;
-    int field2;
-    int* field3;
+...
 };
-struct test doTest(struct test* tst,
-                   char field0,
-                   short field1,
-                   int field2,
-                   int* field3);
+...
+struct test do_something(struct test* tst,
+                         char field0,
+                         short field1,
+                         int[] field2,
+                         int* field3);
 ```
 
 Java
+`SomeHeader.java`
 ```Java
-@Lib("testing")
-public class Testing {
-    @ByVal(TestStruct.class)
-    public native long doTest(@Ptr(TestStruct.class) long tst,
-                              byte field0,
-                              short field1,
-                              int field2,
-                              @Ptr(int.class) long field3);
+@Lib("something")
+public class SomeHeader {
+    static {
+        Linker.link(SomeHeader.class);
+    }
+    
+    @ByVal(StructTest.class)
+    public native long do_something(@Ptr(StructTest.class) long tst,
+                                    byte field0,
+                                    short field1,
+                                    @Ptr(int.class) long field2,
+                                    @Ptr(int.class) long field3);
 }
 ```
-The class exposes the C header file to the Java side. However, simply exposing C functions is not enough. The linker needs to know how these symbols (methods) can be resolved. This is done by providing the `@Lib(...)` annotation. This annotation defines the library where the mapped symbols can be found.
+This Java class exposes the C header file `some_header.h` to the Java side and informs the linker where these symbols (methods) can be resolved. This is done by providing the `@Lib(...)` annotation who's value must match the name part of `libsomething.so`. This whole flow is triggered by calling `Linker.link(...)`.
+
+In order to pass data back and forth between Java and C, there are a few mapping rules to keep in mind.
+
+- Java method name must match C method name
+- Java method must be declared `native`
+- Java method must be declared `public`
+- Java method must only consist of a specific set of primitives for both arguments and return type.
 
 #### Mapping
 
 The Java mapping tries to match it's C counterpart as close as possible. There are however a few non intuitive exceptions. Let's have a look on how C types map to their Java counterpart.
 
-MORE TODO
+| C | Java |
+|---|------|
+| unsigned char or char | byte |
+| unsigned short or short | short |
+| unsigned int or int | int|
+| float | float |
+| double | double |
+| unsigned long or long | long |
+| unsigned long long or long long | @Lng long |
+| struct foo | @ByVal(Foo.class) long |
+| foo* | @Ptr(Foo.class) long|
 
+The Java primitive types `boolean` and `char` do not have a corresponding C type and are not allowed.
+
+The class argument for `@Ptr` is optional.
+
+#### By value, by reference
+
+Java does not support the notion of passing by reference or by value. By default, all method arguments are passed by value in Java, inlcuding POJOs which are actually pointers internally. This limits the size of a single argument in Java to 64-bit. As such, Jaccall can not pass or return a C struct by value. Jaccall works around this problem by allocating heap memory and copyin/reading struct-by-value data. Jaccall must then only pass a pointer to or from the native side. 
+
+The drawback of this approach is that all returned struct-by-value data must still be freed manually!
+
+MORE TODO
 
 # Struct API
 TODO
@@ -302,7 +335,7 @@ Following types are supported
 | unsigned long long or long long | Long or long | 
 | float | Float or float | 
 | double | Double or double | 
-| any_type* | Pointer | 
+| foo* | Pointer | 
 | char* | String |
 
 Java primitives like boolean (Boolean) or char (Character) are not supported for the simple reason that they do not have a good C counterpart. A boolean type does not exist in C, and a Java char is actually an unsigned 16-bit integer that is used as an utf-16 character as opposed to C's 8-bit char type.
