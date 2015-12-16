@@ -74,17 +74,19 @@ The Java mapping tries to match it's C counterpart as close as possible. There a
 
 | C | Java |
 |---|------|
-| char | byte |
-| short | short |
-| int | int|
+| unsigned char or char | byte |
+| unsigned short or short | short |
+| unsigned int or int | int|
 | float | float |
 | double | double |
-| long | long |
-| long long | @Lng long |
+| unsigned long or long | long |
+| unsigned long long or long long | @Lng long |
 | struct foo | @ByVal(Foo.class) long |
-| foo* | @Ptr long|
+| foo* | @Ptr(Foo.class) long|
 
 The Java primitive types `boolean` and `char` do not have a corresponding C type and are not allowed.
+
+The class argument for `@Ptr` is optional.
 
 #### By value, by reference
 
@@ -333,7 +335,7 @@ Following types are supported
 | unsigned long long or long long | Long or long | 
 | float | Float or float | 
 | double | Double or double | 
-| any_type* | Pointer | 
+| foo* | Pointer | 
 | char* | String |
 
 Java primitives like boolean (Boolean) or char (Character) are not supported for the simple reason that they do not have a good C counterpart. A boolean type does not exist in C, and a Java char is actually an unsigned 16-bit integer that is used as an utf-16 character as opposed to C's 8-bit char type.
