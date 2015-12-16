@@ -1,23 +1,34 @@
 Intro
 =====
 
-Experimental project for what is supposed to be a library similar to BridJ or JNA.
+Jaccall makes C libraries accessible from Java without the need to write any native code. It is project similar to JNA or BridJ.
 
-Goals are:
- - Simple usage.
- - Simple runtime API.
- - No config files.
- - Only C.
- - Linux only initially.
- - Support for Win/Lin/Mac - x86, x86_64, armsf, armhf.
- - Support for all common use cases: unions, callbacks, pointer-to-pointer, ...
- - Compile time annotation processor gathers all statically inferable information and generates runtime API independent code.
+Status: Incomplete
 
-Jaccall's does not try be Java, but instead tries to make C accessible in Java.
-This means:
+Jaccall's does not try to be Java, but instead tries to make C accessible in Java.
  - What you allocate, you must free yourself. watch out for memory leaks!
  - Cast to and from anything to anything. Watch out for cast mismatches!
  - Read and write to and from anything to anything. Watch out for segfaults!
+
+Design goals:
+ - Simple usage.
+ - Simple runtime API.
+ - No config files.
+ - C only.
+ - Support for Win/Lin/Mac/Android - x86, x86_64, armsf, armhf.
+ - Support for all common use cases: unions, callbacks, pointer-to-pointer, ...
+ 
+#### Comparison with other libraries
+
+Jaccall was born out of a frustration with existing solutions. Existing solutions have the nasty trade-off of being either complete but cumbersome API and slow runtime, or have excellent speed and good API but suffer from scope creep and lack support for armhf.
+
+Jaccall tries to remedy this by strictly adhering to the KISS princicple.
+
+#### Overview
+
+- [Linker API](#Linker-API)
+- [Struct API](#Struct-API)
+- [Pointer API](#Pointer-API)
 
 # Linker API
 
