@@ -2,10 +2,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
          <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.zubnix</groupId>
     <artifactId>jaccall.runtime</artifactId>
-    <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
+
+    <packaging>jar</packaging>
     <name>Java C call library</name>
 
     <parent>
@@ -13,7 +13,6 @@
         <groupId>com.github.zubnix</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-
 
     <properties>
         <!-- dependencies -->
@@ -29,12 +28,14 @@
     </properties>
 
     <dependencies>
+        <!-- runtime -->
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
             <version>${jsr305.version}</version>
         </dependency>
 
+        <!-- test -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
