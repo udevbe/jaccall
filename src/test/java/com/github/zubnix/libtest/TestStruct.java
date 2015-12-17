@@ -6,12 +6,12 @@ import com.github.zubnix.jaccall.Struct;
 import static com.github.zubnix.jaccall.CType.CHAR;
 import static com.github.zubnix.jaccall.CType.INT;
 import static com.github.zubnix.jaccall.CType.POINTER;
-import static com.github.zubnix.jaccall.CType.SHORT;
+import static com.github.zubnix.jaccall.CType.UNSIGNED_SHORT;
 
 @Struct(value = {
         @Field(type = CHAR,
                name = "field0"),
-        @Field(type = SHORT,
+        @Field(type = UNSIGNED_SHORT,
                name = "field1"),
         @Field(type = INT,
                cardinal = 3,

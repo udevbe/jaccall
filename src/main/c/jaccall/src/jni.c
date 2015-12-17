@@ -152,17 +152,32 @@ parse_struct(const char *jaccallstr,
             case 'c':
                 struct_fields[field_index] = &ffi_type_sint8;
                 break;
+            case 'C':
+                struct_fields[field_index] = &ffi_type_uint8;
+                break;
             case 's':
                 struct_fields[field_index] = &ffi_type_sint16;
+                break;
+            case 'S':
+                struct_fields[field_index] = &ffi_type_uint16;
                 break;
             case 'i':
                 struct_fields[field_index] = &ffi_type_sint32;
                 break;
+            case 'I':
+                struct_fields[field_index] = &ffi_type_uint32;
+                break;
             case 'j':
                 struct_fields[field_index] = &ffi_type_slong;
                 break;
+            case 'J':
+                struct_fields[field_index] = &ffi_type_ulong;
+                break;
             case 'l':
                 struct_fields[field_index] = &ffi_type_sint64;
+                break;
+            case 'L':
+                struct_fields[field_index] = &ffi_type_uint64;
                 break;
             case 'f':
                 struct_fields[field_index] = &ffi_type_float;
@@ -220,17 +235,32 @@ prep_ffi_arg(const char *jaccallstr, int *jaccall_str_index, ffi_type **arg) {
         case 'c':
             *arg = &ffi_type_sint8;
             break;
+        case 'C':
+            *arg = &ffi_type_uint8;
+            break;
         case 's':
             *arg = &ffi_type_sint16;
+            break;
+        case 'S':
+            *arg = &ffi_type_uint16;
             break;
         case 'i':
             *arg = &ffi_type_sint32;
             break;
+        case 'I':
+            *arg = &ffi_type_uint32;
+            break;
         case 'j':
             *arg = &ffi_type_slong;
             break;
+        case 'J':
+            *arg = &ffi_type_ulong;
+            break;
         case 'l':
             *arg = &ffi_type_sint64;
+            break;
+        case 'L':
+            *arg = &ffi_type_uint64;
             break;
         case 'f':
             *arg = &ffi_type_float;
@@ -306,6 +336,7 @@ void prep_jni_cif(ffi_cif *jni_cif, const char *jni_sig, int arg_size) {
                 type = &ffi_type_double;
                 break;
             case 'V' :
+                assert(!parameter);
                 type = &ffi_type_void;
                 break;
             case '(' :
