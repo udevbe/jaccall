@@ -3,7 +3,7 @@ Intro
 
 Jaccall makes C libraries accessible from Java without the need to write any native code. It is project similar to JNA or BridJ.
 
-Status: Incomplete
+Status: In development [![Build Status](https://travis-ci.org/Zubnix/jaccall.svg?branch=master)](https://travis-ci.org/Zubnix/jaccall)
 
 Jaccall's does not try to be Java, but instead tries to make C accessible in Java.
  - What you allocate, you must free yourself. watch out for memory leaks!
