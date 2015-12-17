@@ -1,7 +1,10 @@
-sudo: false
+notifications:
+  email: false
+
+sudo: required
+dist: trusty
 language: java
-branches:
-  only:
-    - master
+before_install:
+  - apt-get install libffi-dev
 install:
     - mvn package
