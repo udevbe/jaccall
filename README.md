@@ -3,7 +3,10 @@ Intro
 
 Jaccall makes C libraries accessible from Java without the need to write any native code. It is project similar to JNA or BridJ.
 
-Status: In development [![Build Status](https://travis-ci.org/Zubnix/jaccall.svg?branch=master)](https://travis-ci.org/Zubnix/jaccall)
+Status: 
+- No release
+- In development 
+- [![Build Status](https://travis-ci.org/Zubnix/jaccall.svg?branch=master)](https://travis-ci.org/Zubnix/jaccall)
 
 Jaccall's does not try to be Java, but instead tries to make C accessible in Java.
  - What you allocate, you must free yourself. watch out for memory leaks!
@@ -20,7 +23,7 @@ Design goals:
  
 #### Comparison with other libraries
 
-Jaccall was born out of a frustration with existing solutions. Existing solutions have the nasty trade-off of being either complete but cumbersome API and slow runtime, or have excellent speed and good API but suffer from scope creep and lack support for armhf.
+Jaccall was born out of a frustration with existing solutions. Existing solutions have the nasty trade-off of having a complete but cumbersome API and slow runtime, or have excellent speed and good API but suffer from scope creep and lack armhf support.
 
 Jaccall tries to remedy this by strictly adhering to the KISS princicple.
 
@@ -54,14 +57,14 @@ C
 ```C
 struct test {
     char field0;
-    short field1;
+    unsigned short field1;
     int field2[3];
     int *field3;
 };
 ...
 struct test do_something(struct test* tst,
                          char field0,
-                         short field1,
+                         unsigned short field1,
                          int* field2,
                          int* field3);
 ```
@@ -78,12 +81,14 @@ public class SomeHeader {
     @ByVal(StructTest.class)
     public native long do_something(@Ptr(StructTest.class) long tst,
                                     byte field0,
-                                    short field1,
+                                    @Unsigned short field1,
                                     @Ptr(int.class) long field2,
                                     @Ptr(int.class) long field3);
 }
 ```
-This Java class exposes the C header file `some_header.h` to the Java side and informs the linker where these symbols (methods) can be resolved. This is done by providing the `@Lib(...)` annotation who's value must match the name part of `libsomething.so`. This whole flow is triggered by calling `Linker.link(...)`.
+This Java class exposes the C header file `some_header.h` to the Java side and informs the linker where these symbols (methods) can be resolved. This is done by providing the `@Lib(...)` annotation who's value must match the name part of `libsomething.so`. This whole flow is triggered by calling `Linker.link(...)`. 
+
+Don't worry about the struct, that is handled in the [Struct API](#struct-api).
 
 In order to pass data back and forth between Java and C, there are a few mapping rules to keep in mind.
 
@@ -99,12 +104,17 @@ The Java mapping tries to match it's C counterpart as close as possible. There a
 | C | Java |
 |---|------|
 | unsigned char or char | byte |
-| unsigned short or short | short |
-| unsigned int or int | int|
+| unsigned char | @Unsigned byte |
+| short | short |
+| unsigned short | @Unsigned short |
+| int | int|
+| unsigned int | @Unsigned int|
+| long | long |
+| unsigned long | @Unsigned long |
+| long long | @Lng long |
+| unsigned long long | @Unsigned @Lng long |
 | float | float |
 | double | double |
-| unsigned long or long | long |
-| unsigned long long or long long | @Lng long |
 | struct foo | @ByVal(Foo.class) long |
 | foo* | @Ptr(Foo.class) long|
 
@@ -145,9 +155,31 @@ The linker data for this mapping would look like
 - `"do_something"` The name of the method
 - `5` The number of arguments
 - `"(JBSJJ)J"` The JNI method signature.
-- `"pcspptcsiiip]"` The Jaccall signature.
+- `"pcSpptcSiiip]"` The Jaccall signature.
 
 The first 4 items are trivial. The Jaccall signature requires some explanation.
+
+A Jaccall signature represents a method's arguments and return type in C. To accomplish this, a specific mapping is used.
+
+| Jaccall | C |
+|---------|---|
+| c | char|
+| C | unsigned char |
+| s | short |
+| S | unsigned short |
+| i | int |
+| I | unsigned int |
+| j | long|
+| J | unsigned long |
+| l | long long |
+| L | unsgined long long |
+| f | float |
+| d | double |
+| p | foo* |
+| t...] | struct |
+| v | void |
+
+
 
 MORE TODO
 
