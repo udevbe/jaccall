@@ -1,0 +1,7 @@
+sudo: false
+language: java
+branches:
+  only:
+    - master
+install:
+    - mvn package
