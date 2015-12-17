@@ -20,7 +20,7 @@ Design goals:
  
 #### Comparison with other libraries
 
-Jaccall was born out of a frustration with existing solutions. Existing solutions have the nasty trade-off of being either complete but cumbersome API and slow runtime, or have excellent speed and good API but suffer from scope creep and lack support for armhf.
+Jaccall was born out of a frustration with existing solutions. Existing solutions have the nasty trade-off of having a complete but cumbersome API and slow runtime, or have excellent speed and good API but suffer from scope creep and lack armhf support.
 
 Jaccall tries to remedy this by strictly adhering to the KISS princicple.
 
@@ -54,14 +54,14 @@ C
 ```C
 struct test {
     char field0;
-    short field1;
+    unsigned short field1;
     int field2[3];
     int *field3;
 };
 ...
 struct test do_something(struct test* tst,
                          char field0,
-                         short field1,
+                         unsigned short field1,
                          int* field2,
                          int* field3);
 ```
@@ -78,12 +78,14 @@ public class SomeHeader {
     @ByVal(StructTest.class)
     public native long do_something(@Ptr(StructTest.class) long tst,
                                     byte field0,
-                                    short field1,
+                                    @Unsigned short field1,
                                     @Ptr(int.class) long field2,
                                     @Ptr(int.class) long field3);
 }
 ```
-This Java class exposes the C header file `some_header.h` to the Java side and informs the linker where these symbols (methods) can be resolved. This is done by providing the `@Lib(...)` annotation who's value must match the name part of `libsomething.so`. This whole flow is triggered by calling `Linker.link(...)`.
+This Java class exposes the C header file `some_header.h` to the Java side and informs the linker where these symbols (methods) can be resolved. This is done by providing the `@Lib(...)` annotation who's value must match the name part of `libsomething.so`. This whole flow is triggered by calling `Linker.link(...)`. 
+
+Don't worry about the struct, that is handled in the [Struct API](#struct-api).
 
 In order to pass data back and forth between Java and C, there are a few mapping rules to keep in mind.
 
@@ -99,12 +101,17 @@ The Java mapping tries to match it's C counterpart as close as possible. There a
 | C | Java |
 |---|------|
 | unsigned char or char | byte |
-| unsigned short or short | short |
-| unsigned int or int | int|
+| unsigned char | @Unsigned byte |
+| short | short |
+| unsigned short | @Unsigned short |
+| int | int|
+| unsigned int | @Unsigned int|
+| long | long |
+| unsigned long | @Unsigned long |
+| long long | @Lng long |
+| unsigned long long | @Unsigned @Lng long |
 | float | float |
 | double | double |
-| unsigned long or long | long |
-| unsigned long long or long long | @Lng long |
 | struct foo | @ByVal(Foo.class) long |
 | foo* | @Ptr(Foo.class) long|
 
