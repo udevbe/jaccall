@@ -125,9 +125,9 @@ JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_readTestStructField1(JNIEnv *
  * Signature: (J)I
  */
 JNIEXPORT
-jint
+jlong
 JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_readTestStructField2(JNIEnv *env, jclass clazz, jlong address){
-     return (jint)((struct teststruct*)(intptr_t) address)->field2;
+     return (jlong)(intptr_t)((struct teststruct*)(intptr_t) address)->field2;
 }
 
 /*
@@ -161,17 +161,6 @@ JNIEXPORT
 void
 JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_writeTestStructField1(JNIEnv *env, jclass clazz, jlong address, jshort field1){
     ((struct teststruct*)(intptr_t) address)->field1 = (short) field1;
-}
-
-/*
- * Class:     com_github_zubnix_jaccall_JNITestUtil
- * Method:    writeTestStructField2
- * Signature: (JI)V
- */
-JNIEXPORT
-void
-JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_writeTestStructField2(JNIEnv *env, jclass clazz, jlong address, jint field2){
-    ((struct teststruct*)(intptr_t) address)->field2 = (int) field2;
 }
 
 /*

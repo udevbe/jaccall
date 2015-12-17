@@ -64,7 +64,7 @@ public class JNITestUtil {
 
     public static native short readTestStructField1(final long address);
 
-    public static native int readTestStructField2(final long address);
+    public static native long readTestStructField2(final long address);
 
     public static native long readTestStructField3(final long address);
 
@@ -73,9 +73,6 @@ public class JNITestUtil {
 
     public static native void writeTestStructField1(final long address,
                                                     short field1);
-
-    public static native void writeTestStructField2(final long address,
-                                                    int field2);
 
     public static native void writeTestStructField3(final long address,
                                                     long field3);
