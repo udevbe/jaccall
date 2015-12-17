@@ -1,17 +1,16 @@
 package com.github.zubnix.jaccall.compiletime;
 
 
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.RoundEnvironment;
-import javax.lang.model.element.TypeElement;
-import java.util.Set;
+import com.google.auto.common.BasicAnnotationProcessor;
+import com.google.auto.service.AutoService;
 
-public class LinkerGenerator extends AbstractProcessor {
+import javax.annotation.processing.Processor;
 
+@AutoService(Processor.class)
+public class LinkerGenerator extends BasicAnnotationProcessor {
 
     @Override
-    public boolean process(final Set<? extends TypeElement> annotations,
-                           final RoundEnvironment roundEnv) {
+    protected Iterable<? extends ProcessingStep> initSteps() {
         //TODO process @Lib classes
 
         //TODO check if all native methods have primitive only arguments and return types
@@ -46,7 +45,6 @@ public class LinkerGenerator extends AbstractProcessor {
         //TODO generate class that extends LinksSymbols
         //name postfix = "_Jaccall_" + LinkSymbols.class.getSimpleName();
 
-        return false;
+        return null;
     }
-
 }
