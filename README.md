@@ -3,7 +3,10 @@ Intro
 
 Jaccall makes C libraries accessible from Java without the need to write any native code. It is project similar to JNA or BridJ.
 
-Status: In development [![Build Status](https://travis-ci.org/Zubnix/jaccall.svg?branch=master)](https://travis-ci.org/Zubnix/jaccall)
+Status: 
+- No release
+- In development 
+- [![Build Status](https://travis-ci.org/Zubnix/jaccall.svg?branch=master)](https://travis-ci.org/Zubnix/jaccall)
 
 Jaccall's does not try to be Java, but instead tries to make C accessible in Java.
  - What you allocate, you must free yourself. watch out for memory leaks!
@@ -152,9 +155,31 @@ The linker data for this mapping would look like
 - `"do_something"` The name of the method
 - `5` The number of arguments
 - `"(JBSJJ)J"` The JNI method signature.
-- `"pcspptcsiiip]"` The Jaccall signature.
+- `"pcSpptcSiiip]"` The Jaccall signature.
 
 The first 4 items are trivial. The Jaccall signature requires some explanation.
+
+A Jaccall signature represents a method's arguments and return type in C. To accomplish this, a specific mapping is used.
+
+| Jaccall | C |
+|---------|---|
+| c | char|
+| C | unsigned char |
+| s | short |
+| S | unsigned short |
+| i | int |
+| I | unsigned int |
+| j | long|
+| J | unsigned long |
+| l | long long |
+| L | unsgined long long |
+| f | float |
+| d | double |
+| p | foo* |
+| t...] | struct |
+| v | void |
+
+
 
 MORE TODO
 
