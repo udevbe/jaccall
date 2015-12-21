@@ -19,6 +19,7 @@
         <jaccall.runtime>1.0-SNAPSHOT</jaccall.runtime>
         <auto-common.version>0.4</auto-common.version>
         <auto-service.version>1.0-rc2</auto-service.version>
+        <javapoet.version>1.4.0</javapoet.version>
 
         <!-- test -->
         <compile-testing.version>0.6</compile-testing.version>
@@ -38,6 +39,11 @@
             <groupId>com.google.auto</groupId>
             <artifactId>auto-common</artifactId>
             <version>${auto-common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup</groupId>
+            <artifactId>javapoet</artifactId>
+            <version>${javapoet.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.auto.service</groupId>
