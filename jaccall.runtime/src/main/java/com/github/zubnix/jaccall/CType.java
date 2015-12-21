@@ -85,7 +85,7 @@ public enum CType {
         return javaType;
     }
 
-    char getSignature() {
+    public char getSignature() {
         return this.signature;
     }
 }
