@@ -112,9 +112,6 @@ public class CheckWellFormedLib implements BasicAnnotationProcessor.ProcessingSt
 
             isNotPtr(element,
                      "@Unsigned annotation can not be placed in conjunction with @Ptr annotation.");
-
-            isNotByVal(element,
-                       "@Unsigned annotation can not be placed in conjunction with @ByVal annotation.");
         }
     }
 
