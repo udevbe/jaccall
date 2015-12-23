@@ -75,4 +75,17 @@ public enum CType {
         this.javaType = javaType;
         this.signature = signature;
     }
+
+    public int getSize() {
+        return size;
+    }
+
+    @Nonnull
+    public Class<?> getJavaType() {
+        return javaType;
+    }
+
+    public char getSignature() {
+        return signature;
+    }
 }

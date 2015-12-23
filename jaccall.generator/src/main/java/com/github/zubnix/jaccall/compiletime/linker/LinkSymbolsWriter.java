@@ -2,7 +2,9 @@ package com.github.zubnix.jaccall.compiletime.linker;
 
 
 import com.github.zubnix.jaccall.ByVal;
+import com.github.zubnix.jaccall.CType;
 import com.github.zubnix.jaccall.Lib;
+import com.github.zubnix.jaccall.LinkSymbols;
 import com.github.zubnix.jaccall.Lng;
 import com.github.zubnix.jaccall.Ptr;
 import com.github.zubnix.jaccall.Struct;
@@ -37,12 +39,13 @@ import java.util.Set;
 
 public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingStep {
 
+    private static final String UNSIGNED = Unsigned.class.getSimpleName();
+    private static final String LNG      = Lng.class.getSimpleName();
+    private static final String PTR      = Ptr.class.getSimpleName();
+    private static final String BY_VAL   = ByVal.class.getSimpleName();
+    private static final String STRUCT   = Struct.class.getSimpleName();
+
     private final LinkerGenerator linkerGenerator;
-    private final TypeMirror      unsignedType;
-    private final TypeMirror      lngType;
-    private final TypeMirror      ptrType;
-    private final TypeMirror      byValType;
-    private final TypeMirror      structType;
     private final Elements        elementUtils;
 
     public LinkSymbolsWriter(final LinkerGenerator linkerGenerator) {
@@ -50,18 +53,6 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
 
         elementUtils = linkerGenerator.getProcessingEnvironment()
                                       .getElementUtils();
-
-        unsignedType = elementUtils.getTypeElement(Unsigned.class.getName())
-                                   .asType();
-        lngType = elementUtils.getTypeElement(Lng.class.getName())
-                              .asType();
-        ptrType = elementUtils.getTypeElement(Ptr.class.getName())
-                              .asType();
-        byValType = elementUtils.getTypeElement(ByVal.class.getName())
-                                .asType();
-
-        structType = elementUtils.getTypeElement(Struct.class.getName())
-                                 .asType();
     }
 
     @Override
@@ -109,20 +100,32 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
             StringBuilder jniSignaturesArray = new StringBuilder();
             jniSignaturesArray.append("new String[]{");
 
-            methodNamesArray.append(methodNames.get(0));
+            methodNamesArray.append('"')
+                            .append(methodNames.get(0))
+                            .append('"');
             argSizesArray.append(argSizes.get(0));
-            jaccallSignaturesArray.append(jaccallSignatures.get(0));
-            jniSignaturesArray.append(jniSignatures.get(0));
+            jaccallSignaturesArray.append('"')
+                                  .append(jaccallSignatures.get(0))
+                                  .append('"');
+            jniSignaturesArray.append('"')
+                              .append(jniSignatures.get(0))
+                              .append('"');
 
             for (int i = 1, methodNamesSize = methodNames.size(); i < methodNamesSize; i++) {
                 methodNamesArray.append(',')
-                                .append(methodNames.get(i));
+                                .append('"')
+                                .append(methodNames.get(i))
+                                .append('"');
                 argSizesArray.append(',')
                              .append(argSizes.get(i));
                 jaccallSignaturesArray.append(',')
-                                      .append(jaccallSignatures.get(i));
+                                      .append('"')
+                                      .append(jaccallSignatures.get(i))
+                                      .append('"');
                 jniSignaturesArray.append(',')
-                                  .append(jniSignatures.get(i));
+                                  .append('"')
+                                  .append(jniSignatures.get(i))
+                                  .append('"');
             }
 
             methodNamesArray.append('}');
@@ -151,6 +154,7 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
             TypeSpec typeSpec = TypeSpec.classBuilder(element.getSimpleName() + "_Jaccall_LinkSymbols")
                                         .addModifiers(Modifier.PUBLIC)
                                         .addModifiers(Modifier.FINAL)
+                                        .superclass(LinkSymbols.class)
                                         .addMethod(constructor)
                                         .build();
 
@@ -244,16 +248,19 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
             final DeclaredType annotationType = annotationMirror.getAnnotationType();
             final Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = annotationMirror.getElementValues();
 
-            if (annotationType.equals(this.ptrType)) {
+            final String simpleName = annotationType.asElement()
+                                                    .getSimpleName()
+                                                    .toString();
+            if (simpleName.equals(PTR)) {
                 ptr = elementValues;
             }
-            else if (annotationType.equals(this.unsignedType)) {
+            else if (simpleName.equals(UNSIGNED)) {
                 unsigned = elementValues;
             }
-            else if (annotationType.equals(this.lngType)) {
+            else if (simpleName.equals(LNG)) {
                 lng = elementValues;
             }
-            else if (annotationType.equals(this.byValType)) {
+            else if (simpleName.equals(BY_VAL)) {
                 byVal = elementValues;
             }
         }
@@ -341,9 +348,13 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
         }
 
         structByVal.append('t');
-        for (AnnotationMirror annotationMirror : structClass.getAnnotationMirrors()) {
+        for (AnnotationMirror annotationMirror : structTypeType.asElement()
+                                                               .getAnnotationMirrors()) {
             if (annotationMirror.getAnnotationType()
-                                .equals(this.structType)) {
+                                .asElement()
+                                .getSimpleName()
+                                .toString()
+                                .equals(STRUCT)) {
                 Boolean union;
 
                 for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> structAttribute : annotationMirror.getElementValues()
@@ -384,7 +395,7 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
             AnnotationMirror fieldAnnotationMirror = (AnnotationMirror) fieldAnnotation.getValue();
 
             VariableElement cType = null;
-            Integer cardinality = 0;
+            Integer cardinality = 1;
             TypeMirror dataType = null;
 
             for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> fieldAttribute : fieldAnnotationMirror.getElementValues()
@@ -393,6 +404,7 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
                                   .getSimpleName()
                                   .toString()
                                   .equals("type")) {
+
                     cType = (VariableElement) fieldAttribute.getValue()
                                                             .getValue();
                 }
@@ -417,13 +429,12 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
                     dataType = (TypeMirror) fieldAttribute.getValue()
                                                           .getValue();
                 }
+            }
 
-
-                for (int i = 0; i < cardinality; i++) {
-                    parseFieldAnnotation(structByVal,
-                                         cType,
-                                         dataType);
-                }
+            for (int i = 0; i < cardinality; i++) {
+                parseFieldAnnotation(structByVal,
+                                     cType,
+                                     dataType);
             }
         }
     }
@@ -432,23 +443,24 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
                                       final VariableElement cType,
                                       final TypeMirror dataType) {
 
-        for (VariableElement variableElement : ElementFilter.fieldsIn(cType.getEnclosedElements())) {
-            if (variableElement.getSimpleName()
-                               .toString()
-                               .equals("signature")) {
-                String signature = variableElement.getConstantValue()
-                                                  .toString();
-                if (signature.equals("t")) {
-                    parseStructFields(variableElement,
-                                      structByVal,
-                                      dataType);
-                }
-                else {
-                    structByVal.append(signature);
-                }
-
-                break;
+        char signature = CType.valueOf(cType.getSimpleName()
+                                            .toString())
+                              .getSignature();
+        if (signature == 't') {
+            if (dataType == null) {
+                linkerGenerator.getProcessingEnvironment()
+                               .getMessager()
+                               .printMessage(Diagnostic.Kind.ERROR,
+                                             "Data type of struct must be specified.",
+                                             cType);
             }
+
+            parseStructFields(cType,
+                              structByVal,
+                              dataType);
+        }
+        else {
+            structByVal.append(signature);
         }
     }
 

@@ -247,7 +247,7 @@ public class CheckWellFormedLib implements BasicAnnotationProcessor.ProcessingSt
 
     private void isPrimitive(final Element element,
                              final TypeKind kind) {
-        if (!kind.isPrimitive()) {
+        if (!kind.isPrimitive() && !kind.equals(TypeKind.VOID)) {
             linkerGenerator.getProcessingEnvironment()
                            .getMessager()
                            .printMessage(Diagnostic.Kind.ERROR,
