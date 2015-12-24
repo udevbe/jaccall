@@ -7,11 +7,15 @@ import com.google.common.collect.SetMultimap;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
 import java.lang.annotation.Annotation;
@@ -49,8 +53,46 @@ public final class CheckWellFormedStruct implements BasicAnnotationProcessor.Pro
     }
 
     private void extendsGeneratedStructType(final TypeElement typeElement) {
-        final DeclaredType declaredType = (DeclaredType) typeElement.getSuperclass();
 
+        final String typeName = typeElement.getSimpleName()
+                                           .toString();
+        final String expectedSuperTypeName = typeName + "_Jaccall_StructType";
+
+        final Element enclosingElement = typeElement.getEnclosingElement();
+        if (!enclosingElement.getKind()
+                             .equals(ElementKind.PACKAGE)) {
+            return;
+        }
+
+        final PackageElement packageElement = (PackageElement) enclosingElement;
+        final String expectedPackage = packageElement.getQualifiedName()
+                                                     .toString();
+
+        final TypeMirror superclass = typeElement.getSuperclass();
+        if (superclass.getKind()
+                      .equals(TypeKind.NONE)) {
+            return;
+        }
+
+        final DeclaredType declaredType     = (DeclaredType) superclass;
+        final Element      superTypeElement = declaredType.asElement();
+        final String superTypeName = superTypeElement.getSimpleName()
+                                                     .toString();
+        String                    superTypePackage = "";
+        final Set<PackageElement> packageElements  = ElementFilter.packagesIn(Collections.singleton(superTypeElement.getEnclosingElement()));
+
+        for (final PackageElement superPackageElement : packageElements) {
+            superTypePackage = superPackageElement.getQualifiedName()
+                                                  .toString();
+        }
+
+        if (!superTypeName.equals(expectedSuperTypeName) || !superTypePackage.equals(expectedPackage)) {
+            this.structGenerator.getProcessingEnvironment()
+                                .getMessager()
+                                .printMessage(Diagnostic.Kind.ERROR,
+                                              "@Struct annotation should be placed on type that extends '" + expectedSuperTypeName + "' from package '" + expectedPackage + "'",
+                                              typeElement);
+        }
     }
 
     private void isTopLevel(final TypeElement typeElement) {
@@ -90,6 +132,7 @@ public final class CheckWellFormedStruct implements BasicAnnotationProcessor.Pro
                                                                                                                      .entrySet()) {
                     if (entry.getKey()
                              .getSimpleName()
+                             .toString()
                              .equals("value")) {
                         final List<? extends AnnotationValue> values = (List<? extends AnnotationValue>) entry.getValue()
                                                                                                               .getValue();
@@ -98,7 +141,7 @@ public final class CheckWellFormedStruct implements BasicAnnotationProcessor.Pro
                                                 .getMessager()
                                                 .printMessage(Diagnostic.Kind.ERROR,
                                                               "@Struct annotation must have at least one field.",
-                                                              entry.getKey());
+                                                              typeElement);
                         }
                     }
                 }
