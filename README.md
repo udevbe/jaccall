@@ -35,8 +35,9 @@ Jaccall tries to remedy this by strictly adhering to the KISS princicple.
   - [By value By reference](#by-value-by-reference)
   - [Internals](#internals)
 - [Struct API](#struct-api)
+  - [An example](#an-example)
 - [Pointer API](#pointer-api)
-  - [A basic example](#a-basic-example)
+  - [An example](#an-example)
   - [Stack vs Heap](#stack-vs-heap)
   - [Memory read write](#memory-read-write)
   - [Arrays](#arrays)
@@ -229,11 +230,50 @@ struct foo {
 will thus be mapped as `tIIIItp]]`
 
 # Struct API
-TODO
+
+#### An example
+
+Jaccall allows you to map any struct type in Java. Let's have a look at our previous example that contained a struct definition:
+
+C `some_header.h`
+```C
+struct test {
+    char field0;
+    unsigned short field1;
+    int field2[3];
+    int *field3;
+};
+...
+```
+Mapping this struct in Java using Jaccall:
+```Java
+...
+import static com.github.zubnix.jaccall.CType.CHAR;
+import static com.github.zubnix.jaccall.CType.INT;
+import static com.github.zubnix.jaccall.CType.POINTER;
+import static com.github.zubnix.jaccall.CType.UNSIGNED_SHORT;
+...
+@Struct(value = {
+    @Field(type = CHAR,
+           name = "field0"),
+    @Field(type = UNSIGNED_SHORT,
+           name = "field1") ,
+    @Field(type = INT,
+           cardinality = 3,
+           name = "field2"),
+    @Field(type = POINTER,
+           dataType = int.class,
+           name = "field3")
+})
+public class Test extends Test_Jaccall_StructType {
+}
+```
+
+MORE TODO
 
 # Pointer API
 
-#### A basic example
+#### An example
 
 C
 ```C
