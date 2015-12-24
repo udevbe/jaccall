@@ -24,37 +24,37 @@ abstract class TestStruct_Jaccall_StructType extends StructType {
         super(SIZE);
     }
 
-    public byte field0() {
+    public final byte field0() {
         return buffer().get(OFFSET_0);
     }
 
-    public void field0(byte field0) {
+    public final void field0(byte field0) {
         buffer().put(OFFSET_0,
                      field0);
     }
 
-    public short field1() {
+    public final short field1() {
         return buffer().getShort(OFFSET_1);
     }
 
-    public void field1(short field1) {
+    public final void field1(short field1) {
         buffer().putShort(OFFSET_1,
                           field1);
     }
 
-    public Pointer<Integer> field2() {
+    public final Pointer<Integer> field2() {
         return Pointer.wrap(Integer.class,
                             buffer())
                       .offset(OFFSET_2);
     }
 
-    public Pointer<Integer> field3() {
+    public final Pointer<Integer> field3() {
         return Pointer.wrap(Integer.class,
                             address(buffer(),
                                     OFFSET_3));
     }
 
-    public void field3(Pointer<Integer> field3) {
+    public final void field3(Pointer<Integer> field3) {
         address(buffer(),
                 OFFSET_3,
                 field3);

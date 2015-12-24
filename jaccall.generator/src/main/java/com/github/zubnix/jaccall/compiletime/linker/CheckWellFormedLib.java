@@ -22,10 +22,11 @@ import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.Set;
 
-public class CheckWellFormedLib implements BasicAnnotationProcessor.ProcessingStep {
+public final class CheckWellFormedLib implements BasicAnnotationProcessor.ProcessingStep {
+
     private final LinkerGenerator linkerGenerator;
 
-    public CheckWellFormedLib(final LinkerGenerator linkerGenerator) {this.linkerGenerator = linkerGenerator;}
+    CheckWellFormedLib(final LinkerGenerator linkerGenerator) {this.linkerGenerator = linkerGenerator;}
 
     @Override
     public Set<? extends Class<? extends Annotation>> annotations() {
