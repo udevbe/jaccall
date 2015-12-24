@@ -506,56 +506,416 @@ public class LinkSymbolsWriterTest {
 
     @Test
     public void testShortReturnTypeGeneration() {
-
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    public static native short doStaticTest();\n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new LinkerGenerator());
+        //then
+        compileTester.compilesWithoutError()
+                     .and()
+                     .generatesSources(JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                       "package com.github.zubnix.libtest;\n" +
+                                                                       "\n" +
+                                                                       "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "\n" +
+                                                                       "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
+                                                                       "  public Testing_Jaccall_LinkSymbols() {\n" +
+                                                                       "    super(new String[]{\"doStaticTest\"},new byte[]{0},new String[]{\"s\"},new String[]{\"()S\"});\n" +
+                                                                       "  }\n" +
+                                                                       "}"));
     }
 
     @Test
     public void testUnsignedShortReturnTypeGeneration() {
-
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "import com.github.zubnix.jaccall.Unsigned;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    @Unsigned" +
+                                                                          "    public static native short doStaticTest();\n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new LinkerGenerator());
+        //then
+        compileTester.compilesWithoutError()
+                     .and()
+                     .generatesSources(JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                       "package com.github.zubnix.libtest;\n" +
+                                                                       "\n" +
+                                                                       "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "\n" +
+                                                                       "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
+                                                                       "  public Testing_Jaccall_LinkSymbols() {\n" +
+                                                                       "    super(new String[]{\"doStaticTest\"},new byte[]{0},new String[]{\"S\"},new String[]{\"()S\"});\n" +
+                                                                       "  }\n" +
+                                                                       "}"));
     }
 
     @Test
     public void testIntReturnTypeGeneration() {
-
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    public static native int doStaticTest();\n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new LinkerGenerator());
+        //then
+        compileTester.compilesWithoutError()
+                     .and()
+                     .generatesSources(JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                       "package com.github.zubnix.libtest;\n" +
+                                                                       "\n" +
+                                                                       "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "\n" +
+                                                                       "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
+                                                                       "  public Testing_Jaccall_LinkSymbols() {\n" +
+                                                                       "    super(new String[]{\"doStaticTest\"},new byte[]{0},new String[]{\"i\"},new String[]{\"()I\"});\n" +
+                                                                       "  }\n" +
+                                                                       "}"));
     }
 
     @Test
     public void testUnsignedIntReturnTypeGeneration() {
-
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "import com.github.zubnix.jaccall.Unsigned;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    @Unsigned" +
+                                                                          "    public static native int doStaticTest();\n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new LinkerGenerator());
+        //then
+        compileTester.compilesWithoutError()
+                     .and()
+                     .generatesSources(JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                       "package com.github.zubnix.libtest;\n" +
+                                                                       "\n" +
+                                                                       "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "\n" +
+                                                                       "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
+                                                                       "  public Testing_Jaccall_LinkSymbols() {\n" +
+                                                                       "    super(new String[]{\"doStaticTest\"},new byte[]{0},new String[]{\"I\"},new String[]{\"()I\"});\n" +
+                                                                       "  }\n" +
+                                                                       "}"));
     }
 
     @Test
     public void testLongReturnTypeGeneration() {
-
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    public static native long doStaticTest();\n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new LinkerGenerator());
+        //then
+        compileTester.compilesWithoutError()
+                     .and()
+                     .generatesSources(JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                       "package com.github.zubnix.libtest;\n" +
+                                                                       "\n" +
+                                                                       "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "\n" +
+                                                                       "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
+                                                                       "  public Testing_Jaccall_LinkSymbols() {\n" +
+                                                                       "    super(new String[]{\"doStaticTest\"},new byte[]{0},new String[]{\"j\"},new String[]{\"()J\"});\n" +
+                                                                       "  }\n" +
+                                                                       "}"));
     }
 
     @Test
     public void testUnsignedLongReturnTypeGeneration() {
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "import com.github.zubnix.jaccall.Unsigned;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    @Unsigned" +
+                                                                          "    public static native long doStaticTest();\n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new LinkerGenerator());
+        //then
+        compileTester.compilesWithoutError()
+                     .and()
+                     .generatesSources(JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                       "package com.github.zubnix.libtest;\n" +
+                                                                       "\n" +
+                                                                       "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "\n" +
+                                                                       "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
+                                                                       "  public Testing_Jaccall_LinkSymbols() {\n" +
+                                                                       "    super(new String[]{\"doStaticTest\"},new byte[]{0},new String[]{\"J\"},new String[]{\"()J\"});\n" +
+                                                                       "  }\n" +
+                                                                       "}"));
+    }
 
+    @Test
+    public void testLongLongReturnTypeGeneration() {
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;" +
+                                                                          "import com.github.zubnix.jaccall.Lng;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    @Lng" +
+                                                                          "    public static native long doStaticTest();\n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new LinkerGenerator());
+        //then
+        compileTester.compilesWithoutError()
+                     .and()
+                     .generatesSources(JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                       "package com.github.zubnix.libtest;\n" +
+                                                                       "\n" +
+                                                                       "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "\n" +
+                                                                       "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
+                                                                       "  public Testing_Jaccall_LinkSymbols() {\n" +
+                                                                       "    super(new String[]{\"doStaticTest\"},new byte[]{0},new String[]{\"l\"},new String[]{\"()J\"});\n" +
+                                                                       "  }\n" +
+                                                                       "}"));
     }
 
     @Test
     public void testUnsignedLongLongReturnTypeGeneration() {
-
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;" +
+                                                                          "import com.github.zubnix.jaccall.Lng;\n" +
+                                                                          "import com.github.zubnix.jaccall.Unsigned;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    @Unsigned @Lng" +
+                                                                          "    public static native long doStaticTest();\n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new LinkerGenerator());
+        //then
+        compileTester.compilesWithoutError()
+                     .and()
+                     .generatesSources(JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                       "package com.github.zubnix.libtest;\n" +
+                                                                       "\n" +
+                                                                       "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "\n" +
+                                                                       "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
+                                                                       "  public Testing_Jaccall_LinkSymbols() {\n" +
+                                                                       "    super(new String[]{\"doStaticTest\"},new byte[]{0},new String[]{\"L\"},new String[]{\"()J\"});\n" +
+                                                                       "  }\n" +
+                                                                       "}"));
     }
 
     @Test
     public void testFloatReturnTypeGeneration() {
-
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    public static native float doStaticTest();\n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new LinkerGenerator());
+        //then
+        compileTester.compilesWithoutError()
+                     .and()
+                     .generatesSources(JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                       "package com.github.zubnix.libtest;\n" +
+                                                                       "\n" +
+                                                                       "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "\n" +
+                                                                       "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
+                                                                       "  public Testing_Jaccall_LinkSymbols() {\n" +
+                                                                       "    super(new String[]{\"doStaticTest\"},new byte[]{0},new String[]{\"f\"},new String[]{\"()F\"});\n" +
+                                                                       "  }\n" +
+                                                                       "}"));
     }
 
     @Test
     public void testDoubleReturnTypeGeneration() {
-
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    public static native double doStaticTest();\n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new LinkerGenerator());
+        //then
+        compileTester.compilesWithoutError()
+                     .and()
+                     .generatesSources(JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                       "package com.github.zubnix.libtest;\n" +
+                                                                       "\n" +
+                                                                       "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "\n" +
+                                                                       "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
+                                                                       "  public Testing_Jaccall_LinkSymbols() {\n" +
+                                                                       "    super(new String[]{\"doStaticTest\"},new byte[]{0},new String[]{\"d\"},new String[]{\"()D\"});\n" +
+                                                                       "  }\n" +
+                                                                       "}"));
     }
 
     @Test
     public void testPointerReturnTypeGeneration() {
-
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "import com.github.zubnix.jaccall.Ptr;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    @Ptr" +
+                                                                          "    public static native long doStaticTest();\n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new LinkerGenerator());
+        //then
+        compileTester.compilesWithoutError()
+                     .and()
+                     .generatesSources(JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                       "package com.github.zubnix.libtest;\n" +
+                                                                       "\n" +
+                                                                       "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "\n" +
+                                                                       "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
+                                                                       "  public Testing_Jaccall_LinkSymbols() {\n" +
+                                                                       "    super(new String[]{\"doStaticTest\"},new byte[]{0},new String[]{\"p\"},new String[]{\"()J\"});\n" +
+                                                                       "  }\n" +
+                                                                       "}"));
     }
 
     @Test
     public void testStructByValReturnTypeGeneration() {
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "import com.github.zubnix.jaccall.ByVal;\n" +
+                                                                          "import com.github.zubnix.jaccall.compiletime.linker.TestStruct;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    @ByVal(TestStruct.class)\n" +
+                                                                          "    public static native long doStaticTest();\n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new LinkerGenerator());
+        //then
+        compileTester.compilesWithoutError()
+                     .and()
+                     .generatesSources(JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                       "package com.github.zubnix.libtest;\n" +
+                                                                       "\n" +
+                                                                       "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "\n" +
+                                                                       "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
+                                                                       "  public Testing_Jaccall_LinkSymbols() {\n" +
+                                                                       "    super(new String[]{\"doStaticTest\"},new byte[]{0},new String[]{\"tcSiiiptlf]]\"},new String[]{\"()J\"});\n" +
+                                                                       "  }\n" +
+                                                                       "}"));
+    }
 
+    @Test
+    public void testAllMixed() {
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "import com.github.zubnix.jaccall.ByVal;\n" +
+                                                                          "import com.github.zubnix.jaccall.Unsigned;\n" +
+                                                                          "import com.github.zubnix.jaccall.Ptr;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lng;\n" +
+                                                                          "import com.github.zubnix.jaccall.compiletime.linker.TestStruct;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    @ByVal(TestStruct.class)\n" +
+                                                                          "    public static native long doStaticTest(@Unsigned int arg0, float arg1, double arg2, byte arg3);\n" +
+                                                                          "\n" +
+                                                                          "    @Unsigned" +
+                                                                          "    public native long doTest(@Ptr long arg0, @Lng long arg1, @ByVal(TestStruct.class) long arg2);\n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new LinkerGenerator());
+        //then
+        compileTester.compilesWithoutError()
+                     .and()
+                     .generatesSources(JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                       "package com.github.zubnix.libtest;\n" +
+                                                                       "\n" +
+                                                                       "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "\n" +
+                                                                       "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
+                                                                       "  public Testing_Jaccall_LinkSymbols() {\n" +
+                                                                       "    super(new String[]{\"doStaticTest\",\"doTest\"},new byte[]{4,3},new String[]{\"IfdctcSiiiptlf]]\",\"pltcSiiiptlf]]J\"},new String[]{\"(IFDB)J\",\"(JJJ)J\"});\n" +
+                                                                       "  }\n" +
+                                                                       "}"));
     }
 }
