@@ -46,7 +46,7 @@ final class PointerDouble extends Pointer<Double> {
         final DoubleBuffer buffer = byteBuffer.asDoubleBuffer();
         buffer.clear();
         buffer.position(index);
-        for (Double aDouble : val) {
+        for (final Double aDouble : val) {
             buffer.put(aDouble);
         }
     }

@@ -26,7 +26,7 @@ final class JNI {
                    tempFile);
             System.load(tempFile.getAbsolutePath());
         }
-        catch (IOException e) {
+        catch (final IOException e) {
             throw new Error(e);
         }
     }
@@ -35,7 +35,7 @@ final class JNI {
                                final File tempFile) throws IOException {
         final FileOutputStream fos    = new FileOutputStream(tempFile);
         final byte[]           buffer = new byte[4096];
-        int                    read   = -1;
+        int                    read;
         while ((read = libStream.read(buffer)) != -1) {
             fos.write(buffer,
                       0,

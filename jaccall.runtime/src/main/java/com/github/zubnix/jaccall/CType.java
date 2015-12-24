@@ -77,15 +77,15 @@ public enum CType {
     }
 
     public int getSize() {
-        return size;
+        return this.size;
     }
 
     @Nonnull
     public Class<?> getJavaType() {
-        return javaType;
+        return this.javaType;
     }
 
     public char getSignature() {
-        return signature;
+        return this.signature;
     }
 }

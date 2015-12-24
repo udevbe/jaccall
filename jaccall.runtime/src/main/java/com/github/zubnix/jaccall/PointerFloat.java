@@ -45,7 +45,7 @@ final class PointerFloat extends Pointer<Float> {
         final FloatBuffer buffer = byteBuffer.asFloatBuffer();
         buffer.clear();
         buffer.position(index);
-        for (Float aFloat : val) {
+        for (final Float aFloat : val) {
             buffer.put(aFloat);
         }
     }

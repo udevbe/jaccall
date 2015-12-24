@@ -68,7 +68,7 @@ final class PointerCLong extends Pointer<CLong> {
             final LongBuffer buffer = byteBuffer.asLongBuffer();
             buffer.clear();
             buffer.position(index);
-            for (CLong cLong : val) {
+            for (final CLong cLong : val) {
                 buffer.put(cLong.longValue());
             }
         }
@@ -77,7 +77,7 @@ final class PointerCLong extends Pointer<CLong> {
             final IntBuffer buffer = byteBuffer.asIntBuffer();
             buffer.clear();
             buffer.position(index);
-            for (CLong cLong : val) {
+            for (final CLong cLong : val) {
                 buffer.put(cLong.intValue());
             }
         }

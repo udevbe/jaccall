@@ -33,7 +33,7 @@ public class LinkerTest {
                    tempFile);
             return tempFile.getAbsolutePath();
         }
-        catch (IOException e) {
+        catch (final IOException e) {
             throw new Error(e);
         }
     }
@@ -41,7 +41,7 @@ public class LinkerTest {
     private static void unpack(final InputStream libStream,
                                final File tempFile) throws IOException {
         final FileOutputStream fos    = new FileOutputStream(tempFile);
-        byte[]                 buffer = new byte[4096];
+        final byte[]           buffer = new byte[4096];
         int                    read   = -1;
         while ((read = libStream.read(buffer)) != -1) {
             fos.write(buffer,
@@ -67,9 +67,9 @@ public class LinkerTest {
         final Pointer<TestStruct> testStructPointer = malloc(TestStruct.SIZE).castp(TestStruct.class);
         final TestStruct          testStruct        = testStructPointer.dref();
 
-        byte             field0 = 10;
-        short            field1 = 20;
-        Pointer<Integer> field3 = nref(40);
+        final byte             field0 = 10;
+        final short            field1 = 20;
+        final Pointer<Integer> field3 = nref(40);
 
         testStruct.field0(field0);
         testStruct.field1(field1);
@@ -88,17 +88,17 @@ public class LinkerTest {
         try (Pointer<TestStruct> tst = testStructPointer;
              Pointer<Integer> intp = nref(44)) {
 
-            byte newField0 = 'a';
-            short newField1 = 22;
-            int newField2_0 = 123;
-            int newField2_1 = 456;
-            int newField2_2 = 789;
+            final byte newField0 = 'a';
+            final short newField1 = 22;
+            final int newField2_0 = 123;
+            final int newField2_1 = 456;
+            final int newField2_2 = 789;
 
-            Pointer<Integer> newField2 = nref(newField2_0,
-                                              newField2_1,
-                                              newField2_2);
+            final Pointer<Integer> newField2 = nref(newField2_0,
+                                                    newField2_1,
+                                                    newField2_2);
 
-            Pointer<Integer> newField3 = intp;
+            final Pointer<Integer> newField3 = intp;
 
             final Pointer<TestStruct> testStructByValue = wrap(TestStruct.class,
                                                                Testing.doStaticTest(tst.address,

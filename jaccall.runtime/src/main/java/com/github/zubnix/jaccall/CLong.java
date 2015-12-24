@@ -3,7 +3,7 @@ package com.github.zubnix.jaccall;
 
 public final class CLong extends Number {
 
-    private long value;
+    private final long value;
 
     public CLong(final long value) {
         this.value = value;
@@ -12,22 +12,22 @@ public final class CLong extends Number {
 
     @Override
     public int intValue() {
-        return (int) value;
+        return (int) this.value;
     }
 
     @Override
     public long longValue() {
-        return value;
+        return this.value;
     }
 
     @Override
     public float floatValue() {
-        return value;
+        return this.value;
     }
 
     @Override
     public double doubleValue() {
-        return value;
+        return this.value;
     }
 
     @Override
@@ -37,11 +37,11 @@ public final class CLong extends Number {
 
         final CLong cLong = (CLong) o;
 
-        return value == cLong.value;
+        return this.value == cLong.value;
     }
 
     @Override
     public int hashCode() {
-        return (int) (value ^ (value >>> 32));
+        return (int) (this.value ^ (this.value >>> 32));
     }
 }

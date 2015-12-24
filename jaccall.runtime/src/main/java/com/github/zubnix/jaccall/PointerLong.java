@@ -46,7 +46,7 @@ final class PointerLong extends Pointer<Long> {
         final LongBuffer buffer = byteBuffer.asLongBuffer();
         buffer.clear();
         buffer.position(index);
-        for (Long aLong : val) {
+        for (final Long aLong : val) {
             buffer.put(aLong);
         }
     }

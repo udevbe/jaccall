@@ -45,7 +45,7 @@ public class PointerShort extends Pointer<Short> {
         final ShortBuffer buffer = byteBuffer.asShortBuffer();
         buffer.clear();
         buffer.position(index);
-        for (Short aShort : val) {
+        for (final Short aShort : val) {
             buffer.put(aShort);
         }
     }

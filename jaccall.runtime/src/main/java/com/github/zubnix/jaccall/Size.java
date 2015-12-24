@@ -52,7 +52,7 @@ public final class Size {
         return 1;
     }
 
-    public static int sizeof(@Nonnull StructType structType) {
+    public static int sizeof(@Nonnull final StructType structType) {
         return structType.size;
     }
 }

@@ -57,16 +57,16 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
 
     @Override
     public void process(final SetMultimap<Class<? extends Annotation>, Element> elementsByAnnotation) {
-        for (Element element : elementsByAnnotation.values()) {
+        for (final Element element : elementsByAnnotation.values()) {
 
-            List<String> methodNames = new LinkedList<>();
-            List<Byte> argSizes = new LinkedList<>();
-            List<String> jaccallSignatures = new LinkedList<>();
-            List<String> jniSignatures = new LinkedList<>();
+            final List<String> methodNames = new LinkedList<>();
+            final List<Byte> argSizes = new LinkedList<>();
+            final List<String> jaccallSignatures = new LinkedList<>();
+            final List<String> jniSignatures = new LinkedList<>();
 
-            TypeElement typeElement = (TypeElement) element;
+            final TypeElement typeElement = (TypeElement) element;
 
-            for (ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
+            for (final ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
                 //gather link symbol information for each native method
                 if (executableElement.getModifiers()
                                      .contains(Modifier.NATIVE)) {
@@ -86,13 +86,13 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
                 return;
             }
 
-            StringBuilder methodNamesArray = new StringBuilder();
+            final StringBuilder methodNamesArray = new StringBuilder();
             methodNamesArray.append("new String[]{");
-            StringBuilder argSizesArray = new StringBuilder();
+            final StringBuilder argSizesArray = new StringBuilder();
             argSizesArray.append("new byte[]{");
-            StringBuilder jaccallSignaturesArray = new StringBuilder();
+            final StringBuilder jaccallSignaturesArray = new StringBuilder();
             jaccallSignaturesArray.append("new String[]{");
-            StringBuilder jniSignaturesArray = new StringBuilder();
+            final StringBuilder jniSignaturesArray = new StringBuilder();
             jniSignaturesArray.append("new String[]{");
 
             methodNamesArray.append('"')
@@ -128,47 +128,40 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
             jaccallSignaturesArray.append('}');
             jniSignaturesArray.append('}');
 
-            StringBuilder superStatement = new StringBuilder();
-            superStatement.append("super(")
-                          .append(methodNamesArray.toString())
-                          .append(',')
-                          .append(argSizesArray.toString())
-                          .append(',')
-                          .append(jaccallSignaturesArray.toString())
-                          .append(',')
-                          .append(jniSignaturesArray.toString())
-                          .append(")");
-
 
             final MethodSpec constructor = MethodSpec.constructorBuilder()
                                                      .addModifiers(Modifier.PUBLIC)
-                                                     .addStatement(superStatement.toString())
+                                                     .addStatement("super(" +
+                                                                   methodNamesArray.toString() + ','
+                                                                   + argSizesArray.toString() + ','
+                                                                   + jaccallSignaturesArray.toString() + ','
+                                                                   + jniSignaturesArray.toString() + ")")
                                                      .build();
 
 
-            TypeSpec typeSpec = TypeSpec.classBuilder(element.getSimpleName() + "_Jaccall_LinkSymbols")
-                                        .addModifiers(Modifier.PUBLIC)
-                                        .addModifiers(Modifier.FINAL)
-                                        .superclass(LinkSymbols.class)
-                                        .addMethod(constructor)
-                                        .build();
+            final TypeSpec typeSpec = TypeSpec.classBuilder(element.getSimpleName() + "_Jaccall_LinkSymbols")
+                                              .addModifiers(Modifier.PUBLIC)
+                                              .addModifiers(Modifier.FINAL)
+                                              .superclass(LinkSymbols.class)
+                                              .addMethod(constructor)
+                                              .build();
 
             // 0 if we have a non top level type, or 1 if we do.
-            for (PackageElement packageElement : ElementFilter.packagesIn(Collections.singletonList(element.getEnclosingElement()))) {
-                JavaFile javaFile = JavaFile.builder(packageElement.getQualifiedName()
-                                                                   .toString(),
-                                                     typeSpec)
-                                            .build();
+            for (final PackageElement packageElement : ElementFilter.packagesIn(Collections.singletonList(element.getEnclosingElement()))) {
+                final JavaFile javaFile = JavaFile.builder(packageElement.getQualifiedName()
+                                                                         .toString(),
+                                                           typeSpec)
+                                                  .build();
                 try {
-                    javaFile.writeTo(linkerGenerator.getProcessingEnvironment()
-                                                    .getFiler());
+                    javaFile.writeTo(this.linkerGenerator.getProcessingEnvironment()
+                                                         .getFiler());
                 }
-                catch (IOException e) {
-                    linkerGenerator.getProcessingEnvironment()
-                                   .getMessager()
-                                   .printMessage(Diagnostic.Kind.ERROR,
-                                                 "Could not write linksymbols source file: \n" + javaFile.toString(),
-                                                 element);
+                catch (final IOException e) {
+                    this.linkerGenerator.getProcessingEnvironment()
+                                        .getMessager()
+                                        .printMessage(Diagnostic.Kind.ERROR,
+                                                      "Could not write linksymbols source file: \n" + javaFile.toString(),
+                                                      element);
                     e.printStackTrace();
                 }
             }
@@ -177,9 +170,9 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
 
     private void parseJniSignature(final ExecutableElement executableElement,
                                    final List<String> jniSignatures) {
-        StringBuilder jniSignature = new StringBuilder();
+        final StringBuilder jniSignature = new StringBuilder();
         jniSignature.append('(');
-        for (VariableElement variableElement : executableElement.getParameters()) {
+        for (final VariableElement variableElement : executableElement.getParameters()) {
             jniSignature.append(parseJNIChar(variableElement.asType(),
                                              variableElement));
         }
@@ -209,11 +202,11 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
             case VOID:
                 return 'V';
             default:
-                linkerGenerator.getProcessingEnvironment()
-                               .getMessager()
-                               .printMessage(Diagnostic.Kind.ERROR,
-                                             "Unsupported type " + typeMirror,
-                                             element);
+                this.linkerGenerator.getProcessingEnvironment()
+                                    .getMessager()
+                                    .printMessage(Diagnostic.Kind.ERROR,
+                                                  "Unsupported type " + typeMirror,
+                                                  element);
                 return 0;
         }
     }
@@ -221,8 +214,8 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
 
     private void parseJaccallSignature(final ExecutableElement executableElement,
                                        final List<String> jaccallSignatures) {
-        StringBuilder jaccallSignature = new StringBuilder();
-        for (VariableElement variableElement : executableElement.getParameters()) {
+        final StringBuilder jaccallSignature = new StringBuilder();
+        for (final VariableElement variableElement : executableElement.getParameters()) {
             jaccallSignature.append(parseJaccallString(variableElement.asType(),
                                                        variableElement));
         }
@@ -239,7 +232,7 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
         Map<? extends ExecutableElement, ? extends AnnotationValue> ptr      = null;
         Map<? extends ExecutableElement, ? extends AnnotationValue> byVal    = null;
 
-        for (AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
+        for (final AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
             final DeclaredType annotationType = annotationMirror.getAnnotationType();
             final Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = annotationMirror.getElementValues();
 
@@ -300,24 +293,24 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
             case VOID:
                 return "v";
             default:
-                linkerGenerator.getProcessingEnvironment()
-                               .getMessager()
-                               .printMessage(Diagnostic.Kind.ERROR,
-                                             "Unsupported type " + typeMirror,
-                                             element);
+                this.linkerGenerator.getProcessingEnvironment()
+                                    .getMessager()
+                                    .printMessage(Diagnostic.Kind.ERROR,
+                                                  "Unsupported type " + typeMirror,
+                                                  element);
                 return "";
         }
     }
 
     private String parseByVal(final Map<? extends ExecutableElement, ? extends AnnotationValue> byVal) {
-        StringBuilder structByVal = new StringBuilder();
-        for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> annotationEntry : byVal.entrySet()) {
+        final StringBuilder structByVal = new StringBuilder();
+        for (final Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> annotationEntry : byVal.entrySet()) {
             if (annotationEntry.getKey()
                                .getSimpleName()
                                .toString()
                                .equals("value")) {
                 final AnnotationValue value = annotationEntry.getValue();
-                TypeMirror structClass = (TypeMirror) value.getValue();
+                final TypeMirror structClass = (TypeMirror) value.getValue();
 
                 parseStructFields(annotationEntry.getKey(),
                                   structByVal,
@@ -328,23 +321,23 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
     }
 
     private void parseStructFields(final Element element,
-                                   StringBuilder structByVal,
+                                   final StringBuilder structByVal,
                                    final TypeMirror structClass) {
         final DeclaredType structTypeType = (DeclaredType) structClass;
         if (structTypeType.asElement()
                           .getSimpleName()
                           .toString()
                           .equals("StructType")) {
-            linkerGenerator.getProcessingEnvironment()
-                           .getMessager()
-                           .printMessage(Diagnostic.Kind.ERROR,
-                                         "Declared struct type must be a subclass of 'com.github.zubnix.jaccall.StructType'.",
-                                         element);
+            this.linkerGenerator.getProcessingEnvironment()
+                                .getMessager()
+                                .printMessage(Diagnostic.Kind.ERROR,
+                                              "Declared struct type must be a subclass of 'com.github.zubnix.jaccall.StructType'.",
+                                              element);
         }
 
         structByVal.append('t');
-        for (AnnotationMirror annotationMirror : structTypeType.asElement()
-                                                               .getAnnotationMirrors()) {
+        for (final AnnotationMirror annotationMirror : structTypeType.asElement()
+                                                                     .getAnnotationMirrors()) {
             if (annotationMirror.getAnnotationType()
                                 .asElement()
                                 .getSimpleName()
@@ -352,8 +345,8 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
                                 .equals(STRUCT)) {
                 Boolean union;
 
-                for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> structAttribute : annotationMirror.getElementValues()
-                                                                                                                         .entrySet()) {
+                for (final Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> structAttribute : annotationMirror.getElementValues()
+                                                                                                                               .entrySet()) {
                     if (structAttribute.getKey()
                                        .getSimpleName()
                                        .toString()
@@ -365,14 +358,14 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
                                             .getSimpleName()
                                             .toString()
                                             .equals("value")) {
-                        List<? extends AnnotationValue> fieldAnnotations = (List<? extends AnnotationValue>) structAttribute.getValue()
-                                                                                                                            .getValue();
+                        final List<? extends AnnotationValue> fieldAnnotations = (List<? extends AnnotationValue>) structAttribute.getValue()
+                                                                                                                                  .getValue();
                         if (fieldAnnotations.isEmpty()) {
-                            linkerGenerator.getProcessingEnvironment()
-                                           .getMessager()
-                                           .printMessage(Diagnostic.Kind.ERROR,
-                                                         "Emptry struct not allowed.",
-                                                         structAttribute.getKey());
+                            this.linkerGenerator.getProcessingEnvironment()
+                                                .getMessager()
+                                                .printMessage(Diagnostic.Kind.ERROR,
+                                                              "Emptry struct not allowed.",
+                                                              structAttribute.getKey());
                         }
 
                         parseFieldAnnotations(structByVal,
@@ -386,15 +379,15 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
 
     private void parseFieldAnnotations(final StringBuilder structByVal,
                                        final List<? extends AnnotationValue> fieldAnnotations) {
-        for (AnnotationValue fieldAnnotation : fieldAnnotations) {
-            AnnotationMirror fieldAnnotationMirror = (AnnotationMirror) fieldAnnotation.getValue();
+        for (final AnnotationValue fieldAnnotation : fieldAnnotations) {
+            final AnnotationMirror fieldAnnotationMirror = (AnnotationMirror) fieldAnnotation.getValue();
 
             VariableElement cType = null;
             Integer cardinality = 1;
             TypeMirror dataType = null;
 
-            for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> fieldAttribute : fieldAnnotationMirror.getElementValues()
-                                                                                                                         .entrySet()) {
+            for (final Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> fieldAttribute : fieldAnnotationMirror.getElementValues()
+                                                                                                                               .entrySet()) {
                 if (fieldAttribute.getKey()
                                   .getSimpleName()
                                   .toString()
@@ -410,11 +403,11 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
                     cardinality = (Integer) fieldAttribute.getValue()
                                                           .getValue();
                     if (cardinality < 1) {
-                        linkerGenerator.getProcessingEnvironment()
-                                       .getMessager()
-                                       .printMessage(Diagnostic.Kind.ERROR,
-                                                     "Cardinality of struct field must be at least 1.",
-                                                     fieldAttribute.getKey());
+                        this.linkerGenerator.getProcessingEnvironment()
+                                            .getMessager()
+                                            .printMessage(Diagnostic.Kind.ERROR,
+                                                          "Cardinality of struct field must be at least 1.",
+                                                          fieldAttribute.getKey());
                     }
                 }
                 else if (fieldAttribute.getKey()
@@ -438,16 +431,16 @@ public class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingSte
                                       final VariableElement cType,
                                       final TypeMirror dataType) {
 
-        char signature = CType.valueOf(cType.getSimpleName()
-                                            .toString())
-                              .getSignature();
+        final char signature = CType.valueOf(cType.getSimpleName()
+                                                  .toString())
+                                    .getSignature();
         if (signature == 't') {
             if (dataType == null) {
-                linkerGenerator.getProcessingEnvironment()
-                               .getMessager()
-                               .printMessage(Diagnostic.Kind.ERROR,
-                                             "Data type of struct must be specified.",
-                                             cType);
+                this.linkerGenerator.getProcessingEnvironment()
+                                    .getMessager()
+                                    .printMessage(Diagnostic.Kind.ERROR,
+                                                  "Data type of struct must be specified.",
+                                                  cType);
             }
 
             parseStructFields(cType,

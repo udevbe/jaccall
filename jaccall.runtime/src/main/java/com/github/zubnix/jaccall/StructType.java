@@ -8,13 +8,13 @@ import static java.nio.ByteBuffer.allocate;
 public abstract class StructType {
 
 
-    protected static int newOffset(int align,
-                                   int offset) {
+    protected static int newOffset(final int align,
+                                   final int offset) {
         return (offset + align - 1) & ~(align - 1);
     }
 
     protected static long address(final ByteBuffer buffer,
-                                  int offset) {
+                                  final int offset) {
         final long pointerSize = Size.sizeof((Pointer) null);
         final long address;
 
@@ -29,8 +29,8 @@ public abstract class StructType {
     }
 
     protected static void address(final ByteBuffer buffer,
-                                  int offset,
-                                  Pointer<?> pointer) {
+                                  final int offset,
+                                  final Pointer<?> pointer) {
         final long pointerSize = Size.sizeof((Pointer) null);
 
         if (pointerSize == 8) {

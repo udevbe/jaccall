@@ -46,7 +46,7 @@ final class PointerInt extends Pointer<Integer> {
         final IntBuffer buffer = byteBuffer.asIntBuffer();
         buffer.clear();
         buffer.position(index);
-        for (Integer integer : val) {
+        for (final Integer integer : val) {
             buffer.put(integer);
         }
     }

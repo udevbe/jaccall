@@ -3,17 +3,17 @@ package com.github.zubnix.jaccall;
 
 public final class Linker {
 
-    private static String POSTFIX = "_Jaccall_" + LinkSymbols.class.getSimpleName();
+    private static final String POSTFIX = "_Jaccall_" + LinkSymbols.class.getSimpleName();
 
-    public static void link(Class<?>... headers) {
+    public static void link(final Class<?>... headers) {
         try {
-            for (Class<?> header : headers) {
+            for (final Class<?> header : headers) {
                 final Lib libAnnotation = header.getAnnotation(Lib.class);
                 if (libAnnotation != null) {
-                    LinkSymbols linkSymbols = (LinkSymbols) header.getClassLoader()
-                                                                  .loadClass(header.getName() +
-                                                                             POSTFIX)
-                                                                  .newInstance();
+                    final LinkSymbols linkSymbols = (LinkSymbols) header.getClassLoader()
+                                                                        .loadClass(header.getName() +
+                                                                                   POSTFIX)
+                                                                        .newInstance();
                     final String libName = libAnnotation.value();
                     //TODO libname resolving is platform depended
                     link("lib" + libName + ".so",
@@ -28,8 +28,8 @@ public final class Linker {
         }
     }
 
-    public static void link(String libraryPath,
-                            Class<?> header,
+    public static void link(final String libraryPath,
+                            final Class<?> header,
                             final LinkSymbols linkSymbols) {
 
         JNI.link(libraryPath,

@@ -33,7 +33,7 @@ class PointerString extends Pointer<String> {
         byteBuffer.position(index);
         final StringBuilder sb = new StringBuilder(byteBuffer.limit());
         while (byteBuffer.remaining() > 0) {
-            char c = (char) byteBuffer.get();
+            final char c = (char) byteBuffer.get();
             if (c == '\0') {
                 break;
             }
@@ -57,7 +57,7 @@ class PointerString extends Pointer<String> {
                 @Nonnegative final int index,
                 final String... val) {
         byteBuffer.position(index);
-        for (String s : val) {
+        for (final String s : val) {
             CHARSET_ENCODER.encode(CharBuffer.wrap(s),
                                    byteBuffer,
                                    true);

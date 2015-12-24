@@ -6,7 +6,7 @@ import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 
 final class PointerByte extends Pointer<Byte> {
-    PointerByte(Type type,
+    PointerByte(final Type type,
                 final long address,
                 final ByteBuffer buffer) {
         super(type,
@@ -42,7 +42,7 @@ final class PointerByte extends Pointer<Byte> {
                        final Byte... val) {
         byteBuffer.clear();
         byteBuffer.position(index);
-        for (Byte aByte : val) {
+        for (final Byte aByte : val) {
             byteBuffer.put(aByte);
         }
     }

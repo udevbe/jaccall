@@ -15,22 +15,22 @@ public class CheckWellFormedLibTest {
     @Test
     public void testLibOnNestedClass() {
         //given
-        JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.UpperTesting",
-                                                                    "package com.github.zubnix.libtest;\n" +
-                                                                    "import com.github.zubnix.jaccall.Lib;\n" +
-                                                                    "import com.github.zubnix.jaccall.Ptr;\n" +
-                                                                    "import com.github.zubnix.jaccall.Unsigned;\n" +
-                                                                    "\n" +
-                                                                    "public class UpperTesting {" +
-                                                                    "   @Lib(\"testing\")\n" +
-                                                                    "   public static class Testing {\n" +
-                                                                    "       public static native long doStaticTest(long tst,\n" +
-                                                                    "                                              byte field0,\n" +
-                                                                    "                                              @Unsigned short field1,\n" +
-                                                                    "                                              @Ptr(int.class) long field2,\n" +
-                                                                    "                                              @Ptr(int.class) long field3);\n" +
-                                                                    "   }" +
-                                                                    "}");
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.UpperTesting",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "import com.github.zubnix.jaccall.Ptr;\n" +
+                                                                          "import com.github.zubnix.jaccall.Unsigned;\n" +
+                                                                          "\n" +
+                                                                          "public class UpperTesting {" +
+                                                                          "   @Lib(\"testing\")\n" +
+                                                                          "   public static class Testing {\n" +
+                                                                          "       public static native long doStaticTest(long tst,\n" +
+                                                                          "                                              byte field0,\n" +
+                                                                          "                                              @Unsigned short field1,\n" +
+                                                                          "                                              @Ptr(int.class) long field2,\n" +
+                                                                          "                                              @Ptr(int.class) long field3);\n" +
+                                                                          "   }" +
+                                                                          "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
@@ -44,20 +44,20 @@ public class CheckWellFormedLibTest {
     @Test
     public void testLibNotOnClass() {
         //given
-        JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
-                                                                    "package com.github.zubnix.libtest;\n" +
-                                                                    "import com.github.zubnix.jaccall.Lib;\n" +
-                                                                    "import com.github.zubnix.jaccall.Ptr;\n" +
-                                                                    "import com.github.zubnix.jaccall.Unsigned;\n" +
-                                                                    "\n" +
-                                                                    "@Lib(\"testing\")\n" +
-                                                                    "public interface Testing {\n" + // <----
-                                                                    "    long doStaticTest(long tst,\n" +
-                                                                    "                      byte field0,\n" +
-                                                                    "                      @Unsigned short field1,\n" +
-                                                                    "                      @Ptr(int.class) long field2,\n" +
-                                                                    "                      @Ptr(int.class) long field3);\n" +
-                                                                    "}");
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "import com.github.zubnix.jaccall.Ptr;\n" +
+                                                                          "import com.github.zubnix.jaccall.Unsigned;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public interface Testing {\n" + // <----
+                                                                          "    long doStaticTest(long tst,\n" +
+                                                                          "                      byte field0,\n" +
+                                                                          "                      @Unsigned short field1,\n" +
+                                                                          "                      @Ptr(int.class) long field2,\n" +
+                                                                          "                      @Ptr(int.class) long field3);\n" +
+                                                                          "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
@@ -71,22 +71,22 @@ public class CheckWellFormedLibTest {
     @Test
     public void testNotAPrimitive() {
         //given
-        JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
-                                                                    "package com.github.zubnix.libtest;\n" +
-                                                                    "import com.github.zubnix.jaccall.Lib;\n" +
-                                                                    "import com.github.zubnix.jaccall.Ptr;\n" +
-                                                                    "import com.github.zubnix.jaccall.Unsigned;\n" +
-                                                                    "\n" +
-                                                                    "@Lib(\"testing\")\n" +
-                                                                    "public class Testing {\n" +
-                                                                    "    public static native " +
-                                                                    "                         Long doStaticTest(" + // <----
-                                                                    "                                           long tst,\n" +
-                                                                    "                                           byte field0,\n" +
-                                                                    "                                           @Unsigned short field1,\n" +
-                                                                    "                                           @Ptr(int.class) long field2,\n" +
-                                                                    "                                           @Ptr(int.class) long field3);\n" +
-                                                                    "}");
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "import com.github.zubnix.jaccall.Ptr;\n" +
+                                                                          "import com.github.zubnix.jaccall.Unsigned;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    public static native " +
+                                                                          "                         Long doStaticTest(" + // <----
+                                                                          "                                           long tst,\n" +
+                                                                          "                                           byte field0,\n" +
+                                                                          "                                           @Unsigned short field1,\n" +
+                                                                          "                                           @Ptr(int.class) long field2,\n" +
+                                                                          "                                           @Ptr(int.class) long field3);\n" +
+                                                                          "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
@@ -100,20 +100,20 @@ public class CheckWellFormedLibTest {
     @Test
     public void testPtrAnnotationNotOnPrimitiveLong() {
         //given
-        JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
-                                                                    "package com.github.zubnix.libtest;\n" +
-                                                                    "import com.github.zubnix.jaccall.Lib;\n" +
-                                                                    "import com.github.zubnix.jaccall.Ptr;\n" +
-                                                                    "import com.github.zubnix.jaccall.Unsigned;\n" +
-                                                                    "\n" +
-                                                                    "@Lib(\"testing\")\n" +
-                                                                    "public class Testing {\n" +
-                                                                    "    public static native long doStaticTest(long tst,\n" +
-                                                                    "                                           byte field0,\n" +
-                                                                    "                                           @Unsigned short field1,\n" +
-                                                                    "                                           @Ptr(int.class) int field2,\n" + // <----
-                                                                    "                                           @Ptr(int.class) long field3);\n" +
-                                                                    "}");
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "import com.github.zubnix.jaccall.Ptr;\n" +
+                                                                          "import com.github.zubnix.jaccall.Unsigned;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    public static native long doStaticTest(long tst,\n" +
+                                                                          "                                           byte field0,\n" +
+                                                                          "                                           @Unsigned short field1,\n" +
+                                                                          "                                           @Ptr(int.class) int field2,\n" + // <----
+                                                                          "                                           @Ptr(int.class) long field3);\n" +
+                                                                          "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
@@ -127,22 +127,22 @@ public class CheckWellFormedLibTest {
     @Test
     public void testByValAnnotationNotOnPrimitiveLong() {
         //given
-        JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
-                                                                    "package com.github.zubnix.libtest;\n" +
-                                                                    "import com.github.zubnix.jaccall.Lib;\n" +
-                                                                    "import com.github.zubnix.jaccall.ByVal;\n" +
-                                                                    "import com.github.zubnix.jaccall.StructType;\n" +
-                                                                    "import com.github.zubnix.jaccall.Ptr;\n" +
-                                                                    "import com.github.zubnix.jaccall.Unsigned;\n" +
-                                                                    "\n" +
-                                                                    "@Lib(\"testing\")\n" +
-                                                                    "public class Testing {\n" +
-                                                                    "    public static native long doStaticTest(long tst,\n" +
-                                                                    "                                           byte field0,\n" +
-                                                                    "                                           @Unsigned short field1,\n" +
-                                                                    "                                           @ByVal(StructType.class) int field2,\n" + // <----
-                                                                    "                                           @Ptr(int.class) long field3);\n" +
-                                                                    "}");
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "import com.github.zubnix.jaccall.ByVal;\n" +
+                                                                          "import com.github.zubnix.jaccall.StructType;\n" +
+                                                                          "import com.github.zubnix.jaccall.Ptr;\n" +
+                                                                          "import com.github.zubnix.jaccall.Unsigned;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    public static native long doStaticTest(long tst,\n" +
+                                                                          "                                           byte field0,\n" +
+                                                                          "                                           @Unsigned short field1,\n" +
+                                                                          "                                           @ByVal(StructType.class) int field2,\n" + // <----
+                                                                          "                                           @Ptr(int.class) long field3);\n" +
+                                                                          "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
@@ -156,22 +156,22 @@ public class CheckWellFormedLibTest {
     @Test
     public void testByValAnnotationInConjunctionWithPtrAnnotation() {
         //given
-        JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
-                                                                    "package com.github.zubnix.libtest;\n" +
-                                                                    "import com.github.zubnix.jaccall.Lib;\n" +
-                                                                    "import com.github.zubnix.jaccall.ByVal;\n" +
-                                                                    "import com.github.zubnix.jaccall.StructType;\n" +
-                                                                    "import com.github.zubnix.jaccall.Ptr;\n" +
-                                                                    "import com.github.zubnix.jaccall.Unsigned;\n" +
-                                                                    "\n" +
-                                                                    "@Lib(\"testing\")\n" +
-                                                                    "public class Testing {\n" +
-                                                                    "    public static native long doStaticTest(long tst,\n" +
-                                                                    "                                           byte field0,\n" +
-                                                                    "                                           @Unsigned short field1,\n" +
-                                                                    "                                           @ByVal(StructType.class) @Ptr(long.class) long field2,\n" + // <----
-                                                                    "                                           @Ptr(int.class) long field3);\n" +
-                                                                    "}");
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "import com.github.zubnix.jaccall.ByVal;\n" +
+                                                                          "import com.github.zubnix.jaccall.StructType;\n" +
+                                                                          "import com.github.zubnix.jaccall.Ptr;\n" +
+                                                                          "import com.github.zubnix.jaccall.Unsigned;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    public static native long doStaticTest(long tst,\n" +
+                                                                          "                                           byte field0,\n" +
+                                                                          "                                           @Unsigned short field1,\n" +
+                                                                          "                                           @ByVal(StructType.class) @Ptr(long.class) long field2,\n" + // <----
+                                                                          "                                           @Ptr(int.class) long field3);\n" +
+                                                                          "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
@@ -185,22 +185,22 @@ public class CheckWellFormedLibTest {
     @Test
     public void testByValAnnotationInConjunctionWithUnsignedAnnotation() {
         //given
-        JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
-                                                                    "package com.github.zubnix.libtest;\n" +
-                                                                    "import com.github.zubnix.jaccall.Lib;\n" +
-                                                                    "import com.github.zubnix.jaccall.ByVal;\n" +
-                                                                    "import com.github.zubnix.jaccall.StructType;\n" +
-                                                                    "import com.github.zubnix.jaccall.Ptr;\n" +
-                                                                    "import com.github.zubnix.jaccall.Unsigned;\n" +
-                                                                    "\n" +
-                                                                    "@Lib(\"testing\")\n" +
-                                                                    "public class Testing {\n" +
-                                                                    "    public static native long doStaticTest(long tst,\n" +
-                                                                    "                                           byte field0,\n" +
-                                                                    "                                           @Unsigned short field1,\n" +
-                                                                    "                                           @ByVal(StructType.class) @Unsigned long field2,\n" + // <----
-                                                                    "                                           @Ptr(int.class) long field3);\n" +
-                                                                    "}");
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "import com.github.zubnix.jaccall.ByVal;\n" +
+                                                                          "import com.github.zubnix.jaccall.StructType;\n" +
+                                                                          "import com.github.zubnix.jaccall.Ptr;\n" +
+                                                                          "import com.github.zubnix.jaccall.Unsigned;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    public static native long doStaticTest(long tst,\n" +
+                                                                          "                                           byte field0,\n" +
+                                                                          "                                           @Unsigned short field1,\n" +
+                                                                          "                                           @ByVal(StructType.class) @Unsigned long field2,\n" + // <----
+                                                                          "                                           @Ptr(int.class) long field3);\n" +
+                                                                          "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
@@ -214,21 +214,21 @@ public class CheckWellFormedLibTest {
     @Test
     public void testLngAnnotationNotOnPrimitiveLong() {
         //given
-        JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
-                                                                    "package com.github.zubnix.libtest;\n" +
-                                                                    "import com.github.zubnix.jaccall.Lib;\n" +
-                                                                    "import com.github.zubnix.jaccall.Lng;\n" +
-                                                                    "import com.github.zubnix.jaccall.Ptr;\n" +
-                                                                    "import com.github.zubnix.jaccall.Unsigned;\n" +
-                                                                    "\n" +
-                                                                    "@Lib(\"testing\")\n" +
-                                                                    "public class Testing {\n" +
-                                                                    "    public static native long doStaticTest(long tst,\n" +
-                                                                    "                                           byte field0,\n" +
-                                                                    "                                           @Unsigned short field1,\n" +
-                                                                    "                                           @Lng int field2,\n" + // <----
-                                                                    "                                           @Ptr(int.class) long field3);\n" +
-                                                                    "}");
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lng;\n" +
+                                                                          "import com.github.zubnix.jaccall.Ptr;\n" +
+                                                                          "import com.github.zubnix.jaccall.Unsigned;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    public static native long doStaticTest(long tst,\n" +
+                                                                          "                                           byte field0,\n" +
+                                                                          "                                           @Unsigned short field1,\n" +
+                                                                          "                                           @Lng int field2,\n" + // <----
+                                                                          "                                           @Ptr(int.class) long field3);\n" +
+                                                                          "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
@@ -242,21 +242,21 @@ public class CheckWellFormedLibTest {
     @Test
     public void testLngAnnotationInConjunctionWithPtrAnnotation() {
         //given
-        JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
-                                                                    "package com.github.zubnix.libtest;\n" +
-                                                                    "import com.github.zubnix.jaccall.Lib;\n" +
-                                                                    "import com.github.zubnix.jaccall.Lng;\n" +
-                                                                    "import com.github.zubnix.jaccall.Ptr;\n" +
-                                                                    "import com.github.zubnix.jaccall.Unsigned;\n" +
-                                                                    "\n" +
-                                                                    "@Lib(\"testing\")\n" +
-                                                                    "public class Testing {\n" +
-                                                                    "    public static native long doStaticTest(long tst,\n" +
-                                                                    "                                           byte field0,\n" +
-                                                                    "                                           @Unsigned short field1,\n" +
-                                                                    "                                           @Lng @Ptr(long.class) long field2,\n" + // <----
-                                                                    "                                           @Ptr(int.class) long field3);\n" +
-                                                                    "}");
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lng;\n" +
+                                                                          "import com.github.zubnix.jaccall.Ptr;\n" +
+                                                                          "import com.github.zubnix.jaccall.Unsigned;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    public static native long doStaticTest(long tst,\n" +
+                                                                          "                                           byte field0,\n" +
+                                                                          "                                           @Unsigned short field1,\n" +
+                                                                          "                                           @Lng @Ptr(long.class) long field2,\n" + // <----
+                                                                          "                                           @Ptr(int.class) long field3);\n" +
+                                                                          "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
@@ -270,23 +270,23 @@ public class CheckWellFormedLibTest {
     @Test
     public void testLngAnnotationInConjunctionWithByValAnnotation() {
         //given
-        JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
-                                                                    "package com.github.zubnix.libtest;\n" +
-                                                                    "import com.github.zubnix.jaccall.Lib;\n" +
-                                                                    "import com.github.zubnix.jaccall.ByVal;\n" +
-                                                                    "import com.github.zubnix.jaccall.StructType;\n" +
-                                                                    "import com.github.zubnix.jaccall.Lng;\n" +
-                                                                    "import com.github.zubnix.jaccall.Ptr;\n" +
-                                                                    "import com.github.zubnix.jaccall.Unsigned;\n" +
-                                                                    "\n" +
-                                                                    "@Lib(\"testing\")\n" +
-                                                                    "public class Testing {\n" +
-                                                                    "    public static native long doStaticTest(long tst,\n" +
-                                                                    "                                           byte field0,\n" +
-                                                                    "                                           @Unsigned short field1,\n" +
-                                                                    "                                           @Lng @ByVal(StructType.class) long field2,\n" + // <----
-                                                                    "                                           @Ptr(int.class) long field3);\n" +
-                                                                    "}");
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "import com.github.zubnix.jaccall.ByVal;\n" +
+                                                                          "import com.github.zubnix.jaccall.StructType;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lng;\n" +
+                                                                          "import com.github.zubnix.jaccall.Ptr;\n" +
+                                                                          "import com.github.zubnix.jaccall.Unsigned;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    public static native long doStaticTest(long tst,\n" +
+                                                                          "                                           byte field0,\n" +
+                                                                          "                                           @Unsigned short field1,\n" +
+                                                                          "                                           @Lng @ByVal(StructType.class) long field2,\n" + // <----
+                                                                          "                                           @Ptr(int.class) long field3);\n" +
+                                                                          "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
@@ -300,20 +300,20 @@ public class CheckWellFormedLibTest {
     @Test
     public void testUnsignedAnnotationNotOnPrimitiveNonFloat() {
         //given
-        JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
-                                                                    "package com.github.zubnix.libtest;\n" +
-                                                                    "import com.github.zubnix.jaccall.Lib;\n" +
-                                                                    "import com.github.zubnix.jaccall.Ptr;\n" +
-                                                                    "import com.github.zubnix.jaccall.Unsigned;\n" +
-                                                                    "\n" +
-                                                                    "@Lib(\"testing\")\n" +
-                                                                    "public class Testing {\n" +
-                                                                    "    public static native long doStaticTest(long tst,\n" +
-                                                                    "                                           byte field0,\n" +
-                                                                    "                                           @Unsigned short field1,\n" +
-                                                                    "                                           @Unsigned float field2,\n" + // <----
-                                                                    "                                           @Ptr(int.class) long field3);\n" +
-                                                                    "}");
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "import com.github.zubnix.jaccall.Ptr;\n" +
+                                                                          "import com.github.zubnix.jaccall.Unsigned;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    public static native long doStaticTest(long tst,\n" +
+                                                                          "                                           byte field0,\n" +
+                                                                          "                                           @Unsigned short field1,\n" +
+                                                                          "                                           @Unsigned float field2,\n" + // <----
+                                                                          "                                           @Ptr(int.class) long field3);\n" +
+                                                                          "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
@@ -327,20 +327,20 @@ public class CheckWellFormedLibTest {
     @Test
     public void testUnsignedAnnotationNotOnPrimitiveNonDouble() {
         //given
-        JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
-                                                                    "package com.github.zubnix.libtest;\n" +
-                                                                    "import com.github.zubnix.jaccall.Lib;\n" +
-                                                                    "import com.github.zubnix.jaccall.Ptr;\n" +
-                                                                    "import com.github.zubnix.jaccall.Unsigned;\n" +
-                                                                    "\n" +
-                                                                    "@Lib(\"testing\")\n" +
-                                                                    "public class Testing {\n" +
-                                                                    "    public static native long doStaticTest(long tst,\n" +
-                                                                    "                                           byte field0,\n" +
-                                                                    "                                           @Unsigned short field1,\n" +
-                                                                    "                                           @Unsigned double field2,\n" +// <----
-                                                                    "                                           @Ptr(int.class) long field3);\n" +
-                                                                    "}");
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "import com.github.zubnix.jaccall.Ptr;\n" +
+                                                                          "import com.github.zubnix.jaccall.Unsigned;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    public static native long doStaticTest(long tst,\n" +
+                                                                          "                                           byte field0,\n" +
+                                                                          "                                           @Unsigned short field1,\n" +
+                                                                          "                                           @Unsigned double field2,\n" +// <----
+                                                                          "                                           @Ptr(int.class) long field3);\n" +
+                                                                          "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
@@ -354,20 +354,20 @@ public class CheckWellFormedLibTest {
     @Test
     public void testUnsignedAnnotationInConjunctionWithPtrAnnotation() {
         //given
-        JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
-                                                                    "package com.github.zubnix.libtest;\n" +
-                                                                    "import com.github.zubnix.jaccall.Lib;\n" +
-                                                                    "import com.github.zubnix.jaccall.Ptr;\n" +
-                                                                    "import com.github.zubnix.jaccall.Unsigned;\n" +
-                                                                    "\n" +
-                                                                    "@Lib(\"testing\")\n" +
-                                                                    "public class Testing {\n" +
-                                                                    "    public static native long doStaticTest(long tst,\n" +
-                                                                    "                                           byte field0,\n" +
-                                                                    "                                           @Unsigned short field1,\n" +
-                                                                    "                                           @Unsigned @Ptr(long.class) long field2,\n" + // <----
-                                                                    "                                           @Ptr(int.class) long field3);\n" +
-                                                                    "}");
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "import com.github.zubnix.jaccall.Ptr;\n" +
+                                                                          "import com.github.zubnix.jaccall.Unsigned;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    public static native long doStaticTest(long tst,\n" +
+                                                                          "                                           byte field0,\n" +
+                                                                          "                                           @Unsigned short field1,\n" +
+                                                                          "                                           @Unsigned @Ptr(long.class) long field2,\n" + // <----
+                                                                          "                                           @Ptr(int.class) long field3);\n" +
+                                                                          "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)

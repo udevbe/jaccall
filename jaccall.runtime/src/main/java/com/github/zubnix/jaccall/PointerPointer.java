@@ -57,7 +57,7 @@ final class PointerPointer<T> extends Pointer<Pointer<T>> {
 
         final Type type;
         if (genericClass != null && genericClass instanceof ParameterizedType) {
-            ParameterizedType parameterizedType = (ParameterizedType) genericClass;
+            final ParameterizedType parameterizedType = (ParameterizedType) genericClass;
             type = parameterizedType.getActualTypeArguments()[0];
         }
         else {
@@ -89,7 +89,7 @@ final class PointerPointer<T> extends Pointer<Pointer<T>> {
             final LongBuffer buffer = byteBuffer.asLongBuffer();
             buffer.clear();
             buffer.position(index);
-            for (Pointer<?> pointer : val) {
+            for (final Pointer<?> pointer : val) {
                 buffer.put(pointer.cast(Long.class));
             }
         }
@@ -98,7 +98,7 @@ final class PointerPointer<T> extends Pointer<Pointer<T>> {
             final IntBuffer buffer = byteBuffer.asIntBuffer();
             buffer.clear();
             buffer.position(index);
-            for (Pointer<?> pointer : val) {
+            for (final Pointer<?> pointer : val) {
                 buffer.put(pointer.cast(Integer.class));
             }
         }

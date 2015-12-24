@@ -21,6 +21,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      *
      * @return a new untyped pointer object that will use the memory pointed to by the given direct byte buffer.
      */
+    @Nonnull
     public static Pointer<Void> wrap(@Nonnull final ByteBuffer byteBuffer) {
         if (!byteBuffer.isDirect()) {
             throw new IllegalArgumentException("ByteBuffer must be direct.");
@@ -45,6 +46,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      *
      * @return a new typed pointer object that will use the memory pointed to by the given direct byte buffer.
      */
+    @Nonnull
     public static <U> Pointer<U> wrap(@Nonnull final Class<U> type,
                                       @Nonnull final ByteBuffer byteBuffer) {
         return wrap((Type) type,
@@ -58,6 +60,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      *
      * @return a new untyped pointer object that will use the memory pointed to by the given address.
      */
+    @Nonnull
     public static Pointer<Void> wrap(final long address) {
         return wrap(Void.class,
                     address);
@@ -72,6 +75,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      *
      * @return a new typed pointer object that will use the memory pointed to by the given address.
      */
+    @Nonnull
     public static <U> Pointer<U> wrap(@Nonnull final Class<U> type,
                                       final long address) {
         return wrap((Type) type,
@@ -171,6 +175,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      *
      * @return a new untyped pointer object that will use the newly allocated memory.
      */
+    @Nonnull
     public static Pointer<Void> malloc(@Nonnegative final int size) {
         return wrap(JNI.malloc(size));
     }
@@ -185,22 +190,23 @@ public abstract class Pointer<T> implements AutoCloseable {
      *
      * @return a new untyped pointer object that will use the newly allocated memory.
      */
+    @Nonnull
     public static Pointer<Void> calloc(@Nonnegative final int nmemb,
                                        @Nonnegative final int size) {
         return wrap(JNI.calloc(nmemb,
                                size));
     }
 
-    private static <U> Pointer<U> create(Class<U> type,
-                                         int elementSize,
-                                         int length) {
+    private static <U> Pointer<U> create(final Class<U> type,
+                                         final int elementSize,
+                                         final int length) {
         return wrap(type,
                     JNI.malloc(elementSize * length));
     }
 
     @SafeVarargs
     @Nonnull
-    public static <U extends CLong> Pointer<U> nref(@Nonnull U... val) {
+    public static <U extends CLong> Pointer<U> nref(@Nonnull final U... val) {
         final int length = val.length;
         if (length == 0) {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
@@ -225,7 +231,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      */
     @SafeVarargs
     @Nonnull
-    public static <U extends StructType> Pointer<U> nref(@Nonnull U... val) {
+    public static <U extends StructType> Pointer<U> nref(@Nonnull final U... val) {
         final int length = val.length;
         if (length == 0) {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
@@ -250,7 +256,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      */
     @SafeVarargs
     @Nonnull
-    public static <U extends Pointer> Pointer<U> nref(@Nonnull U... val) {
+    public static <U extends Pointer> Pointer<U> nref(@Nonnull final U... val) {
         final int length = val.length;
         if (length == 0) {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
@@ -272,7 +278,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @return a new typed pointer object that will use new memory initialized with the given bytes.
      */
     @Nonnull
-    public static Pointer<Byte> nref(@Nonnull Byte... val) {
+    public static Pointer<Byte> nref(@Nonnull final Byte... val) {
 
 
         final int length = val.length;
@@ -296,7 +302,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @return a new typed pointer object that will use new memory initialized with the given shorts.
      */
     @Nonnull
-    public static Pointer<Short> nref(@Nonnull Short... val) {
+    public static Pointer<Short> nref(@Nonnull final Short... val) {
 
         final int length = val.length;
         if (length == 0) {
@@ -319,7 +325,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @return a new typed pointer object that will use new memory initialized with the given Java 16-bit chars.
      */
     @Nonnull
-    public static Pointer<Character> nref(@Nonnull Character... val) {
+    public static Pointer<Character> nref(@Nonnull final Character... val) {
 
         final int length = val.length;
         if (length == 0) {
@@ -342,7 +348,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @return a new typed pointer object that will use new memory initialized with the given ints.
      */
     @Nonnull
-    public static Pointer<Integer> nref(@Nonnull Integer... val) {
+    public static Pointer<Integer> nref(@Nonnull final Integer... val) {
 
         final int length = val.length;
         if (length == 0) {
@@ -365,7 +371,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @return a new typed pointer object that will use new memory initialized with the given floats.
      */
     @Nonnull
-    public static Pointer<Float> nref(@Nonnull Float... val) {
+    public static Pointer<Float> nref(@Nonnull final Float... val) {
 
         final int length = val.length;
         if (length == 0) {
@@ -388,7 +394,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @return a new typed pointer object that will use new memory initialized with the given longs.
      */
     @Nonnull
-    public static Pointer<Long> nref(@Nonnull Long... val) {
+    public static Pointer<Long> nref(@Nonnull final Long... val) {
 
         final int length = val.length;
         if (length == 0) {
@@ -404,7 +410,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     }
 
     @Nonnull
-    public static Pointer<Double> nref(@Nonnull Double... val) {
+    public static Pointer<Double> nref(@Nonnull final Double... val) {
 
         final int length = val.length;
         if (length == 0) {
@@ -420,7 +426,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     }
 
     @Nonnull
-    public static Pointer<String> nref(@Nonnull String val) {
+    public static Pointer<String> nref(@Nonnull final String val) {
         final Pointer<String> pointer = create(String.class,
                                                sizeof(val),
                                                1);
@@ -464,12 +470,13 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code T value = foo.dref();}
-     * <p>
+     * <p/>
      * C equivalent:<br>
      * {@code T value = *foo}
      *
      * @return
      */
+    @Nonnull
     public T dref() {
         return dref(this.byteBuffer);
     }
@@ -479,7 +486,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code T value = foo.dref(i);}
-     * <p>
+     * <p/>
      * C equivalent:<br>
      * {@code T value = foo[i]}
      *
@@ -487,7 +494,8 @@ public abstract class Pointer<T> implements AutoCloseable {
      *
      * @return
      */
-    public T dref(@Nonnegative int index) {
+    @Nonnull
+    public T dref(@Nonnegative final int index) {
         return dref(index,
                     this.byteBuffer);
     }
@@ -498,7 +506,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code offsetFoo = foo.offset(i);}
-     * <p>
+     * <p/>
      * C equivalent:<br>
      * {@code offsetFoo = foo+i;}
      *
@@ -506,7 +514,8 @@ public abstract class Pointer<T> implements AutoCloseable {
      *
      * @return
      */
-    public Pointer<T> offset(int bytes) {
+    @Nonnull
+    public Pointer<T> offset(final int bytes) {
         return wrap(this.type,
                     this.address + bytes);
     }
@@ -519,7 +528,8 @@ public abstract class Pointer<T> implements AutoCloseable {
      *
      * @return
      */
-    public <U> U cast(@Nonnull Class<U> type) {
+    @Nonnull
+    public <U> U cast(@Nonnull final Class<U> type) {
         //primitive "fast" paths
         if (type.equals(Long.class) || type.equals(long.class)) {
             return (U) Long.valueOf(this.address);
@@ -563,7 +573,8 @@ public abstract class Pointer<T> implements AutoCloseable {
      *
      * @return
      */
-    public <U> Pointer<U> castp(@Nonnull Class<U> type) {
+    @Nonnull
+    public <U> Pointer<U> castp(@Nonnull final Class<U> type) {
         return wrap(type,
                     this.address);
     }
@@ -573,6 +584,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      *
      * @return
      */
+    @Nonnull
     public Pointer<Pointer<T>> castpp() {
         return wrap(new ParameterizedType() {
                         @Override
@@ -587,7 +599,8 @@ public abstract class Pointer<T> implements AutoCloseable {
                     this.address);
     }
 
-    public void write(@Nonnull final T... val) {
+    @SafeVarargs
+    public final void write(@Nonnull final T... val) {
         write(this.byteBuffer,
               val);
     }
@@ -595,9 +608,10 @@ public abstract class Pointer<T> implements AutoCloseable {
     abstract void write(@Nonnull ByteBuffer byteBuffer,
                         @Nonnull final T... val);
 
-    public void writei(@Nonnegative final int index,
-                       final T... val) {
-        writei(byteBuffer,
+    @SafeVarargs
+    public final void writei(@Nonnegative final int index,
+                             final T... val) {
+        writei(this.byteBuffer,
                index,
                val);
     }
@@ -606,7 +620,8 @@ public abstract class Pointer<T> implements AutoCloseable {
                          @Nonnegative final int index,
                          final T... val);
 
-    protected static Class<?> toClass(Type type) {
+    @Nonnull
+    protected static Class<?> toClass(@Nonnull final Type type) {
         final Class<?> rawType;
         if (type instanceof Class) {
             rawType = (Class<?>) type;

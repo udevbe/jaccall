@@ -23,7 +23,7 @@ public class JNITestUtil {
                    tempFile);
             System.load(tempFile.getAbsolutePath());
         }
-        catch (IOException e) {
+        catch (final IOException e) {
             throw new Error(e);
         }
     }
@@ -31,7 +31,7 @@ public class JNITestUtil {
     private static void unpack(final InputStream libStream,
                                final File tempFile) throws IOException {
         final FileOutputStream fos    = new FileOutputStream(tempFile);
-        byte[]                 buffer = new byte[4096];
+        final byte[]           buffer = new byte[4096];
         int                    read   = -1;
         while ((read = libStream.read(buffer)) != -1) {
             fos.write(buffer,

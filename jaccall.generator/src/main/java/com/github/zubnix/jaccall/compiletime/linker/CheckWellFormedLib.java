@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.Set;
 
 public class CheckWellFormedLib implements BasicAnnotationProcessor.ProcessingStep {
-    private LinkerGenerator linkerGenerator;
+    private final LinkerGenerator linkerGenerator;
 
     public CheckWellFormedLib(final LinkerGenerator linkerGenerator) {this.linkerGenerator = linkerGenerator;}
 
@@ -34,24 +34,24 @@ public class CheckWellFormedLib implements BasicAnnotationProcessor.ProcessingSt
 
     @Override
     public void process(final SetMultimap<Class<? extends Annotation>, Element> elementsByAnnotation) {
-        for (Element element : elementsByAnnotation.values()) {
+        for (final Element element : elementsByAnnotation.values()) {
             if (SuperficialValidation.validateElement(element)) {
 
-                TypeElement typeElement = (TypeElement) element;
+                final TypeElement typeElement = (TypeElement) element;
 
                 isClass(typeElement);
                 isNotNested(typeElement);
 
-                for (Element enclosedElement : typeElement.getEnclosedElements()) {
+                for (final Element enclosedElement : typeElement.getEnclosedElements()) {
                     isWellFormedMethod(enclosedElement);
                 }
             }
             else {
-                linkerGenerator.getProcessingEnvironment()
-                               .getMessager()
-                               .printMessage(Diagnostic.Kind.ERROR,
-                                             "Could not resolve all required compile time type information.",
-                                             element);
+                this.linkerGenerator.getProcessingEnvironment()
+                                    .getMessager()
+                                    .printMessage(Diagnostic.Kind.ERROR,
+                                                  "Could not resolve all required compile time type information.",
+                                                  element);
             }
         }
     }
@@ -61,35 +61,35 @@ public class CheckWellFormedLib implements BasicAnnotationProcessor.ProcessingSt
                         .getKind()
                         .equals(ElementKind.PACKAGE) || typeElement.getNestingKind()
                                                                    .isNested()) {
-            linkerGenerator.getProcessingEnvironment()
-                           .getMessager()
-                           .printMessage(Diagnostic.Kind.ERROR,
-                                         "@Lib annotation should be placed on top level class types only.",
-                                         typeElement);
+            this.linkerGenerator.getProcessingEnvironment()
+                                .getMessager()
+                                .printMessage(Diagnostic.Kind.ERROR,
+                                              "@Lib annotation should be placed on top level class types only.",
+                                              typeElement);
         }
     }
 
-    private void isClass(TypeElement typeElement) {
+    private void isClass(final TypeElement typeElement) {
         if (!typeElement.getKind()
                         .equals(ElementKind.CLASS)) {
-            linkerGenerator.getProcessingEnvironment()
-                           .getMessager()
-                           .printMessage(Diagnostic.Kind.ERROR,
-                                         "@Lib annotation should be placed on class type only.",
-                                         typeElement);
+            this.linkerGenerator.getProcessingEnvironment()
+                                .getMessager()
+                                .printMessage(Diagnostic.Kind.ERROR,
+                                              "@Lib annotation should be placed on class type only.",
+                                              typeElement);
         }
     }
 
     private void isWellFormedMethod(final Element enclosedElement) {
         if (enclosedElement.getKind()
                            .equals(ElementKind.METHOD)) {
-            ExecutableElement executableElement = (ExecutableElement) enclosedElement;
+            final ExecutableElement executableElement = (ExecutableElement) enclosedElement;
 
             if (enclosedElement.getModifiers()
                                .contains(Modifier.NATIVE)) {
                 //we're only interested if native methods are properly formed
 
-                for (VariableElement variableElement : executableElement.getParameters()) {
+                for (final VariableElement variableElement : executableElement.getParameters()) {
                     isAllowedElement(variableElement,
                                      variableElement.asType()
                                                     .getKind());
@@ -146,11 +146,11 @@ public class CheckWellFormedLib implements BasicAnnotationProcessor.ProcessingSt
                                final String charSequence) {
         if (typeMirror.getKind()
                       .equals(aDouble)) {
-            linkerGenerator.getProcessingEnvironment()
-                           .getMessager()
-                           .printMessage(Diagnostic.Kind.ERROR,
-                                         charSequence,
-                                         element);
+            this.linkerGenerator.getProcessingEnvironment()
+                                .getMessager()
+                                .printMessage(Diagnostic.Kind.ERROR,
+                                              charSequence,
+                                              element);
         }
     }
 
@@ -171,11 +171,11 @@ public class CheckWellFormedLib implements BasicAnnotationProcessor.ProcessingSt
     private void isNotByVal(final Element element,
                             final String charSequence) {
         if (element.getAnnotation(ByVal.class) != null) {
-            linkerGenerator.getProcessingEnvironment()
-                           .getMessager()
-                           .printMessage(Diagnostic.Kind.ERROR,
-                                         charSequence,
-                                         element);
+            this.linkerGenerator.getProcessingEnvironment()
+                                .getMessager()
+                                .printMessage(Diagnostic.Kind.ERROR,
+                                              charSequence,
+                                              element);
         }
     }
 
@@ -193,22 +193,22 @@ public class CheckWellFormedLib implements BasicAnnotationProcessor.ProcessingSt
 
     private void isNotUnsigned(final Element element) {
         if (element.getAnnotation(Unsigned.class) != null) {
-            linkerGenerator.getProcessingEnvironment()
-                           .getMessager()
-                           .printMessage(Diagnostic.Kind.ERROR,
-                                         "@ByVal annotation can not be placed in conjunction with @Unsigned annotation.",
-                                         element);
+            this.linkerGenerator.getProcessingEnvironment()
+                                .getMessager()
+                                .printMessage(Diagnostic.Kind.ERROR,
+                                              "@ByVal annotation can not be placed in conjunction with @Unsigned annotation.",
+                                              element);
         }
     }
 
     private void isNotPtr(final Element element,
                           final String charSequence) {
         if (element.getAnnotation(Ptr.class) != null) {
-            linkerGenerator.getProcessingEnvironment()
-                           .getMessager()
-                           .printMessage(Diagnostic.Kind.ERROR,
-                                         charSequence,
-                                         element);
+            this.linkerGenerator.getProcessingEnvironment()
+                                .getMessager()
+                                .printMessage(Diagnostic.Kind.ERROR,
+                                              charSequence,
+                                              element);
         }
     }
 
@@ -226,16 +226,16 @@ public class CheckWellFormedLib implements BasicAnnotationProcessor.ProcessingSt
                         final String charSequence) {
         if (!typeMirror.getKind()
                        .equals(TypeKind.LONG)) {
-            linkerGenerator.getProcessingEnvironment()
-                           .getMessager()
-                           .printMessage(Diagnostic.Kind.ERROR,
-                                         charSequence,
-                                         element);
+            this.linkerGenerator.getProcessingEnvironment()
+                                .getMessager()
+                                .printMessage(Diagnostic.Kind.ERROR,
+                                              charSequence,
+                                              element);
 
         }
     }
 
-    private void isAllowedElement(Element element,
+    private void isAllowedElement(final Element element,
                                   final TypeKind kind) {
         //only primitive parameter and return types are allowed
         isPrimitive(element,
@@ -248,30 +248,30 @@ public class CheckWellFormedLib implements BasicAnnotationProcessor.ProcessingSt
     private void isPrimitive(final Element element,
                              final TypeKind kind) {
         if (!kind.isPrimitive() && !kind.equals(TypeKind.VOID)) {
-            linkerGenerator.getProcessingEnvironment()
-                           .getMessager()
-                           .printMessage(Diagnostic.Kind.ERROR,
-                                         "Native method should have supported primitive types only.",
-                                         element);
+            this.linkerGenerator.getProcessingEnvironment()
+                                .getMessager()
+                                .printMessage(Diagnostic.Kind.ERROR,
+                                              "Native method should have supported primitive types only.",
+                                              element);
         }
     }
 
     private void isAllowedPrimitive(final Element element,
                                     final TypeKind kind) {
         if (kind.equals(TypeKind.BOOLEAN)) {
-            linkerGenerator.getProcessingEnvironment()
-                           .getMessager()
-                           .printMessage(Diagnostic.Kind.ERROR,
-                                         "Native method should not have a primitive type 'boolean'.",
-                                         element);
+            this.linkerGenerator.getProcessingEnvironment()
+                                .getMessager()
+                                .printMessage(Diagnostic.Kind.ERROR,
+                                              "Native method should not have a primitive type 'boolean'.",
+                                              element);
         }
 
         if (kind.equals(TypeKind.CHAR)) {
-            linkerGenerator.getProcessingEnvironment()
-                           .getMessager()
-                           .printMessage(Diagnostic.Kind.ERROR,
-                                         "Native method should not have a primitive type 'char'.",
-                                         element);
+            this.linkerGenerator.getProcessingEnvironment()
+                                .getMessager()
+                                .printMessage(Diagnostic.Kind.ERROR,
+                                              "Native method should not have a primitive type 'char'.",
+                                              element);
         }
     }
 }
