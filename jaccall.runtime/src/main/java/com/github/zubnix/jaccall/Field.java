@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * A field of a {@link Struct} or {@link Union}.
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Field {
     /**
      * The data type defined by this field.
