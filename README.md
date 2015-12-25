@@ -119,6 +119,7 @@ The Java mapping tries to match it's C counterpart as close as possible. There a
 | float | float |
 | double | double |
 | struct foo | @ByVal(Foo.class) long |
+| union bar | @ByVal(Bar.class) long |
 | foo* | @Ptr(Foo.class) long|
 
 The Java primitive types `boolean` and `char` do not have a corresponding C type and are not allowed.
@@ -214,9 +215,10 @@ A Jaccall signature represents a method's arguments and return type in C. To acc
 | d | double |
 | p | foo* |
 | t...] | struct |
+| u...] | union |
 | v | void |
 
-The struct signature is a special case as it needs to refine what members are part of it. This is done using the same Jaccall signature characters. Arrays types are mapped by repeating their specific type.
+The struct and union signature is a special case as it needs to refine what members are part of it. This is done using the same Jaccall signature characters. Arrays types are mapped by repeating their specific type.
 
 A struct
 ```C
@@ -233,9 +235,8 @@ will thus be mapped as `tIIIItp]]`
 
 #### An example
 
-Jaccall allows you to map any struct type in Java. Let's have a look at our previous example that contained a struct definition:
+Jaccall allows you to map any struct or union type in Java. Let's have a look at our previous example that contained a struct definition:
 
-C `some_header.h`
 ```C
 struct test {
     char field0;
@@ -264,6 +265,33 @@ import static com.github.zubnix.jaccall.CType.UNSIGNED_SHORT;
     @Field(type = POINTER,
            dataType = int.class,
            name = "field3")
+})
+public class Test extends Test_Jaccall_StructType {
+}
+```
+
+Mapping a union is completely analogue.
+C `some_header.h`
+```C
+union test {
+    char field0;
+    int field1;
+};
+...
+```
+
+In Java this becomes
+```Java
+...
+import static com.github.zubnix.jaccall.CType.CHAR;
+import static com.github.zubnix.jaccall.CType.INT;
+...
+@Struct(value = {
+    union = true,
+    @Field(type = CHAR,
+           name = "field0"),
+    @Field(type = INT,
+           name = "field1"),
 })
 public class Test extends Test_Jaccall_StructType {
 }
