@@ -142,8 +142,8 @@ To aid the `Linker` in processing a natively mapped Java class, the `LinkerGener
 For every mapped method, 4 parts of linker data are generated.
 - The method name (the C symbol name).
 - The number of arguments.
+- A LibFFI call interface.
 - A JNI signature.
-- A Jaccall signature.
 
 If we reiterate our first mapping example
 
@@ -265,6 +265,24 @@ import static com.github.zubnix.jaccall.CType.INT;
 public class Test extends Test_Jaccall_StructType {
 }
 ```
+
+The `@Struct` annotation defines the layout of the native C struct in Java. This layout is parsed during compilation to generate accessor code. This generated code is put in a Java class with name `Foo_Jaccall_StructType`, where `Foo` is the name of the class that has the `@Struct` annotation. To use this accessor code, simply extend the generated class. In our exmaple this becomes `extends Test_Jaccall_StructType`.
+
+The generated accessor class is part of the internal Jaccall API and should never be used directly. Instead always inherit from it.
+
+The following rules apply when annotating a class with `@Struct`.
+- A class annotated with `@Struct` must have a default no-arg constructor.
+- A class annotated with `@Struct` must not be abstract.
+- A class annotated with `@Struct` must have at least one `@Field`.
+- A class annotated with `@Struct` must extend the equivalent generated accessor class.
+- A class annotated with `@Struct` must have unique `@Field` names.
+- A class annotated with `@Struct` must not have a static field with name `SIZE`.
+- A class annotated with `@Struct` must be public.
+- A class annotated with `@Struct` must be a class.
+- A class annotated with `@Struct` must be a top level class.
+
+
+#### Usage
 
 MORE TODO
 
