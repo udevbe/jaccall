@@ -30,14 +30,14 @@ Jaccall tries to remedy this by strictly adhering to the KISS princicple.
 # Overview
 
 - [Linker API](#linker-api)
-  - [An example](#an-example)
+  - [A linker example](#a-linker-example)
   - [Mapping](#mapping)
   - [By value By reference](#by-value-by-reference)
   - [Internals](#internals)
 - [Struct API](#struct-api)
-  - [An example](#an-example)
+  - [A struct example](#a-struct-example)
 - [Pointer API](#pointer-api)
-  - [An example](#an-example)
+  - [A pointer example](#a-pointer-example)
   - [Stack vs Heap](#stack-vs-heap)
   - [Memory read write](#memory-read-write)
   - [Arrays](#arrays)
@@ -50,7 +50,7 @@ The linker API forms the basis of all native method invocation. Without it, you 
 
 To call a C method, we must create a Java class where we define what C method we are interested in, what they look like and where they can be found. This is done by mapping Java methods to C methods, and providing additional information through annotations.
 
-#### An example
+#### A linker example
 
 C
 
@@ -202,7 +202,7 @@ Linker data of different methods matches on array index.
 
 # Struct API
 
-#### An example
+#### A struct example
 
 Jaccall allows you to map any struct or union type in Java. Let's have a look at our previous example that contained a struct definition:
 
@@ -288,7 +288,7 @@ MORE TODO
 
 # Pointer API
 
-#### An example
+#### A pointer example
 
 C
 ```C
