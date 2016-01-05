@@ -187,9 +187,7 @@ public final class SomeHeader_Jaccall_LinkSymbols extends LinkSymbols {
                                                JNI.FFI_TYPE_SINT8,
                                                JNI.FFI_TYPE_UINT16,
                                                JNI.FFI_TYPE_POINTER,
-                                               JNI.FFI_TYPE_POINTER,
-                                               JNI.FFI_TYPE_SINT64,
-                                               JNI.FFI_TYPE_FLOAT)},
+                                               JNI.FFI_TYPE_POINTER)},
               new String[]{"(JBSJJ)J"});
     }
 }
