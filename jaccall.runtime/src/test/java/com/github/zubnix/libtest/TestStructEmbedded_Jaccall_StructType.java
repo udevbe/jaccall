@@ -8,7 +8,7 @@ import com.github.zubnix.jaccall.StructType;
 import javax.annotation.Generated;
 
 @Generated("com.github.zubnix.jaccall.compiletime.StructGenerator")
-abstract class Jaccall_TestStructEmbedded extends StructType {
+abstract class TestStructEmbedded_Jaccall_StructType extends StructType {
 
     public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_SINT64,
                                                             JNI.FFI_TYPE_FLOAT);
@@ -18,7 +18,7 @@ abstract class Jaccall_TestStructEmbedded extends StructType {
     private static final int OFFSET_1 = newOffset(Size.sizeof((Float) null),
                                                   OFFSET_0 + Size.sizeof((Long) null));
 
-    Jaccall_TestStructEmbedded() {
+    TestStructEmbedded_Jaccall_StructType() {
         super(SIZE);
     }
 

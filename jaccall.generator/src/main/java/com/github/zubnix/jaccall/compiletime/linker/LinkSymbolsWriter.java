@@ -77,6 +77,8 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
                                     methodNames);
                     parseArgSize(executableElement,
                                  argSizes);
+                    //extra jni.class object added for use in $T.ffi_callInterface( later on.
+                    statementTypes.add(JNI.class);
                     parseFfiSignature(executableElement,
                                       ffiSignatures,
                                       statementTypes);
@@ -91,29 +93,39 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
             }
 
             final StringBuilder methodNamesArray = new StringBuilder();
-            methodNamesArray.append("new String[]{");
+            methodNamesArray.append("new String[]{ /*method name*/\n");
             final StringBuilder argSizesArray = new StringBuilder();
-            argSizesArray.append("new byte[]{");
+            argSizesArray.append("new byte[]{ /*number of arguments*/\n");
             final StringBuilder ffiSignaturesArray = new StringBuilder();
-            ffiSignaturesArray.append("new long[]{");
+            ffiSignaturesArray.append("new long[]{ /*FFI call interface*/\n");
             final StringBuilder jniSignaturesArray = new StringBuilder();
-            jniSignaturesArray.append("new String[]{");
+            jniSignaturesArray.append("new String[]{ /*JNI method signature*/\n");
 
             //first element
+            String methodName = methodNames.get(0);
             methodNamesArray.append('"')
-                            .append(methodNames.get(0))
+                            .append(methodName)
                             .append('"');
-            argSizesArray.append(argSizes.get(0));
-            statementTypes.addFirst(JNI.class);
-            ffiSignaturesArray.append("$T.ffi_callInterface(")
+            argSizesArray.append("/*")
+                         .append(methodName)
+                         .append("*/ ")
+                         .append(argSizes.get(0));
+            ffiSignaturesArray.append("/*")
+                              .append(methodName)
+                              .append("*/ ")
+                              .append("$T.ffi_callInterface(")
                               .append(ffiSignatures.get(0))
                               .append(')');
-            jniSignaturesArray.append('"')
+            jniSignaturesArray.append("/*")
+                              .append(methodName)
+                              .append("*/ ")
+                              .append('"')
                               .append(jniSignatures.get(0))
                               .append('"');
 
-            //subsequent elements
+            //subsequent elements, with prepended comma
             for (int i = 1, methodNamesSize = methodNames.size(); i < methodNamesSize; i++) {
+                methodName = methodNames.get(i);
                 methodNamesArray.append(',')
                                 .append('\n')
                                 .append('"')
@@ -121,23 +133,32 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
                                 .append('"');
                 argSizesArray.append(',')
                              .append('\n')
+                             .append("/*")
+                             .append(methodName)
+                             .append("*/ ")
                              .append(argSizes.get(i));
                 ffiSignaturesArray.append(',')
                                   .append('\n')
+                                  .append("/*")
+                                  .append(methodName)
+                                  .append("*/ ")
                                   .append("$T.ffi_callInterface(")
                                   .append(ffiSignatures.get(i))
                                   .append(')');
                 jniSignaturesArray.append(',')
                                   .append('\n')
+                                  .append("/*")
+                                  .append(methodName)
+                                  .append("*/ ")
                                   .append('"')
                                   .append(jniSignatures.get(i))
                                   .append('"');
             }
 
-            methodNamesArray.append('}');
-            argSizesArray.append('}');
-            ffiSignaturesArray.append('}');
-            jniSignaturesArray.append('}');
+            methodNamesArray.append("\n}");
+            argSizesArray.append("\n}");
+            ffiSignaturesArray.append("\n}");
+            jniSignaturesArray.append("\n}");
 
 
             final MethodSpec constructor = MethodSpec.constructorBuilder()
@@ -236,7 +257,7 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
 
         //arguments
         for (final VariableElement variableElement : executableElement.getParameters()) {
-            ffiSignature.append(',')
+            ffiSignature.append(", ")
                         .append(parseFfiString(variableElement.asType(),
                                                variableElement,
                                                statementTypes));

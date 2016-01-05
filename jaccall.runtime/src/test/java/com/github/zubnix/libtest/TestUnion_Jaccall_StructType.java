@@ -3,7 +3,10 @@ package com.github.zubnix.libtest;
 import com.github.zubnix.jaccall.JNI;
 import com.github.zubnix.jaccall.StructType;
 
-public abstract class TestUnion_Jaccall_StructType extends StructType {
+import javax.annotation.Generated;
+
+@Generated("com.github.zubnix.jaccall.compiletime.StructGenerator")
+abstract class TestUnion_Jaccall_StructType extends StructType {
 
     public static final long FFI_TYPE = JNI.ffi_type_union(JNI.FFI_TYPE_SINT32,
                                                            JNI.FFI_TYPE_FLOAT);

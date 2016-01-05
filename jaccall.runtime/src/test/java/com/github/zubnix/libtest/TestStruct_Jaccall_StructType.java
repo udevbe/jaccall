@@ -27,7 +27,7 @@ abstract class TestStruct_Jaccall_StructType extends StructType {
                                                   OFFSET_1 + Size.sizeof((Short) null));
     private static final int OFFSET_3 = newOffset(Size.sizeof((Pointer<?>) null),
                                                   OFFSET_2 + Size.sizeof((Integer) null) * 3);
-    private static final int OFFSET_4 = newOffset(Size.sizeof((Long)null),
+    private static final int OFFSET_4 = newOffset(Size.sizeof((Long) null),
                                                   OFFSET_3 + Size.sizeof((Pointer<?>) null));
 
 

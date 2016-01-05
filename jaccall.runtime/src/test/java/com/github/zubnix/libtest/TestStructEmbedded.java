@@ -10,5 +10,5 @@ import com.github.zubnix.jaccall.Struct;
         @Field(type = CType.FLOAT,
                name = "field1")
 })
-public final class TestStructEmbedded extends Jaccall_TestStructEmbedded {
+public final class TestStructEmbedded extends TestStructEmbedded_Jaccall_StructType {
 }
