@@ -182,7 +182,14 @@ public final class SomeHeader_Jaccall_LinkSymbols extends LinkSymbols {
     public SomeHeader_Jaccall_LinkSymbols() {
         super(new String[]{"do_something"},
               new byte[]{5},
-              new String[]{"pcSpptcSiiip]"},
+              new long[]{JNI.ffi_callInterface(StructTest.FFI_TYPE,
+                                               JNI.FFI_TYPE_POINTER,
+                                               JNI.FFI_TYPE_SINT8,
+                                               JNI.FFI_TYPE_UINT16,
+                                               JNI.FFI_TYPE_POINTER,
+                                               JNI.FFI_TYPE_POINTER,
+                                               JNI.FFI_TYPE_SINT64,
+                                               JNI.FFI_TYPE_FLOAT)},
               new String[]{"(JBSJJ)J"});
     }
 }
@@ -190,46 +197,10 @@ public final class SomeHeader_Jaccall_LinkSymbols extends LinkSymbols {
 
 - `"do_something"` The name of the method
 - `5` The number of arguments
+- `"pcSpptcSiiip]"` The libffi call interface.
 - `"(JBSJJ)J"` The JNI method signature.
-- `"pcSpptcSiiip]"` The Jaccall signature.
 
 Linker data of different methods matches on array index.
-
-The first 4 items are trivial. The Jaccall signature requires some explanation.
-
-A Jaccall signature represents a method's arguments and return type in C. To accomplish this, a specific mapping is used.
-
-| Jaccall | C |
-|---------|---|
-| c | char|
-| C | unsigned char |
-| s | short |
-| S | unsigned short |
-| i | int |
-| I | unsigned int |
-| j | long|
-| J | unsigned long |
-| l | long long |
-| L | unsgined long long |
-| f | float |
-| d | double |
-| p | foo* |
-| t...] | struct |
-| u...] | union |
-| v | void |
-
-The struct and union signature is a special case as it needs to refine what members are part of it. This is done using the same Jaccall signature characters. Arrays types are mapped by repeating their specific type.
-
-A struct
-```C
-struct foo {
-    unsigned int bar[4];
-    struct baz {
-        void* qux;
-    }
-};
-```
-will thus be mapped as `tIIIItp]]`
 
 # Struct API
 
