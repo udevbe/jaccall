@@ -197,7 +197,7 @@ public final class SomeHeader_Jaccall_LinkSymbols extends LinkSymbols {
 
 - `"do_something"` The name of the method
 - `5` The number of arguments
-- `"pcSpptcSiiip]"` The libffi call interface.
+- `JNI.ffi_callInterface(...)` The libffi call interface.
 - `"(JBSJJ)J"` The JNI method signature.
 
 Linker data of different methods matches on array index.
