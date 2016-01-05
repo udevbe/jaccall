@@ -34,8 +34,6 @@ Jaccall tries to remedy this by strictly adhering to the KISS princicple.
   - [Mapping](#mapping)
   - [By value By reference](#by-value-by-reference)
   - [Internals](#internals)
-- [Struct API](#struct-api)
-  - [A struct example](#a-struct-example)
 - [Pointer API](#pointer-api)
   - [A pointer example](#a-pointer-example)
   - [Stack vs Heap](#stack-vs-heap)
@@ -43,6 +41,9 @@ Jaccall tries to remedy this by strictly adhering to the KISS princicple.
   - [Arrays](#arrays)
   - [Address manipulation](#address-manipulation)
   - [Pointer types](#pointer-types)
+- [Struct API](#struct-api)
+  - [A struct example](#a-struct-example)
+  - [Usage](#usage)
 
 # Linker API
 
@@ -206,6 +207,7 @@ Linker data of different methods matches on array index.
 
 Jaccall allows you to map any struct or union type in Java. Let's have a look at our previous example that contained a struct definition:
 
+C
 ```C
 struct test {
     char field0;
@@ -215,7 +217,7 @@ struct test {
 };
 ...
 ```
-Mapping this struct in Java using Jaccall:
+Mapping this struct in Java using Jaccall
 ```Java
 ...
 import static com.github.zubnix.jaccall.CType.CHAR;
@@ -281,8 +283,47 @@ The following rules apply when annotating a class with `@Struct`.
 - A class annotated with `@Struct` must be a class.
 - A class annotated with `@Struct` must be a top level class.
 
-
 #### Usage
+
+Using a Jaccall struct in Java is very similar as how you would use a C struct. You can create a new one directly
+
+C
+```C
+struct test testStruct;
+testStruct.field0 = (char)123;
+...
+int field1 = testStruct.field1;
+```
+
+Java
+```Java
+Test testStruct = new Test();
+testStruct.field0((byte)123);
+...
+int field1 = testStruct.field1();
+```
+
+or you can allocate a block of memory first, and map it as a struct.
+
+C
+```C
+void* voidPointer = malloc(sizeof(struct test));
+struct test *testPointer = (struct test *) voidPointer;
+struct test testStruct = *testPointer;
+testStruct.field0 = (char)123;
+...
+int field1 = testStruct.field1;
+```
+
+Java
+```Java
+Pointer<Void> voidPointer = Pointer.malloc(Test.SIZE);
+Pointer<Test> testPointer = voidPointer.pcast(Test.class);
+Test testStruct = testPointer.dref();
+testStruct.field0((byte)123);
+...
+int field1 = testStruct.field1();
+```
 
 MORE TODO
 
