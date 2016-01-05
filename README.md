@@ -201,132 +201,6 @@ public final class SomeHeader_Jaccall_LinkSymbols extends LinkSymbols {
 
 Linker data of different methods matches on array index.
 
-# Struct API
-
-#### A struct example
-
-Jaccall allows you to map any struct or union type in Java. Let's have a look at our previous example that contained a struct definition:
-
-C
-```C
-struct test {
-    char field0;
-    unsigned short field1;
-    int field2[3];
-    int *field3;
-};
-...
-```
-Mapping this struct in Java using Jaccall
-```Java
-...
-import static com.github.zubnix.jaccall.CType.CHAR;
-import static com.github.zubnix.jaccall.CType.INT;
-import static com.github.zubnix.jaccall.CType.POINTER;
-import static com.github.zubnix.jaccall.CType.UNSIGNED_SHORT;
-...
-@Struct(value = {
-    @Field(type = CHAR,
-           name = "field0"),
-    @Field(type = UNSIGNED_SHORT,
-           name = "field1") ,
-    @Field(type = INT,
-           cardinality = 3,
-           name = "field2"),
-    @Field(type = POINTER,
-           dataType = int.class,
-           name = "field3")
-})
-public class Test extends Test_Jaccall_StructType {
-}
-```
-
-Mapping a union is completely analogue.
-C `some_header.h`
-```C
-union test {
-    char field0;
-    int field1;
-};
-...
-```
-
-In Java this becomes
-```Java
-...
-import static com.github.zubnix.jaccall.CType.CHAR;
-import static com.github.zubnix.jaccall.CType.INT;
-...
-@Struct(value = {
-    union = true,
-    @Field(type = CHAR,
-           name = "field0"),
-    @Field(type = INT,
-           name = "field1"),
-})
-public class Test extends Test_Jaccall_StructType {
-}
-```
-
-The `@Struct` annotation defines the layout of the native C struct in Java. This layout is parsed during compilation to generate accessor code. This generated code is put in a Java class with name `Foo_Jaccall_StructType`, where `Foo` is the name of the class that has the `@Struct` annotation. To use this accessor code, simply extend the generated class. In our exmaple this becomes `extends Test_Jaccall_StructType`.
-
-The generated accessor class is part of the internal Jaccall API and should never be used directly. Instead always inherit from it.
-
-The following rules apply when annotating a class with `@Struct`.
-- A class annotated with `@Struct` must have a default no-arg constructor.
-- A class annotated with `@Struct` must not be abstract.
-- A class annotated with `@Struct` must have at least one `@Field`.
-- A class annotated with `@Struct` must extend the equivalent generated accessor class.
-- A class annotated with `@Struct` must have unique `@Field` names.
-- A class annotated with `@Struct` must not have a static field with name `SIZE`.
-- A class annotated with `@Struct` must be public.
-- A class annotated with `@Struct` must be a class.
-- A class annotated with `@Struct` must be a top level class.
-
-#### Usage
-
-Using a Jaccall struct in Java is very similar as how you would use a C struct. You can create a new one directly
-
-C
-```C
-struct test testStruct;
-testStruct.field0 = (char)123;
-...
-int field1 = testStruct.field1;
-```
-
-Java
-```Java
-Test testStruct = new Test();
-testStruct.field0((byte)123);
-...
-int field1 = testStruct.field1();
-```
-
-or you can allocate a block of memory first, and map it as a struct.
-
-C
-```C
-void* voidPointer = malloc(sizeof(struct test));
-struct test *testPointer = (struct test *) voidPointer;
-struct test testStruct = *testPointer;
-testStruct.field0 = (char)123;
-...
-int field1 = testStruct.field1;
-```
-
-Java
-```Java
-Pointer<Void> voidPointer = Pointer.malloc(Test.SIZE);
-Pointer<Test> testPointer = voidPointer.pcast(Test.class);
-Test testStruct = testPointer.dref();
-testStruct.field0((byte)123);
-...
-int field1 = testStruct.field1();
-```
-
-MORE TODO
-
 # Pointer API
 
 #### A pointer example
@@ -567,4 +441,128 @@ Following types are supported
 
 Java primitives like boolean (Boolean) or char (Character) are not supported for the simple reason that they do not have a good C counterpart. A boolean type does not exist in C, and a Java char is actually an unsigned 16-bit integer that is used as an utf-16 character as opposed to C's 8-bit char type.
 
-TODO MORE
+# Struct API
+
+#### A struct example
+
+Jaccall allows you to map any struct or union type in Java. Let's have a look at our previous example that contained a struct definition:
+
+C
+```C
+struct test {
+    char field0;
+    unsigned short field1;
+    int field2[3];
+    int *field3;
+};
+...
+```
+Mapping this struct in Java using Jaccall
+```Java
+...
+import static com.github.zubnix.jaccall.CType.CHAR;
+import static com.github.zubnix.jaccall.CType.INT;
+import static com.github.zubnix.jaccall.CType.POINTER;
+import static com.github.zubnix.jaccall.CType.UNSIGNED_SHORT;
+...
+@Struct(value = {
+    @Field(type = CHAR,
+           name = "field0"),
+    @Field(type = UNSIGNED_SHORT,
+           name = "field1") ,
+    @Field(type = INT,
+           cardinality = 3,
+           name = "field2"),
+    @Field(type = POINTER,
+           dataType = int.class,
+           name = "field3")
+})
+public class Test extends Test_Jaccall_StructType {
+}
+```
+
+Mapping a union is completely analogue.
+C `some_header.h`
+```C
+union test {
+    char field0;
+    int field1;
+};
+...
+```
+
+In Java this becomes
+```Java
+...
+import static com.github.zubnix.jaccall.CType.CHAR;
+import static com.github.zubnix.jaccall.CType.INT;
+...
+@Struct(value = {
+    union = true,
+    @Field(type = CHAR,
+           name = "field0"),
+    @Field(type = INT,
+           name = "field1"),
+})
+public class Test extends Test_Jaccall_StructType {
+}
+```
+
+The `@Struct` annotation defines the layout of the native C struct in Java. This layout is parsed during compilation to generate accessor code. This generated code is put in a Java class with name `Foo_Jaccall_StructType`, where `Foo` is the name of the class that has the `@Struct` annotation. To use this accessor code, simply extend the generated class. In our exmaple this becomes `extends Test_Jaccall_StructType`.
+
+The generated accessor class is part of the internal Jaccall API and should never be used directly. Instead always inherit from it.
+
+The following rules apply when annotating a class with `@Struct`.
+- A class annotated with `@Struct` must have a default no-arg constructor.
+- A class annotated with `@Struct` must not be abstract.
+- A class annotated with `@Struct` must have at least one `@Field`.
+- A class annotated with `@Struct` must extend the equivalent generated accessor class.
+- A class annotated with `@Struct` must have unique `@Field` names.
+- A class annotated with `@Struct` must not have a static field with name `SIZE`.
+- A class annotated with `@Struct` must be public.
+- A class annotated with `@Struct` must be a class.
+- A class annotated with `@Struct` must be a top level class.
+
+#### Usage
+
+Using a Jaccall struct in Java is very similar as how you would use a C struct. You can create a new one directly
+
+C
+```C
+struct test testStruct;
+testStruct.field0 = (char)123;
+...
+int field1 = testStruct.field1;
+```
+
+Java
+```Java
+Test testStruct = new Test();
+testStruct.field0((byte)123);
+...
+int field1 = testStruct.field1();
+```
+
+or you can allocate a block of memory first, and map it as a struct.
+
+C
+```C
+void* voidPointer = malloc(sizeof(struct test));
+struct test *testPointer = (struct test *) voidPointer;
+struct test testStruct = *testPointer;
+testStruct.field0 = (char)123;
+...
+int field1 = testStruct.field1;
+```
+
+Java
+```Java
+Pointer<Void> voidPointer = Pointer.malloc(Test.SIZE);
+Pointer<Test> testPointer = voidPointer.pcast(Test.class);
+Test testStruct = testPointer.dref();
+testStruct.field0((byte)123);
+...
+int field1 = testStruct.field1();
+```
+
+MORE TODO
