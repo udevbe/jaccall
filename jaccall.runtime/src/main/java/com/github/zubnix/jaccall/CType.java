@@ -1,46 +1,31 @@
 package com.github.zubnix.jaccall;
 
-import javax.annotation.Nonnull;
-
 public enum CType {
-    CHAR(byte.class),
-    UNSIGNED_CHAR(byte.class),
+    CHAR,
+    UNSIGNED_CHAR,
 
-    SHORT(short.class),
-    UNSIGNED_SHORT(short.class),
+    SHORT,
+    UNSIGNED_SHORT,
 
-    INT(int.class),
-    UNSIGNED_INT(int.class),
+    INT,
+    UNSIGNED_INT,
 
-    LONG(long.class),
-    UNSIGNED_LONG(long.class),
+    LONG,
+    UNSIGNED_LONG,
 
-    LONG_LONG(long.class),
-    UNSIGNED_LONG_LONG(long.class),
+    LONG_LONG,
+    UNSIGNED_LONG_LONG,
 
-    FLOAT(float.class),
-
-    DOUBLE(double.class),
+    FLOAT,
+    DOUBLE,
 
     /**
      * Any pointer type.
      */
-    POINTER(Void.class),
+    POINTER,
 
     /**
      * A struct or union by value.
      */
-    STRUCT(StructType.class);
-
-    @Nonnull
-    private final Class<?> javaType;
-
-    CType(@Nonnull final Class<?> javaType) {
-        this.javaType = javaType;
-    }
-
-    @Nonnull
-    public Class<?> getJavaType() {
-        return this.javaType;
-    }
+    STRUCT;
 }
