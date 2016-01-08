@@ -3,12 +3,14 @@ package com.github.zubnix.jaccall.compiletime.struct;
 import com.github.zubnix.jaccall.CLong;
 import com.github.zubnix.jaccall.CType;
 import com.github.zubnix.jaccall.JNI;
+import com.github.zubnix.jaccall.Pointer;
 import com.github.zubnix.jaccall.Size;
 import com.github.zubnix.jaccall.Struct;
 import com.github.zubnix.jaccall.StructType;
 import com.google.auto.common.BasicAnnotationProcessor;
 import com.google.common.collect.SetMultimap;
 import com.squareup.javapoet.AnnotationSpec;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
@@ -360,7 +362,7 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                 addStruct(i,
                           fieldDefinitions,
                           cardinality,
-                          dataType,
+                          structTypeType,
                           union);
                 break;
             }
@@ -370,21 +372,137 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
     private void addStruct(final int i,
                            final LinkedList<FieldDefinition> fieldDefinitions,
                            final Integer cardinality,
-                           final TypeMirror dataType,
+                           final DeclaredType structTypeType,
                            final Boolean union) {
 
         //TODO get type of first field of struct.
-        final String sizeOfCode  = "$T.sizeof(($T) null)";//Size, size of first non struct field
-        final String ffiTypeCode = "$T.FFI_TYPE_FLOAT";//JNI
-
         //TODO implement special handling for nested struct types
 
-//        fieldDefinitions.add(createFieldDefinition(i,
-//                                                   fieldDefinitions,
-//                                                   sizeOfCode,
-//                                                   new Object[]{Size.class,},
-//                                                   ffiTypeCode,
-//                                                   new Object[]{JNI.class}));
+        final CodeBlock ffiTypeCode = CodeBlock.builder()
+                                               .add("$T.FFI_TYPE",
+                                                    ClassName.get(structTypeType))
+                                               .build();
+        final CodeBlock firstNonStructField = CodeBlock.builder()
+                                                       .add("($T.sizeof(($T) null))",
+                                                            Size.class,
+                                                            findFirstNonStructField(structTypeType))
+                                                       .build();
+        final CodeBlock offsetCode;
+        if (i == 0 || union) {
+            //we're the first field
+            offsetCode = CodeBlock.builder()
+                                  .addStatement("0")
+                                  .build();
+        }
+        else {
+            final FieldDefinition previous = fieldDefinitions.get(i - 1);
+
+            offsetCode = CodeBlock.builder()
+                                  .add("$[")
+                                  .add("newOffset(")
+                                  .add(firstNonStructField)
+                                  .add(", OFFSET_" + (i - 1) + " + ")
+                                  .add(previous.getSizeOfCode())
+                                  .add(" * " + previous.getCardinality())
+                                  .add(")")
+                                  .add("$]")
+                                  .build();
+        }
+
+        final CodeBlock sizeOfCode = CodeBlock.builder()
+                                              .add("($T.SIZE)",
+                                                   ClassName.get(structTypeType))
+                                              .build();
+        fieldDefinitions.add(new FieldDefinition(ffiTypeCode,
+                                                 offsetCode,
+                                                 sizeOfCode,
+                                                 cardinality));
+    }
+
+    private Object findFirstNonStructField(final DeclaredType structTypeType) {
+        final List<? extends AnnotationMirror> annotationMirrors = structTypeType.asElement()
+                                                                                 .getAnnotationMirrors();
+        for (final AnnotationMirror annotationMirror : annotationMirrors) {
+            if (annotationMirror.getAnnotationType()
+                                .asElement()
+                                .getSimpleName()
+                                .toString()
+                                .equals(STRUCT)) {
+                for (final Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : annotationMirror.getElementValues()
+                                                                                                                     .entrySet()) {
+                    if (entry.getKey()
+                             .getSimpleName()
+                             .toString()
+                             .equals("value")) {
+                        final List<? extends AnnotationValue> fields = (List<? extends AnnotationValue>) entry.getValue()
+                                                                                                              .getValue();
+                        final AnnotationValue firstField = fields.get(0);
+                        final AnnotationMirror fieldAnnotationMirror = (AnnotationMirror) firstField.getValue();
+
+                        VariableElement cType = null;
+                        TypeMirror dataType = null;
+                        for (final Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> fieldAttribute : fieldAnnotationMirror.getElementValues()
+                                                                                                                                           .entrySet()) {
+                            if (fieldAttribute.getKey()
+                                              .getSimpleName()
+                                              .toString()
+                                              .equals("type")) {
+
+                                cType = (VariableElement) fieldAttribute.getValue()
+                                                                        .getValue();
+                            }
+                            else if (fieldAttribute.getKey()
+                                                   .getSimpleName()
+                                                   .toString()
+                                                   .equals("dataType")) {
+                                dataType = (TypeMirror) fieldAttribute.getValue()
+                                                                      .getValue();
+                            }
+                        }
+
+                        if (cType != null) {
+                            final CType cTypeInstance = CType.valueOf(cType.getSimpleName()
+                                                                           .toString());
+
+
+                            switch (cTypeInstance) {
+                                case CHAR:
+                                    return Byte.class;
+                                case UNSIGNED_CHAR:
+                                    return Byte.class;
+                                case SHORT:
+                                    return Short.class;
+                                case UNSIGNED_SHORT:
+                                    return Short.class;
+                                case INT:
+                                    return Integer.class;
+                                case UNSIGNED_INT:
+                                    return Integer.class;
+                                case LONG:
+                                    return CLong.class;
+                                case UNSIGNED_LONG:
+                                    return CLong.class;
+                                case LONG_LONG:
+                                    return Long.class;
+                                case UNSIGNED_LONG_LONG:
+                                    return Long.class;
+                                case FLOAT:
+                                    return Float.class;
+                                case DOUBLE:
+                                    return Double.class;
+                                case POINTER:
+                                    return Pointer.class;
+                                case STRUCT:
+                                    //nested struct in a nested struct
+                                    return findFirstNonStructField((DeclaredType) dataType);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     private void addPointer(final int i,
