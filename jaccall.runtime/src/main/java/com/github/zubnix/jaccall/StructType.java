@@ -33,41 +33,41 @@ public abstract class StructType {
         this.buffer = buffer;
     }
 
-    //byte
-    protected final byte readChar(int offset) {
+    //Byte
+    protected final byte readByte(final int offset) {
         return buffer().get(offset);
     }
 
-    protected final void writeChar(int offset,
-                                   byte value) {
+    protected final void writeByte(final int offset,
+                                   final byte value) {
         buffer().put(offset,
                      value);
     }
 
-    //short
-    protected final short readShort(int offset) {
+    //Short
+    protected final short readShort(final int offset) {
         return buffer().getShort(offset);
     }
 
-    protected final void writeShort(int offset,
-                                    short value) {
+    protected final void writeShort(final int offset,
+                                    final short value) {
         buffer().putShort(offset,
                           value);
     }
 
-    //int
-    protected final int readInt(int offset) {
+    //Integer
+    protected final int readInteger(final int offset) {
         return buffer().getInt(offset);
     }
 
-    protected final void writeInt(int offset,
-                                  int value) {
+    protected final void writeInteger(final int offset,
+                                      final int value) {
         buffer().putInt(offset,
                         value);
     }
 
     //c long
-    protected final CLong readCLong(int offset) {
+    protected final CLong readCLong(final int offset) {
         final long size = Size.sizeof((CLong) null);
         final long value;
 
@@ -81,8 +81,8 @@ public abstract class StructType {
         return new CLong(value);
     }
 
-    protected final void writeCLong(int offset,
-                                    CLong value) {
+    protected final void writeCLong(final int offset,
+                                    final CLong value) {
         final long size = Size.sizeof((CLong) null);
 
         if (size == 8) {
@@ -96,41 +96,41 @@ public abstract class StructType {
     }
 
     //long long
-    protected final long readLong(int offset) {
+    protected final long readLong(final int offset) {
         return buffer().getLong(offset);
     }
 
-    protected final void writeLong(int offset,
-                                   long value) {
+    protected final void writeLong(final int offset,
+                                   final long value) {
         buffer().putLong(offset,
                          value);
     }
 
     //float
-    protected final float readFloat(int offset) {
+    protected final float readFloat(final int offset) {
         return buffer().getFloat(offset);
     }
 
-    protected final void writeFloat(int offset,
-                                    float value) {
+    protected final void writeFloat(final int offset,
+                                    final float value) {
         buffer().putFloat(offset,
                           value);
     }
 
     //double
-    protected final double readDouble(int offset) {
+    protected final double readDouble(final int offset) {
         return buffer().getDouble(offset);
     }
 
-    protected final void writeDouble(int offset,
-                                     double value) {
+    protected final void writeDouble(final int offset,
+                                     final double value) {
         buffer().putDouble(offset,
                            value);
     }
 
     //pointer
     protected final <T> Pointer<T> readPointer(final int offset,
-                                               Class<T> type) {
+                                               final Class<T> type) {
         final long size = Size.sizeof((Pointer) null);
         final long address;
 
@@ -160,16 +160,16 @@ public abstract class StructType {
     }
 
     //struct type
-    protected final <T extends StructType> T readStructType(int offset,
-                                                            Class<T> structTypeClass) {
+    protected final <T extends StructType> T readStructType(final int offset,
+                                                            final Class<T> structTypeClass) {
         return Pointer.wrap(structTypeClass,
                             buffer())
                       .offset(offset)
                       .dref();
     }
 
-    protected final void writeStructType(int offset,
-                                         StructType structType) {
+    protected final void writeStructType(final int offset,
+                                         final StructType structType) {
         structType.buffer()
                   .rewind();
         final PointerStruct pointer = (PointerStruct) Pointer.wrap(structType.getClass(),
@@ -179,8 +179,8 @@ public abstract class StructType {
     }
 
     //array
-    protected final <T> Pointer<T> readArray(int offset,
-                                             Class<T> arrayType) {
+    protected final <T> Pointer<T> readArray(final int offset,
+                                             final Class<T> arrayType) {
         return Pointer.wrap(arrayType,
                             buffer())
                       .offset(offset);

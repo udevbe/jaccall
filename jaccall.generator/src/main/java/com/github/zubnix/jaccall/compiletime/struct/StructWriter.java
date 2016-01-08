@@ -9,12 +9,14 @@ import com.github.zubnix.jaccall.Struct;
 import com.github.zubnix.jaccall.StructType;
 import com.google.auto.common.BasicAnnotationProcessor;
 import com.google.common.collect.SetMultimap;
+import com.google.common.primitives.Primitives;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
@@ -33,6 +35,7 @@ import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -104,6 +107,7 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
         final CodeBlock.Builder ffiTypeCodeBuilder = CodeBlock.builder()
                                                               .add("$[$T.ffi_type_struct(",
                                                                    JNI.class);
+        final List<MethodSpec> accessors = new LinkedList<>();
         for (int i = 0; i < fieldDefinitions.size(); i++) {
             final FieldDefinition fieldDefinition = fieldDefinitions.get(i);
             final CodeBlock offsetCode = fieldDefinition.getOffsetCode();
@@ -120,6 +124,8 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                 ffiTypeCodeBuilder.add(", ");
             }
             ffiTypeCodeBuilder.add(fieldDefinition.getFfiTypeCode());
+
+            accessors.addAll(fieldDefinition.getAccessorsCode());
         }
         ffiTypeCodeBuilder.add(")$]");
 
@@ -146,9 +152,10 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
 
         final AnnotationSpec annotationSpec = AnnotationSpec.builder(Generated.class)
                                                             .addMember("value",
-                                                                       '"' + StructGenerator.class.getName() + '"')
+                                                                       "$S",
+                                                                       StructGenerator.class.getName())
                                                             .build();
-        //TODO add field accessor methods
+
         final TypeSpec typeSpec = TypeSpec.classBuilder(element.getSimpleName() + "_Jaccall_StructType")
                                           .addAnnotation(annotationSpec)
                                           .addModifiers(Modifier.ABSTRACT)
@@ -157,6 +164,7 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                                           .addField(sizeField)
                                           .addFields(offsetFields)
                                           .addMethod(constructor)
+                                          .addMethods(accessors)
                                           .build();
 
         // 0 if we have a non top level type, or 1 if we do.
@@ -190,6 +198,7 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
             VariableElement cType = null;
             Integer cardinality = 1;
             TypeMirror dataType = null;
+            String name = null;
 
             for (final Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> fieldAttribute : fieldAnnotationMirror.getElementValues()
                                                                                                                                .entrySet()) {
@@ -222,9 +231,17 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                     dataType = (TypeMirror) fieldAttribute.getValue()
                                                           .getValue();
                 }
+                else if (fieldAttribute.getKey()
+                                       .getSimpleName()
+                                       .toString()
+                                       .equals("name")) {
+                    name = (String) fieldAttribute.getValue()
+                                                  .getValue();
+                }
             }
 
             parseFieldAnnotation(i,
+                                 name,
                                  fieldDefinitions,
                                  cType,
                                  cardinality,
@@ -234,6 +251,7 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
     }
 
     private void parseFieldAnnotation(final int i,
+                                      final String fieldName,
                                       final LinkedList<FieldDefinition> fieldDefinitions,
                                       final VariableElement cType,
                                       final Integer cardinality,
@@ -245,95 +263,146 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
 
         switch (cTypeInstance) {
             case CHAR: {
-                addChar(i,
-                        fieldDefinitions,
-                        cardinality,
-                        union);
+                fieldDefinitions.add(createFieldDefinition(i,
+                                                           fieldName,
+                                                           fieldDefinitions,
+                                                           Byte.class,
+                                                           null,
+                                                           "FFI_TYPE_SINT8",
+                                                           union,
+                                                           cardinality));
                 break;
             }
             case UNSIGNED_CHAR: {
-                addUnsignedChar(i,
-                                fieldDefinitions,
-                                cardinality,
-                                union);
+                fieldDefinitions.add(createFieldDefinition(i,
+                                                           fieldName,
+                                                           fieldDefinitions,
+                                                           Byte.class,
+                                                           null,
+                                                           "FFI_TYPE_UINT8",
+                                                           union,
+                                                           cardinality));
                 break;
             }
             case SHORT: {
-                addShort(i,
-                         fieldDefinitions,
-                         cardinality,
-                         union);
+                fieldDefinitions.add(createFieldDefinition(i,
+                                                           fieldName,
+                                                           fieldDefinitions,
+                                                           Short.class,
+                                                           null,
+                                                           "FFI_TYPE_SINT16",
+                                                           union,
+                                                           cardinality));
                 break;
             }
             case UNSIGNED_SHORT: {
-                addUnsignedShort(i,
-                                 fieldDefinitions,
-                                 cardinality,
-                                 union);
+                fieldDefinitions.add(createFieldDefinition(i,
+                                                           fieldName,
+                                                           fieldDefinitions,
+                                                           Short.class,
+                                                           null,
+                                                           "FFI_TYPE_UINT16",
+                                                           union,
+                                                           cardinality));
                 break;
             }
             case INT: {
-                addInt(i,
-                       fieldDefinitions,
-                       cardinality,
-                       union);
+                fieldDefinitions.add(createFieldDefinition(i,
+                                                           fieldName,
+                                                           fieldDefinitions,
+                                                           Integer.class,
+                                                           null,
+                                                           "FFI_TYPE_SINT32",
+                                                           union,
+                                                           cardinality));
                 break;
             }
             case UNSIGNED_INT: {
-                addUnsignedInt(i,
-                               fieldDefinitions,
-                               cardinality,
-                               union);
+                fieldDefinitions.add(createFieldDefinition(i,
+                                                           fieldName,
+                                                           fieldDefinitions,
+                                                           Integer.class,
+                                                           null,
+                                                           "FFI_TYPE_UINT32",
+                                                           union,
+                                                           cardinality));
                 break;
             }
             case LONG: {
-                addLong(i,
-                        fieldDefinitions,
-                        cardinality,
-                        union);
+                fieldDefinitions.add(createFieldDefinition(i,
+                                                           fieldName,
+                                                           fieldDefinitions,
+                                                           CLong.class,
+                                                           null,
+                                                           "FFI_TYPE_SLONG",
+                                                           union,
+                                                           cardinality));
                 break;
             }
             case UNSIGNED_LONG: {
-                addUnsignedLong(i,
-                                fieldDefinitions,
-                                cardinality,
-                                union);
+                fieldDefinitions.add(createFieldDefinition(i,
+                                                           fieldName,
+                                                           fieldDefinitions,
+                                                           CLong.class,
+                                                           null,
+                                                           "FFI_TYPE_ULONG",
+                                                           union,
+                                                           cardinality));
                 break;
             }
             case LONG_LONG: {
-                addLongLong(i,
-                            fieldDefinitions,
-                            cardinality,
-                            union);
+                fieldDefinitions.add(createFieldDefinition(i,
+                                                           fieldName,
+                                                           fieldDefinitions,
+                                                           Long.class,
+                                                           null,
+                                                           "FFI_TYPE_SINT64",
+                                                           union,
+                                                           cardinality));
                 break;
             }
             case UNSIGNED_LONG_LONG: {
-                addUnsignedLongLong(i,
-                                    fieldDefinitions,
-                                    cardinality,
-                                    union);
+                fieldDefinitions.add(createFieldDefinition(i,
+                                                           fieldName,
+                                                           fieldDefinitions,
+                                                           Long.class,
+                                                           null,
+                                                           "FFI_TYPE_UINT64",
+                                                           union,
+                                                           cardinality));
                 break;
             }
             case FLOAT: {
-                addFloat(i,
-                         fieldDefinitions,
-                         cardinality,
-                         union);
+                fieldDefinitions.add(createFieldDefinition(i,
+                                                           fieldName,
+                                                           fieldDefinitions,
+                                                           Float.class,
+                                                           null,
+                                                           "FFI_TYPE_FLOAT",
+                                                           union,
+                                                           cardinality));
                 break;
             }
             case DOUBLE: {
-                addDouble(i,
-                          fieldDefinitions,
-                          cardinality,
-                          union);
+                fieldDefinitions.add(createFieldDefinition(i,
+                                                           fieldName,
+                                                           fieldDefinitions,
+                                                           Double.class,
+                                                           null,
+                                                           "FFI_TYPE_DOUBLE",
+                                                           union,
+                                                           cardinality));
                 break;
             }
             case POINTER: {
-                addPointer(i,
-                           fieldDefinitions,
-                           cardinality,
-                           dataType,
-                           union);
+                fieldDefinitions.add(createFieldDefinition(i,
+                                                           fieldName,
+                                                           fieldDefinitions,
+                                                           Pointer.class,
+                                                           dataType,
+                                                           "FFI_TYPE_POINTER",
+                                                           union,
+                                                           cardinality));
                 break;
             }
             case STRUCT: {
@@ -360,6 +429,7 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                 }
 
                 addStruct(i,
+                          fieldName,
                           fieldDefinitions,
                           cardinality,
                           structTypeType,
@@ -370,23 +440,18 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
     }
 
     private void addStruct(final int i,
+                           final String fieldName,
                            final LinkedList<FieldDefinition> fieldDefinitions,
                            final Integer cardinality,
                            final DeclaredType structTypeType,
                            final Boolean union) {
 
-        //TODO get type of first field of struct.
-        //TODO implement special handling for nested struct types
+        final TypeName structTypeName = ClassName.get(structTypeType);
 
         final CodeBlock ffiTypeCode = CodeBlock.builder()
                                                .add("$T.FFI_TYPE",
-                                                    ClassName.get(structTypeType))
+                                                    structTypeName)
                                                .build();
-        final CodeBlock firstNonStructField = CodeBlock.builder()
-                                                       .add("($T.sizeof(($T) null))",
-                                                            Size.class,
-                                                            findFirstNonStructField(structTypeType))
-                                                       .build();
         final CodeBlock offsetCode;
         if (i == 0 || union) {
             //we're the first field
@@ -398,25 +463,47 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
             final FieldDefinition previous = fieldDefinitions.get(i - 1);
 
             offsetCode = CodeBlock.builder()
-                                  .add("$[")
-                                  .add("newOffset(")
-                                  .add(firstNonStructField)
-                                  .add(", OFFSET_" + (i - 1) + " + ")
-                                  .add(previous.getSizeOfCode())
-                                  .add(" * " + previous.getCardinality())
-                                  .add(")")
-                                  .add("$]")
+                                  .add("$[newOffset(($T.sizeof(($T) null)), OFFSET_$L + ($L * $L))$]",
+                                       Size.class,
+                                       findFirstNonStructField(structTypeType),
+                                       i - 1,
+                                       previous.getSizeOfCode(),
+                                       previous.getCardinality())
                                   .build();
         }
 
         final CodeBlock sizeOfCode = CodeBlock.builder()
-                                              .add("($T.SIZE)",
-                                                   ClassName.get(structTypeType))
+                                              .add("$T.SIZE",
+                                                   structTypeName)
                                               .build();
+
+        final MethodSpec read = MethodSpec.methodBuilder(fieldName)
+                                          .addModifiers(Modifier.PUBLIC,
+                                                        Modifier.FINAL)
+                                          .returns(structTypeName)
+                                          .addStatement("return readStructType(OFFSET_$L, $T.class)",
+                                                        i,
+                                                        structTypeName)
+                                          .build();
+
+        final MethodSpec write = MethodSpec.methodBuilder(fieldName)
+                                           .addModifiers(Modifier.PUBLIC,
+                                                         Modifier.FINAL)
+                                           .addParameter(structTypeName,
+                                                         fieldName,
+                                                         Modifier.FINAL)
+                                           .addStatement("writeStructType(OFFSET_$L, $N)",
+                                                         i,
+                                                         fieldName)
+                                           .build();
+
+
         fieldDefinitions.add(new FieldDefinition(ffiTypeCode,
                                                  offsetCode,
                                                  sizeOfCode,
-                                                 cardinality));
+                                                 cardinality,
+                                                 Arrays.asList(read,
+                                                               write)));
     }
 
     private Object findFirstNonStructField(final DeclaredType structTypeType) {
@@ -463,8 +550,6 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                         if (cType != null) {
                             final CType cTypeInstance = CType.valueOf(cType.getSimpleName()
                                                                            .toString());
-
-
                             switch (cTypeInstance) {
                                 case CHAR:
                                     return Byte.class;
@@ -505,314 +590,123 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
         return null;
     }
 
-    private void addPointer(final int i,
-                            final LinkedList<FieldDefinition> fieldDefinitions,
-                            final Integer cardinality,
-                            final TypeMirror dataType,
-                            final Boolean union) {
-        final CodeBlock sizeOfCode = CodeBlock.builder()
-                                              .add("($T.sizeof((Pointer) null))",
-                                                   Size.class)
-                                              .build();
-        final CodeBlock ffiTypeCode = CodeBlock.builder()
-                                               .add("$T.FFI_TYPE_POINTER",
-                                                    JNI.class)
-                                               .build();
-
-        fieldDefinitions.add(createFieldDefinition(i,
-                                                   fieldDefinitions,
-                                                   sizeOfCode,
-                                                   ffiTypeCode,
-                                                   union,
-                                                   cardinality));
-    }
-
-    private void addDouble(final int i,
-                           final LinkedList<FieldDefinition> fieldDefinitions,
-                           final Integer cardinality,
-                           final Boolean union) {
-        final CodeBlock sizeOfCode = CodeBlock.builder()
-                                              .add("($T.sizeof((Double) null))",
-                                                   Size.class)
-                                              .build();
-        final CodeBlock ffiTypeCode = CodeBlock.builder()
-                                               .add("$T.FFI_TYPE_DOUBLE",
-                                                    JNI.class)
-                                               .build();
-
-        fieldDefinitions.add(createFieldDefinition(i,
-                                                   fieldDefinitions,
-                                                   sizeOfCode,
-                                                   ffiTypeCode,
-                                                   union,
-                                                   cardinality));
-    }
-
-    private void addFloat(final int i,
-                          final LinkedList<FieldDefinition> fieldDefinitions,
-                          final Integer cardinality,
-                          final Boolean union) {
-        final CodeBlock sizeOfCode = CodeBlock.builder()
-                                              .add("($T.sizeof((Float) null))",
-                                                   Size.class)
-                                              .build();
-        final CodeBlock ffiTypeCode = CodeBlock.builder()
-                                               .add("$T.FFI_TYPE_FLOAT",
-                                                    JNI.class)
-                                               .build();
-
-        fieldDefinitions.add(createFieldDefinition(i,
-                                                   fieldDefinitions,
-                                                   sizeOfCode,
-                                                   ffiTypeCode,
-                                                   union,
-                                                   cardinality));
-    }
-
-    private void addUnsignedLongLong(final int i,
-                                     final LinkedList<FieldDefinition> fieldDefinitions,
-                                     final Integer cardinality,
-                                     final Boolean union) {
-        final CodeBlock sizeOfCode = CodeBlock.builder()
-                                              .add("($T.sizeof((Long) null))",
-                                                   Size.class)
-                                              .build();
-        final CodeBlock ffiTypeCode = CodeBlock.builder()
-                                               .add("$T.FFI_TYPE_UINT64",
-                                                    JNI.class)
-                                               .build();
-
-        fieldDefinitions.add(createFieldDefinition(i,
-                                                   fieldDefinitions,
-                                                   sizeOfCode,
-                                                   ffiTypeCode,
-                                                   union,
-                                                   cardinality));
-    }
-
-    private void addLongLong(final int i,
-                             final LinkedList<FieldDefinition> fieldDefinitions,
-                             final Integer cardinality,
-                             final Boolean union) {
-        final CodeBlock sizeOfCode = CodeBlock.builder()
-                                              .add("($T.sizeof((Long) null))",
-                                                   Size.class)
-                                              .build();
-        final CodeBlock ffiTypeCode = CodeBlock.builder()
-                                               .add("$T.FFI_TYPE_SINT64",
-                                                    JNI.class)
-                                               .build();
-
-        fieldDefinitions.add(createFieldDefinition(i,
-                                                   fieldDefinitions,
-                                                   sizeOfCode,
-                                                   ffiTypeCode,
-                                                   union,
-                                                   cardinality));
-    }
-
-    private void addUnsignedLong(final int i,
-                                 final LinkedList<FieldDefinition> fieldDefinitions,
-                                 final Integer cardinality,
-                                 final Boolean union) {
-        final CodeBlock sizeOfCode = CodeBlock.builder()
-                                              .add("($T.sizeof(($T) null))",
-                                                   Size.class,
-                                                   CLong.class)
-                                              .build();
-        final CodeBlock ffiTypeCode = CodeBlock.builder()
-                                               .add("$T.FFI_TYPE_ULONG",
-                                                    JNI.class)
-                                               .build();
-
-        fieldDefinitions.add(createFieldDefinition(i,
-                                                   fieldDefinitions,
-                                                   sizeOfCode,
-                                                   ffiTypeCode,
-                                                   union,
-                                                   cardinality));
-    }
-
-    private void addLong(final int i,
-                         final LinkedList<FieldDefinition> fieldDefinitions,
-                         final Integer cardinality,
-                         final Boolean union) {
-        final CodeBlock sizeOfCode = CodeBlock.builder()
-                                              .add("($T.sizeof(($T) null))",
-                                                   Size.class,
-                                                   CLong.class)
-                                              .build();
-        final CodeBlock ffiTypeCode = CodeBlock.builder()
-                                               .add("$T.FFI_TYPE_SLONG",
-                                                    JNI.class)
-                                               .build();
-
-        fieldDefinitions.add(createFieldDefinition(i,
-                                                   fieldDefinitions,
-                                                   sizeOfCode,
-                                                   ffiTypeCode,
-                                                   union,
-                                                   cardinality));
-    }
-
-    private void addUnsignedInt(final int i,
-                                final LinkedList<FieldDefinition> fieldDefinitions,
-                                final Integer cardinality,
-                                final Boolean union) {
-        final CodeBlock sizeOfCode = CodeBlock.builder()
-                                              .add("($T.sizeof((Integer) null))",
-                                                   Size.class)
-                                              .build();
-        final CodeBlock ffiTypeCode = CodeBlock.builder()
-                                               .add("$T.FFI_TYPE_UINT32",
-                                                    JNI.class)
-                                               .build();
-
-        fieldDefinitions.add(createFieldDefinition(i,
-                                                   fieldDefinitions,
-                                                   sizeOfCode,
-                                                   ffiTypeCode,
-                                                   union,
-                                                   cardinality));
-    }
-
-    private void addInt(final int i,
-                        final LinkedList<FieldDefinition> fieldDefinitions,
-                        final Integer cardinality,
-                        final Boolean union) {
-        final CodeBlock sizeOfCode = CodeBlock.builder()
-                                              .add("($T.sizeof((Integer) null))",
-                                                   Size.class)
-                                              .build();
-        final CodeBlock ffiTypeCode = CodeBlock.builder()
-                                               .add("$T.FFI_TYPE_SINT32",
-                                                    JNI.class)
-                                               .build();
-
-        fieldDefinitions.add(createFieldDefinition(i,
-                                                   fieldDefinitions,
-                                                   sizeOfCode,
-                                                   ffiTypeCode,
-                                                   union,
-                                                   cardinality));
-    }
-
-    private void addUnsignedShort(final int i,
-                                  final LinkedList<FieldDefinition> fieldDefinitions,
-                                  final Integer cardinality,
-                                  final Boolean union) {
-        final CodeBlock sizeOfCode = CodeBlock.builder()
-                                              .add("($T.sizeof((Short) null))",
-                                                   Size.class)
-                                              .build();
-        final CodeBlock ffiTypeCode = CodeBlock.builder()
-                                               .add("$T.FFI_TYPE_UINT16",
-                                                    JNI.class)
-                                               .build();
-
-        fieldDefinitions.add(createFieldDefinition(i,
-                                                   fieldDefinitions,
-                                                   sizeOfCode,
-                                                   ffiTypeCode,
-                                                   union,
-                                                   cardinality));
-    }
-
-    private void addShort(final int i,
-                          final LinkedList<FieldDefinition> fieldDefinitions,
-                          final Integer cardinality,
-                          final Boolean union) {
-        final CodeBlock sizeOfCode = CodeBlock.builder()
-                                              .add("($T.sizeof((Short) null))",
-                                                   Size.class)
-                                              .build();
-        final CodeBlock ffiTypeCode = CodeBlock.builder()
-                                               .add("$T.FFI_TYPE_SINT16",
-                                                    JNI.class)
-                                               .build();
-
-        fieldDefinitions.add(createFieldDefinition(i,
-                                                   fieldDefinitions,
-                                                   sizeOfCode,
-                                                   ffiTypeCode,
-                                                   union,
-                                                   cardinality));
-    }
-
-    private void addUnsignedChar(final int i,
-                                 final LinkedList<FieldDefinition> fieldDefinitions,
-                                 final Integer cardinality,
-                                 final Boolean union) {
-        final CodeBlock sizeOfCode = CodeBlock.builder()
-                                              .add("($T.sizeof((Byte) null))",
-                                                   Size.class)
-                                              .build();
-        final CodeBlock ffiTypeCode = CodeBlock.builder()
-                                               .add("$T.FFI_TYPE_UINT8",
-                                                    JNI.class)
-                                               .build();
-
-        fieldDefinitions.add(createFieldDefinition(i,
-                                                   fieldDefinitions,
-                                                   sizeOfCode,
-                                                   ffiTypeCode,
-                                                   union,
-                                                   cardinality));
-    }
-
-    private void addChar(final int i,
-                         final LinkedList<FieldDefinition> fieldDefinitions,
-                         final Integer cardinality,
-                         final Boolean union) {
-        final CodeBlock sizeOfCode = CodeBlock.builder()
-                                              .add("($T.sizeof((Byte) null))",
-                                                   Size.class)
-                                              .build();
-        final CodeBlock ffiTypeCode = CodeBlock.builder()
-                                               .add("$T.FFI_TYPE_SINT8",
-                                                    JNI.class)
-                                               .build();
-
-        fieldDefinitions.add(createFieldDefinition(i,
-                                                   fieldDefinitions,
-                                                   sizeOfCode,
-                                                   ffiTypeCode,
-                                                   union,
-                                                   cardinality));
-    }
-
     private FieldDefinition createFieldDefinition(final int i,
+                                                  final String fieldName,
                                                   final LinkedList<FieldDefinition> fieldDefinitions,
-                                                  final CodeBlock sizeOfCode,
-                                                  final CodeBlock ffiTypeCode,
+                                                  final Class<?> javaType,
+                                                  final TypeMirror dataType,
+                                                  final String ffiType,
                                                   final Boolean union,
                                                   final Integer cardinality) {
+        final CodeBlock sizeOfCode = CodeBlock.builder()
+                                              .add("$T.sizeof(($T) null)",
+                                                   Size.class,
+                                                   javaType)
+                                              .build();
+        final CodeBlock ffiTypeCode = CodeBlock.builder()
+                                               .add("$T.$L",
+                                                    JNI.class,
+                                                    ffiType)
+                                               .build();
         final CodeBlock offsetCode;
 
         if (i == 0 || union) {
             //we're the first field
             offsetCode = CodeBlock.builder()
-                                  .addStatement("0")
+                                  .add("0")
                                   .build();
         }
         else {
             final FieldDefinition previous = fieldDefinitions.get(i - 1);
 
             offsetCode = CodeBlock.builder()
-                                  .add("$[")
-                                  .add("newOffset(")
-                                  .add(sizeOfCode)
-                                  .add(", OFFSET_" + (i - 1) + " + ")
-                                  .add(previous.getSizeOfCode())
-                                  .add(" * " + previous.getCardinality())
-                                  .add(")")
-                                  .add("$]")
+                                  .add("$[newOffset($L, OFFSET_$L + ($L * $L))$]",
+                                       sizeOfCode,
+                                       i - 1,
+                                       previous.getSizeOfCode(),
+                                       previous.getCardinality())
                                   .build();
+        }
+
+
+        final List<MethodSpec> accessors = new LinkedList<>();
+
+        if (cardinality > 1) {
+            accessors.add(MethodSpec.methodBuilder(fieldName)
+                                    .addModifiers(Modifier.PUBLIC,
+                                                  Modifier.FINAL)
+                                    .returns(ParameterizedTypeName.get(Pointer.class,
+                                                                       javaType))
+                                    .addStatement("return readArray(OFFSET_$L, $T.class)",
+                                                  i,
+                                                  javaType)
+                                    .build());
+        }
+        else if (Pointer.class.isAssignableFrom(javaType)) {
+            TypeName dataTypeName = dataType == null ? ClassName.VOID : ClassName.get(dataType);
+            if (dataTypeName.isPrimitive()) {
+                dataTypeName = dataTypeName.box();
+            }
+
+            //read
+            accessors.add(MethodSpec.methodBuilder(fieldName)
+                                    .addModifiers(Modifier.PUBLIC,
+                                                  Modifier.FINAL)
+                                    .returns(ParameterizedTypeName.get(ClassName.get(Pointer.class),
+                                                                       dataTypeName))
+                                    .addStatement("return readPointer(OFFSET_$L, $T.class)",
+                                                  i,
+                                                  dataTypeName)
+                                    .build());
+            //write
+            accessors.add(MethodSpec.methodBuilder(fieldName)
+                                    .addModifiers(Modifier.PUBLIC,
+                                                  Modifier.FINAL)
+                                    .addParameter(ParameterizedTypeName.get(ClassName.get(Pointer.class),
+                                                                            dataTypeName),
+                                                  CodeBlock.builder()
+                                                           .add("$N",
+                                                                fieldName)
+                                                           .build()
+                                                           .toString(),
+                                                  Modifier.FINAL)
+                                    .addStatement("writePointer(OFFSET_$L, $N)",
+                                                  i,
+                                                  fieldName)
+                                    .build());
+        }
+        else {
+            //read
+            accessors.add(MethodSpec.methodBuilder(fieldName)
+                                    .addModifiers(Modifier.PUBLIC,
+                                                  Modifier.FINAL)
+                                    .returns(Primitives.unwrap(javaType))
+                                    .addStatement("return read$L(OFFSET_$L)",
+                                                  javaType.getSimpleName(),
+                                                  i)
+                                    .build());
+            //write
+            accessors.add(MethodSpec.methodBuilder(fieldName)
+                                    .addModifiers(Modifier.PUBLIC,
+                                                  Modifier.FINAL)
+                                    .addParameter(Primitives.unwrap(javaType),
+                                                  CodeBlock.builder()
+                                                           .add("$N",
+                                                                fieldName)
+                                                           .build()
+                                                           .toString(),
+                                                  Modifier.FINAL)
+                                    .addStatement("write$L(OFFSET_$L, $N)",
+                                                  javaType.getSimpleName(),
+                                                  i,
+                                                  fieldName)
+                                    .build());
         }
 
         return new FieldDefinition(ffiTypeCode,
                                    offsetCode,
                                    sizeOfCode,
-                                   cardinality);
+                                   cardinality,
+                                   accessors);
     }
 }

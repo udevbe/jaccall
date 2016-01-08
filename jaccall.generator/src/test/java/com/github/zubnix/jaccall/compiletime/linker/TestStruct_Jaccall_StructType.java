@@ -36,11 +36,11 @@ abstract class TestStruct_Jaccall_StructType extends StructType {
     }
 
     public final byte field0() {
-        return readChar(OFFSET_0);
+        return readByte(OFFSET_0);
     }
 
     public final void field0(byte field0) {
-        writeChar(OFFSET_0,
+        writeByte(OFFSET_0,
                   field0);
     }
 
