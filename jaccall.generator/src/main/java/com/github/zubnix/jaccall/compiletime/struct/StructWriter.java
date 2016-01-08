@@ -129,7 +129,7 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
         }
         ffiTypeCodeBuilder.add(")$]");
 
-        final FieldSpec ffiTypeField = FieldSpec.builder(TypeName.INT,
+        final FieldSpec ffiTypeField = FieldSpec.builder(TypeName.LONG,
                                                          "FFI_TYPE",
                                                          Modifier.PUBLIC,
                                                          Modifier.STATIC,

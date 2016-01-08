@@ -42,7 +42,7 @@ public class CheckWellFormedStructTest {
                                                                           "                    dataType = TestStructEmbedded.class,\n" +
                                                                           "                    name = \"field4\")\n" +
                                                                           "              })\n" +
-                                                                          "      public class TestStruct extends TestStruct_Jaccall_StructType{\n" +
+                                                                          "      public class TestStruct {\n" +
                                                                           "      \n" +
                                                                           "   }" +
                                                                           "}");
