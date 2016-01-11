@@ -9,8 +9,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Ptr {
     /**
-     * Programmer's aid to indicate what data the pointer is referencing.
-     * This value is not interpreted in any way nor does it make any guarantee or do type checking.
+     * Programming aid to indicate what data the pointer is referencing.
+     * This value is not interpreted in any way nor does it make any guarantee or do any type checking.
      *
      * @return
      */

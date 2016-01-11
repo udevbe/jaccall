@@ -14,6 +14,14 @@ union testunion {
     float field1;
 };
 
+typedef char(*testFunc)(struct test*, unsigned int, struct test);
+
+char function(struct test* arg0, unsigned int arg1, struct test arg2);
+
+testFunc getFunctionPointerTest();
+
+char functionPointerTest(testFunc function, struct test* arg0, unsigned int arg1, struct test arg2);
+
 struct test structTest(struct test *tst,
                        char field0,
                        short field1,

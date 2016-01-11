@@ -147,3 +147,16 @@ void *pointerTest(void *value) {
     return value;
 
 }
+
+char function(struct test* arg0, unsigned int arg1, struct test arg2){
+
+}
+
+testFunc getFunctionPointerTest(){
+    return &function;
+}
+
+
+char functionPointerTest(testFunc func, struct test* arg0, unsigned int arg1, struct test arg2){
+    func(arg0,arg1,arg2);
+}

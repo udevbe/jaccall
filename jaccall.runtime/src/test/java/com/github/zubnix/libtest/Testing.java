@@ -9,6 +9,14 @@ import com.github.zubnix.jaccall.Unsigned;
 @Lib("testing")
 public class Testing {
 
+    @Ptr
+    public native long getFunctionPointerTest();
+
+    public native byte functionPointerTest(@Ptr(TestFunc.class) long function,
+                                           @Ptr(TestStruct.class) long arg0,
+                                           @Unsigned int arg1,
+                                           @ByVal(TestStruct.class) long arg2);
+
     public native byte charTest(byte value);
 
     @Unsigned

@@ -55,6 +55,8 @@ public final class JNI {
                                          @Nonnegative long size);
 
     public static native long unwrap(@Nonnull ByteBuffer byteBuffer);
+
+    public static native void DeleteGlobalRef(@Nonnull final Object object);
     /*
      * <- JNI
      */
@@ -144,6 +146,11 @@ public final class JNI {
 
     public static native long ffi_callInterface(long return_type,
                                                 long... arg_types);
+
+    public static native long ffi_closure(final long ffiCif,
+                                          @Nonnull final Object function);
+
+    public static native void ffi_closure_free(final long address);
     /*
      * <- ffi
      */
@@ -152,19 +159,19 @@ public final class JNI {
      * linker ->
      */
 
-    static native void link(String library, /* library path */
-                            Class<?> header,/*class with native methods*/
-                            String[] symbols,/*method names*/
-                            byte[] argumentSizes,/*number of arguments for each method*/
-                            String[] jniSignatures,/*jni method signatures*/
-                            long[] ffiCallInterfaces/*array of ffi type pointers*/
-                           );
+    static native void link(@Nonnull String library, /* library path */
+                            @Nonnull Class<?> header,/*class with native methods*/
+                            @Nonnull String[] symbols,/*method names*/
+                            @Nonnull byte[] argumentSizes,/*number of arguments for each method*/
+                            @Nonnull String[] jniSignatures,/*jni method signatures*/
+                            @Nonnull long[] ffiCallInterfaces/*array of ffi type pointers*/);
 
-    public static native void link(Class<?> wrapper,/*class with native method*/
-                                   String symbol,/*method name*/
-                                   byte argumentSize,/*number of arguments for the method*/
-                                   String jniSignature,/*jni method signature*/
-                                   long ffiCallInterface/*ffi call interface*/);
+    public static native void linkFuncPtr(@Nonnull Class<?> wrapper,/*class with native method*/
+                                          @Nonnull String symbol,/*method name*/
+                                          @Nonnegative int argumentSize,/*number of arguments for the method*/
+                                          @Nonnull String jniSignature,/*jni method signature*/
+                                          long ffiCallInterface/*ffi call interface*/);
+
     /*
      * <- linker
      */

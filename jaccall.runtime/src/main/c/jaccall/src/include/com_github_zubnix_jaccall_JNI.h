@@ -25,6 +25,14 @@ JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_unwrap
 
 /*
  * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    DeleteGlobalRef
+ * Signature: (Ljava/lang/Object;)V
+ */
+JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_DeleteGlobalRef
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
  * Method:    malloc
  * Signature: (I)J
  */
@@ -209,19 +217,35 @@ JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1callInterface
 
 /*
  * Class:     com_github_zubnix_jaccall_JNI
- * Method:    link
- * Signature: (Ljava/lang/String;Ljava/lang/Class;[Ljava/lang/String;[B[Ljava/lang/String;[J)V
+ * Method:    ffi_closure
+ * Signature: (JLjava/lang/Object;)J
  */
-JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_link__Ljava_lang_String_2Ljava_lang_Class_2_3Ljava_lang_String_2_3B_3Ljava_lang_String_2_3J
-  (JNIEnv *, jclass, jstring, jclass, jobjectArray, jbyteArray, jobjectArray, jlongArray);
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1closure
+  (JNIEnv *, jclass, jlong, jobject);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    ffi_closure_free
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1closure_1free
+  (JNIEnv *, jclass, jlong);
 
 /*
  * Class:     com_github_zubnix_jaccall_JNI
  * Method:    link
- * Signature: (Ljava/lang/Class;Ljava/lang/String;BLjava/lang/String;J)V
+ * Signature: (Ljava/lang/String;Ljava/lang/Class;[Ljava/lang/String;[B[Ljava/lang/String;[J)V
  */
-JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_link__Ljava_lang_Class_2Ljava_lang_String_2BLjava_lang_String_2J
-  (JNIEnv *, jclass, jclass, jstring, jbyte, jstring, jlong);
+JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_link
+  (JNIEnv *, jclass, jstring, jclass, jobjectArray, jbyteArray, jobjectArray, jlongArray);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    linkFuncPtr
+ * Signature: (Ljava/lang/Class;Ljava/lang/String;ILjava/lang/String;J)V
+ */
+JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_linkFuncPtr
+  (JNIEnv *, jclass, jclass, jstring, jint, jstring, jlong);
 
 #ifdef __cplusplus
 }

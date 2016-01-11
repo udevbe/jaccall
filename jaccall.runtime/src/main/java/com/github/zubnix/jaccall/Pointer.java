@@ -3,7 +3,6 @@ package com.github.zubnix.jaccall;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
@@ -165,34 +164,7 @@ public abstract class Pointer<T> implements AutoCloseable {
                                                           Integer.MAX_VALUE));
         }
 
-        if (Func.class.isAssignableFrom(rawType)) {
-            return (Pointer<U>) nativePointerFunc((Class<? extends Func>) toClass(type),
-                                                  address);
-        }
-
         throw new IllegalArgumentException("Type " + rawType + " does not have a known native size.");
-    }
-
-    private static PointerFunc<?> nativePointerFunc(final Class<? extends Func> type,
-                                                    final long address) {
-        try {
-            final Class<? extends PointerFunc<?>> cFuncClass = (Class<? extends PointerFunc<?>>) type.getClassLoader()
-                                                                                                     .loadClass(type.getName() + "_Jaccall_PointerFunc");
-            return cFuncClass.getConstructor(Type.class,
-                                             long.class,
-                                             ByteBuffer.class)
-                             .newInstance(type,
-                                          address,
-                                          JNI.wrap(address,
-                                                   Integer.MAX_VALUE));
-        }
-        catch (final InvocationTargetException |
-                InstantiationException |
-                IllegalAccessException |
-                ClassNotFoundException |
-                NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**
@@ -297,16 +269,6 @@ public abstract class Pointer<T> implements AutoCloseable {
 
         return pointer;
     }
-
-    public static <U extends Func> Pointer<U> nref(@Nonnull final U function) {
-        return (Pointer<U>) wrap(function.getClass(),
-                                 javaClosure(function));
-    }
-
-    private static long javaClosure(final Func function) {
-        return 0L;
-    }
-
 
     /**
      * Create a new pointer object with newly allocated memory. The memory is initialized with the given bytes.
