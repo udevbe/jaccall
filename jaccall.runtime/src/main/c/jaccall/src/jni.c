@@ -427,6 +427,9 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1callInterface(JNIEnv *env, jclas
                                                               jlongArray ffi_types) {
     jlong *struct_ctypes = (*env)->GetLongArrayElements(env, ffi_types, 0);
     int nro_args = (*env)->GetArrayLength(env, ffi_types);
+
+    fprintf(stderr,"nro_args %i\n",nro_args);
+
     ffi_type **args = nro_args ? malloc(sizeof(ffi_type *) * nro_args) : NULL;
 
     int i = 0;
