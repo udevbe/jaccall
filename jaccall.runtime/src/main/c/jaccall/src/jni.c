@@ -45,6 +45,11 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_GetMethodID(JNIEnv *env, jclass clazz
     const char *signature = (*env)->GetStringUTFChars(env, jniSignature, 0);
 
     jmethodID mid = (*env)->GetMethodID(env, target, methodName, signature);
+    if(mid == NULL) {
+        //TODO throw exception
+        fprintf(stderr, "Could not find method id for %s with signature %s",methodName, signature);
+        exit(1);
+    }
 
     (*env)->ReleaseStringUTFChars(env, jniMethodName, methodName);
     (*env)->ReleaseStringUTFChars(env, jniSignature, signature);
@@ -572,9 +577,11 @@ JNI_OnLoad(JavaVM *vm, void *reserved){
 static
 void
 java_func_ptr_handler(ffi_cif *jni_cif, void *ret, void **jargs, void *user_data) {
-    //TODO get env pointer through a jvm instance
+
+    struct java_call_data* call_data = user_data;
     JNIEnv * env;
-    // double check it's all ok
+    jvalue result;
+
     const int getEnvStat = (*jvm)->GetEnv(jvm, (void **)&env, JNI_VERSION_1_6);
     if (getEnvStat == JNI_EDETACHED) {
         if ((*jvm)->AttachCurrentThread(jvm, (void **) &env, NULL) != 0) {
@@ -583,17 +590,37 @@ java_func_ptr_handler(ffi_cif *jni_cif, void *ret, void **jargs, void *user_data
                         "Failed to attach java thread in native context.");
                 exit(1);
         }
-    } else if (getEnvStat == JNI_OK) {
-        //
     } else if (getEnvStat == JNI_EVERSION) {
+        //TODO throw java error
         fprintf(stderr,
                 "GetEnv: version not supported.");
         exit(1);
     }
 
+
+    unsigned int nargs = jni_cif->nargs;
+    jvalue arguments[nargs];
+    int i = 0;
+    for(; i < nargs; i++){
+        //TODO cast to the correct *native* pointer type or we risk reading too much data when dereferencing(?).
+        //TODO check if argument is a struct by value and get it's address.
+        //arguments[i] = *((jvalue*)jargs[i]);
+    }
+
     //TODO analyse cif for void/non void call & prepare **jargs for calling java method
     //TODO (optional speed improvement) make a java_func_ptr_handler for void & non-void methods separately
-    //(*env)->CallVoidMethod(g_obj, g_mid, val);
+
+    switch(jni_cif->rtype->type) {
+        case FFI_TYPE_VOID:
+            (*env)->CallVoidMethodA(env, call_data->object, call_data->mid, arguments);
+            break;
+        case FFI_TYPE_UINT8:
+        case FFI_TYPE_SINT8:
+            result.b = (*env)->CallByteMethodA(env, call_data->object, call_data->mid, arguments);
+            break;
+    }
+
+    *((jvalue *)ret) = result;
 
     if ((*env)->ExceptionCheck(env)) {
         (*env)->ExceptionDescribe(env);
@@ -613,7 +640,7 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1closure(JNIEnv *env, jclass claz
     ffi_closure *closure = ffi_closure_alloc(sizeof(ffi_closure), &target_func);
     if (closure) {
         struct java_call_data *java_call = malloc(sizeof(struct java_call_data));
-        java_call->object = object;
+        java_call->object = (*env)->NewGlobalRef(env, object);
         java_call->mid = (jmethodID) methodId;
 
         ffi_status status = ffi_prep_closure_loc(closure, target_cif, &java_func_ptr_handler, java_call, target_func);
