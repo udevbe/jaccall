@@ -6,6 +6,8 @@ import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 
+import static com.github.zubnix.jaccall.Size.sizeof;
+
 
 final class PointerDouble extends Pointer<Double> {
     PointerDouble(@Nonnull final Type type,
@@ -29,6 +31,13 @@ final class PointerDouble extends Pointer<Double> {
         buffer.rewind();
         buffer.position(index);
         return buffer.get();
+    }
+
+    @Nonnull
+    @Override
+    public Pointer<Double> offset(final int offset) {
+        return wrap(this.type,
+                    this.address + (offset * sizeof((Double) null)));
     }
 
     @Override

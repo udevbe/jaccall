@@ -5,6 +5,7 @@ import com.github.zubnix.jaccall.JNI;
 import com.github.zubnix.jaccall.PointerFunc;
 
 import javax.annotation.Generated;
+import javax.annotation.Nonnull;
 
 @Generated("com.github.zubnix.jaccall.compiletime.funcptr.FunctionPointerGenerator")
 public abstract class PointerTestFunc extends PointerFunc<PointerTestFunc> implements TestFunc {
@@ -19,11 +20,13 @@ public abstract class PointerTestFunc extends PointerFunc<PointerTestFunc> imple
               address);
     }
 
+    @Nonnull
     public static PointerTestFunc wrapFunc(final long address) {
         return new TestFunc_Jaccall_C(address);
     }
 
-    public static PointerTestFunc nref(final TestFunc function) {
+    @Nonnull
+    public static PointerTestFunc nref(@Nonnull final TestFunc function) {
         if (function instanceof TestFunc_Jaccall_J) {
             return (PointerTestFunc) function;
         }

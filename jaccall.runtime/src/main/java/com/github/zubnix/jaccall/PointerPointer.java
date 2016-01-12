@@ -69,6 +69,13 @@ final class PointerPointer<T> extends Pointer<Pointer<T>> {
                     val);
     }
 
+    @Nonnull
+    @Override
+    public Pointer<Pointer<T>> offset(final int offset) {
+        return wrap(this.type,
+                    this.address + (offset * sizeof((Pointer) null)));
+    }
+
     @SafeVarargs
     @Override
     final void write(@Nonnull final ByteBuffer byteBuffer,

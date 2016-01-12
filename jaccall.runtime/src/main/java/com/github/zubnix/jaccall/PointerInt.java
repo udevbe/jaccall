@@ -6,6 +6,8 @@ import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
+import static com.github.zubnix.jaccall.Size.sizeof;
+
 
 final class PointerInt extends Pointer<Integer> {
     PointerInt(@Nonnull final Type type,
@@ -29,6 +31,13 @@ final class PointerInt extends Pointer<Integer> {
         buffer.rewind();
         buffer.position(index);
         return buffer.get();
+    }
+
+    @Nonnull
+    @Override
+    public Pointer<Integer> offset(final int offset) {
+        return wrap(this.type,
+                    this.address + (offset * sizeof((Integer) null)));
     }
 
     @Override

@@ -6,6 +6,8 @@ import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
 
+import static com.github.zubnix.jaccall.Size.sizeof;
+
 public class PointerShort extends Pointer<Short> {
     public PointerShort(@Nonnull final Type type,
                         final long address,
@@ -28,6 +30,13 @@ public class PointerShort extends Pointer<Short> {
         buffer.rewind();
         buffer.position(index);
         return buffer.get();
+    }
+
+    @Nonnull
+    @Override
+    public Pointer<Short> offset(final int offset) {
+        return wrap(this.type,
+                    this.address + (offset * sizeof((Short) null)));
     }
 
     @Override

@@ -45,6 +45,13 @@ final class PointerCLong extends Pointer<CLong> {
         return new CLong(clong);
     }
 
+    @Nonnull
+    @Override
+    public Pointer<CLong> offset(final int offset) {
+        return wrap(this.type,
+                    this.address + (offset * sizeof((CLong) null)));
+    }
+
     @Override
     void write(@Nonnull final ByteBuffer byteBuffer,
                @Nonnull final CLong... val) {

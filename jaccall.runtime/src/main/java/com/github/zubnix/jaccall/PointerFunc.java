@@ -30,6 +30,12 @@ public abstract class PointerFunc<T> extends Pointer<T> {
         throw new UnsupportedOperationException();
     }
 
+    @Nonnull
+    @Override
+    public Pointer<T> offset(final int offset) {
+        throw new UnsupportedOperationException();
+    }
+
     @SafeVarargs
     @Override
     final void writei(@Nonnull final ByteBuffer byteBuffer,

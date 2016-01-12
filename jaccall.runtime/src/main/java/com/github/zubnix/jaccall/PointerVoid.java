@@ -14,6 +14,12 @@ final class PointerVoid extends Pointer<Void> {
               byteBuffer);
     }
 
+    @Nonnull
+    @Override
+    public Pointer<Void> offset(final int offset) {
+        throw new IllegalStateException("Can not offset void pointer.");
+    }
+
     @Override
     Void dref(@Nonnull final ByteBuffer byteBuffer) {
         throw new IllegalStateException("Can not dereference void pointer.");
