@@ -24,6 +24,9 @@ public abstract class PointerTestFunc extends PointerFunc<PointerTestFunc> imple
     }
 
     public static PointerTestFunc nref(final TestFunc function) {
+        if (function instanceof TestFunc_Jaccall_J) {
+            return (PointerTestFunc) function;
+        }
         return new TestFunc_Jaccall_J(function);
     }
 }
