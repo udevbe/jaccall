@@ -149,15 +149,20 @@ void *pointerTest(void *value) {
 }
 
 void noArgsTest(void) {
-    //do nothing
+    //do nothing but have something so we 're included as a symbol
+    struct test testStruct;
 }
 
 funcptr noArgsFuncPtrTest(void) {
     return &noArgsTest;
 }
 
-char function(struct test* arg0, unsigned int arg1, struct test arg2){
+char function(struct test* testStructByRef, unsigned int arg1, struct test testStructByVal){
+        testStructByRef->field2[0] = arg1;
+        testStructByRef->field2[1] = testStructByVal.field1;
+        testStructByRef->field3 = testStructByVal.field3;
 
+        return testStructByVal.field0;
 }
 
 testFunc getFunctionPointerTest(){

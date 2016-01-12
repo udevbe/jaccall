@@ -179,7 +179,7 @@ void jni_call_handler(ffi_cif *cif, void *ret, void **jargs, void *user_data) {
     unsigned int nargs = call_data->cif->nargs;
     ffi_type *rtype = call_data->cif->rtype;
 
-    void **args = nargs ? &jargs[2] : NULL;
+    void **args = (nargs ? jargs + 2 : NULL);
 
     //TODO (optional speed improvement) make a separate func_ptr_handler for calls with and without FFI_TYPE_STRUCT args/ret.
     int i = 0;
@@ -240,11 +240,13 @@ void create_closure(const char *symstr,
     }
 }
 
-JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env, jclass clazz, jstring library,
-                                                               jclass headerClazz, jobjectArray symbols,
-                                                               jbyteArray argumentSizes,
-                                                               jobjectArray jniSignatures,
-                                                               jlongArray ffiCallInterfaces) {
+JNIEXPORT
+void
+JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env, jclass clazz, jstring library,
+                                                jclass headerClazz, jobjectArray symbols,
+                                                jbyteArray argumentSizes,
+                                                jobjectArray jniSignatures,
+                                                jlongArray ffiCallInterfaces) {
     void *libaddr = find_libaddr(env, library);
     jbyte *argSizes = (*env)->GetByteArrayElements(env, argumentSizes, 0);
     jlong *ffi_cifs = (*env)->GetLongArrayElements(env, ffiCallInterfaces, 0);
@@ -491,7 +493,7 @@ void func_ptr_handler(ffi_cif *jni_cif, void *ret, void **jargs, void *user_data
 
     void *func_ptr = *((void **) jargs[2]);
 
-    void **args = nargs ? &jargs[3] : NULL;
+    void **args = nargs ? jargs + 3 : NULL;
 
     //TODO (optional speed improvement) make a separate func_ptr_handler for calls with and without FFI_TYPE_STRUCT args/ret.
     int i = 0;

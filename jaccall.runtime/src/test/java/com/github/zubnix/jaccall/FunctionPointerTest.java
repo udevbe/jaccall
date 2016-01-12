@@ -82,7 +82,7 @@ public class FunctionPointerTest {
                                                   arg2.address);
 
             //then
-            assertThat(result).isEqualTo(123);
+            assertThat(result).isEqualTo((byte)123);
             assertThat(arg0.dref()
                            .field2()
                            .dref(0)).isEqualTo(567);
@@ -133,7 +133,7 @@ public class FunctionPointerTest {
                                                                   arg2.address);
 
             //then
-            assertThat(result).isEqualTo(123);
+            assertThat(result).isEqualTo((byte)123);
             assertThat(arg0.dref()
                            .field2()
                            .dref(0)).isEqualTo(567);
