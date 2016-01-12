@@ -11,12 +11,17 @@ import javax.annotation.Nonnull;
 @Generated("com.github.zubnix.jaccall.compiletime.funcptr.FunctionPointerGenerator")
 final class TestFunc_Jaccall_J extends PointerTestFunc {
 
+    private static final long JNI_METHOD_ID = JNI.GetMethodID(TestFunc_Jaccall_J.class,
+                                                              "$",
+                                                              "(JIJ)B");
+
     @Nonnull
     private final TestFunc testFunction;
 
     TestFunc_Jaccall_J(@Nonnull final TestFunc testFunction) {
         super(JNI.ffi_closure(PointerTestFunc.FFI_CIF,
-                              testFunction));
+                              testFunction,
+                              JNI_METHOD_ID));
         this.testFunction = testFunction;
     }
 

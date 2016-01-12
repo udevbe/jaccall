@@ -60,8 +60,6 @@ public class FunctionPointerTest {
                     new Testing_Jaccall_LinkSymbols());
 
         final long funcPtrAddr = new Testing().getFunctionPointerTest();
-
-
         final PointerTestFunc pointerTestFunc = PointerTestFunc.wrapFunc(funcPtrAddr);
 
         try (final Pointer<TestStruct> arg0 = Pointer.malloc(Size.sizeof(TestStruct.SIZE))

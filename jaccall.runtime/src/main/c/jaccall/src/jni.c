@@ -7,9 +7,16 @@
 
 #include "com_github_zubnix_jaccall_JNI.h"
 
+static JavaVM *jvm;
+
 struct jni_call_data {
     ffi_cif *cif;
     void *symaddr;
+};
+
+struct java_call_data {
+    jmethodID mid;
+    jobject object;
 };
 
 JNIEXPORT
@@ -22,6 +29,27 @@ JNIEXPORT
 jlong
 JNICALL Java_com_github_zubnix_jaccall_JNI_unwrap(JNIEnv *env, jclass clazz, jobject byteBuffer) {
     return (jlong) (intptr_t) (*env)->GetDirectBufferAddress(env, byteBuffer);
+}
+
+JNIEXPORT
+void
+JNICALL Java_com_github_zubnix_jaccall_JNI_DeleteGlobalRef(JNIEnv *env, jclass clazz, jobject object){
+    (*env)->DeleteGlobalRef(env, object);
+}
+
+JNIEXPORT
+jlong
+JNICALL Java_com_github_zubnix_jaccall_JNI_GetMethodID(JNIEnv *env, jclass clazz, jclass target,
+                                                        jstring jniMethodName, jstring jniSignature){
+    const char *methodName = (*env)->GetStringUTFChars(env, jniMethodName, 0);
+    const char *signature = (*env)->GetStringUTFChars(env, jniSignature, 0);
+
+    jmethodID mid = (*env)->GetMethodID(env, target, methodName, signature);
+
+    (*env)->ReleaseStringUTFChars(env, jniMethodName, methodName);
+    (*env)->ReleaseStringUTFChars(env, jniSignature, signature);
+
+    return (jlong) mid;
 }
 
 JNIEXPORT
@@ -61,6 +89,7 @@ find_libaddr(JNIEnv *env, jstring library) {
     const char *lib_str = (*env)->GetStringUTFChars(env, library, 0);
     void *lib_addr = dlopen(lib_str, RTLD_NOW | RTLD_GLOBAL);
     if (!lib_addr) {
+        //TODO throw java error
         fprintf(stderr, "dlopen error: %s\n", dlerror());
         exit(1);
     }
@@ -116,6 +145,7 @@ void prep_jni_cif(ffi_cif *jni_cif, const char *jni_sig, int arg_size) {
                 parameter--;
                 continue;
             default:
+                //TODO throw java error
                 fprintf(stderr, "unsupported JNI argument: %c\n", jni_sig_char);
                 exit(1);
         }
@@ -134,6 +164,7 @@ void prep_jni_cif(ffi_cif *jni_cif, const char *jni_sig, int arg_size) {
 
     ffi_status status = ffi_prep_cif(jni_cif, FFI_DEFAULT_ABI, (unsigned int) arg_size + 2, return_type, args);
     if (status != FFI_OK) {
+        //TODO throw java error
         fprintf(stderr, "ffi_prep_cif failed: %d\n", status);
         exit(1);
     }
@@ -150,6 +181,7 @@ void jni_call_handler(ffi_cif *cif, void *ret, void **jargs, void *user_data) {
 
     void **args = nargs ? &jargs[2] : NULL;
 
+    //TODO (optional speed improvement) make a separate func_ptr_handler for calls with and without FFI_TYPE_STRUCT args/ret.
     int i = 0;
     for (; i < nargs; i++) {
         if (arg_types[i]->type == FFI_TYPE_STRUCT) {
@@ -201,6 +233,7 @@ void create_closure(const char *symstr,
         }
     }
     else {
+        //TODO throw java error
         fprintf(stderr,
                 "ffi_closure_alloc failed: %s\n", symstr);
         exit(1);
@@ -227,6 +260,7 @@ JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env, jcla
         void *symaddr = dlsym(libaddr, symstr);
         char *err = dlerror();
         if (err) {
+            //TODO throw java error
             fprintf(stderr,
                     "dlsym failed: %s\n", err);
             exit(1);
@@ -361,6 +395,7 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1struct(JNIEnv *env, jclass
 
     ffi_cif cif;
     if (ffi_prep_cif(&cif, FFI_DEFAULT_ABI, 0, struct_description, NULL) != FFI_OK) {
+        //TODO throw java error
         fprintf(stderr,
                 "ffi_type struct failed.\n");
         exit(1);
@@ -373,10 +408,12 @@ JNIEXPORT
 jlong
 JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1union(JNIEnv *env, jclass clazz,
                                                             jlongArray ffi_types) {
+    //TODO use calloc
     ffi_type *struct_description = malloc(sizeof(ffi_type));
     jlong *struct_ctypes = (*env)->GetLongArrayElements(env, ffi_types, 0);
     int nro_fields = (*env)->GetArrayLength(env, ffi_types);
 
+    //TODO use calloc
     ffi_type **union_fields = malloc(sizeof(ffi_type *) * (2));
     union_fields[1] = NULL;
 
@@ -434,6 +471,7 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1callInterface(JNIEnv *env, jclas
     ffi_cif *cif = malloc(sizeof(ffi_cif));
     if (ffi_prep_cif(cif, FFI_DEFAULT_ABI, (unsigned int) nro_args, (ffi_type *) (intptr_t) ffi_return_type, args) !=
         FFI_OK) {
+        //TODO throw java error
         fprintf(stderr,
                 "ffi_prep_cif failed.\n");
         exit(1);
@@ -455,6 +493,7 @@ void func_ptr_handler(ffi_cif *jni_cif, void *ret, void **jargs, void *user_data
 
     void **args = nargs ? &jargs[3] : NULL;
 
+    //TODO (optional speed improvement) make a separate func_ptr_handler for calls with and without FFI_TYPE_STRUCT args/ret.
     int i = 0;
     for (; i < nargs; i++) {
         if (arg_types[i]->type == FFI_TYPE_STRUCT) {
@@ -495,12 +534,14 @@ void create_func_ptr_closure(const char *symstr,
             jniMethods->fnPtr = jni_func;
 
         } else {
+            //TODO throw java error
             fprintf(stderr,
                     "ffi_prep_closure_loc failed: %d\n", status);
             exit(1);
         }
     }
     else {
+        //TODO throw java error
         fprintf(stderr,
                 "ffi_closure_alloc failed: %s\n", symstr);
         exit(1);
@@ -520,11 +561,75 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_linkFuncPtr(JNIEnv *env, jclass clazz
     (*env)->RegisterNatives(env, wrapper, jniMethods, 1);
 }
 
+jint
+JNI_OnLoad(JavaVM *vm, void *reserved){
+    jvm = vm;
+    return JNI_VERSION_1_6;
+}
+
+static
+void
+java_func_ptr_handler(ffi_cif *jni_cif, void *ret, void **jargs, void *user_data) {
+    //TODO get env pointer through a jvm instance
+    JNIEnv * env;
+    // double check it's all ok
+    const int getEnvStat = (*jvm)->GetEnv(jvm, (void **)&env, JNI_VERSION_1_6);
+    if (getEnvStat == JNI_EDETACHED) {
+        if ((*jvm)->AttachCurrentThread(jvm, (void **) &env, NULL) != 0) {
+                //TODO throw java error
+                fprintf(stderr,
+                        "Failed to attach java thread in native context.");
+                exit(1);
+        }
+    } else if (getEnvStat == JNI_OK) {
+        //
+    } else if (getEnvStat == JNI_EVERSION) {
+        fprintf(stderr,
+                "GetEnv: version not supported.");
+        exit(1);
+    }
+
+    //TODO analyse cif for void/non void call & prepare **jargs for calling java method
+    //TODO (optional speed improvement) make a java_func_ptr_handler for void & non-void methods separately
+    //(*env)->CallVoidMethod(g_obj, g_mid, val);
+
+    if ((*env)->ExceptionCheck(env)) {
+        (*env)->ExceptionDescribe(env);
+    }
+
+    if (getEnvStat == JNI_EDETACHED) {
+        (*jvm)->DetachCurrentThread(jvm);
+    }
+}
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1closure(JNIEnv *env, jclass clazz, jlong cif, jobject object) {
+JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1closure(JNIEnv *env, jclass clazz, jlong cif, jobject object, jlong methodId) {
+    ffi_cif *target_cif = (ffi_cif*)(intptr_t)cif;
 
+    void *target_func;
+    ffi_closure *closure = ffi_closure_alloc(sizeof(ffi_closure), &target_func);
+    if (closure) {
+        struct java_call_data *java_call = malloc(sizeof(struct java_call_data));
+        java_call->object = object;
+        java_call->mid = (jmethodID) methodId;
+
+        ffi_status status = ffi_prep_closure_loc(closure, target_cif, &java_func_ptr_handler, java_call, target_func);
+        if (status != FFI_OK) {
+            //TODO throw java error
+            fprintf(stderr,
+                    "ffi_prep_closure_loc failed: %d\n", status);
+            exit(1);
+        }
+    }
+    else {
+        //TODO throw java error
+        fprintf(stderr,
+                "ffi_closure_alloc failed\n");
+        exit(1);
+    }
+
+    return (jlong)(intptr_t)target_func;
 }
 
 /*
@@ -535,5 +640,5 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1closure(JNIEnv *env, jclass claz
 JNIEXPORT
 void
 JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1closure_1free(JNIEnv *env, jclass clazz, jlong closure) {
-    //ffi_closure_free((void *) (intptr_t) closure);
+    ffi_closure_free((void *) (intptr_t) closure);
 }

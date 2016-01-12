@@ -33,6 +33,14 @@ JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_DeleteGlobalRef
 
 /*
  * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    GetMethodID
+ * Signature: (Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_GetMethodID
+  (JNIEnv *, jclass, jclass, jstring, jstring);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
  * Method:    malloc
  * Signature: (I)J
  */
@@ -218,10 +226,10 @@ JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1callInterface
 /*
  * Class:     com_github_zubnix_jaccall_JNI
  * Method:    ffi_closure
- * Signature: (JLjava/lang/Object;)J
+ * Signature: (JLjava/lang/Object;J)J
  */
 JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1closure
-  (JNIEnv *, jclass, jlong, jobject);
+  (JNIEnv *, jclass, jlong, jobject, jlong);
 
 /*
  * Class:     com_github_zubnix_jaccall_JNI

@@ -57,6 +57,10 @@ public final class JNI {
     public static native long unwrap(@Nonnull ByteBuffer byteBuffer);
 
     public static native void DeleteGlobalRef(@Nonnull final Object object);
+
+    public static native long GetMethodID(final Class<?> clazz,
+                                          final String methodName,
+                                          final String jniSignature);
     /*
      * <- JNI
      */
@@ -148,7 +152,8 @@ public final class JNI {
                                                 long... arg_types);
 
     public static native long ffi_closure(final long ffiCif,
-                                          @Nonnull final Object function);
+                                          @Nonnull final Object function,
+                                          final long jniMethodId);
 
     public static native void ffi_closure_free(final long address);
     /*
