@@ -510,15 +510,12 @@ public abstract class Pointer<T> implements AutoCloseable {
      * C equivalent:<br>
      * {@code offsetFoo = foo+i;}
      *
-     * @param bytes
+     * @param offset
      *
      * @return
      */
     @Nonnull
-    public Pointer<T> offset(final int bytes) {
-        return wrap(this.type,
-                    this.address + bytes);
-    }
+    public abstract Pointer<T> offset(final int offset);
 
     /**
      * type cast

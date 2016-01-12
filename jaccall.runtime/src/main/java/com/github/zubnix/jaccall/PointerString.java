@@ -9,6 +9,8 @@ import java.nio.CharBuffer;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
 
+import static com.github.zubnix.jaccall.Size.sizeof;
+
 class PointerString extends Pointer<String> {
 
     private static final CharsetEncoder CHARSET_ENCODER = StandardCharsets.US_ASCII.newEncoder();
@@ -42,6 +44,13 @@ class PointerString extends Pointer<String> {
             }
         }
         return sb.toString();
+    }
+
+    @Nonnull
+    @Override
+    public Pointer<String> offset(final int offset) {
+        return wrap(this.type,
+                    this.address + (offset * sizeof((Byte) null)));
     }
 
     @Override

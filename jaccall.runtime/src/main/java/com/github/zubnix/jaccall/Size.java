@@ -48,8 +48,7 @@ public final class Size {
     }
 
     public static int sizeof(@Nullable final Void val) {
-        //on gcc it's 1
-        return 1;
+        throw new IllegalArgumentException();
     }
 
     public static int sizeof(@Nonnull final StructType structType) {

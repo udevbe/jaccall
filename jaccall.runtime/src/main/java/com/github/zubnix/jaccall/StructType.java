@@ -162,9 +162,10 @@ public abstract class StructType {
     //struct type
     protected final <T extends StructType> T readStructType(final int offset,
                                                             final Class<T> structTypeClass) {
-        return Pointer.wrap(structTypeClass,
+        return Pointer.wrap(Byte.class,
                             buffer())
                       .offset(offset)
+                      .castp(structTypeClass)
                       .dref();
     }
 
@@ -172,17 +173,19 @@ public abstract class StructType {
                                          final StructType structType) {
         structType.buffer()
                   .rewind();
-        final PointerStruct pointer = (PointerStruct) Pointer.wrap(structType.getClass(),
-                                                                   buffer());
-        pointer.offset(offset)
-               .write(structType);
+        final Pointer<StructType> castp = (Pointer<StructType>) Pointer.wrap(Byte.class,
+                                                                             buffer())
+                                                                       .offset(offset)
+                                                                       .castp(structType.getClass());
+        castp.write((StructType) structType);
     }
 
     //array
     protected final <T> Pointer<T> readArray(final int offset,
                                              final Class<T> arrayType) {
-        return Pointer.wrap(arrayType,
+        return Pointer.wrap(Byte.class,
                             buffer())
-                      .offset(offset);
+                      .offset(offset)
+                      .castp(arrayType);
     }
 }

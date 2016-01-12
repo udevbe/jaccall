@@ -6,6 +6,8 @@ import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
+import static com.github.zubnix.jaccall.Size.sizeof;
+
 final class PointerFloat extends Pointer<Float> {
     PointerFloat(@Nonnull final Type type,
                  final long address,
@@ -28,6 +30,13 @@ final class PointerFloat extends Pointer<Float> {
         buffer.rewind();
         buffer.position(index);
         return buffer.get();
+    }
+
+    @Nonnull
+    @Override
+    public Pointer<Float> offset(final int offset) {
+        return wrap(this.type,
+                    this.address + (offset * sizeof((Float) null)));
     }
 
     @Override

@@ -28,6 +28,13 @@ final class PointerByte extends Pointer<Byte> {
         return buffer.get();
     }
 
+    @Nonnull
+    @Override
+    public Pointer<Byte> offset(final int offset) {
+        return wrap(this.type,
+                    this.address + (offset * Size.sizeof((Byte) null)));
+    }
+
     @Override
     void write(@Nonnull final ByteBuffer byteBuffer,
                @Nonnull final Byte... val) {

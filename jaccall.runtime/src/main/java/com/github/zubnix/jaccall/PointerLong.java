@@ -6,6 +6,8 @@ import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.LongBuffer;
 
+import static com.github.zubnix.jaccall.Size.sizeof;
+
 
 final class PointerLong extends Pointer<Long> {
     PointerLong(@Nonnull final Type type,
@@ -29,6 +31,13 @@ final class PointerLong extends Pointer<Long> {
         buffer.rewind();
         buffer.position(index);
         return buffer.get();
+    }
+
+    @Nonnull
+    @Override
+    public Pointer<Long> offset(final int offset) {
+        return wrap(this.type,
+                    this.address + (offset * sizeof((Long) null)));
     }
 
     @Override
