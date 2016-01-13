@@ -102,16 +102,17 @@ public class FunctionPointerTest {
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
-        final PointerTestFunc pointerTestFunc = PointerTestFunc.nref(new TestFunc() {
-            @Override
-            public byte $(@Ptr final long arg0,
-                          @Unsigned final int arg1,
-                          @ByVal(TestStruct.class) final long arg2) {
-                return function(arg0,
-                                arg1,
-                                arg2);
-            }
-        });
+        final PointerTestFunc pointerTestFunc = PointerTestFunc.nref(
+                new TestFunc() {
+                    @Override
+                    public byte $(@Ptr final long arg0,
+                                  @Unsigned final int arg1,
+                                  @ByVal(TestStruct.class) final long arg2) {
+                        return function(arg0,
+                                        arg1,
+                                        arg2);
+                    }
+                });
 
         try (final Pointer<TestStruct> arg0 = Pointer.malloc(Size.sizeof(TestStruct.SIZE))
                                                      .castp(TestStruct.class);
@@ -172,7 +173,9 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void charTestFunctionPointerFromJava() {}
+    public void charTestFunctionPointerFromJava() {
+
+    }
 
     @Test
     public void unsignedCharTestFunctionPointerFromJava() {}

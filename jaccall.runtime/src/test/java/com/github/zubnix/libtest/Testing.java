@@ -1,6 +1,7 @@
 package com.github.zubnix.libtest;
 
 import com.github.zubnix.jaccall.ByVal;
+import com.github.zubnix.jaccall.FuncPtr;
 import com.github.zubnix.jaccall.Lib;
 import com.github.zubnix.jaccall.Lng;
 import com.github.zubnix.jaccall.Ptr;
@@ -149,37 +150,110 @@ public class Testing {
 
     public native byte charTest(byte value);
 
+    @FuncPtr
+    interface CharTest {
+        byte $(byte value);
+    }
+
     @Unsigned
     public native byte unsignedCharTest(@Unsigned byte value);
 
+    @FuncPtr
+    interface UnsignedCharTest {
+        @Unsigned
+        byte $(@Unsigned byte value);
+    }
+
     public native short shortTest(short value);
+
+    @FuncPtr
+    interface ShortTest {
+        short $(short value);
+    }
 
     @Unsigned
     public native short unsignedShortTest(@Unsigned short value);
 
+    @FuncPtr
+    interface UnsignedShortTest {
+        @Unsigned
+        short $(@Unsigned short value);
+    }
+
     public native int intTest(int value);
+
+    @FuncPtr
+    interface IntTest {
+        int $(int value);
+    }
 
     @Unsigned
     public native int unsignedIntTest(@Unsigned int value);
 
+    @FuncPtr
+    interface UnsignedIntTest {
+
+        @Unsigned
+        int $(@Unsigned int value);
+    }
+
     public native long longTest(long value);
+
+    @FuncPtr
+    interface LongTest {
+        long $(long value);
+    }
 
     @Unsigned
     public native long unsignedLongTest(@Unsigned long value);
 
+    @FuncPtr
+    interface UnsignedLongTest {
+        long $(@Unsigned long value);
+    }
+
     @Lng
     public native long longLongTest(@Lng long value);
+
+    @FuncPtr
+    interface LongLongTest {
+        @Lng
+        long $(@Lng long value);
+    }
 
     @Unsigned
     @Lng
     public native long unsignedLongLongTest(@Unsigned @Lng long value);
 
+    @FuncPtr
+    interface UnsignedLongLongTest {
+        @Unsigned
+        @Lng
+        long $(@Unsigned @Lng long value);
+    }
+
     public native float floatTest(float value);
+
+    @FuncPtr
+    interface FloatTest {
+        float $(float value);
+    }
 
     public native double doubleTest(double value);
 
+    @FuncPtr
+    interface DoubleTest {
+        double $(double value);
+    }
+
     @Ptr
     public native long pointerTest(@Ptr long value);
+
+    @FuncPtr
+    interface PointerTest {
+        @Ptr
+        long $(@Ptr long value);
+    }
 
 
     @ByVal(TestStruct.class)
