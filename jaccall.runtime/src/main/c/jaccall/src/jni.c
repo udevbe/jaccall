@@ -1,5 +1,6 @@
 #include <jni.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdint.h>
 #include <dlfcn.h>
 #include <ffi.h>
@@ -186,7 +187,7 @@ void jni_call_handler(ffi_cif *cif, void *ret, void **jargs, void *user_data) {
 
     void **args = (nargs ? jargs + 2 : NULL);
 
-    //TODO (optional speed improvement) make a separate func_ptr_handler for calls with and without FFI_TYPE_STRUCT args/ret.
+    //TODO (optional speed improvement) analyse cif in advance and check for struct types, so we can avoid struct_type loops if not needed
     int i = 0;
     for (; i < nargs; i++) {
         if (arg_types[i]->type == FFI_TYPE_STRUCT) {
@@ -500,7 +501,7 @@ void func_ptr_handler(ffi_cif *jni_cif, void *ret, void **jargs, void *user_data
 
     void **args = nargs ? jargs + 3 : NULL;
 
-    //TODO (optional speed improvement) make a separate func_ptr_handler for calls with and without FFI_TYPE_STRUCT args/ret.
+    //TODO (optional speed improvement) analyse cif in advance and check for struct types, so we can avoid struct_type loops if not needed
     int i = 0;
     for (; i < nargs; i++) {
         if (arg_types[i]->type == FFI_TYPE_STRUCT) {
@@ -580,7 +581,6 @@ java_func_ptr_handler(ffi_cif *jni_cif, void *ret, void **jargs, void *user_data
 
     struct java_call_data* call_data = user_data;
     JNIEnv * env;
-    jvalue result;
 
     const int getEnvStat = (*jvm)->GetEnv(jvm, (void **)&env, JNI_VERSION_1_6);
     if (getEnvStat == JNI_EDETACHED) {
@@ -597,37 +597,52 @@ java_func_ptr_handler(ffi_cif *jni_cif, void *ret, void **jargs, void *user_data
         exit(1);
     }
 
-
+    //TODO (optional speed improvement) analyse cif in advance and check for struct types, so we can avoid this loop if not needed
     unsigned int nargs = jni_cif->nargs;
     jvalue arguments[nargs];
     int i = 0;
     for(; i < nargs; i++){
         //TODO cast to the correct *native* pointer type or we risk reading too much data when dereferencing(?).
-        //TODO check if argument is a struct by value and get it's address.
         if(jni_cif->arg_types[i]->type == FFI_TYPE_STRUCT){
             arguments[i].j = (jlong)jargs[i];
-
         } else {
             arguments[i] = *((jvalue*)jargs[i]);
         }
     }
 
-    //TODO analyse cif for void/non void call & prepare **jargs for calling java method
-    //TODO (optional speed improvement) make a java_func_ptr_handler for void & non-void methods separately
-
+    //TODO (optional speed improvement) analyse cif in advance and avoid this switch, instead use a different java_func_ptr_handler implementation
     switch(jni_cif->rtype->type) {
+        case FFI_TYPE_POINTER:
+        case FFI_TYPE_UINT64:
+        case FFI_TYPE_SINT64:
+            *((jlong*)ret) = (*env)->CallLongMethodA(env, call_data->object, call_data->mid, arguments);
+            break;
         case FFI_TYPE_VOID:
             (*env)->CallVoidMethodA(env, call_data->object, call_data->mid, arguments);
             break;
         case FFI_TYPE_UINT8:
         case FFI_TYPE_SINT8:
-            result.b = (*env)->CallByteMethodA(env, call_data->object, call_data->mid, arguments);
+            *((jbyte*)ret) = (*env)->CallByteMethodA(env, call_data->object, call_data->mid, arguments);
             break;
-            //TODO more return types
+        case FFI_TYPE_UINT16:
+        case FFI_TYPE_SINT16:
+            *((jshort*)ret) = (*env)->CallShortMethodA(env, call_data->object, call_data->mid, arguments);
+            break;
+        case FFI_TYPE_INT:
+        case FFI_TYPE_UINT32:
+        case FFI_TYPE_SINT32:
+            *((jint*)ret) = (*env)->CallIntMethodA(env, call_data->object, call_data->mid, arguments);
+            break;
+        case FFI_TYPE_FLOAT:
+            *((jfloat*)ret) = (*env)->CallFloatMethodA(env, call_data->object, call_data->mid, arguments);
+            break;
+        case FFI_TYPE_DOUBLE:
+            *((jdouble*)ret) = (*env)->CallDoubleMethodA(env, call_data->object, call_data->mid, arguments);
+            break;
+        case FFI_TYPE_STRUCT:
+            memcpy (ret, (const void *) (*env)->CallLongMethodA(env, call_data->object, call_data->mid, arguments), jni_cif->rtype->size );
+            break;
     }
-
-    //TODO handle struc type return
-    *((jvalue *)ret) = result;
 
     if ((*env)->ExceptionCheck(env)) {
         (*env)->ExceptionDescribe(env);
