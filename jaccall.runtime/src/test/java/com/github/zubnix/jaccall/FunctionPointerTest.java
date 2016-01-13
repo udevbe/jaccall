@@ -4,6 +4,7 @@ package com.github.zubnix.jaccall;
 import com.github.zubnix.libtest.PointerTestFunc;
 import com.github.zubnix.libtest.TestFunc;
 import com.github.zubnix.libtest.TestStruct;
+import com.github.zubnix.libtest.TestUnion;
 import com.github.zubnix.libtest.Testing;
 import com.github.zubnix.libtest.Testing_Jaccall_LinkSymbols;
 import org.junit.Test;
@@ -59,7 +60,7 @@ public class FunctionPointerTest {
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
-        final long funcPtrAddr = new Testing().getFunctionPointerTest();
+        final long            funcPtrAddr     = new Testing().getFunctionPointerTest();
         final PointerTestFunc pointerTestFunc = PointerTestFunc.wrapFunc(funcPtrAddr);
 
         try (final Pointer<TestStruct> arg0 = Pointer.malloc(Size.sizeof(TestStruct.SIZE))
@@ -82,7 +83,7 @@ public class FunctionPointerTest {
                                                   arg2.address);
 
             //then
-            assertThat(result).isEqualTo((byte)123);
+            assertThat(result).isEqualTo((byte) 123);
             assertThat(arg0.dref()
                            .field2()
                            .dref(0)).isEqualTo(567);
@@ -133,7 +134,7 @@ public class FunctionPointerTest {
                                                                   arg2.address);
 
             //then
-            assertThat(result).isEqualTo((byte)123);
+            assertThat(result).isEqualTo((byte) 123);
             assertThat(arg0.dref()
                            .field2()
                            .dref(0)).isEqualTo(567);
@@ -169,4 +170,203 @@ public class FunctionPointerTest {
 
         return testStructByVal.field0();
     }
+
+    @Test
+    public void charTestFunctionPointerFromJava() {}
+
+    @Test
+    public void unsignedCharTestFunctionPointerFromJava() {}
+
+    @Test
+    public void shortTestFunctionPointerFromJava() {}
+
+    @Test
+    public void unsignedShortTestFunctionPointerFromJava() {}
+
+    @Test
+    public void intTestFunctionPointerFromJava() {}
+
+    @Test
+    public void unsignedIntTestFunctionPointerFromJava() {}
+
+    @Test
+    public void longTestFunctionPointerFromJava() {}
+
+    @Test
+    public void unsignedLongTestFunctionPointerFromJava() {}
+
+    @Test
+    public void longLongTestFunctionPointerFromJava() {}
+
+    @Test
+    public void unsignedLongLongTestFunctionPointerFromJava() {}
+
+    @Test
+    public void floatTestFunctionPointerFromJava() {}
+
+    @Test
+    public void doubleTestFunctionPointerFromJava() {}
+
+    @Test
+    public void pointerTestFunctionPointerFromJava() {}
+
+    @Test
+    public void structTestFunctionPointerFromJava() {}
+
+    @Test
+    public void structTest2FunctionPointerFromJava() {}
+
+    @Test
+    public void unionTestFunctionPointerFromJava() {}
+
+    @Test
+    public void unionTest2FunctionPointerFromJava() {}
+
+
+    public byte charTestInJava(byte value) {
+        return value;
+    }
+
+    @Unsigned
+    public byte unsignedCharTestInJava(@Unsigned byte value) {
+        return value;
+    }
+
+    public short shortTestInJava(short value) {
+        return value;
+    }
+
+    @Unsigned
+    public short unsignedShortTestInJava(@Unsigned short value) {
+        return value;
+    }
+
+    public int intTestInJava(int value) {
+        return value;
+    }
+
+    @Unsigned
+    public int unsignedIntTestInJava(@Unsigned int value) {
+        return value;
+    }
+
+    public long longTestInJava(long value) {
+        return value;
+    }
+
+    @Unsigned
+    public long unsignedLongTestInJava(@Unsigned long value) {
+        return value;
+    }
+
+    @Lng
+    public long longLongTestInJava(@Lng long value) {
+        return value;
+    }
+
+    @Unsigned
+    @Lng
+    public long unsignedLongLongTestInJava(@Unsigned @Lng long value) {
+        return value;
+    }
+
+    public float floatTestInJava(float value) {
+        return value;
+    }
+
+    public double doubleTestInJava(double value) {
+        return value;
+    }
+
+    @Ptr
+    public long pointerTestInJava(@Ptr long value) {
+        return value;
+    }
+
+
+    @ByVal(TestStruct.class)
+    public static long structTestInJava(@Ptr(TestStruct.class) long tst,
+                                        byte field0,
+                                        @Unsigned short field1,
+                                        @Ptr(int.class) long field2,
+                                        @Ptr(int.class) long field3,
+                                        @Lng long embedded_field0,
+                                        float embedded_field1) {
+        return 0;
+    }
+
+    @Ptr(TestStruct.class)
+    public static long structTest2InJava(@ByVal(TestStruct.class) long tst,
+                                         byte field0,
+                                         @Unsigned short field1,
+                                         @Ptr(int.class) long field2,
+                                         @Ptr(int.class) long field3,
+                                         @Lng long embedded_field0,
+                                         float embedded_field1) {
+        return 0;
+    }
+
+    @ByVal(TestUnion.class)
+    public static long unionTestInJava(@Ptr(TestUnion.class) long tst,
+                                       int field0,
+                                       float field1) {
+        return 0;
+    }
+
+    @Ptr(TestUnion.class)
+    public static long unionTest2InJava(@ByVal(TestUnion.class) long tst,
+                                        int field0) {
+        return 0;
+    }
+
+    @Test
+    public void charTestFunctionPointerFromC() {}
+
+    @Test
+    public void unsignedCharTestFunctionPointerFromC() {}
+
+    @Test
+    public void shortTestFunctionPointerFromC() {}
+
+    @Test
+    public void unsignedShortTestFunctionPointerFromC() {}
+
+    @Test
+    public void intTestFunctionPointerFromC() {}
+
+    @Test
+    public void unsignedIntTestFunctionPointerFromC() {}
+
+    @Test
+    public void longTestFunctionPointerFromC() {}
+
+    @Test
+    public void unsignedLongTestFunctionPointerFromC() {}
+
+    @Test
+    public void longLongTestFunctionPointerFromC() {}
+
+    @Test
+    public void unsignedLongLongTestFunctionPointerFromC() {}
+
+    @Test
+    public void floatTestFunctionPointerFromC() {}
+
+    @Test
+    public void doubleTestFunctionPointerFromC() {}
+
+    @Test
+    public void pointerTestFunctionPointerFromC() {}
+
+    @Test
+    public void structTestFunctionPointerFromC() {}
+
+    @Test
+    public void structTest2FunctionPointerFromC() {}
+
+    @Test
+    public void unionTestFunctionPointerFromC() {}
+
+    @Test
+    public void unionTest2FunctionPointerFromC() {}
 }
