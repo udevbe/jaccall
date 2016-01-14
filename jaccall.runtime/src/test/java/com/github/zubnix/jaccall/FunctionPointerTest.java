@@ -226,99 +226,99 @@ public class FunctionPointerTest {
     public void unionTest2FunctionPointerFromJava() {}
 
 
-    public byte charTestInJava(byte value) {
+    public byte charTestInJava(final byte value) {
         return value;
     }
 
     @Unsigned
-    public byte unsignedCharTestInJava(@Unsigned byte value) {
+    public byte unsignedCharTestInJava(@Unsigned final byte value) {
         return value;
     }
 
-    public short shortTestInJava(short value) {
-        return value;
-    }
-
-    @Unsigned
-    public short unsignedShortTestInJava(@Unsigned short value) {
-        return value;
-    }
-
-    public int intTestInJava(int value) {
+    public short shortTestInJava(final short value) {
         return value;
     }
 
     @Unsigned
-    public int unsignedIntTestInJava(@Unsigned int value) {
+    public short unsignedShortTestInJava(@Unsigned final short value) {
         return value;
     }
 
-    public long longTestInJava(long value) {
+    public int intTestInJava(final int value) {
         return value;
     }
 
     @Unsigned
-    public long unsignedLongTestInJava(@Unsigned long value) {
+    public int unsignedIntTestInJava(@Unsigned final int value) {
+        return value;
+    }
+
+    public long longTestInJava(final long value) {
+        return value;
+    }
+
+    @Unsigned
+    public long unsignedLongTestInJava(@Unsigned final long value) {
         return value;
     }
 
     @Lng
-    public long longLongTestInJava(@Lng long value) {
+    public long longLongTestInJava(@Lng final long value) {
         return value;
     }
 
     @Unsigned
     @Lng
-    public long unsignedLongLongTestInJava(@Unsigned @Lng long value) {
+    public long unsignedLongLongTestInJava(@Unsigned @Lng final long value) {
         return value;
     }
 
-    public float floatTestInJava(float value) {
+    public float floatTestInJava(final float value) {
         return value;
     }
 
-    public double doubleTestInJava(double value) {
+    public double doubleTestInJava(final double value) {
         return value;
     }
 
     @Ptr
-    public long pointerTestInJava(@Ptr long value) {
+    public long pointerTestInJava(@Ptr final long value) {
         return value;
     }
 
 
     @ByVal(TestStruct.class)
-    public static long structTestInJava(@Ptr(TestStruct.class) long tst,
-                                        byte field0,
-                                        @Unsigned short field1,
-                                        @Ptr(int.class) long field2,
-                                        @Ptr(int.class) long field3,
-                                        @Lng long embedded_field0,
-                                        float embedded_field1) {
+    public static long structTestInJava(@Ptr(TestStruct.class) final long tst,
+                                        final byte field0,
+                                        @Unsigned final short field1,
+                                        @Ptr(int.class) final long field2,
+                                        @Ptr(int.class) final long field3,
+                                        @Lng final long embedded_field0,
+                                        final float embedded_field1) {
         return 0;
     }
 
     @Ptr(TestStruct.class)
-    public static long structTest2InJava(@ByVal(TestStruct.class) long tst,
-                                         byte field0,
-                                         @Unsigned short field1,
-                                         @Ptr(int.class) long field2,
-                                         @Ptr(int.class) long field3,
-                                         @Lng long embedded_field0,
-                                         float embedded_field1) {
+    public static long structTest2InJava(@ByVal(TestStruct.class) final long tst,
+                                         final byte field0,
+                                         @Unsigned final short field1,
+                                         @Ptr(int.class) final long field2,
+                                         @Ptr(int.class) final long field3,
+                                         @Lng final long embedded_field0,
+                                         final float embedded_field1) {
         return 0;
     }
 
     @ByVal(TestUnion.class)
-    public static long unionTestInJava(@Ptr(TestUnion.class) long tst,
-                                       int field0,
-                                       float field1) {
+    public static long unionTestInJava(@Ptr(TestUnion.class) final long tst,
+                                       final int field0,
+                                       final float field1) {
         return 0;
     }
 
     @Ptr(TestUnion.class)
-    public static long unionTest2InJava(@ByVal(TestUnion.class) long tst,
-                                        int field0) {
+    public static long unionTest2InJava(@ByVal(TestUnion.class) final long tst,
+                                        final int field0) {
         return 0;
     }
 

@@ -6,26 +6,26 @@ import com.github.zubnix.jaccall.JNI;
 import javax.annotation.Generated;
 
 @Generated("com.github.zubnix.jaccall.compiletime.funcptr.FunctionPointerGenerator")
-final class CharTest_Jaccall_C extends PointerCharTest {
+final class ShortTest_Jaccall_C extends PointerShortTest {
 
     static {
-        JNI.linkFuncPtr(CharTest_Jaccall_C.class,
+        JNI.linkFuncPtr(ShortTest_Jaccall_C.class,
                         "_$",
                         2,
-                        "(JB)B",
-                        PointerCharTest.FFI_CIF);
+                        "(JS)S",
+                        PointerShortTest.FFI_CIF);
     }
 
-    CharTest_Jaccall_C(final long address) {
+    ShortTest_Jaccall_C(final long address) {
         super(address);
     }
 
     @Override
-    public byte $(final byte value) {
+    public short $(final short value) {
         return _$(this.address,
                   value);
     }
 
     private static native byte _$(final long address,
-                                  final byte value);
+                                  final short value);
 }

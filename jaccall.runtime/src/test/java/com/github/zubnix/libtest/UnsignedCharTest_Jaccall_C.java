@@ -9,7 +9,7 @@ import javax.annotation.Generated;
 final class UnsignedCharTest_Jaccall_C extends PointerUnsignedCharTest {
 
     static {
-        JNI.linkFuncPtr(TestFunc_Jaccall_C.class,
+        JNI.linkFuncPtr(UnsignedCharTest_Jaccall_C.class,
                         "_$",
                         2,
                         "(JB)B",

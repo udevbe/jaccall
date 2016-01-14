@@ -5,14 +5,14 @@ import com.github.zubnix.jaccall.JNI;
 import javax.annotation.Generated;
 
 @Generated("com.github.zubnix.jaccall.compiletime.funcptr.FunctionPointerGenerator")
-final class UnsignedCharTest_Jaccall_J extends PointerUnsignedCharTest {
+final class ShortTest_Jaccall_J extends PointerShortTest {
 
-    private static final long JNI_METHOD_ID = JNI.GetMethodID(Testing.UnsignedCharTest.class,
+    private static final long JNI_METHOD_ID = JNI.GetMethodID(Testing.ShortTest.class,
                                                               "$",
-                                                              "(B)B");
-    private final Testing.UnsignedCharTest function;
+                                                              "(S)S");
+    private final Testing.ShortTest function;
 
-    public UnsignedCharTest_Jaccall_J(final Testing.UnsignedCharTest function) {
+    public ShortTest_Jaccall_J(final Testing.ShortTest function) {
         super(JNI.ffi_closure(PointerShortTest.FFI_CIF,
                               function,
                               JNI_METHOD_ID));
@@ -21,7 +21,7 @@ final class UnsignedCharTest_Jaccall_J extends PointerUnsignedCharTest {
 
 
     @Override
-    public byte $(final byte value) {
+    public short $(final short value) {
         return this.function.$(value);
     }
 }

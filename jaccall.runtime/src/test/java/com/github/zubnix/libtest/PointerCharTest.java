@@ -8,13 +8,13 @@ import javax.annotation.Generated;
 import javax.annotation.Nonnull;
 
 @Generated("com.github.zubnix.jaccall.compiletime.funcptr.FunctionPointerGenerator")
-public abstract class PointerCharTest extends PointerFunc<Testing.CharTest> implements Testing.CharTest {
+public abstract class PointerCharTest extends PointerFunc<PointerCharTest> implements Testing.CharTest {
 
     static final long FFI_CIF = JNI.ffi_callInterface(JNI.FFI_TYPE_SINT8,
                                                       JNI.FFI_TYPE_SINT8);
 
     PointerCharTest(final long address) {
-        super(Testing.CharTest.class,
+        super(PointerCharTest.class,
               address);
     }
 
