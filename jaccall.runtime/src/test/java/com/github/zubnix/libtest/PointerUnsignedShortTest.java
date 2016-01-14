@@ -8,7 +8,7 @@ import javax.annotation.Generated;
 import javax.annotation.Nonnull;
 
 @Generated("com.github.zubnix.jaccall.compiletime.funcptr.FunctionPointerGenerator")
-abstract class PointerUnsignedShortTest extends PointerFunc<PointerUnsignedShortTest> implements Testing.UnsignedShortTest {
+public abstract class PointerUnsignedShortTest extends PointerFunc<PointerUnsignedShortTest> implements Testing.UnsignedShortTest {
 
     static final long FFI_CIF = JNI.ffi_callInterface(JNI.FFI_TYPE_UINT16,
                                                       JNI.FFI_TYPE_UINT16);

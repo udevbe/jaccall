@@ -65,59 +65,139 @@ JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_readPointer
 
 /*
  * Class:     com_github_zubnix_jaccall_JNITestUtil
- * Method:    readTestStructField0
- * Signature: (J)B
+ * Method:    execCharTest
+ * Signature: (JB)B
  */
-JNIEXPORT jbyte JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_readTestStructField0
-  (JNIEnv *, jclass, jlong);
-
-/*
- * Class:     com_github_zubnix_jaccall_JNITestUtil
- * Method:    readTestStructField1
- * Signature: (J)S
- */
-JNIEXPORT jshort JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_readTestStructField1
-  (JNIEnv *, jclass, jlong);
-
-/*
- * Class:     com_github_zubnix_jaccall_JNITestUtil
- * Method:    readTestStructField2
- * Signature: (J)J
- */
-JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_readTestStructField2
-  (JNIEnv *, jclass, jlong);
-
-/*
- * Class:     com_github_zubnix_jaccall_JNITestUtil
- * Method:    readTestStructField3
- * Signature: (J)J
- */
-JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_readTestStructField3
-  (JNIEnv *, jclass, jlong);
-
-/*
- * Class:     com_github_zubnix_jaccall_JNITestUtil
- * Method:    writeTestStructField0
- * Signature: (JB)V
- */
-JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_writeTestStructField0
+JNIEXPORT jbyte JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execCharTest
   (JNIEnv *, jclass, jlong, jbyte);
 
 /*
  * Class:     com_github_zubnix_jaccall_JNITestUtil
- * Method:    writeTestStructField1
- * Signature: (JS)V
+ * Method:    execUnsignedCharTest
+ * Signature: (JB)B
  */
-JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_writeTestStructField1
+JNIEXPORT jbyte JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execUnsignedCharTest
+  (JNIEnv *, jclass, jlong, jbyte);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execShortTest
+ * Signature: (JS)S
+ */
+JNIEXPORT jshort JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execShortTest
   (JNIEnv *, jclass, jlong, jshort);
 
 /*
  * Class:     com_github_zubnix_jaccall_JNITestUtil
- * Method:    writeTestStructField3
- * Signature: (JJ)V
+ * Method:    execUnsignedShortTest
+ * Signature: (JS)S
  */
-JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_writeTestStructField3
+JNIEXPORT jshort JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execUnsignedShortTest
+  (JNIEnv *, jclass, jlong, jshort);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execIntTest
+ * Signature: (JI)I
+ */
+JNIEXPORT jint JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execIntTest
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execUnsignedIntTest
+ * Signature: (JI)I
+ */
+JNIEXPORT jint JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execUnsignedIntTest
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execLongTest
+ * Signature: (JJ)J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execLongTest
   (JNIEnv *, jclass, jlong, jlong);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execUnsignedLongTest
+ * Signature: (JJ)J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execUnsignedLongTest
+  (JNIEnv *, jclass, jlong, jlong);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execLongLongTest
+ * Signature: (JJ)J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execLongLongTest
+  (JNIEnv *, jclass, jlong, jlong);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execUnsignedLongLongTest
+ * Signature: (JJ)J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execUnsignedLongLongTest
+  (JNIEnv *, jclass, jlong, jlong);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execFloatTest
+ * Signature: (JF)F
+ */
+JNIEXPORT jfloat JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execFloatTest
+  (JNIEnv *, jclass, jlong, jfloat);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execDoubleTest
+ * Signature: (JD)D
+ */
+JNIEXPORT jdouble JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execDoubleTest
+  (JNIEnv *, jclass, jlong, jdouble);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execPointerTest
+ * Signature: (JJ)J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execPointerTest
+  (JNIEnv *, jclass, jlong, jlong);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execStructTest
+ * Signature: (JJBSJJJF)J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execStructTest
+  (JNIEnv *, jclass, jlong, jlong, jbyte, jshort, jlong, jlong, jlong, jfloat);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execStructTest2
+ * Signature: (JJBSJJJF)J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execStructTest2
+  (JNIEnv *, jclass, jlong, jlong, jbyte, jshort, jlong, jlong, jlong, jfloat);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execUnionTest
+ * Signature: (JJIF)J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execUnionTest
+  (JNIEnv *, jclass, jlong, jlong, jint, jfloat);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execUnionTest2
+ * Signature: (JJI)J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execUnionTest2
+  (JNIEnv *, jclass, jlong, jlong, jint);
 
 #ifdef __cplusplus
 }

@@ -60,20 +60,71 @@ public class JNITestUtil {
 
     public static native long readPointer(final long address);
 
-    public static native byte readTestStructField0(final long address);
+    public static native byte execCharTest(long functionPointer,
+                                           byte value);
 
-    public static native short readTestStructField1(final long address);
+    public static native byte execUnsignedCharTest(long functionPointer,
+                                                   byte value);
 
-    public static native long readTestStructField2(final long address);
+    public static native short execShortTest(long functionPointer,
+                                             short value);
 
-    public static native long readTestStructField3(final long address);
+    public static native short execUnsignedShortTest(long functionPointer,
+                                                     short value);
 
-    public static native void writeTestStructField0(final long address,
-                                                    byte field0);
+    public static native int execIntTest(long functionPointer,
+                                         int value);
 
-    public static native void writeTestStructField1(final long address,
-                                                    short field1);
+    public static native int execUnsignedIntTest(long functionPointer,
+                                                 int value);
 
-    public static native void writeTestStructField3(final long address,
-                                                    long field3);
+    public static native long execLongTest(long functionPointer,
+                                           long value);
+
+
+    public static native long execUnsignedLongTest(long functionPointer,
+                                                   long value);
+
+    public static native long execLongLongTest(long functionPointer,
+                                               long value);
+
+
+    public static native long execUnsignedLongLongTest(long functionPointer,
+                                                       long value);
+
+    public static native float execFloatTest(long functionPointer,
+                                             float value);
+
+    public static native double execDoubleTest(long functionPointer,
+                                               double value);
+
+    public static native long execPointerTest(long functionPointer,
+                                              long value);
+
+    public static native long execStructTest(long functionPointer,
+                                             long tst,
+                                             byte field0,
+                                             short field1,
+                                             long field2,
+                                             long field3,
+                                             long embedded_field0,
+                                             float embedded_field1);
+
+    public static native long execStructTest2(long functionPointer,
+                                              long tst,
+                                              byte field0,
+                                              short field1,
+                                              long field2,
+                                              long field3,
+                                              long embedded_field0,
+                                              float embedded_field1);
+
+    public static native long execUnionTest(long functionPointer,
+                                            long tst,
+                                            int field0,
+                                            float field1);
+
+    public static native long execUnionTest2(long functionPointer,
+                                             long tst,
+                                             int field0);
 }

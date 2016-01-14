@@ -1,7 +1,11 @@
 package com.github.zubnix.jaccall;
 
 
+import com.github.zubnix.libtest.PointerCharTest;
+import com.github.zubnix.libtest.PointerShortTest;
 import com.github.zubnix.libtest.PointerTestFunc;
+import com.github.zubnix.libtest.PointerUnsignedCharTest;
+import com.github.zubnix.libtest.PointerUnsignedShortTest;
 import com.github.zubnix.libtest.TestFunc;
 import com.github.zubnix.libtest.TestStruct;
 import com.github.zubnix.libtest.TestUnion;
@@ -174,17 +178,99 @@ public class FunctionPointerTest {
 
     @Test
     public void charTestFunctionPointerFromJava() {
+        //given
+        final PointerCharTest pointerCharTest = PointerCharTest.nref(new Testing.CharTest() {
+            @Override
+            public byte $(final byte value) {
+                return charTest(value);
+            }
+        });
 
+        final byte value = 123;
+
+        //when
+        final byte retVal = JNITestUtil.execCharTest(pointerCharTest.address,
+                                                     value);
+
+        //then
+        assertThat(retVal).isEqualTo(value);
+    }
+
+    public byte charTest(final byte value) {
+        return value;
     }
 
     @Test
-    public void unsignedCharTestFunctionPointerFromJava() {}
+    public void unsignedCharTestFunctionPointerFromJava() {
+        //given
+        final PointerUnsignedCharTest pointerUnsignedCharTest = PointerUnsignedCharTest.nref(new Testing.UnsignedCharTest() {
+            @Override
+            public byte $(final byte value) {
+                return unsignedCharTest(value);
+            }
+        });
+
+        final byte value = 123;
+
+        //when
+        final byte retVal = JNITestUtil.execUnsignedCharTest(pointerUnsignedCharTest.address,
+                                                             value);
+
+        //then
+        assertThat(retVal).isEqualTo(value);
+    }
+
+    public byte unsignedCharTest(final byte value) {
+        return value;
+    }
 
     @Test
-    public void shortTestFunctionPointerFromJava() {}
+    public void shortTestFunctionPointerFromJava() {
+        //given
+        final PointerShortTest pointerShortTest = PointerShortTest.nref(new Testing.ShortTest() {
+            @Override
+            public short $(final short value) {
+                return shortTest(value);
+            }
+        });
+
+        final short value = 32536;
+
+        //when
+        final short retVal = JNITestUtil.execShortTest(pointerShortTest.address,
+                                                       value);
+
+        //then
+        assertThat(retVal).isEqualTo(value);
+    }
+
+    public short shortTest(final short value) {
+        return value;
+    }
 
     @Test
-    public void unsignedShortTestFunctionPointerFromJava() {}
+    public void unsignedShortTestFunctionPointerFromJava() {
+        //given
+        final PointerUnsignedShortTest pointerUnsignedShortTest = PointerUnsignedShortTest.nref(new Testing.UnsignedShortTest() {
+            @Override
+            public short $(final short value) {
+                return unsignedShortTest(value);
+            }
+        });
+
+        final short value = 32536;
+
+        //when
+        final short retVal = JNITestUtil.execUnsignedShortTest(pointerUnsignedShortTest.address,
+                                                               value);
+
+        //then
+        assertThat(retVal).isEqualTo(value);
+    }
+
+    public short unsignedShortTest(final short value) {
+        return value;
+    }
 
     @Test
     public void intTestFunctionPointerFromJava() {}
@@ -224,67 +310,6 @@ public class FunctionPointerTest {
 
     @Test
     public void unionTest2FunctionPointerFromJava() {}
-
-
-    public byte charTestInJava(final byte value) {
-        return value;
-    }
-
-    @Unsigned
-    public byte unsignedCharTestInJava(@Unsigned final byte value) {
-        return value;
-    }
-
-    public short shortTestInJava(final short value) {
-        return value;
-    }
-
-    @Unsigned
-    public short unsignedShortTestInJava(@Unsigned final short value) {
-        return value;
-    }
-
-    public int intTestInJava(final int value) {
-        return value;
-    }
-
-    @Unsigned
-    public int unsignedIntTestInJava(@Unsigned final int value) {
-        return value;
-    }
-
-    public long longTestInJava(final long value) {
-        return value;
-    }
-
-    @Unsigned
-    public long unsignedLongTestInJava(@Unsigned final long value) {
-        return value;
-    }
-
-    @Lng
-    public long longLongTestInJava(@Lng final long value) {
-        return value;
-    }
-
-    @Unsigned
-    @Lng
-    public long unsignedLongLongTestInJava(@Unsigned @Lng final long value) {
-        return value;
-    }
-
-    public float floatTestInJava(final float value) {
-        return value;
-    }
-
-    public double doubleTestInJava(final double value) {
-        return value;
-    }
-
-    @Ptr
-    public long pointerTestInJava(@Ptr final long value) {
-        return value;
-    }
 
 
     @ByVal(TestStruct.class)
