@@ -25,7 +25,7 @@ public abstract class PointerShortTest extends PointerFunc<PointerShortTest> imp
 
     @Nonnull
     public static PointerShortTest nref(@Nonnull final Testing.ShortTest function) {
-        if (function instanceof ShortTest_Jaccall_J) {
+        if (function instanceof PointerShortTest) {
             return (PointerShortTest) function;
         }
         return new ShortTest_Jaccall_J(function);

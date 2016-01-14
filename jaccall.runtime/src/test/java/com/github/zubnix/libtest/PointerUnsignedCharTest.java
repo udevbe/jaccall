@@ -25,7 +25,7 @@ public abstract class PointerUnsignedCharTest extends PointerFunc<PointerUnsigne
 
     @Nonnull
     public static PointerUnsignedCharTest nref(@Nonnull final Testing.UnsignedCharTest function) {
-        if (function instanceof UnsignedCharTest_Jaccall_J) {
+        if (function instanceof PointerUnsignedCharTest) {
             return (PointerUnsignedCharTest) function;
         }
         return new UnsignedCharTest_Jaccall_J(function);

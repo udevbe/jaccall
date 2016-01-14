@@ -25,7 +25,7 @@ public abstract class PointerCharTest extends PointerFunc<PointerCharTest> imple
 
     @Nonnull
     public static PointerCharTest nref(@Nonnull final Testing.CharTest function) {
-        if (function instanceof CharTest_Jaccall_J) {
+        if (function instanceof PointerCharTest) {
             return (PointerCharTest) function;
         }
         return new CharTest_Jaccall_J(function);
