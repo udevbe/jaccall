@@ -173,3 +173,11 @@ testFunc getFunctionPointerTest(){
 char functionPointerTest(testFunc func, struct test* arg0, unsigned int arg1, struct test arg2){
     func(arg0,arg1,arg2);
 }
+
+char (*charTestFunctionPointer(void))(char){
+    return &charTest;
+}
+
+unsigned char (*unsignedCharTestFunctionPointer(void))(unsigned char){
+    return &unsignedCharTest;
+}

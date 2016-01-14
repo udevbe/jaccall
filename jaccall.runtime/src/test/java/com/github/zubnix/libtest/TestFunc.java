@@ -1,11 +1,11 @@
 package com.github.zubnix.libtest;
 
 import com.github.zubnix.jaccall.ByVal;
-import com.github.zubnix.jaccall.FuncPtr;
+import com.github.zubnix.jaccall.Functor;
 import com.github.zubnix.jaccall.Ptr;
 import com.github.zubnix.jaccall.Unsigned;
 
-@FuncPtr
+@Functor
 public interface TestFunc {
 
     byte $(@Ptr long arg0,

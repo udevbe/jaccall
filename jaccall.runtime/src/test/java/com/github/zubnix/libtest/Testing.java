@@ -1,7 +1,7 @@
 package com.github.zubnix.libtest;
 
 import com.github.zubnix.jaccall.ByVal;
-import com.github.zubnix.jaccall.FuncPtr;
+import com.github.zubnix.jaccall.Functor;
 import com.github.zubnix.jaccall.Lib;
 import com.github.zubnix.jaccall.Lng;
 import com.github.zubnix.jaccall.Ptr;
@@ -71,7 +71,7 @@ public class Testing {
 
     public native byte charTest(byte value);
 
-    @FuncPtr
+    @Functor
     public interface CharTest {
         byte $(byte value);
     }
@@ -79,7 +79,7 @@ public class Testing {
     @Unsigned
     public native byte unsignedCharTest(@Unsigned byte value);
 
-    @FuncPtr
+    @Functor
     public interface UnsignedCharTest {
         @Unsigned
         byte $(@Unsigned byte value);
@@ -87,7 +87,7 @@ public class Testing {
 
     public native short shortTest(short value);
 
-    @FuncPtr
+    @Functor
     public interface ShortTest {
         short $(short value);
     }
@@ -95,7 +95,7 @@ public class Testing {
     @Unsigned
     public native short unsignedShortTest(@Unsigned short value);
 
-    @FuncPtr
+    @Functor
     public interface UnsignedShortTest {
         @Unsigned
         short $(@Unsigned short value);
@@ -103,7 +103,7 @@ public class Testing {
 
     public native int intTest(int value);
 
-    @FuncPtr
+    @Functor
     interface IntTest {
         int $(int value);
     }
@@ -111,7 +111,7 @@ public class Testing {
     @Unsigned
     public native int unsignedIntTest(@Unsigned int value);
 
-    @FuncPtr
+    @Functor
     interface UnsignedIntTest {
 
         @Unsigned
@@ -120,7 +120,7 @@ public class Testing {
 
     public native long longTest(long value);
 
-    @FuncPtr
+    @Functor
     interface LongTest {
         long $(long value);
     }
@@ -128,7 +128,7 @@ public class Testing {
     @Unsigned
     public native long unsignedLongTest(@Unsigned long value);
 
-    @FuncPtr
+    @Functor
     interface UnsignedLongTest {
         long $(@Unsigned long value);
     }
@@ -136,7 +136,7 @@ public class Testing {
     @Lng
     public native long longLongTest(@Lng long value);
 
-    @FuncPtr
+    @Functor
     interface LongLongTest {
         @Lng
         long $(@Lng long value);
@@ -146,7 +146,7 @@ public class Testing {
     @Lng
     public native long unsignedLongLongTest(@Unsigned @Lng long value);
 
-    @FuncPtr
+    @Functor
     interface UnsignedLongLongTest {
         @Unsigned
         @Lng
@@ -155,14 +155,14 @@ public class Testing {
 
     public native float floatTest(float value);
 
-    @FuncPtr
+    @Functor
     interface FloatTest {
         float $(float value);
     }
 
     public native double doubleTest(double value);
 
-    @FuncPtr
+    @Functor
     interface DoubleTest {
         double $(double value);
     }
@@ -170,7 +170,7 @@ public class Testing {
     @Ptr
     public native long pointerTest(@Ptr long value);
 
-    @FuncPtr
+    @Functor
     interface PointerTest {
         @Ptr
         long $(@Ptr long value);
@@ -185,7 +185,7 @@ public class Testing {
                                          @Lng long embedded_field0,
                                          float embedded_field1);
 
-    @FuncPtr
+    @Functor
     interface StructTest {
         @ByVal(TestStruct.class)
         long $(@Ptr(TestStruct.class) long tst,
@@ -206,7 +206,7 @@ public class Testing {
                                           @Lng long embedded_field0,
                                           float embedded_field1);
 
-    @FuncPtr
+    @Functor
     interface StructTest2 {
         @Ptr(TestStruct.class)
         long $(@ByVal(TestStruct.class) long tst,
@@ -223,7 +223,7 @@ public class Testing {
                                         int field0,
                                         float field1);
 
-    @FuncPtr
+    @Functor
     interface UnionTest {
         @ByVal(TestUnion.class)
         long $(@Ptr(TestUnion.class) long tst,
@@ -235,7 +235,7 @@ public class Testing {
     public static native long unionTest2(@ByVal(TestUnion.class) long tst,
                                          int field0);
 
-    @FuncPtr
+    @Functor
     interface UnionTest2 {
         @Ptr(TestUnion.class)
         long $(@ByVal(TestUnion.class) long tst,

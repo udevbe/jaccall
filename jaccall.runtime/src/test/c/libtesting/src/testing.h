@@ -76,3 +76,7 @@ void noArgsTest(void);
 typedef void(*funcptr)(void);
 
 funcptr noArgsFuncPtrTest(void);
+
+char (*charTestFunctionPointer(void))(char);
+
+unsigned char (*unsignedCharTestFunctionPointer(void))(unsigned char);
