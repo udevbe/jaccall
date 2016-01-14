@@ -80,3 +80,7 @@ funcptr noArgsFuncPtrTest(void);
 char (*charTestFunctionPointer(void))(char);
 
 unsigned char (*unsignedCharTestFunctionPointer(void))(unsigned char);
+
+short (*shortTestFunctionPointer(void))(short);
+
+unsigned short (*unsignedShortTestFunctionPointer(void))(unsigned short);

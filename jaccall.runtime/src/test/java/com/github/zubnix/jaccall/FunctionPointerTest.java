@@ -388,10 +388,44 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void shortTestFunctionPointerFromC() {}
+    public void shortTestFunctionPointerFromC() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        final long             shortTestFunctionPointer = new Testing().shortTestFunctionPointer();
+        final PointerShortTest pointerShortTest         = PointerShortTest.wrapFunc(shortTestFunctionPointer);
+
+        final short value = 32536;
+
+        //when
+        final short retVal = JNITestUtil.execShortTest(pointerShortTest.address,
+                                                       value);
+
+        //then
+        assertThat(retVal).isEqualTo(value);
+    }
 
     @Test
-    public void unsignedShortTestFunctionPointerFromC() {}
+    public void unsignedShortTestFunctionPointerFromC() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        final long                     unsignedShortTestFunctionPointer = new Testing().unsignedShortTestFunctionPointer();
+        final PointerUnsignedShortTest pointerUnsignedShortTest         = PointerUnsignedShortTest.wrapFunc(unsignedShortTestFunctionPointer);
+
+        final short value = 32536;
+
+        //when
+        final short retVal = JNITestUtil.execUnsignedShortTest(pointerUnsignedShortTest.address,
+                                                               value);
+
+        //then
+        assertThat(retVal).isEqualTo(value);
+    }
 
     @Test
     public void intTestFunctionPointerFromC() {}

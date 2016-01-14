@@ -26,6 +26,6 @@ final class UnsignedShortTest_Jaccall_C extends PointerUnsignedShortTest {
                   value);
     }
 
-    private static native byte _$(final long address,
-                                  final short value);
+    private static native short _$(final long address,
+                                   final short value);
 }

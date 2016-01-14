@@ -181,3 +181,11 @@ char (*charTestFunctionPointer(void))(char){
 unsigned char (*unsignedCharTestFunctionPointer(void))(unsigned char){
     return &unsignedCharTest;
 }
+
+short (*shortTestFunctionPointer(void))(short){
+   return &shortTest;
+}
+
+unsigned short (*unsignedShortTestFunctionPointer(void))(unsigned short){
+   return &unsignedShortTest;
+}
