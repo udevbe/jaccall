@@ -205,3 +205,11 @@ long (*longTestFunctionPointer(void))(long){
 unsigned long (*unsignedLongTestFunctionPointer(void))(unsigned long){
    return &unsignedLongTest;
 }
+
+long long (*longLongTestFunctionPointer(void))(long long){
+   return &longLongTest;
+}
+
+unsigned long long (*unsignedLongLongTestFunctionPointer(void))(unsigned long long){
+   return &unsignedLongLongTest;
+}

@@ -37,7 +37,9 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                            "intTestFunctionPointer",
                            "unsignedIntTestFunctionPointer",
                            "longTestFunctionPointer",
-                           "unsignedLongTestFunctionPointer"
+                           "unsignedLongTestFunctionPointer",
+                           "longLongTestFunctionPointer",
+                           "unsignedLongLongTestFunctionPointer"
               },
               new byte[]{1,
                          1,
@@ -60,6 +62,8 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                          0,
                          0,
                          4,
+                         0,
+                         0,
                          0,
                          0,
                          0,
@@ -133,6 +137,8 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                          JNI.ffi_callInterface(JNI.FFI_TYPE_POINTER),
                          JNI.ffi_callInterface(JNI.FFI_TYPE_POINTER),
                          JNI.ffi_callInterface(JNI.FFI_TYPE_POINTER),
+                         JNI.ffi_callInterface(JNI.FFI_TYPE_POINTER),
+                         JNI.ffi_callInterface(JNI.FFI_TYPE_POINTER),
                          JNI.ffi_callInterface(JNI.FFI_TYPE_POINTER)
               },
               new String[]{"(B)B",
@@ -156,6 +162,8 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                            "()J",
                            "()J",
                            "(JJIJ)B",
+                           "()J",
+                           "()J",
                            "()J",
                            "()J",
                            "()J",

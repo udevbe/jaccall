@@ -92,3 +92,7 @@ unsigned int (*unsignedIntTestFunctionPointer(void))(unsigned int);
 long (*longTestFunctionPointer(void))(long);
 
 unsigned long (*unsignedLongTestFunctionPointer(void))(unsigned long);
+
+long long (*longLongTestFunctionPointer(void))(long long);
+
+unsigned long long (*unsignedLongLongTestFunctionPointer(void))(unsigned long long);
