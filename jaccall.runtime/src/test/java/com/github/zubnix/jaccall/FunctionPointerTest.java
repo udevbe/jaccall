@@ -2,9 +2,11 @@ package com.github.zubnix.jaccall;
 
 
 import com.github.zubnix.libtest.PointerCharTest;
+import com.github.zubnix.libtest.PointerIntTest;
 import com.github.zubnix.libtest.PointerShortTest;
 import com.github.zubnix.libtest.PointerTestFunc;
 import com.github.zubnix.libtest.PointerUnsignedCharTest;
+import com.github.zubnix.libtest.PointerUnsignedIntTest;
 import com.github.zubnix.libtest.PointerUnsignedShortTest;
 import com.github.zubnix.libtest.TestFunc;
 import com.github.zubnix.libtest.TestStruct;
@@ -273,10 +275,49 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void intTestFunctionPointerFromJava() {}
+    public void intTestFunctionPointerFromJava() {
+        //given
+        final PointerIntTest pointerIntTest = PointerIntTest.nref(new Testing.IntTest() {
+            @Override
+            public int $(final int value) {
+                return intTest(value);
+            }
+        });
+
+        final int value = 325364564;
+
+        //when
+        final int retVal = JNITestUtil.execIntTest(pointerIntTest.address,
+                                                   value);
+
+        //then
+        assertThat(retVal).isEqualTo(value);
+    }
+
+    public int intTest(final int value) { return value; }
 
     @Test
-    public void unsignedIntTestFunctionPointerFromJava() {}
+    public void unsignedIntTestFunctionPointerFromJava() {
+        //given
+        final PointerUnsignedIntTest pointerUnsignedIntTest = PointerUnsignedIntTest.nref(new Testing.UnsignedIntTest() {
+            @Override
+            public int $(final int value) {
+                return unsignedIntTest(value);
+            }
+        });
+
+        final int value = 325364564;
+
+        //when
+        final int retVal = JNITestUtil.execUnsignedIntTest(pointerUnsignedIntTest.address,
+                                                           value);
+
+        //then
+        assertThat(retVal).isEqualTo(value);
+    }
+
+    public int unsignedIntTest(final int value) { return value; }
+
 
     @Test
     public void longTestFunctionPointerFromJava() {}
@@ -428,10 +469,44 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void intTestFunctionPointerFromC() {}
+    public void intTestFunctionPointerFromC() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        final long           intTestFunctionPointer = new Testing().intTestFunctionPointer();
+        final PointerIntTest pointerIntTest         = PointerIntTest.wrapFunc(intTestFunctionPointer);
+
+        final short value = 32536;
+
+        //when
+        final int retVal = JNITestUtil.execIntTest(pointerIntTest.address,
+                                                   value);
+
+        //then
+        assertThat(retVal).isEqualTo(value);
+    }
 
     @Test
-    public void unsignedIntTestFunctionPointerFromC() {}
+    public void unsignedIntTestFunctionPointerFromC() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        final long                   unsignedIntTestFunctionPointer = new Testing().unsignedIntTestFunctionPointer();
+        final PointerUnsignedIntTest pointerIntTest                 = PointerUnsignedIntTest.wrapFunc(unsignedIntTestFunctionPointer);
+
+        final short value = 32536;
+
+        //when
+        final int retVal = JNITestUtil.execUnsignedIntTest(pointerIntTest.address,
+                                                           value);
+
+        //then
+        assertThat(retVal).isEqualTo(value);
+    }
 
     @Test
     public void longTestFunctionPointerFromC() {}

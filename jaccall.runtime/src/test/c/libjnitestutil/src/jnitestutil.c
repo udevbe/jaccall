@@ -140,3 +140,25 @@ jshort JNICALL
 Java_com_github_zubnix_jaccall_JNITestUtil_execUnsignedShortTest(JNIEnv *env, jclass clazz, jlong func_ptr, jshort value){
     return ((unsigned short(*)(unsigned short))(intptr_t)func_ptr)((unsigned short)value);
 }
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execIntTest
+ * Signature: (JI)I
+ */
+JNIEXPORT
+jint
+JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execIntTest(JNIEnv *env, jclass clazz, jlong func_ptr, jint value){
+    return ((int(*)(int))(intptr_t)func_ptr)((int)value);
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execIntTest
+ * Signature: (JI)I
+ */
+JNIEXPORT
+jint
+JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execUnsignedIntTest(JNIEnv *env, jclass clazz, jlong func_ptr, jint value){
+    return ((unsigned int(*)(unsigned int))(intptr_t)func_ptr)((unsigned int)value);
+}

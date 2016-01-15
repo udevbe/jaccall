@@ -189,3 +189,11 @@ short (*shortTestFunctionPointer(void))(short){
 unsigned short (*unsignedShortTestFunctionPointer(void))(unsigned short){
    return &unsignedShortTest;
 }
+
+int (*intTestFunctionPointer(void))(int){
+   return &intTest;
+}
+
+unsigned int (*unsignedIntTestFunctionPointer(void))(unsigned int){
+   return &unsignedIntTest;
+}

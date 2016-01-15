@@ -104,7 +104,7 @@ public class Testing {
     public native int intTest(int value);
 
     @Functor
-    interface IntTest {
+    public interface IntTest {
         int $(int value);
     }
 
@@ -112,7 +112,7 @@ public class Testing {
     public native int unsignedIntTest(@Unsigned int value);
 
     @Functor
-    interface UnsignedIntTest {
+    public interface UnsignedIntTest {
 
         @Unsigned
         int $(@Unsigned int value);
