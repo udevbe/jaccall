@@ -217,3 +217,7 @@ unsigned long long (*unsignedLongLongTestFunctionPointer(void))(unsigned long lo
 float (*floatTestFunctionPointer(void))(float){
     return &floatTest;
 }
+
+double (*doubleTestFunctionPointer(void))(double){
+    return &doubleTest;
+}

@@ -163,7 +163,7 @@ public class Testing {
     public native double doubleTest(double value);
 
     @Functor
-    interface DoubleTest {
+    public interface DoubleTest {
         double $(double value);
     }
 

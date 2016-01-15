@@ -217,3 +217,14 @@ jfloat
 JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execFloatTest(JNIEnv *env, jclass clazz, jlong func_ptr, jfloat value){
     return ((float(*)(float))(intptr_t)func_ptr)((float)value);
 }
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execDoubleTest
+ * Signature: (JD)D
+ */
+JNIEXPORT
+jdouble
+JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execDoubleTest(JNIEnv *env, jclass clazz, jlong func_ptr, jdouble value){
+    return ((double(*)(double))(intptr_t)func_ptr)((double)value);
+}

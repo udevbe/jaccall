@@ -2,6 +2,7 @@ package com.github.zubnix.jaccall;
 
 
 import com.github.zubnix.libtest.PointerCharTest;
+import com.github.zubnix.libtest.PointerDoubleTest;
 import com.github.zubnix.libtest.PointerFloatTest;
 import com.github.zubnix.libtest.PointerIntTest;
 import com.github.zubnix.libtest.PointerLongLongTest;
@@ -437,7 +438,26 @@ public class FunctionPointerTest {
     public float floatTest(final float value) { return value; }
 
     @Test
-    public void doubleTestFunctionPointerFromJava() {}
+    public void doubleTestFunctionPointerFromJava() {
+        //given
+        final PointerDoubleTest pointerLongTest = PointerDoubleTest.nref(new Testing.DoubleTest() {
+            @Override
+            public double $(final double value) {
+                return doubleTest(value);
+            }
+        });
+
+        final double value = 325364564753159.456789159753D;
+
+        //when
+        final double retVal = JNITestUtil.execDoubleTest(pointerLongTest.address,
+                                                         value);
+
+        //then
+        assertThat(retVal).isEqualTo(value);
+    }
+
+    public double doubleTest(final double value) { return value; }
 
     @Test
     public void pointerTestFunctionPointerFromJava() {}
@@ -701,7 +721,23 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void doubleTestFunctionPointerFromC() {}
+    public void doubleTestFunctionPointerFromC() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        final long              doubleTestFunctionPointer = new Testing().doubleTestFunctionPointer();
+        final PointerDoubleTest pointerFloatTest          = PointerDoubleTest.wrapFunc(doubleTestFunctionPointer);
+
+        final double value = 32536456159753.12345615975D;
+
+        //when
+        final double retVal = pointerFloatTest.$(value);
+
+        //then
+        assertThat(retVal).isEqualTo(value);
+    }
 
     @Test
     public void pointerTestFunctionPointerFromC() {}
