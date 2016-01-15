@@ -206,3 +206,14 @@ jlong
 JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execUnsignedLongLongTest(JNIEnv *env, jclass clazz, jlong func_ptr, jlong value){
     return ((unsigned long long(*)(unsigned long long))(intptr_t)func_ptr)((unsigned long long)value);
 }
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execFloatTest
+ * Signature: (JF)F
+ */
+JNIEXPORT
+jfloat
+JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execFloatTest(JNIEnv *env, jclass clazz, jlong func_ptr, jfloat value){
+    return ((float(*)(float))(intptr_t)func_ptr)((float)value);
+}

@@ -2,6 +2,7 @@ package com.github.zubnix.jaccall;
 
 
 import com.github.zubnix.libtest.PointerCharTest;
+import com.github.zubnix.libtest.PointerFloatTest;
 import com.github.zubnix.libtest.PointerIntTest;
 import com.github.zubnix.libtest.PointerLongLongTest;
 import com.github.zubnix.libtest.PointerLongTest;
@@ -351,7 +352,7 @@ public class FunctionPointerTest {
         final PointerUnsignedLongTest pointerUnsignedLongTest = PointerUnsignedLongTest.nref(new Testing.UnsignedLongTest() {
             @Override
             public long $(final long value) {
-                return longTest(value);
+                return unsignedLongTest(value);
             }
         });
 
@@ -374,7 +375,7 @@ public class FunctionPointerTest {
         final PointerLongLongTest pointerLongTest = PointerLongLongTest.nref(new Testing.LongLongTest() {
             @Override
             public long $(final long value) {
-                return longTest(value);
+                return longLongTest(value);
             }
         });
 
@@ -388,13 +389,15 @@ public class FunctionPointerTest {
         assertThat(retVal).isEqualTo(value);
     }
 
+    public long longLongTest(final long value) { return value; }
+
     @Test
     public void unsignedLongLongTestFunctionPointerFromJava() {
         //given
         final PointerUnsignedLongLongTest pointerLongTest = PointerUnsignedLongLongTest.nref(new Testing.UnsignedLongLongTest() {
             @Override
             public long $(final long value) {
-                return longTest(value);
+                return unsignedLongLongTest(value);
             }
         });
 
@@ -408,8 +411,30 @@ public class FunctionPointerTest {
         assertThat(retVal).isEqualTo(value);
     }
 
+    public long unsignedLongLongTest(final long value) { return value; }
+
+
     @Test
-    public void floatTestFunctionPointerFromJava() {}
+    public void floatTestFunctionPointerFromJava() {
+        //given
+        final PointerFloatTest pointerLongTest = PointerFloatTest.nref(new Testing.FloatTest() {
+            @Override
+            public float $(final float value) {
+                return floatTest(value);
+            }
+        });
+
+        final float value = 325364564.456789F;
+
+        //when
+        final float retVal = JNITestUtil.execFloatTest(pointerLongTest.address,
+                                                       value);
+
+        //then
+        assertThat(retVal).isEqualTo(value);
+    }
+
+    public float floatTest(final float value) { return value; }
 
     @Test
     public void doubleTestFunctionPointerFromJava() {}
@@ -657,7 +682,23 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void floatTestFunctionPointerFromC() {}
+    public void floatTestFunctionPointerFromC() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        final long             floatTestFunctionPointer = new Testing().floatTestFunctionPointer();
+        final PointerFloatTest pointerFloatTest         = PointerFloatTest.wrapFunc(floatTestFunctionPointer);
+
+        final float value = 32536456.123456F;
+
+        //when
+        final float retVal = pointerFloatTest.$(value);
+
+        //then
+        assertThat(retVal).isEqualTo(value);
+    }
 
     @Test
     public void doubleTestFunctionPointerFromC() {}

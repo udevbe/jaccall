@@ -156,7 +156,7 @@ public class Testing {
     public native float floatTest(float value);
 
     @Functor
-    interface FloatTest {
+    public interface FloatTest {
         float $(float value);
     }
 
