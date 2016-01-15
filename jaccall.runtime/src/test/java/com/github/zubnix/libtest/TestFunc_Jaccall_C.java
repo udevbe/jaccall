@@ -12,7 +12,7 @@ final class TestFunc_Jaccall_C extends PointerTestFunc {
                         "_$",
                         4,
                         "(JJIJ)B",
-                        PointerTestFunc.FFI_CIF);
+                        FFI_CIF);
     }
 
     TestFunc_Jaccall_C(final long address) {

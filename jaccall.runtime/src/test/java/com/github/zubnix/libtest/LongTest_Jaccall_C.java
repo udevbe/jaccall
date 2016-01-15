@@ -5,26 +5,26 @@ import com.github.zubnix.jaccall.JNI;
 import javax.annotation.Generated;
 
 @Generated("com.github.zubnix.jaccall.compiletime.funcptr.FunctionPointerGenerator")
-final class UnsignedIntTest_Jaccall_C extends PointerUnsignedIntTest {
+final class LongTest_Jaccall_C extends PointerLongTest {
 
     static {
-        JNI.linkFuncPtr(UnsignedIntTest_Jaccall_C.class,
+        JNI.linkFuncPtr(LongTest_Jaccall_C.class,
                         "_$",
                         2,
-                        "(JI)I",
+                        "(JJ)J",
                         FFI_CIF);
     }
 
-    UnsignedIntTest_Jaccall_C(final long address) {
+    LongTest_Jaccall_C(final long address) {
         super(address);
     }
 
     @Override
-    public int $(final int value) {
+    public long $(final long value) {
         return _$(this.address,
                   value);
     }
 
-    private static native int _$(final long address,
-                                 final int value);
+    private static native long _$(final long address,
+                                  final long value);
 }

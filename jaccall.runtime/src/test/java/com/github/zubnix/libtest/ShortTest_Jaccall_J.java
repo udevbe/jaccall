@@ -13,7 +13,7 @@ final class ShortTest_Jaccall_J extends PointerShortTest {
     private final Testing.ShortTest function;
 
     public ShortTest_Jaccall_J(final Testing.ShortTest function) {
-        super(JNI.ffi_closure(PointerShortTest.FFI_CIF,
+        super(JNI.ffi_closure(FFI_CIF,
                               function,
                               JNI_METHOD_ID));
         this.function = function;

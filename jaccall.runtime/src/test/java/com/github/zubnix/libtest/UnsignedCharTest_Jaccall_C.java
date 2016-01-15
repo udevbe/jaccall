@@ -13,7 +13,7 @@ final class UnsignedCharTest_Jaccall_C extends PointerUnsignedCharTest {
                         "_$",
                         2,
                         "(JB)B",
-                        PointerUnsignedCharTest.FFI_CIF);
+                        FFI_CIF);
     }
 
     UnsignedCharTest_Jaccall_C(final long address) {

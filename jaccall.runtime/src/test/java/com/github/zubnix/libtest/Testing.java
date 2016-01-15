@@ -121,7 +121,7 @@ public class Testing {
     public native long longTest(long value);
 
     @Functor
-    interface LongTest {
+    public interface LongTest {
         long $(long value);
     }
 
@@ -129,7 +129,7 @@ public class Testing {
     public native long unsignedLongTest(@Unsigned long value);
 
     @Functor
-    interface UnsignedLongTest {
+    public interface UnsignedLongTest {
         long $(@Unsigned long value);
     }
 

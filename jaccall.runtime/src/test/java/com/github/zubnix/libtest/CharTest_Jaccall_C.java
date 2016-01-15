@@ -13,7 +13,7 @@ final class CharTest_Jaccall_C extends PointerCharTest {
                         "_$",
                         2,
                         "(JB)B",
-                        PointerCharTest.FFI_CIF);
+                        FFI_CIF);
     }
 
     CharTest_Jaccall_C(final long address) {

@@ -197,3 +197,11 @@ int (*intTestFunctionPointer(void))(int){
 unsigned int (*unsignedIntTestFunctionPointer(void))(unsigned int){
    return &unsignedIntTest;
 }
+
+long (*longTestFunctionPointer(void))(long){
+   return &longTest;
+}
+
+unsigned long (*unsignedLongTestFunctionPointer(void))(unsigned long){
+   return &unsignedLongTest;
+}

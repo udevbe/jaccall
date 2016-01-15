@@ -88,3 +88,7 @@ unsigned short (*unsignedShortTestFunctionPointer(void))(unsigned short);
 int (*intTestFunctionPointer(void))(int);
 
 unsigned int (*unsignedIntTestFunctionPointer(void))(unsigned int);
+
+long (*longTestFunctionPointer(void))(long);
+
+unsigned long (*unsignedLongTestFunctionPointer(void))(unsigned long);

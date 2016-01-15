@@ -3,10 +3,12 @@ package com.github.zubnix.jaccall;
 
 import com.github.zubnix.libtest.PointerCharTest;
 import com.github.zubnix.libtest.PointerIntTest;
+import com.github.zubnix.libtest.PointerLongTest;
 import com.github.zubnix.libtest.PointerShortTest;
 import com.github.zubnix.libtest.PointerTestFunc;
 import com.github.zubnix.libtest.PointerUnsignedCharTest;
 import com.github.zubnix.libtest.PointerUnsignedIntTest;
+import com.github.zubnix.libtest.PointerUnsignedLongTest;
 import com.github.zubnix.libtest.PointerUnsignedShortTest;
 import com.github.zubnix.libtest.TestFunc;
 import com.github.zubnix.libtest.TestStruct;
@@ -320,10 +322,49 @@ public class FunctionPointerTest {
 
 
     @Test
-    public void longTestFunctionPointerFromJava() {}
+    public void longTestFunctionPointerFromJava() {
+        //given
+        final PointerLongTest pointerLongTest = PointerLongTest.nref(new Testing.LongTest() {
+            @Override
+            public long $(final long value) {
+                return longTest(value);
+            }
+        });
+
+        final int value = 325364564;
+
+        //when
+        final long retVal = JNITestUtil.execLongTest(pointerLongTest.address,
+                                                     value);
+
+        //then
+        assertThat(retVal).isEqualTo(value);
+    }
+
+    public long longTest(final long value) { return value; }
 
     @Test
-    public void unsignedLongTestFunctionPointerFromJava() {}
+    public void unsignedLongTestFunctionPointerFromJava() {
+        //given
+        final PointerUnsignedLongTest pointerUnsignedLongTest = PointerUnsignedLongTest.nref(new Testing.UnsignedLongTest() {
+            @Override
+            public long $(final long value) {
+                return longTest(value);
+            }
+        });
+
+        final int value = 325364564;
+
+        //when
+        final long retVal = JNITestUtil.execUnsignedLongTest(pointerUnsignedLongTest.address,
+                                                             value);
+
+        //then
+        assertThat(retVal).isEqualTo(value);
+    }
+
+    public long unsignedLongTest(final long value) { return value; }
+
 
     @Test
     public void longLongTestFunctionPointerFromJava() {}
@@ -401,8 +442,7 @@ public class FunctionPointerTest {
         final byte value = 123;
 
         //when
-        final byte retVal = JNITestUtil.execCharTest(pointerCharTest.address,
-                                                     value);
+        final byte retVal = pointerCharTest.$(value);
 
         //then
         assertThat(retVal).isEqualTo(value);
@@ -421,8 +461,7 @@ public class FunctionPointerTest {
         final byte value = 123;
 
         //when
-        final byte retVal = JNITestUtil.execUnsignedCharTest(pointerCharTest.address,
-                                                             value);
+        final byte retVal = pointerCharTest.$(value);
 
         //then
         assertThat(retVal).isEqualTo(value);
@@ -441,8 +480,7 @@ public class FunctionPointerTest {
         final short value = 32536;
 
         //when
-        final short retVal = JNITestUtil.execShortTest(pointerShortTest.address,
-                                                       value);
+        final short retVal = pointerShortTest.$(value);
 
         //then
         assertThat(retVal).isEqualTo(value);
@@ -461,8 +499,7 @@ public class FunctionPointerTest {
         final short value = 32536;
 
         //when
-        final short retVal = JNITestUtil.execUnsignedShortTest(pointerUnsignedShortTest.address,
-                                                               value);
+        final short retVal = pointerUnsignedShortTest.$(value);
 
         //then
         assertThat(retVal).isEqualTo(value);
@@ -478,11 +515,10 @@ public class FunctionPointerTest {
         final long           intTestFunctionPointer = new Testing().intTestFunctionPointer();
         final PointerIntTest pointerIntTest         = PointerIntTest.wrapFunc(intTestFunctionPointer);
 
-        final short value = 32536;
+        final int value = 32536987;
 
         //when
-        final int retVal = JNITestUtil.execIntTest(pointerIntTest.address,
-                                                   value);
+        final int retVal = pointerIntTest.$(value);
 
         //then
         assertThat(retVal).isEqualTo(value);
@@ -498,21 +534,53 @@ public class FunctionPointerTest {
         final long                   unsignedIntTestFunctionPointer = new Testing().unsignedIntTestFunctionPointer();
         final PointerUnsignedIntTest pointerIntTest                 = PointerUnsignedIntTest.wrapFunc(unsignedIntTestFunctionPointer);
 
-        final short value = 32536;
+        final int value = 32536987;
 
         //when
-        final int retVal = JNITestUtil.execUnsignedIntTest(pointerIntTest.address,
-                                                           value);
+        final int retVal = pointerIntTest.$(value);
 
         //then
         assertThat(retVal).isEqualTo(value);
     }
 
     @Test
-    public void longTestFunctionPointerFromC() {}
+    public void longTestFunctionPointerFromC() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        final long            longTestFunctionPointer = new Testing().longTestFunctionPointer();
+        final PointerLongTest pointerLongTest         = PointerLongTest.wrapFunc(longTestFunctionPointer);
+
+        final int value = 32536456;
+
+        //when
+        final long retVal = pointerLongTest.$(value);
+
+        //then
+        assertThat(retVal).isEqualTo(value);
+    }
 
     @Test
-    public void unsignedLongTestFunctionPointerFromC() {}
+    public void unsignedLongTestFunctionPointerFromC() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        final long                    longTestFunctionPointer = new Testing().unsignedLongTestFunctionPointer();
+        final PointerUnsignedLongTest pointerLongTest         = PointerUnsignedLongTest.wrapFunc(longTestFunctionPointer);
+
+        final int value = 32536456;
+
+        //when
+
+        final long retVal = pointerLongTest.$(value);
+
+        //then
+        assertThat(retVal).isEqualTo(value);
+    }
 
     @Test
     public void longLongTestFunctionPointerFromC() {}

@@ -162,3 +162,25 @@ jint
 JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execUnsignedIntTest(JNIEnv *env, jclass clazz, jlong func_ptr, jint value){
     return ((unsigned int(*)(unsigned int))(intptr_t)func_ptr)((unsigned int)value);
 }
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execLongTest
+ * Signature: (JJ)J
+ */
+JNIEXPORT
+jlong
+JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execLongTest(JNIEnv *env, jclass clazz, jlong func_ptr, jlong value){
+    return ((long(*)(long))(intptr_t)func_ptr)((long)value);
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execUnsignedLongTest
+ * Signature: (JJ)J
+ */
+JNIEXPORT
+jlong
+JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execUnsignedLongTest(JNIEnv *env, jclass clazz, jlong func_ptr, jlong value){
+    return ((unsigned long(*)(unsigned long))(intptr_t)func_ptr)((unsigned long)value);
+}

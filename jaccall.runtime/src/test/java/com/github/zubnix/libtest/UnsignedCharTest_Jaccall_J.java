@@ -13,7 +13,7 @@ final class UnsignedCharTest_Jaccall_J extends PointerUnsignedCharTest {
     private final Testing.UnsignedCharTest function;
 
     public UnsignedCharTest_Jaccall_J(final Testing.UnsignedCharTest function) {
-        super(JNI.ffi_closure(PointerShortTest.FFI_CIF,
+        super(JNI.ffi_closure(FFI_CIF,
                               function,
                               JNI_METHOD_ID));
         this.function = function;

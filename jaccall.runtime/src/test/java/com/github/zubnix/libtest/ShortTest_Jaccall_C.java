@@ -13,7 +13,7 @@ final class ShortTest_Jaccall_C extends PointerShortTest {
                         "_$",
                         2,
                         "(JS)S",
-                        PointerShortTest.FFI_CIF);
+                        FFI_CIF);
     }
 
     ShortTest_Jaccall_C(final long address) {

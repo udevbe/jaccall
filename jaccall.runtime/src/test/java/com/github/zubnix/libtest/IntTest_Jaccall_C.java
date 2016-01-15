@@ -12,7 +12,7 @@ final class IntTest_Jaccall_C extends PointerIntTest {
                         "_$",
                         2,
                         "(JI)I",
-                        PointerIntTest.FFI_CIF);
+                        FFI_CIF);
     }
 
     IntTest_Jaccall_C(final long address) {

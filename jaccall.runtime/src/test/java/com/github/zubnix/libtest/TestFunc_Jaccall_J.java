@@ -19,7 +19,7 @@ final class TestFunc_Jaccall_J extends PointerTestFunc {
     private final TestFunc testFunction;
 
     TestFunc_Jaccall_J(@Nonnull final TestFunc testFunction) {
-        super(JNI.ffi_closure(PointerTestFunc.FFI_CIF,
+        super(JNI.ffi_closure(FFI_CIF,
                               testFunction,
                               JNI_METHOD_ID));
         this.testFunction = testFunction;

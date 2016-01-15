@@ -13,7 +13,7 @@ final class IntTest_Jaccall_J extends PointerIntTest {
     private final Testing.IntTest function;
 
     public IntTest_Jaccall_J(final Testing.IntTest function) {
-        super(JNI.ffi_closure(PointerIntTest.FFI_CIF,
+        super(JNI.ffi_closure(FFI_CIF,
                               function,
                               JNI_METHOD_ID));
         this.function = function;
