@@ -225,3 +225,13 @@ double (*doubleTestFunctionPointer(void))(double){
 void* (*pointerTestFunctionPointer(void))(void*){
     return &pointerTest;
 }
+
+struct test (*structTestFunctionPointer(void))(struct test *tst,
+                                               char field0,
+                                               short field1,
+                                               int field2[3],
+                                               int *field3,
+                                               long long embedded_field0,
+                                               float embedded_field1){
+    return &structTest;
+}

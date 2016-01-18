@@ -910,7 +910,87 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void testStructFunctionPointerFromC() {}
+    public void testStructFunctionPointerFromC() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        final long              pointer           = Testing.structTestFunctionPointer();
+        final PointerStructFunc pointerStructFunc = PointerStructFunc.wrapFunc(pointer);
+
+        final Pointer<TestStruct> testStructPointer = malloc(TestStruct.SIZE).castp(TestStruct.class);
+        final TestStruct          testStruct        = testStructPointer.dref();
+
+        final byte             field0 = 10;
+        final short            field1 = 20;
+        final Pointer<Integer> field3 = nref(40);
+
+        testStruct.field0(field0);
+        testStruct.field1(field1);
+        testStruct.field2()
+                  .writei(1,
+                          1);
+        testStruct.field2()
+                  .writei(2,
+                          11);
+        testStruct.field2()
+                  .writei(3,
+                          111);
+        testStruct.field3(field3);
+
+        //when
+        try (Pointer<TestStruct> tst = testStructPointer;
+             Pointer<Integer> intp = nref(44)) {
+
+            final byte newField0 = 'a';
+            final short newField1 = 22;
+            final int newField2_0 = 123;
+            final int newField2_1 = 456;
+            final int newField2_2 = 789;
+
+            final Pointer<Integer> newField2 = nref(newField2_0,
+                                                    newField2_1,
+                                                    newField2_2);
+
+            final Pointer<Integer> newField3 = intp;
+            final long embedded_field0 = 1234567890L;
+            final float embedded_field1 = 9876543.21F;
+
+            final Pointer<TestStruct> testStructByValue = wrap(TestStruct.class,
+                                                               pointerStructFunc.$(tst.address,
+                                                                                   newField0,
+                                                                                   newField1,
+                                                                                   newField2.address,
+                                                                                   newField3.address,
+                                                                                   embedded_field0,
+                                                                                   embedded_field1));
+
+            //then
+            final TestStruct testStruct1 = testStructByValue.dref();
+            assertThat(testStruct1.field0()).isEqualTo(newField0);
+            assertThat(testStruct1.field1()).isEqualTo(newField1);
+            assertThat(testStruct1.field2()
+                                  .dref(0)).isEqualTo(newField2_0);
+            assertThat(testStruct1.field2()
+                                  .dref(1)).isEqualTo(newField2_1);
+            assertThat(testStruct1.field2()
+                                  .dref(2)).isEqualTo(newField2_2);
+            assertThat(testStruct1.field3()).isEqualTo(newField3);
+
+            assertThat(testStruct.field0()).isEqualTo(newField0);
+            assertThat(testStruct.field1()).isEqualTo(newField1);
+            assertThat(testStruct.field2()
+                                 .dref(0)).isEqualTo(newField2_0);
+            assertThat(testStruct.field2()
+                                 .dref(1)).isEqualTo(newField2_1);
+            assertThat(testStruct.field2()
+                                 .dref(2)).isEqualTo(newField2_2);
+            assertThat(testStruct.field3()).isEqualTo(newField3);
+
+            testStructByValue.close();
+        }
+    }
 
     @Test
     public void testStruct2FunctionPointerFromC() {}

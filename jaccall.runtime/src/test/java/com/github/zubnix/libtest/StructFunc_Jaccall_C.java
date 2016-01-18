@@ -38,12 +38,12 @@ final class StructFunc_Jaccall_C extends PointerStructFunc {
                   embedded_field1);
     }
 
-    private static native short _$(final long address,
-                                   long tst,
-                                   byte field0,
-                                   short field1,
-                                   long field2,
-                                   long field3,
-                                   long embedded_field0,
-                                   float embedded_field1);
+    private static native long _$(final long address,
+                                  long tst,
+                                  byte field0,
+                                  short field1,
+                                  long field2,
+                                  long field3,
+                                  long embedded_field0,
+                                  float embedded_field1);
 }
