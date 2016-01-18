@@ -63,7 +63,7 @@ final class PointerCLong extends Pointer<CLong> {
     @Override
     public void writei(@Nonnull final ByteBuffer byteBuffer,
                        @Nonnegative final int index,
-                       final CLong... val) {
+                       @Nonnull final CLong... val) {
         if (val.length == 0) {
             return;
         }

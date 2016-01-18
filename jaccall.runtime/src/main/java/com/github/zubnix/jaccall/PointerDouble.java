@@ -51,7 +51,7 @@ final class PointerDouble extends Pointer<Double> {
     @Override
     public void writei(@Nonnull final ByteBuffer byteBuffer,
                        @Nonnegative final int index,
-                       final Double... val) {
+                       @Nonnull final Double... val) {
         final DoubleBuffer buffer = byteBuffer.asDoubleBuffer();
         buffer.clear();
         buffer.position(index);

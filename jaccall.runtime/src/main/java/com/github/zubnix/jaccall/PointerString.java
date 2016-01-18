@@ -64,7 +64,7 @@ class PointerString extends Pointer<String> {
     @Override
     void writei(@Nonnull final ByteBuffer byteBuffer,
                 @Nonnegative final int index,
-                final String... val) {
+                @Nonnull final String... val) {
         byteBuffer.position(index);
         for (final String s : val) {
             CHARSET_ENCODER.encode(CharBuffer.wrap(s),

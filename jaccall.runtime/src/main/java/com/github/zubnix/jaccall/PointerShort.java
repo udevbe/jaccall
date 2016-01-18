@@ -50,7 +50,7 @@ public class PointerShort extends Pointer<Short> {
     @Override
     public void writei(@Nonnull final ByteBuffer byteBuffer,
                        @Nonnegative final int index,
-                       final Short... val) {
+                       @Nonnull final Short... val) {
         final ShortBuffer buffer = byteBuffer.asShortBuffer();
         buffer.clear();
         buffer.position(index);

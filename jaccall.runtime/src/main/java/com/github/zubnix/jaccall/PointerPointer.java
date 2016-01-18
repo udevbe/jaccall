@@ -89,7 +89,7 @@ final class PointerPointer<T> extends Pointer<Pointer<T>> {
     @Override
     public final void writei(@Nonnull final ByteBuffer byteBuffer,
                              @Nonnegative final int index,
-                             final Pointer<T>... val) {
+                             @Nonnull final Pointer<T>... val) {
         final long pointerSize = sizeof((Pointer) null);
         if (pointerSize == 8) {
             //64-bit

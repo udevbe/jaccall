@@ -70,7 +70,7 @@ final class PointerStruct extends Pointer<StructType> {
     @Override
     void writei(@Nonnull final ByteBuffer byteBuffer,
                 @Nonnegative final int index,
-                final StructType... val) {
+                @Nonnull final StructType... val) {
         if (val.length == 0) {
             return;
         }

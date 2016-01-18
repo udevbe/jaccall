@@ -51,7 +51,7 @@ final class PointerLong extends Pointer<Long> {
     @Override
     public void writei(@Nonnull final ByteBuffer byteBuffer,
                        @Nonnegative final int index,
-                       final Long... val) {
+                       @Nonnull final Long... val) {
         final LongBuffer buffer = byteBuffer.asLongBuffer();
         buffer.clear();
         buffer.position(index);

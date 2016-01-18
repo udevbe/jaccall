@@ -607,7 +607,7 @@ public abstract class Pointer<T> implements AutoCloseable {
 
     @SafeVarargs
     public final void writei(@Nonnegative final int index,
-                             final T... val) {
+                             @Nonnull final T... val) {
         writei(this.byteBuffer,
                index,
                val);
@@ -615,7 +615,7 @@ public abstract class Pointer<T> implements AutoCloseable {
 
     abstract void writei(@Nonnull ByteBuffer byteBuffer,
                          @Nonnegative final int index,
-                         final T... val);
+                         @Nonnull final T... val);
 
     @Nonnull
     static Class<?> toClass(@Nonnull final Type type) {

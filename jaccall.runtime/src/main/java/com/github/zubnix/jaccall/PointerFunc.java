@@ -40,7 +40,7 @@ public abstract class PointerFunc<T> extends Pointer<T> {
     @Override
     final void writei(@Nonnull final ByteBuffer byteBuffer,
                       @Nonnegative final int index,
-                      final T... val) {
+                      @Nonnull final T... val) {
         throw new UnsupportedOperationException();
     }
 }

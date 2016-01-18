@@ -50,7 +50,7 @@ final class PointerFloat extends Pointer<Float> {
     @Override
     public void writei(@Nonnull final ByteBuffer byteBuffer,
                        @Nonnegative final int index,
-                       final Float... val) {
+                       @Nonnull final Float... val) {
         final FloatBuffer buffer = byteBuffer.asFloatBuffer();
         buffer.clear();
         buffer.position(index);
