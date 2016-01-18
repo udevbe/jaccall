@@ -1,11 +1,14 @@
 package com.github.zubnix.jaccall;
 
 
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import static java.nio.ByteBuffer.allocateDirect;
 
+//TODO unit test all read+write struct operations
 public abstract class StructType {
 
     protected static int newOffset(final int align,
@@ -17,18 +20,20 @@ public abstract class StructType {
 
     private ByteBuffer buffer;
 
-    protected StructType(final int size) {
+    protected StructType(@Nonnegative final int size) {
         this.size = size;
     }
 
+    @Nonnull
     final ByteBuffer buffer() {
         if (this.buffer == null) {
+            //TODO allocate an indirect bytebuffer once the CArray type has been added
             buffer(allocateDirect(this.size));
         }
         return this.buffer;
     }
 
-    final void buffer(final ByteBuffer buffer) {
+    final void buffer(@Nonnull final ByteBuffer buffer) {
         buffer.rewind();
         buffer.clear();
         buffer.order(ByteOrder.nativeOrder());
@@ -36,40 +41,41 @@ public abstract class StructType {
     }
 
     //Byte
-    protected final byte readByte(final int offset) {
+    protected final byte readByte(@Nonnegative final int offset) {
         return buffer().get(offset);
     }
 
-    protected final void writeByte(final int offset,
+    protected final void writeByte(@Nonnegative final int offset,
                                    final byte value) {
         buffer().put(offset,
                      value);
     }
 
     //Short
-    protected final short readShort(final int offset) {
+    protected final short readShort(@Nonnegative final int offset) {
         return buffer().getShort(offset);
     }
 
-    protected final void writeShort(final int offset,
+    protected final void writeShort(@Nonnegative final int offset,
                                     final short value) {
         buffer().putShort(offset,
                           value);
     }
 
     //Integer
-    protected final int readInteger(final int offset) {
+    protected final int readInteger(@Nonnegative final int offset) {
         return buffer().getInt(offset);
     }
 
-    protected final void writeInteger(final int offset,
+    protected final void writeInteger(@Nonnegative final int offset,
                                       final int value) {
         buffer().putInt(offset,
                         value);
     }
 
     //c long
-    protected final CLong readCLong(final int offset) {
+    @Nonnull
+    protected final CLong readCLong(@Nonnegative final int offset) {
         final long size = Size.sizeof((CLong) null);
         final long value;
 
@@ -83,8 +89,8 @@ public abstract class StructType {
         return new CLong(value);
     }
 
-    protected final void writeCLong(final int offset,
-                                    final CLong value) {
+    protected final void writeCLong(@Nonnegative final int offset,
+                                    @Nonnull final CLong value) {
         final long size = Size.sizeof((CLong) null);
 
         if (size == 8) {
@@ -98,41 +104,42 @@ public abstract class StructType {
     }
 
     //long long
-    protected final long readLong(final int offset) {
+    protected final long readLong(@Nonnegative final int offset) {
         return buffer().getLong(offset);
     }
 
-    protected final void writeLong(final int offset,
+    protected final void writeLong(@Nonnegative final int offset,
                                    final long value) {
         buffer().putLong(offset,
                          value);
     }
 
     //float
-    protected final float readFloat(final int offset) {
+    protected final float readFloat(@Nonnegative final int offset) {
         return buffer().getFloat(offset);
     }
 
-    protected final void writeFloat(final int offset,
+    protected final void writeFloat(@Nonnegative final int offset,
                                     final float value) {
         buffer().putFloat(offset,
                           value);
     }
 
     //double
-    protected final double readDouble(final int offset) {
+    protected final double readDouble(@Nonnegative final int offset) {
         return buffer().getDouble(offset);
     }
 
-    protected final void writeDouble(final int offset,
+    protected final void writeDouble(@Nonnegative final int offset,
                                      final double value) {
         buffer().putDouble(offset,
                            value);
     }
 
     //pointer
-    protected final <T> Pointer<T> readPointer(final int offset,
-                                               final Class<T> type) {
+    @Nonnull
+    protected final <T> Pointer<T> readPointer(@Nonnegative final int offset,
+                                               @Nonnull final Class<T> type) {
         final long size = Size.sizeof((Pointer) null);
         final long address;
 
@@ -147,8 +154,8 @@ public abstract class StructType {
                       .castp(type);
     }
 
-    protected final void writePointer(final int offset,
-                                      final Pointer<?> pointer) {
+    protected final void writePointer(@Nonnegative final int offset,
+                                      @Nonnull final Pointer<?> pointer) {
         final long size = Size.sizeof((Pointer) null);
 
         if (size == 8) {
@@ -162,29 +169,34 @@ public abstract class StructType {
     }
 
     //struct type
-    protected final <T extends StructType> T readStructType(final int offset,
-                                                            final Class<T> structTypeClass) {
-        return Pointer.wrap(Byte.class,
-                            buffer())
-                      .offset(offset)
-                      .castp(structTypeClass)
-                      .dref();
+    @Nonnull
+    protected final <T extends StructType> T readStructType(@Nonnegative final int offset,
+                                                            @Nonnull final Class<T> structTypeClass) {
+        buffer().position(offset);
+        final ByteBuffer structTypeBuffer = buffer().slice();
+        try {
+            final T structType = structTypeClass.newInstance();
+            structType.buffer(structTypeBuffer);
+            return structType;
+        }
+        catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    protected final void writeStructType(final int offset,
-                                         final StructType structType) {
+    protected final void writeStructType(@Nonnegative final int offset,
+                                         @Nonnull final StructType structType) {
         structType.buffer()
                   .rewind();
-        final Pointer<StructType> castp = (Pointer<StructType>) Pointer.wrap(Byte.class,
-                                                                             buffer())
-                                                                       .offset(offset)
-                                                                       .castp(structType.getClass());
-        castp.write((StructType) structType);
+        buffer().position(offset);
+        buffer().put(structType.buffer());
     }
 
     //array
-    protected final <T> Pointer<T> readArray(final int offset,
-                                             final Class<T> arrayType) {
+    @Nonnull
+    //TODO instead of a pointer, we should return a CArray object that can be backed by either a direct or indirect bytebuffer.
+    protected final <T> Pointer<T> readArray(@Nonnegative final int offset,
+                                             @Nonnull final Class<T> arrayType) {
         return Pointer.wrap(Byte.class,
                             buffer())
                       .offset(offset)

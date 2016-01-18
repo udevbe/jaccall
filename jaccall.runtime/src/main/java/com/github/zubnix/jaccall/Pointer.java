@@ -11,7 +11,7 @@ import java.nio.LongBuffer;
 
 import static com.github.zubnix.jaccall.Size.sizeof;
 
-
+//TODO let pointer implement a new CArray type
 public abstract class Pointer<T> implements AutoCloseable {
 
     /**
