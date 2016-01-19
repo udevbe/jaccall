@@ -15,7 +15,8 @@ final class PointerLong extends Pointer<Long> {
                 @Nonnull final ByteBuffer byteBuffer) {
         super(type,
               address,
-              byteBuffer);
+              byteBuffer,
+              sizeof((Long) null));
     }
 
     @Override
@@ -31,13 +32,6 @@ final class PointerLong extends Pointer<Long> {
         buffer.rewind();
         buffer.position(index);
         return buffer.get();
-    }
-
-    @Nonnull
-    @Override
-    public Pointer<Long> offset(final int offset) {
-        return wrap(this.type,
-                    this.address + (offset * sizeof((Long) null)));
     }
 
     @Override

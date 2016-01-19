@@ -15,7 +15,8 @@ final class PointerDouble extends Pointer<Double> {
                   @Nonnull final ByteBuffer byteBuffer) {
         super(type,
               address,
-              byteBuffer);
+              byteBuffer,
+              sizeof((Double) null));
     }
 
     @Override
@@ -31,13 +32,6 @@ final class PointerDouble extends Pointer<Double> {
         buffer.rewind();
         buffer.position(index);
         return buffer.get();
-    }
-
-    @Nonnull
-    @Override
-    public Pointer<Double> offset(final int offset) {
-        return wrap(this.type,
-                    this.address + (offset * sizeof((Double) null)));
     }
 
     @Override

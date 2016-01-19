@@ -17,7 +17,8 @@ final class PointerPointer<T> extends Pointer<Pointer<T>> {
                    @Nonnull final ByteBuffer byteBuffer) {
         super(type,
               address,
-              byteBuffer);
+              byteBuffer,
+              sizeof((Pointer) null));
     }
 
     @Override
@@ -29,9 +30,8 @@ final class PointerPointer<T> extends Pointer<Pointer<T>> {
     @Override
     Pointer<T> dref(@Nonnegative final int index,
                     @Nonnull final ByteBuffer byteBuffer) {
-        final long size = Size.sizeof((Pointer) null);
         final long val;
-        if (size == 8) {
+        if (this.typeSize == 8) {
             final LongBuffer buffer = byteBuffer.asLongBuffer();
             buffer.rewind();
             buffer.position(index);
@@ -66,14 +66,9 @@ final class PointerPointer<T> extends Pointer<Pointer<T>> {
         }
 
         return wrap(type,
-                    val);
-    }
-
-    @Nonnull
-    @Override
-    public Pointer<Pointer<T>> offset(final int offset) {
-        return wrap(this.type,
-                    this.address + (offset * sizeof((Pointer) null)));
+                    val,
+                    JNI.wrap(val,
+                             Integer.MAX_VALUE));
     }
 
     @SafeVarargs

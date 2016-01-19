@@ -15,7 +15,8 @@ final class PointerInt extends Pointer<Integer> {
                @Nonnull final ByteBuffer byteBuffer) {
         super(type,
               address,
-              byteBuffer);
+              byteBuffer,
+              sizeof((Integer) null));
     }
 
     @Override
@@ -31,13 +32,6 @@ final class PointerInt extends Pointer<Integer> {
         buffer.rewind();
         buffer.position(index);
         return buffer.get();
-    }
-
-    @Nonnull
-    @Override
-    public Pointer<Integer> offset(final int offset) {
-        return wrap(this.type,
-                    this.address + (offset * sizeof((Integer) null)));
     }
 
     @Override

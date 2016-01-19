@@ -14,7 +14,8 @@ public class PointerShort extends Pointer<Short> {
                         @Nonnull final ByteBuffer byteBuffer) {
         super(type,
               address,
-              byteBuffer);
+              byteBuffer,
+              sizeof((Short) null));
     }
 
     @Override
@@ -30,13 +31,6 @@ public class PointerShort extends Pointer<Short> {
         buffer.rewind();
         buffer.position(index);
         return buffer.get();
-    }
-
-    @Nonnull
-    @Override
-    public Pointer<Short> offset(final int offset) {
-        return wrap(this.type,
-                    this.address + (offset * sizeof((Short) null)));
     }
 
     @Override

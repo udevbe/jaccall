@@ -28,13 +28,8 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         return wrap(Void.class,
-                    JNI.unwrap(byteBuffer));
-    }
-
-    private static <U> Pointer<U> wrap(@Nonnull final Type type,
-                                       @Nonnull final ByteBuffer byteBuffer) {
-        return wrap(type,
-                    JNI.unwrap(byteBuffer));
+                    JNI.unwrap(byteBuffer),
+                    byteBuffer);
     }
 
     /**
@@ -49,7 +44,12 @@ public abstract class Pointer<T> implements AutoCloseable {
     @Nonnull
     public static <U> Pointer<U> wrap(@Nonnull final Class<U> type,
                                       @Nonnull final ByteBuffer byteBuffer) {
+        if (!byteBuffer.isDirect()) {
+            throw new IllegalArgumentException("ByteBuffer must be direct.");
+        }
+
         return wrap((Type) type,
+                    JNI.unwrap(byteBuffer),
                     byteBuffer);
     }
 
@@ -79,89 +79,86 @@ public abstract class Pointer<T> implements AutoCloseable {
     public static <U> Pointer<U> wrap(@Nonnull final Class<U> type,
                                       final long address) {
         return wrap((Type) type,
-                    address);
+                    address,
+                    JNI.wrap(address,
+                             Integer.MAX_VALUE));
     }
 
     static <U> Pointer<U> wrap(@Nonnull final Type type,
-                               final long address) {
+                               final long address,
+                               final ByteBuffer byteBuffer) {
 
         final Class<?> rawType = toClass(type);
 
         if (StructType.class.isAssignableFrom(rawType)) {
-            return (Pointer<U>) new PointerStruct(type,
-                                                  address,
-                                                  JNI.wrap(address,
-                                                           Integer.MAX_VALUE));
+            try {
+                return (Pointer<U>) new PointerStruct(type,
+                                                      address,
+                                                      byteBuffer);
+            }
+            catch (IllegalAccessException | InstantiationException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         if (rawType.equals(Integer.class) || rawType.equals(int.class)) {
             return (Pointer<U>) new PointerInt(type,
                                                address,
-                                               JNI.wrap(address,
-                                                        Integer.MAX_VALUE));
+                                               byteBuffer);
         }
 
         if (rawType.equals(Float.class) || rawType.equals(float.class)) {
             return (Pointer<U>) new PointerFloat(type,
                                                  address,
-                                                 JNI.wrap(address,
-                                                          Integer.MAX_VALUE));
+                                                 byteBuffer);
         }
 
         if (Pointer.class.isAssignableFrom(rawType)) {
             return (Pointer<U>) new PointerPointer(type,
                                                    address,
-                                                   JNI.wrap(address,
-                                                            Integer.MAX_VALUE));
+                                                   byteBuffer);
         }
 
         if (type.equals(String.class)) {
             return (Pointer<U>) new PointerString(type,
                                                   address,
-                                                  JNI.wrap(address,
-                                                           Integer.MAX_VALUE));
+                                                  byteBuffer);
         }
 
         if (rawType.equals(Void.class) || rawType.equals(void.class)) {
             return (Pointer<U>) new PointerVoid(type,
                                                 address,
-                                                JNI.wrap(address,
-                                                         Integer.MAX_VALUE));
+                                                byteBuffer);
         }
 
         if (rawType.equals(Byte.class) || rawType.equals(byte.class)) {
             return (Pointer<U>) new PointerByte(type,
                                                 address,
-                                                JNI.wrap(address,
-                                                         Integer.MAX_VALUE));
+                                                byteBuffer);
         }
 
         if (rawType.equals(Short.class) || rawType.equals(short.class)) {
             return (Pointer<U>) new PointerShort(type,
                                                  address,
-                                                 JNI.wrap(address,
-                                                          Integer.MAX_VALUE));
+                                                 byteBuffer);
         }
 
         if (rawType.equals(Long.class) || rawType.equals(long.class)) {
             return (Pointer<U>) new PointerLong(type,
                                                 address,
-                                                JNI.wrap(address,
-                                                         Integer.MAX_VALUE));
+                                                byteBuffer);
         }
 
         if (rawType.equals(Double.class) || rawType.equals(double.class)) {
             return (Pointer<U>) new PointerDouble(type,
                                                   address,
-                                                  JNI.wrap(address,
-                                                           Integer.MAX_VALUE));
+                                                  byteBuffer);
         }
 
         if (rawType.equals(CLong.class)) {
             return (Pointer<U>) new PointerCLong(type,
                                                  address,
-                                                 JNI.wrap(address,
-                                                          Integer.MAX_VALUE));
+                                                 byteBuffer);
         }
 
         throw new IllegalArgumentException("Type " + rawType + " does not have a known native size.");
@@ -233,11 +230,11 @@ public abstract class Pointer<T> implements AutoCloseable {
                                size));
     }
 
-    private static <U> Pointer<U> create(final Class<U> type,
-                                         final int elementSize,
-                                         final int length) {
+    private static <U> Pointer<U> createStack(final Class<U> type,
+                                              final int elementSize,
+                                              final int length) {
         return wrap(type,
-                    JNI.malloc(elementSize * length));
+                    ByteBuffer.allocateDirect(elementSize * length));
     }
 
     @SafeVarargs
@@ -249,41 +246,30 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         final Class<? extends CLong> componentType = val[0].getClass();
-        final Pointer<U> pointer = (Pointer<U>) create(componentType,
-                                                       sizeof((CLong) null),
-                                                       length);
+        final Pointer<U> pointer = (Pointer<U>) createStack(componentType,
+                                                            sizeof((CLong) null),
+                                                            length);
         pointer.write(val);
 
         return pointer;
     }
 
     /**
-     * Create a new pointer object with newly allocated memory. The memory is initialized with the given structs.
+     * Get a pointer object that refers to the memory used by the given struct.
      *
-     * @param val One ore more structs. Each struct has to be of the same type.
+     * @param val a struct.
      * @param <U> The Java type of the struct.
      *
      * @return a new typed pointer object that will use new memory initialized with the given structs.
      */
-    @SafeVarargs
     @Nonnull
-    public static <U extends StructType> Pointer<U> nref(@Nonnull final U... val) {
-        final int length = val.length;
-        if (length == 0) {
-            throw new IllegalArgumentException("Cannot allocate zero length array.");
-        }
-
-        final Class<? extends StructType> componentType = val[0].getClass();
-        final Pointer<U> pointer = (Pointer<U>) create(componentType,
-                                                       sizeof(val[0]),
-                                                       length);
-        pointer.write(val);
-
-        return pointer;
+    public static <U extends StructType> Pointer<U> ref(@Nonnull final U val) {
+        return (Pointer<U>) wrap(val.getClass(),
+                                 val.buffer());
     }
 
     /**
-     * Create a new pointer object with newly allocated memory. The memory is initialized with the given pointers.
+     * Create a new pointer object with newly stack allocated memory. The memory is initialized with the given pointers.
      *
      * @param val One ore more pointers. Each pointer has to be of the same type.
      * @param <U> The Java type of the pointer.
@@ -298,9 +284,9 @@ public abstract class Pointer<T> implements AutoCloseable {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
 
-        final Pointer<U> pointer = (Pointer<U>) create(val[0].getClass(),
-                                                       sizeof((Pointer) null),
-                                                       length);
+        final Pointer<U> pointer = (Pointer<U>) createStack(val[0].getClass(),
+                                                            sizeof((Pointer) null),
+                                                            length);
         pointer.write(val);
 
         return pointer;
@@ -315,16 +301,14 @@ public abstract class Pointer<T> implements AutoCloseable {
      */
     @Nonnull
     public static Pointer<Byte> nref(@Nonnull final Byte... val) {
-
-
         final int length = val.length;
         if (length == 0) {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
 
-        final Pointer<Byte> pointer = create(Byte.class,
-                                             sizeof((Byte) null),
-                                             length);
+        final Pointer<Byte> pointer = createStack(Byte.class,
+                                                  sizeof((Byte) null),
+                                                  length);
         pointer.write(val);
 
         return pointer;
@@ -345,32 +329,9 @@ public abstract class Pointer<T> implements AutoCloseable {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
 
-        final Pointer<Short> pointer = create(Short.class,
-                                              sizeof((Short) null),
-                                              length);
-        pointer.write(val);
-
-        return pointer;
-    }
-
-    /**
-     * Create a new pointer object with newly allocated memory. The memory is initialized with the given Java 16-bit chars.
-     *
-     * @param val One ore more Java primitive chars.
-     *
-     * @return a new typed pointer object that will use new memory initialized with the given Java 16-bit chars.
-     */
-    @Nonnull
-    public static Pointer<Character> nref(@Nonnull final Character... val) {
-
-        final int length = val.length;
-        if (length == 0) {
-            throw new IllegalArgumentException("Cannot allocate zero length array.");
-        }
-
-        final Pointer<Character> pointer = create(Character.class,
-                                                  sizeof((Character) null),
-                                                  length);
+        final Pointer<Short> pointer = createStack(Short.class,
+                                                   sizeof((Short) null),
+                                                   length);
         pointer.write(val);
 
         return pointer;
@@ -391,9 +352,9 @@ public abstract class Pointer<T> implements AutoCloseable {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
 
-        final Pointer<Integer> pointer = create(Integer.class,
-                                                sizeof((Integer) null),
-                                                length);
+        final Pointer<Integer> pointer = createStack(Integer.class,
+                                                     sizeof((Integer) null),
+                                                     length);
         pointer.write(val);
 
         return pointer;
@@ -414,9 +375,9 @@ public abstract class Pointer<T> implements AutoCloseable {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
 
-        final Pointer<Float> pointer = create(Float.class,
-                                              sizeof((Float) null),
-                                              length);
+        final Pointer<Float> pointer = createStack(Float.class,
+                                                   sizeof((Float) null),
+                                                   length);
         pointer.write(val);
 
         return pointer;
@@ -437,9 +398,9 @@ public abstract class Pointer<T> implements AutoCloseable {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
 
-        final Pointer<Long> pointer = create(Long.class,
-                                             sizeof((Long) null),
-                                             length);
+        final Pointer<Long> pointer = createStack(Long.class,
+                                                  sizeof((Long) null),
+                                                  length);
         pointer.write(val);
 
         return pointer;
@@ -453,9 +414,9 @@ public abstract class Pointer<T> implements AutoCloseable {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
 
-        final Pointer<Double> pointer = create(Double.class,
-                                               sizeof((Double) null),
-                                               length);
+        final Pointer<Double> pointer = createStack(Double.class,
+                                                    sizeof((Double) null),
+                                                    length);
         pointer.write(val);
 
         return pointer;
@@ -463,25 +424,28 @@ public abstract class Pointer<T> implements AutoCloseable {
 
     @Nonnull
     public static Pointer<String> nref(@Nonnull final String val) {
-        final Pointer<String> pointer = create(String.class,
-                                               sizeof(val),
-                                               1);
+        final Pointer<String> pointer = createStack(String.class,
+                                                    sizeof(val),
+                                                    1);
         pointer.write(val);
 
         return pointer;
     }
 
-    public final    long       address;
+    public final long       address;
     @Nonnull
-    private final   ByteBuffer byteBuffer;
+    final        ByteBuffer byteBuffer;
     @Nonnull
-    protected final Type       type;
+    final        Type       type;
+    final        int        typeSize;
 
     Pointer(@Nonnull final Type type,
             final long address,
-            @Nonnull final ByteBuffer byteBuffer) {
+            @Nonnull final ByteBuffer byteBuffer,
+            final int typeSize) {
         this.address = address;
         this.type = type;
+        this.typeSize = typeSize;
         this.byteBuffer = byteBuffer.order(ByteOrder.nativeOrder());
     }
 
@@ -551,7 +515,18 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @return
      */
     @Nonnull
-    public abstract Pointer<T> offset(final int offset);
+    public final Pointer<T> offset(final int offset) {
+        final int byteOffset = offset * this.typeSize;
+
+        final long newAddress = this.address + byteOffset;
+
+        this.byteBuffer.rewind();
+        this.byteBuffer.position(byteOffset);
+
+        return wrap((Type) this.type,
+                    newAddress,
+                    this.byteBuffer.slice());
+    }
 
     /**
      * type cast
@@ -629,7 +604,8 @@ public abstract class Pointer<T> implements AutoCloseable {
                         @Override
                         public Type getOwnerType() { return null; }
                     },
-                    this.address);
+                    this.address,
+                    this.byteBuffer);
     }
 
     @SafeVarargs

@@ -14,7 +14,8 @@ final class PointerFloat extends Pointer<Float> {
                  @Nonnull final ByteBuffer byteBuffer) {
         super(type,
               address,
-              byteBuffer);
+              byteBuffer,
+              sizeof((Float) null));
     }
 
     @Override
@@ -30,13 +31,6 @@ final class PointerFloat extends Pointer<Float> {
         buffer.rewind();
         buffer.position(index);
         return buffer.get();
-    }
-
-    @Nonnull
-    @Override
-    public Pointer<Float> offset(final int offset) {
-        return wrap(this.type,
-                    this.address + (offset * sizeof((Float) null)));
     }
 
     @Override

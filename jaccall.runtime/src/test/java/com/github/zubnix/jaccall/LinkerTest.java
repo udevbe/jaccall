@@ -254,7 +254,7 @@ public class LinkerTest {
                     new Testing_Jaccall_LinkSymbols());
 
         //when
-        try (Pointer<TestStruct> tst = nref(new TestStruct());
+        try (Pointer<TestStruct> tst = Pointer.ref(new TestStruct());
              Pointer<Integer> intp = nref(44)) {
 
             final byte field0 = 'a';

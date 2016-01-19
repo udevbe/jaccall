@@ -487,7 +487,7 @@ public class FunctionPointerTest {
     public long pointerTest(final long value) { return value; }
 
     @Test
-    public void testStructFunctionPointerFromJava() {
+    public void testStructFunctionPointerFromJava() throws InterruptedException {
         //given
         final PointerStructFunc pointerStructFunc = PointerStructFunc.nref(new Testing.StructFunc() {
             @Override
@@ -555,7 +555,6 @@ public class FunctionPointerTest {
                                                                                           newField3.address,
                                                                                           embedded_field0,
                                                                                           embedded_field1));
-
             //then
             final TestStruct testStruct1 = testStructByValue.dref();
             assertThat(testStruct1.field0()).isEqualTo(newField0);
@@ -612,7 +611,7 @@ public class FunctionPointerTest {
         someTest.field4().field0(tst.dref().field4().field0());
         someTest.field4().field1(tst.dref().field4().field1());
 
-        return Pointer.nref(someTest).address;
+        return Pointer.ref(someTest).address;
         //@formatter:on
     }
 

@@ -20,7 +20,8 @@ class PointerString extends Pointer<String> {
                   @Nonnull final ByteBuffer byteBuffer) {
         super(type,
               address,
-              byteBuffer);
+              byteBuffer,
+              sizeof((Byte) null));
     }
 
     @Override
@@ -44,13 +45,6 @@ class PointerString extends Pointer<String> {
             }
         }
         return sb.toString();
-    }
-
-    @Nonnull
-    @Override
-    public Pointer<String> offset(final int offset) {
-        return wrap(this.type,
-                    this.address + (offset * sizeof((Byte) null)));
     }
 
     @Override

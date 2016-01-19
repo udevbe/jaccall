@@ -11,13 +11,8 @@ final class PointerVoid extends Pointer<Void> {
                 final ByteBuffer byteBuffer) {
         super(type,
               address,
-              byteBuffer);
-    }
-
-    @Nonnull
-    @Override
-    public Pointer<Void> offset(final int offset) {
-        throw new IllegalStateException("Can not offset void pointer.");
+              byteBuffer,
+              1);
     }
 
     @Override

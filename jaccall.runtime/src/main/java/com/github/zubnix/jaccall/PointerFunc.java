@@ -4,12 +4,15 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.nio.ByteBuffer;
 
+import static com.github.zubnix.jaccall.Size.sizeof;
+
 public abstract class PointerFunc<T> extends Pointer<T> {
     protected PointerFunc(@Nonnull final Class<T> type,
                           final long address) {
         super(type,
               address,
-              ByteBuffer.allocate(0));
+              ByteBuffer.allocate(0),
+              sizeof((Pointer) null));
     }
 
     @Override
@@ -27,12 +30,6 @@ public abstract class PointerFunc<T> extends Pointer<T> {
     @Override
     final void write(@Nonnull final ByteBuffer byteBuffer,
                      @Nonnull final T... val) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Nonnull
-    @Override
-    public Pointer<T> offset(final int offset) {
         throw new UnsupportedOperationException();
     }
 

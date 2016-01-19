@@ -11,12 +11,14 @@ import static com.github.zubnix.jaccall.Size.sizeof;
 
 
 final class PointerCLong extends Pointer<CLong> {
+
     PointerCLong(@Nonnull final Type type,
                  final long address,
                  @Nonnull final ByteBuffer byteBuffer) {
         super(type,
               address,
-              byteBuffer);
+              byteBuffer,
+              sizeof((CLong) null));
     }
 
     @Override
@@ -28,9 +30,8 @@ final class PointerCLong extends Pointer<CLong> {
     @Override
     CLong dref(@Nonnegative final int index,
                @Nonnull final ByteBuffer byteBuffer) {
-        final long clongSize = sizeof((CLong) null);
         final long clong;
-        if (clongSize == 8) {
+        if (this.typeSize == 8) {
             final LongBuffer buffer = byteBuffer.asLongBuffer();
             buffer.rewind();
             buffer.position(index);
@@ -43,13 +44,6 @@ final class PointerCLong extends Pointer<CLong> {
             clong = buffer.get();
         }
         return new CLong(clong);
-    }
-
-    @Nonnull
-    @Override
-    public Pointer<CLong> offset(final int offset) {
-        return wrap(this.type,
-                    this.address + (offset * sizeof((CLong) null)));
     }
 
     @Override

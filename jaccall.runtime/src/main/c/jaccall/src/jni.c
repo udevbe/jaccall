@@ -639,9 +639,10 @@ java_func_ptr_handler(ffi_cif *jni_cif, void *ret, void **jargs, void *user_data
         case FFI_TYPE_DOUBLE:
             *((jdouble*)ret) = (*env)->CallDoubleMethodA(env, call_data->object, call_data->mid, arguments);
             break;
-        case FFI_TYPE_STRUCT:
-            memcpy (ret, (const void *) (*env)->CallLongMethodA(env, call_data->object, call_data->mid, arguments), jni_cif->rtype->size );
+        case FFI_TYPE_STRUCT: {
+            memcpy(ret, (void *)(intptr_t)(*env)->CallLongMethodA(env, call_data->object, call_data->mid, arguments), jni_cif->rtype->size );
             break;
+        }
     }
 
     if ((*env)->ExceptionCheck(env)) {

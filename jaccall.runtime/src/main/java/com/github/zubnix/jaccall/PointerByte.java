@@ -5,13 +5,17 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 
+import static com.github.zubnix.jaccall.Size.sizeof;
+
 final class PointerByte extends Pointer<Byte> {
+
     PointerByte(final Type type,
                 final long address,
                 final ByteBuffer buffer) {
         super(type,
               address,
-              buffer);
+              buffer,
+              sizeof((Byte) null));
     }
 
     @Override
@@ -26,13 +30,6 @@ final class PointerByte extends Pointer<Byte> {
         buffer.rewind();
         buffer.position(index);
         return buffer.get();
-    }
-
-    @Nonnull
-    @Override
-    public Pointer<Byte> offset(final int offset) {
-        return wrap(this.type,
-                    this.address + (offset * Size.sizeof((Byte) null)));
     }
 
     @Override
