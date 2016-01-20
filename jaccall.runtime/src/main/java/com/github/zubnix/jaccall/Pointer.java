@@ -8,6 +8,7 @@ import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.LongBuffer;
+import java.util.Objects;
 
 import static com.github.zubnix.jaccall.Size.sizeof;
 
@@ -19,10 +20,15 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @param byteBuffer A direct byte buffer
      *
      * @return a new untyped pointer object that will use the memory pointed to by the given direct byte buffer.
+     *
+     * @throws IllegalArgumentException Thrown if the given byte buffer is not direct.
+     * @throws NullPointerException     Thrown if the given byte buffer is null.
      */
     @Nonnull
     public static Pointer<Void> wrap(@Nonnull final ByteBuffer byteBuffer) {
-        if (!byteBuffer.isDirect()) {
+        if (!Objects.requireNonNull(byteBuffer,
+                                    "Argument byteByffer must not be null")
+                    .isDirect()) {
             throw new IllegalArgumentException("ByteBuffer must be direct.");
         }
 
@@ -39,15 +45,21 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @param <U>        The Java type of the given type object.
      *
      * @return a new typed pointer object that will use the memory pointed to by the given direct byte buffer.
+     *
+     * @throws IllegalArgumentException Thrown if the given byte buffer is not direct.
+     * @throws NullPointerException     Thrown if the given byte buffer or type is null.
      */
     @Nonnull
     public static <U> Pointer<U> wrap(@Nonnull final Class<U> type,
                                       @Nonnull final ByteBuffer byteBuffer) {
-        if (!byteBuffer.isDirect()) {
+        if (!Objects.requireNonNull(byteBuffer,
+                                    "Argument byteBuffer must not be null.")
+                    .isDirect()) {
             throw new IllegalArgumentException("ByteBuffer must be direct.");
         }
 
-        return wrap((Type) type,
+        return wrap((Type) Objects.requireNonNull(type,
+                                                  "Argument type must not be null."),
                     JNI.unwrap(byteBuffer),
                     byteBuffer);
     }
@@ -73,11 +85,14 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @param <U>     The Java type of the given type object.
      *
      * @return a new typed pointer object that will use the memory pointed to by the given address.
+     *
+     * @throws NullPointerException Thrown if the given type is null.
      */
     @Nonnull
     public static <U> Pointer<U> wrap(@Nonnull final Class<U> type,
                                       final long address) {
-        return wrap((Type) type,
+        return wrap((Type) Objects.requireNonNull(type,
+                                                  "Argument type must not be null."),
                     address,
                     JNI.wrap(address,
                              Integer.MAX_VALUE));
@@ -85,7 +100,7 @@ public abstract class Pointer<T> implements AutoCloseable {
 
     static <U> Pointer<U> wrap(@Nonnull final Type type,
                                final long address,
-                               final ByteBuffer byteBuffer) {
+                               @Nonnull final ByteBuffer byteBuffer) {
 
         final Class<?> rawType = toClass(type);
 
@@ -166,46 +181,66 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Allocate size bytes and returns a pointer to
      * the allocated memory.  The memory is not initialized.
+     * The memory is allocated on the heap and not subject to Java's GC.
      *
-     * @param size
+     * @param size The size in bytes. Must be a positive number.
      *
      * @return a new untyped pointer object that will use the newly allocated memory.
+     *
+     * @throws IllegalArgumentException Thrown if size argument is a negative number.
      */
     @Nonnull
     public static Pointer<Void> malloc(@Nonnegative final int size) {
+        if (size < 0) {
+            throw new IllegalArgumentException("Given size argument is not a positive number.");
+        }
         return wrap(JNI.malloc(size));
     }
 
     /**
      * Allocate size bytes and returns a typed pointer to
      * the allocated memory.  The memory is not initialized.
+     * The memory is allocated on the heap and not subject to Java's GC.
      *
-     * @param size
-     * @param type
+     * @param size The size in bytes
+     * @param type The type of the pointer.
      *
-     * @return a new untyped pointer object that will use the newly allocated memory.
+     * @return a new untyped pointer that points to the newly allocated heap memory.
+     *
+     * @throws IllegalArgumentException Thrown if size argument is a negative number.
+     * @throws NullPointerException     Thrown if given type argument is null.
      */
     @Nonnull
     public static <U> Pointer<U> malloc(@Nonnegative final int size,
                                         @Nonnull final Class<U> type) {
-        return wrap(type,
+        if (size < 0) {
+            throw new IllegalArgumentException("Given size argument is not a positive number.");
+        }
+
+        return wrap(Objects.requireNonNull(type,
+                                           "Argument type must not be null."),
                     JNI.malloc(size));
     }
-
 
     /**
      * Allocate memory for an array of nmemb elements
      * of size bytes each and returns a pointer to the allocated memory.
-     * The memory is set to zero.
+     * The memory is set to zero. The memory is allocated on the heap and not subject to Java's GC.
      *
-     * @param nmemb
-     * @param size
+     * @param nmemb number of members
+     * @param size  size of an individual member
      *
      * @return a new untyped pointer object that will use the newly allocated memory.
+     *
+     * @throws IllegalArgumentException Thrown if size or nmemb is a negative number.
      */
     @Nonnull
     public static Pointer<Void> calloc(@Nonnegative final int nmemb,
                                        @Nonnegative final int size) {
+        if (size < 0 || nmemb < 0) {
+            throw new IllegalArgumentException("Given size argument is not a positive number.");
+        }
+
         return wrap(JNI.calloc(nmemb,
                                size));
     }
@@ -213,18 +248,26 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Allocate typed memory for an array of nmemb elements
      * of size bytes each and returns a pointer to the allocated memory.
-     * The memory is set to zero.
+     * The memory is set to zero. The memory is allocated on the heap and not subject to Java's GC.
      *
      * @param nmemb
      * @param size
      *
      * @return a new untyped pointer object that will use the newly allocated memory.
+     *
+     * @throws IllegalArgumentException Thrown if size or nmemb is a negative number.
+     * @throws NullPointerException     Thrown if given type argument is null.
      */
     @Nonnull
     public static <U> Pointer<U> calloc(@Nonnegative final int nmemb,
                                         @Nonnegative final int size,
                                         @Nonnull final Class<U> type) {
-        return wrap(type,
+        if (size < 0 || nmemb < 0) {
+            throw new IllegalArgumentException("Given size or nmemb argument is not a positive number.");
+        }
+
+        return wrap(Objects.requireNonNull(type,
+                                           "Argument type must not be null"),
                     JNI.calloc(nmemb,
                                size));
     }
@@ -236,49 +279,72 @@ public abstract class Pointer<T> implements AutoCloseable {
                     ByteBuffer.allocateDirect(elementSize * length));
     }
 
-    @SafeVarargs
+    /**
+     * @param val one ore more {@code CLongs}s.
+     *
+     * @return a new typed pointer that will use new memory initialized with the given {@code CLongs}s.
+     *
+     * @throws IllegalArgumentException thrown when zero arguments are provided.
+     * @throws NullPointerException     thrown if the var args val argument or one of the individual elements is null.
+     */
     @Nonnull
-    public static <U extends CLong> Pointer<U> nref(@Nonnull final U... val) {
-        final int length = val.length;
+    public static Pointer<CLong> nref(@Nonnull final CLong... val) {
+        final int length = Objects.requireNonNull(val,
+                                                  "Argument val must not be null").length;
         if (length == 0) {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
 
         final Class<? extends CLong> componentType = val[0].getClass();
-        final Pointer<U> pointer = (Pointer<U>) createStack(componentType,
-                                                            sizeof((CLong) null),
-                                                            length);
+        final Pointer<CLong> pointer = (Pointer<CLong>) createStack(componentType,
+                                                                    sizeof((CLong) null),
+                                                                    length);
         pointer.write(val);
 
         return pointer;
     }
 
     /**
-     * Get a pointer object that refers to the memory used by the given struct.
+     * Get a pointer object that refers to the memory used by the given struct. The memory pointed to can be either
+     * heap allocated memory or memory subject to Java's GC, depending on how the given struct was created.
+     * <p/>
+     * A struct created through a call to {@code new} will be subject to Java's GC while a struct
+     * dereferenced from a pointer created with {@link #malloc(int)} or {@link #calloc(int, int)} will live on the heap
+     * until it is explicitly freed with a call to {@link #close()}.
      *
      * @param val a struct.
      * @param <U> The Java type of the struct.
      *
-     * @return a new typed pointer object that will use new memory initialized with the given structs.
+     * @return a typed pointer that will point to the memory used by the given struct.
+     *
+     * @throws NullPointerException thrown if the given val argument is null.
      */
     @Nonnull
     public static <U extends StructType> Pointer<U> ref(@Nonnull final U val) {
-        return (Pointer<U>) wrap(val.getClass(),
+        return (Pointer<U>) wrap(Objects.requireNonNull(val,
+                                                        "Argument val must not be null")
+                                        .getClass(),
                                  val.buffer());
     }
 
     /**
-     * Create a new pointer object with newly stack allocated memory. The memory is initialized with the given pointers.
+     * Create a pointer with newly allocated memory. The memory is initialized with the given pointers.
+     * The memory is subject to Java's GC and as such should only be used in case where one would need stack
+     * allocated memory.
      *
      * @param val One ore more pointers. Each pointer has to be of the same type.
      * @param <U> The Java type of the pointer.
      *
-     * @return a new typed pointer object that will use new memory initialized with the given pointers.
+     * @return a new typed pointer that will use new memory initialized with the given pointers.
+     *
+     * @throws IllegalArgumentException thrown when zero arguments are provided.
+     * @throws NullPointerException     thrown if the given val argument is null.
      */
     @SafeVarargs
     @Nonnull
     public static <U extends Pointer> Pointer<U> nref(@Nonnull final U... val) {
-        final int length = val.length;
+        final int length = Objects.requireNonNull(val,
+                                                  "Argument val must not be null").length;
         if (length == 0) {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
@@ -292,15 +358,21 @@ public abstract class Pointer<T> implements AutoCloseable {
     }
 
     /**
-     * Create a new pointer object with newly allocated memory. The memory is initialized with the given bytes.
+     * Create a pointer with newly allocated memory. The memory is initialized with the given byte arguments.
+     * The memory is subject to Java's GC and as such should only be used in case where one would need stack
+     * allocated memory.
      *
      * @param val One ore more bytes.
      *
      * @return a new typed pointer object that will use new memory initialized with the given bytes.
+     *
+     * @throws IllegalArgumentException thrown when zero arguments are provided.
+     * @throws NullPointerException     thrown if the given val argument is null.
      */
     @Nonnull
     public static Pointer<Byte> nref(@Nonnull final Byte... val) {
-        final int length = val.length;
+        final int length = Objects.requireNonNull(val,
+                                                  "Argument val must not be null").length;
         if (length == 0) {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
@@ -314,16 +386,21 @@ public abstract class Pointer<T> implements AutoCloseable {
     }
 
     /**
-     * Create a new pointer object with newly allocated memory. The memory is initialized with the given shorts.
+     * Create a pointer with newly allocated memory. The memory is initialized with the given short arguments.
+     * The memory is subject to Java's GC and as such should only be used in case where one would need stack
+     * allocated memory.
      *
      * @param val One ore more shorts.
      *
      * @return a new typed pointer object that will use new memory initialized with the given shorts.
+     *
+     * @throws IllegalArgumentException thrown when zero arguments are provided.
+     * @throws NullPointerException     thrown if the given val argument is null.
      */
     @Nonnull
     public static Pointer<Short> nref(@Nonnull final Short... val) {
-
-        final int length = val.length;
+        final int length = Objects.requireNonNull(val,
+                                                  "Argument val must not be null").length;
         if (length == 0) {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
@@ -337,16 +414,21 @@ public abstract class Pointer<T> implements AutoCloseable {
     }
 
     /**
-     * Create a new pointer object with newly allocated memory. The memory is initialized with the given ints.
+     * Create a new pointer object with newly allocated memory. The memory is initialized with the given integer arguments.
+     * The memory is subject to Java's GC and as such should only be used in case where one would need stack
+     * allocated memory.
      *
      * @param val One ore more ints.
      *
      * @return a new typed pointer object that will use new memory initialized with the given ints.
+     *
+     * @throws IllegalArgumentException thrown when zero arguments are provided.
+     * @throws NullPointerException     thrown if the given val argument is null.
      */
     @Nonnull
     public static Pointer<Integer> nref(@Nonnull final Integer... val) {
-
-        final int length = val.length;
+        final int length = Objects.requireNonNull(val,
+                                                  "Argument val must not be null").length;
         if (length == 0) {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
@@ -361,15 +443,20 @@ public abstract class Pointer<T> implements AutoCloseable {
 
     /**
      * Create a new pointer object with newly allocated memory. The memory is initialized with the given floats.
+     * The memory is subject to Java's GC and as such should only be used in case where one would need stack
+     * allocated memory.
      *
      * @param val One ore more floats.
      *
      * @return a new typed pointer object that will use new memory initialized with the given floats.
+     *
+     * @throws IllegalArgumentException thrown when zero arguments are provided.
+     * @throws NullPointerException     thrown if the given val argument is null.
      */
     @Nonnull
     public static Pointer<Float> nref(@Nonnull final Float... val) {
-
-        final int length = val.length;
+        final int length = Objects.requireNonNull(val,
+                                                  "Argument val must not be null").length;
         if (length == 0) {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
@@ -384,15 +471,20 @@ public abstract class Pointer<T> implements AutoCloseable {
 
     /**
      * Create a new pointer object with newly allocated memory. The memory is initialized with the given longs.
+     * The memory is subject to Java's GC and as such should only be used in case where one would need stack
+     * allocated memory.
      *
      * @param val One ore more longs.
      *
      * @return a new typed pointer object that will use new memory initialized with the given longs.
+     *
+     * @throws IllegalArgumentException thrown when zero arguments are provided.
+     * @throws NullPointerException     thrown if the given val argument is null.
      */
     @Nonnull
     public static Pointer<Long> nref(@Nonnull final Long... val) {
-
-        final int length = val.length;
+        final int length = Objects.requireNonNull(val,
+                                                  "Argument val must not be null").length;
         if (length == 0) {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
@@ -405,10 +497,22 @@ public abstract class Pointer<T> implements AutoCloseable {
         return pointer;
     }
 
+    /**
+     * Create a new pointer object with newly allocated memory. The memory is initialized with the given doubles.
+     * The memory is subject to Java's GC and as such should only be used in case where one would need stack
+     * allocated memory.
+     *
+     * @param val One ore more doubles.
+     *
+     * @return a new typed pointer object that will use new memory initialized with the given doubles.
+     *
+     * @throws IllegalArgumentException thrown when zero arguments are provided.
+     * @throws NullPointerException     thrown if the given val argument is null.
+     */
     @Nonnull
     public static Pointer<Double> nref(@Nonnull final Double... val) {
-
-        final int length = val.length;
+        final int length = Objects.requireNonNull(val,
+                                                  "Argument val must not be null").length;
         if (length == 0) {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
@@ -421,10 +525,20 @@ public abstract class Pointer<T> implements AutoCloseable {
         return pointer;
     }
 
+    /**
+     * Create a new pointer object with newly allocated memory. The memory is initialized with the given string.
+     * The memory is subject to Java's GC and as such should only be used in case where one would need stack
+     * allocated memory.
+     *
+     * @param val the Java string that will be copied to a zero terminated C string.
+     *
+     * @return a new typed pointer object that will use new memory initialized with the given string.
+     */
     @Nonnull
     public static Pointer<String> nref(@Nonnull final String val) {
         final Pointer<String> pointer = createStack(String.class,
-                                                    sizeof(val),
+                                                    sizeof(Objects.requireNonNull(val,
+                                                                                  "Argument val must not be null")),
                                                     1);
         pointer.write(val);
 
