@@ -32,7 +32,6 @@ final class PointerStruct extends Pointer<StructType> {
     StructType dref(@Nonnegative final int index,
                     @Nonnull final ByteBuffer byteBuffer) {
         try {
-            //TODO do this once and reuse the returned instance for the given index
             final StructType structType = this.structClass.newInstance();
             byteBuffer.position(index * this.typeSize);
             final ByteBuffer slice = byteBuffer.slice()

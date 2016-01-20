@@ -27,7 +27,6 @@ public abstract class StructType {
     @Nonnull
     final ByteBuffer buffer() {
         if (this.buffer == null) {
-            //TODO allocate an indirect bytebuffer once the CArray type has been added
             buffer(allocateDirect(this.size));
         }
         return this.buffer;
@@ -194,7 +193,6 @@ public abstract class StructType {
 
     //array
     @Nonnull
-    //TODO instead of a pointer, we should return a CArray object that can be backed by either a direct or indirect bytebuffer.
     protected final <T> Pointer<T> readArray(@Nonnegative final int offset,
                                              @Nonnull final Class<T> arrayType) {
         return Pointer.wrap(Byte.class,

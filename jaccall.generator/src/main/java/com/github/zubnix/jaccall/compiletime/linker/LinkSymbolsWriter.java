@@ -398,7 +398,7 @@ public final class LinkSymbolsWriter implements BasicAnnotationProcessor.Process
                                               element);
         }
 
-        //TODO check if struct type element has a struct annotation
+        //TODO check if struct type element has a struct annotation and fail if it does not
         //structTypeElement.getAnnotationMirrors()
 
         final Set<PackageElement> packageElements = ElementFilter.packagesIn(Collections.singleton(structTypeElement.getEnclosingElement()));

@@ -7,7 +7,6 @@ import com.github.zubnix.jaccall.StructType;
 
 import javax.annotation.Generated;
 
-//TODO auto generate this code from a compile time annotation processor
 @Generated("com.github.zubnix.jaccall.compiletime.StructGenerator")
 abstract class TestStruct_Jaccall_StructType extends StructType {
 
