@@ -20,6 +20,25 @@ struct java_call_data {
     jobject object;
 };
 
+void throwError( JNIEnv *env, char *message, ...)
+{
+    jclass exClass;
+    char *className = "java/lang/Error";
+
+    exClass = (*env)->FindClass( env, className);
+
+    va_list args;
+    va_start (args, message);
+
+    char* string;
+    vasprintf(&string, message, args);
+
+    (*env)->ThrowNew( env, exClass, string );
+
+    va_end(args);
+    free(string);
+}
+
 JNIEXPORT
 jobject
 JNICALL Java_com_github_zubnix_jaccall_JNI_wrap(JNIEnv *env, jclass clazz, jlong address, jlong size) {
@@ -47,8 +66,7 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_GetMethodID(JNIEnv *env, jclass clazz
 
     jmethodID mid = (*env)->GetMethodID(env, target, methodName, signature);
     if(mid == NULL) {
-        //TODO throw exception
-        fprintf(stderr, "Could not find method id for %s with signature %s",methodName, signature);
+        throwError(env, "Could not find method id for %s with signature %s",methodName, signature);
         exit(1);
     }
 
@@ -95,8 +113,7 @@ find_libaddr(JNIEnv *env, jstring library) {
     const char *lib_str = (*env)->GetStringUTFChars(env, library, 0);
     void *lib_addr = dlopen(lib_str, RTLD_NOW | RTLD_GLOBAL);
     if (!lib_addr) {
-        //TODO throw java error
-        fprintf(stderr, "dlopen error: %s\n", dlerror());
+        throwError(env, "dlopen error: %s\n", dlerror());
         exit(1);
     }
     (*env)->ReleaseStringUTFChars(env, library, lib_str);
@@ -105,7 +122,7 @@ find_libaddr(JNIEnv *env, jstring library) {
 }
 
 static inline
-void prep_jni_cif(ffi_cif *jni_cif, const char *jni_sig, int arg_size) {
+void prep_jni_cif(JNIEnv *env, ffi_cif *jni_cif, const char *jni_sig, int arg_size) {
     //prepare jni ffi_cif by parsing jni signature
     //compensate for jnienv & jobject/jclass arguments
     ffi_type **args = malloc((sizeof(ffi_type *) * (arg_size + 2)));
@@ -151,8 +168,7 @@ void prep_jni_cif(ffi_cif *jni_cif, const char *jni_sig, int arg_size) {
                 parameter--;
                 continue;
             default:
-                //TODO throw java error
-                fprintf(stderr, "unsupported JNI argument: %c\n", jni_sig_char);
+                throwError(env,  "unsupported JNI argument: %c\n", jni_sig_char);
                 exit(1);
         }
 
@@ -170,8 +186,7 @@ void prep_jni_cif(ffi_cif *jni_cif, const char *jni_sig, int arg_size) {
 
     ffi_status status = ffi_prep_cif(jni_cif, FFI_DEFAULT_ABI, (unsigned int) arg_size + 2, return_type, args);
     if (status != FFI_OK) {
-        //TODO throw java error
-        fprintf(stderr, "ffi_prep_cif failed: %d\n", status);
+        throwError(env, "ffi_prep_cif failed: %d\n", status);
         exit(1);
     }
 }
@@ -208,7 +223,8 @@ void jni_call_handler(ffi_cif *cif, void *ret, void **jargs, void *user_data) {
 
 static
 inline
-void create_closure(const char *symstr,
+void create_closure(JNIEnv *env,
+                    const char *symstr,
                     void *symaddr,
                     const char *jni_sig,
                     jbyte argSize,
@@ -220,7 +236,7 @@ void create_closure(const char *symstr,
 
         ffi_cif *jni_cif = malloc(sizeof(ffi_cif));
 
-        prep_jni_cif(jni_cif, jni_sig, argSize);
+        prep_jni_cif(env, jni_cif, jni_sig, argSize);
 
         struct jni_call_data *call_data = malloc(sizeof(struct jni_call_data));
         call_data->cif = cif;
@@ -233,15 +249,12 @@ void create_closure(const char *symstr,
             jniMethods_i->fnPtr = jni_func;
 
         } else {
-            fprintf(stderr,
-                    "ffi_prep_closure_loc failed: %d\n", status);
+            fprintf(stderr, "ffi_prep_closure_loc failed: %d\n", status);
             exit(1);
         }
     }
     else {
-        //TODO throw java error
-        fprintf(stderr,
-                "ffi_closure_alloc failed: %s\n", symstr);
+        throwError(env, "ffi_closure_alloc failed: %s\n", symstr);
         exit(1);
     }
 }
@@ -268,9 +281,7 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env, jclass clazz, jstri
         void *symaddr = dlsym(libaddr, symstr);
         char *err = dlerror();
         if (err) {
-            //TODO throw java error
-            fprintf(stderr,
-                    "dlsym failed: %s\n", err);
+            throwError(env, "dlsym failed: %s\n", err);
             exit(1);
         }
 
@@ -280,7 +291,7 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env, jclass clazz, jstri
         ffi_cif *cif = (ffi_cif *) (intptr_t) ffi_cifs[i];
         JNINativeMethod *jniMethods_i = &jniMethods[i];
 
-        create_closure(symstr, symaddr, jni_sig, argSize, cif, jniMethods_i);
+        create_closure(env, symstr, symaddr, jni_sig, argSize, cif, jniMethods_i);
     }
 
 
@@ -403,9 +414,7 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1struct(JNIEnv *env, jclass
 
     ffi_cif cif;
     if (ffi_prep_cif(&cif, FFI_DEFAULT_ABI, 0, struct_description, NULL) != FFI_OK) {
-        //TODO throw java error
-        fprintf(stderr,
-                "ffi_type struct failed.\n");
+       throwError(env, "ffi_type struct failed.\n");
         exit(1);
     }
 
@@ -479,9 +488,7 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1callInterface(JNIEnv *env, jclas
     ffi_cif *cif = malloc(sizeof(ffi_cif));
     if (ffi_prep_cif(cif, FFI_DEFAULT_ABI, (unsigned int) nro_args, (ffi_type *) (intptr_t) ffi_return_type, args) !=
         FFI_OK) {
-        //TODO throw java error
-        fprintf(stderr,
-                "ffi_prep_cif failed.\n");
+        throwError(env, "ffi_prep_cif failed.\n");
         exit(1);
     }
 
@@ -522,7 +529,8 @@ void func_ptr_handler(ffi_cif *jni_cif, void *ret, void **jargs, void *user_data
 
 static
 inline
-void create_func_ptr_closure(const char *symstr,
+void create_func_ptr_closure(JNIEnv *env,
+                             const char *symstr,
                              const char *jni_sig,
                              jint argSize,
                              ffi_cif *cif,
@@ -533,7 +541,7 @@ void create_func_ptr_closure(const char *symstr,
 
         ffi_cif *jni_cif = malloc(sizeof(ffi_cif));
 
-        prep_jni_cif(jni_cif, jni_sig, argSize);
+        prep_jni_cif(env, jni_cif, jni_sig, argSize);
 
         ffi_status status = ffi_prep_closure_loc(closure, jni_cif, &func_ptr_handler, cif, jni_func);
         if (status == FFI_OK) {
@@ -542,16 +550,12 @@ void create_func_ptr_closure(const char *symstr,
             jniMethods->fnPtr = jni_func;
 
         } else {
-            //TODO throw java error
-            fprintf(stderr,
-                    "ffi_prep_closure_loc failed: %d\n", status);
+            throwError(env, "ffi_prep_closure_loc failed: %d\n", status);
             exit(1);
         }
     }
     else {
-        //TODO throw java error
-        fprintf(stderr,
-                "ffi_closure_alloc failed: %s\n", symstr);
+        throwError(env, "ffi_closure_alloc failed: %s\n", symstr);
         exit(1);
     }
 }
@@ -564,7 +568,7 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_linkFuncPtr(JNIEnv *env, jclass clazz
     const char *jni_sig = (*env)->GetStringUTFChars(env, jniSignature, 0);
     JNINativeMethod *jniMethods = malloc(sizeof(JNINativeMethod));
 
-    create_func_ptr_closure(symstr, jni_sig, argSize, (ffi_cif *) (intptr_t) cif, jniMethods);
+    create_func_ptr_closure(env, symstr, jni_sig, argSize, (ffi_cif *) (intptr_t) cif, jniMethods);
 
     (*env)->RegisterNatives(env, wrapper, jniMethods, 1);
 }
@@ -585,15 +589,11 @@ java_func_ptr_handler(ffi_cif *jni_cif, void *ret, void **jargs, void *user_data
     const int getEnvStat = (*jvm)->GetEnv(jvm, (void **)&env, JNI_VERSION_1_6);
     if (getEnvStat == JNI_EDETACHED) {
         if ((*jvm)->AttachCurrentThread(jvm, (void **) &env, NULL) != 0) {
-                //TODO throw java error
-                fprintf(stderr,
-                        "Failed to attach java thread in native context.");
+                throwError(env, "Failed to attach java thread in native context.");
                 exit(1);
         }
     } else if (getEnvStat == JNI_EVERSION) {
-        //TODO throw java error
-        fprintf(stderr,
-                "GetEnv: version not supported.");
+        throwError(env, "GetEnv: version not supported.");
         exit(1);
     }
 
@@ -668,16 +668,12 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1closure(JNIEnv *env, jclass claz
 
         ffi_status status = ffi_prep_closure_loc(closure, target_cif, &java_func_ptr_handler, java_call, target_func);
         if (status != FFI_OK) {
-            //TODO throw java error
-            fprintf(stderr,
-                    "ffi_prep_closure_loc failed: %d\n", status);
+            throwError(env, "ffi_prep_closure_loc failed: %d\n", status);
             exit(1);
         }
     }
     else {
-        //TODO throw java error
-        fprintf(stderr,
-                "ffi_closure_alloc failed\n");
+       throwError(env, "ffi_closure_alloc failed\n");
         exit(1);
     }
 
