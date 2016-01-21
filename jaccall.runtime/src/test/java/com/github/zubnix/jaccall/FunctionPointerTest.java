@@ -619,6 +619,7 @@ public class FunctionPointerTest {
     @Test
     public void testStruct2FunctionPointerFromJava() {
 
+        //given
         final PointerStructFunc2 pointerStructFunc2 = PointerStructFunc2.nref(new Testing.StructFunc2() {
             @Override
             public long $(@ByVal(TestStruct.class) final long tst,
@@ -628,7 +629,13 @@ public class FunctionPointerTest {
                           @Ptr(int.class) final long field3,
                           @Lng final long embedded_field0,
                           final float embedded_field1) {
-                return structTest2(tst, field0, field1, field2, field3, embedded_field0, embedded_field1);
+                return structTest2(tst,
+                                   field0,
+                                   field1,
+                                   field2,
+                                   field3,
+                                   embedded_field0,
+                                   embedded_field1);
             }
         });
 
@@ -1076,7 +1083,71 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void testStruct2FunctionPointerFromC() {}
+    public void testStruct2FunctionPointerFromC() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        final long               pointer            = Testing.structTest2FunctionPointer();
+        final PointerStructFunc2 pointerStructFunc2 = PointerStructFunc2.wrapFunc(pointer);
+
+        //when
+        try (Pointer<TestStruct> tst = Pointer.ref(new TestStruct());
+             Pointer<Integer> intp = nref(44)) {
+
+            final byte field0 = 'a';
+            final short field1 = 22;
+            final int field2_0 = 123;
+            final int field2_1 = 456;
+            final int field2_2 = 789;
+
+            final Pointer<Integer> field2 = nref(field2_0,
+                                                 field2_1,
+                                                 field2_2);
+
+            final Pointer<Integer> field3 = intp;
+            final long embedded_field0 = 1234567890L;
+            final float embedded_field1 = 9876543.21F;
+
+            final Pointer<TestStruct> testStruct = wrap(TestStruct.class,
+                                                        pointerStructFunc2.$(tst.address,
+                                                                             field0,
+                                                                             field1,
+                                                                             field2.address,
+                                                                             field3.address,
+                                                                             embedded_field0,
+                                                                             embedded_field1));
+
+            //then
+            final TestStruct testStruct1 = testStruct.dref();
+            assertThat(testStruct1.field0()).isEqualTo(field0);
+            assertThat(testStruct1.field1()).isEqualTo(field1);
+            assertThat(testStruct1.field2()
+                                  .dref(0)).isEqualTo(field2_0);
+            assertThat(testStruct1.field2()
+                                  .dref(1)).isEqualTo(field2_1);
+            assertThat(testStruct1.field2()
+                                  .dref(2)).isEqualTo(field2_2);
+            assertThat(testStruct1.field3()).isEqualTo(field3);
+
+            assertThat(testStruct1.field0()).isEqualTo(field0);
+            assertThat(testStruct1.field1()).isEqualTo(field1);
+            assertThat(testStruct1.field2()
+                                  .dref(0)).isEqualTo(field2_0);
+            assertThat(testStruct1.field2()
+                                  .dref(1)).isEqualTo(field2_1);
+            assertThat(testStruct1.field2()
+                                  .dref(2)).isEqualTo(field2_2);
+            assertThat(testStruct1.field3()).isEqualTo(field3);
+            assertThat(testStruct1.field4()
+                                  .field0()).isEqualTo(embedded_field0);
+            assertThat(testStruct1.field4()
+                                  .field1()).isEqualTo(embedded_field1);
+
+            testStruct.close();
+        }
+    }
 
     @Test
     public void testUnionFunctionPointerFromC() {}
