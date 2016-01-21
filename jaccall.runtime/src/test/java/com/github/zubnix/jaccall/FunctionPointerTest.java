@@ -12,6 +12,7 @@ import com.github.zubnix.libtest.PointerLongLongFunc;
 import com.github.zubnix.libtest.PointerPointerFunc;
 import com.github.zubnix.libtest.PointerShortFunc;
 import com.github.zubnix.libtest.PointerStructFunc;
+import com.github.zubnix.libtest.PointerStructFunc2;
 import com.github.zubnix.libtest.PointerUnsignedCharFunc;
 import com.github.zubnix.libtest.PointerUnsignedIntFunc;
 import com.github.zubnix.libtest.PointerUnsignedLongFunc;
@@ -618,6 +619,110 @@ public class FunctionPointerTest {
     @Test
     public void testStruct2FunctionPointerFromJava() {
 
+        final PointerStructFunc2 pointerStructFunc2 = PointerStructFunc2.nref(new Testing.StructFunc2() {
+            @Override
+            public long $(@ByVal(TestStruct.class) final long tst,
+                          final byte field0,
+                          @Unsigned final short field1,
+                          @Ptr(int.class) final long field2,
+                          @Ptr(int.class) final long field3,
+                          @Lng final long embedded_field0,
+                          final float embedded_field1) {
+                return structTest2(tst, field0, field1, field2, field3, embedded_field0, embedded_field1);
+            }
+        });
+
+        //when
+        try (Pointer<TestStruct> tst = Pointer.ref(new TestStruct());
+             Pointer<Integer> intp = nref(44)) {
+
+            final byte field0 = 'a';
+            final short field1 = 22;
+            final int field2_0 = 123;
+            final int field2_1 = 456;
+            final int field2_2 = 789;
+
+            final Pointer<Integer> field2 = nref(field2_0,
+                                                 field2_1,
+                                                 field2_2);
+
+            final Pointer<Integer> field3 = intp;
+            final long embedded_field0 = 1234567890L;
+            final float embedded_field1 = 9876543.21F;
+
+            final Pointer<TestStruct> testStruct = wrap(TestStruct.class,
+                                                        JNITestUtil.execStructTest2(pointerStructFunc2.address,
+                                                                                    tst.address,
+                                                                                    field0,
+                                                                                    field1,
+                                                                                    field2.address,
+                                                                                    field3.address,
+                                                                                    embedded_field0,
+                                                                                    embedded_field1));
+
+            //then
+            final TestStruct testStruct1 = testStruct.dref();
+            assertThat(testStruct1.field0()).isEqualTo(field0);
+            assertThat(testStruct1.field1()).isEqualTo(field1);
+            assertThat(testStruct1.field2()
+                                  .dref(0)).isEqualTo(field2_0);
+            assertThat(testStruct1.field2()
+                                  .dref(1)).isEqualTo(field2_1);
+            assertThat(testStruct1.field2()
+                                  .dref(2)).isEqualTo(field2_2);
+            assertThat(testStruct1.field3()).isEqualTo(field3);
+
+            assertThat(testStruct1.field0()).isEqualTo(field0);
+            assertThat(testStruct1.field1()).isEqualTo(field1);
+            assertThat(testStruct1.field2()
+                                  .dref(0)).isEqualTo(field2_0);
+            assertThat(testStruct1.field2()
+                                  .dref(1)).isEqualTo(field2_1);
+            assertThat(testStruct1.field2()
+                                  .dref(2)).isEqualTo(field2_2);
+            assertThat(testStruct1.field3()).isEqualTo(field3);
+            assertThat(testStruct1.field4()
+                                  .field0()).isEqualTo(embedded_field0);
+            assertThat(testStruct1.field4()
+                                  .field1()).isEqualTo(embedded_field1);
+
+            testStruct.close();
+        }
+    }
+
+    public long structTest2(final long tstPointer,
+                            final byte field0,
+                            final short field1,
+                            final long field2Array,
+                            final long field3,
+                            final long embedded_field0,
+                            final float embedded_field1) {
+
+        //@formatter:off
+        final Pointer<TestStruct> someTest = malloc(TestStruct.SIZE, TestStruct.class);
+        final TestStruct tst = Pointer.wrap(TestStruct.class, tstPointer).dref();
+
+        tst.field0(field0);
+        tst.field1(field1);
+        final Pointer<Integer> field2 = Pointer.wrap(Integer.class, field2Array);
+        tst.field2().writei(0, field2.dref(0));
+        tst.field2().writei(1, field2.dref(1));
+        tst.field2().writei(2, field2.dref(2));
+        tst.field3(Pointer.wrap(Integer.class, field3));
+        tst.field4().field0(embedded_field0);
+        tst.field4().field1(embedded_field1);
+
+        someTest.dref().field0(tst.field0());
+        someTest.dref().field1(tst.field1());
+        someTest.dref().field2().writei(0, tst.field2().dref(0));
+        someTest.dref().field2().writei(1, tst.field2().dref(1));
+        someTest.dref().field2().writei(2, tst.field2().dref(2));
+        someTest.dref().field3(tst.field3());
+        someTest.dref().field4().field0(tst.field4().field0());
+        someTest.dref().field4().field1(tst.field4().field1());
+
+        return someTest.address;
+        //@formatter:on
     }
 
     @Test
@@ -625,29 +730,6 @@ public class FunctionPointerTest {
 
     @Test
     public void testUnion2FunctionPointerFromJava() {}
-
-
-    @ByVal(TestStruct.class)
-    public static long structTestInJava(@Ptr(TestStruct.class) final long tst,
-                                        final byte field0,
-                                        @Unsigned final short field1,
-                                        @Ptr(int.class) final long field2,
-                                        @Ptr(int.class) final long field3,
-                                        @Lng final long embedded_field0,
-                                        final float embedded_field1) {
-        return 0;
-    }
-
-    @Ptr(TestStruct.class)
-    public static long structTest2InJava(@ByVal(TestStruct.class) final long tst,
-                                         final byte field0,
-                                         @Unsigned final short field1,
-                                         @Ptr(int.class) final long field2,
-                                         @Ptr(int.class) final long field3,
-                                         @Lng final long embedded_field0,
-                                         final float embedded_field1) {
-        return 0;
-    }
 
     @ByVal(TestUnion.class)
     public static long unionTestInJava(@Ptr(TestUnion.class) final long tst,

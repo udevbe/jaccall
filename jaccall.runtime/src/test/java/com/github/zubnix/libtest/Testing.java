@@ -207,7 +207,7 @@ public class Testing {
                                           float embedded_field1);
 
     @Functor
-    interface StructFunc2 {
+    public interface StructFunc2 {
         @Ptr(TestStruct.class)
         long $(@ByVal(TestStruct.class) long tst,
                byte field0,

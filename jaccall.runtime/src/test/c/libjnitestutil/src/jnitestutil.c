@@ -267,3 +267,18 @@ JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execStructTest(JNIEnv *env, j
     memcpy(ret_result, &result, sizeof(struct test));
     return (jlong)(intptr_t) ret_result;
 }
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execStructTest2
+ * Signature: (JJBSJJJF)J
+ */
+JNIEXPORT
+jlong
+JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execStructTest2(JNIEnv *env, jclass clazz, jlong func_ptr, jlong tst,
+                                                                   jbyte field0, jshort field1, jlong field2, jlong field3,
+                                                                   jlong embedded_field0, jfloat embedded_field1){
+
+    struct test *result = ((struct test*(*)(struct test,char,short,int *,int *,long long,float))(intptr_t)func_ptr)(*((struct test*)(intptr_t)tst),(char)field0,(unsigned short) field1,(int*)(intptr_t)field2,(int*)(intptr_t)field3,(long long)embedded_field0,(float)embedded_field1);
+    return (jlong)(intptr_t)result;
+}
