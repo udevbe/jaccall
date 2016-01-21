@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 
 import static com.github.zubnix.jaccall.Size.sizeof;
 
-class PointerString extends Pointer<String> {
+final class PointerString extends Pointer<String> {
 
     private static final CharsetEncoder CHARSET_ENCODER = StandardCharsets.US_ASCII.newEncoder();
 
@@ -25,18 +25,16 @@ class PointerString extends Pointer<String> {
     }
 
     @Override
-    String dref(@Nonnull final ByteBuffer byteBuffer) {
-        return dref(0,
-                    byteBuffer);
+    public String dref() {
+        return dref(0);
     }
 
     @Override
-    String dref(@Nonnegative final int index,
-                @Nonnull final ByteBuffer byteBuffer) {
-        byteBuffer.position(index);
-        final StringBuilder sb = new StringBuilder(byteBuffer.limit());
-        while (byteBuffer.remaining() > 0) {
-            final char c = (char) byteBuffer.get();
+    public String dref(@Nonnegative final int index) {
+        this.byteBuffer.position(index);
+        final StringBuilder sb = new StringBuilder(this.byteBuffer.limit());
+        while (this.byteBuffer.remaining() > 0) {
+            final char c = (char) this.byteBuffer.get();
             if (c == '\0') {
                 break;
             }

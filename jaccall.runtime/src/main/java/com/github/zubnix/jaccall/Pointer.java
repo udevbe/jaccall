@@ -7,7 +7,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.LongBuffer;
 import java.util.Objects;
 
 import static com.github.zubnix.jaccall.Size.sizeof;
@@ -600,11 +599,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @return
      */
     @Nonnull
-    public T dref() {
-        return dref(this.byteBuffer);
-    }
-
-    abstract T dref(@Nonnull ByteBuffer byteBuffer);
+    public abstract T dref();
 
     /**
      * Java:<br>
@@ -618,13 +613,7 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @return
      */
     @Nonnull
-    public T dref(@Nonnegative final int index) {
-        return dref(index,
-                    this.byteBuffer);
-    }
-
-    abstract T dref(@Nonnegative int index,
-                    @Nonnull ByteBuffer byteBuffer);
+    public abstract T dref(@Nonnegative final int index);
 
     /**
      * Java:<br>
@@ -649,51 +638,6 @@ public abstract class Pointer<T> implements AutoCloseable {
         return wrap((Type) this.type,
                     newAddress,
                     this.byteBuffer.slice());
-    }
-
-    /**
-     * type cast
-     *
-     * @param type
-     * @param <U>
-     *
-     * @return
-     */
-    @Nonnull
-    public <U> U cast(@Nonnull final Class<U> type) {
-        //primitive "fast" paths
-        if (type.equals(Long.class) || type.equals(long.class)) {
-            return (U) Long.valueOf(this.address);
-        }
-        if (type.equals(Double.class) || type.equals(double.class)) {
-            return (U) Double.valueOf(Double.longBitsToDouble(this.address));
-        }
-        if (type.equals(Integer.class) || type.equals(int.class)) {
-            return (U) Integer.valueOf((int) this.address);
-        }
-        if (type.equals(Float.class) || type.equals(float.class)) {
-            return (U) Float.valueOf(Float.intBitsToFloat((int) this.address));
-        }
-        if (type.equals(Short.class) || type.equals(short.class)) {
-            return (U) Short.valueOf((short) this.address);
-        }
-        if (type.equals(Character.class) || type.equals(char.class)) {
-            return (U) Character.valueOf((char) this.address);
-        }
-        if (type.equals(Byte.class) || type.equals(byte.class)) {
-            return (U) Byte.valueOf((byte) this.address);
-        }
-        if (type.equals(Void.class) || type.equals(void.class)) {
-            throw new IllegalArgumentException("Can not cast to incomplete type void.");
-        }
-
-        final ByteBuffer addressBuffer = ByteBuffer.allocate(8)
-                                                   .order(ByteOrder.nativeOrder());
-        final LongBuffer longBuffer = addressBuffer.asLongBuffer();
-        longBuffer.clear();
-        longBuffer.put(this.address);
-        addressBuffer.rewind();
-        return castp(type).dref(addressBuffer);
     }
 
     /**

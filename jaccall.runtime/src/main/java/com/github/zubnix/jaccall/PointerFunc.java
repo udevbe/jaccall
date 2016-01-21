@@ -15,14 +15,15 @@ public abstract class PointerFunc<T> extends Pointer<T> {
               sizeof((Pointer) null));
     }
 
+    @Nonnull
     @Override
-    final T dref(@Nonnull final ByteBuffer byteBuffer) {
+    public final T dref() {
         return (T) this;
     }
 
+    @Nonnull
     @Override
-    final T dref(@Nonnegative final int index,
-                 @Nonnull final ByteBuffer byteBuffer) {
+    public final T dref(@Nonnegative final int index) {
         throw new UnsupportedOperationException();
     }
 

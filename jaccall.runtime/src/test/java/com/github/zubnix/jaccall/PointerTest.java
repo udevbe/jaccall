@@ -37,7 +37,7 @@ public class PointerTest {
         final Pointer<Void> voidPointer = wrap(byteBuffer);
 
         //then
-        final long address = voidPointer.cast(Long.class);
+        final long address = voidPointer.address;
         assertThat(address).isNotEqualTo(0L);
     }
 
@@ -82,7 +82,7 @@ public class PointerTest {
         try (final Pointer<Void> voidPointer = wrap(pointer)) {
 
             //then
-            assertThat(voidPointer.cast(Long.class)).isEqualTo(pointer);
+            assertThat(voidPointer.address).isEqualTo(pointer);
         }
     }
 
@@ -139,8 +139,7 @@ public class PointerTest {
 
         //when
         try (Pointer<Long> longPointer = calloc(nroLongs,
-                                                longSize)
-                .castp(long.class);) {
+                                                longSize).castp(long.class);) {
             //then
             for (int i = 0; i < nroLongs; i++) {
                 //FIXME use jni to read values
@@ -150,9 +149,9 @@ public class PointerTest {
     }
 
     @Test
-    public void testNrefStructType() throws Exception {
-        //TODO
-//        throw new UnsupportedOperationException();
+    public void testRefStructType() throws Exception {
+        //TODO add test
+
     }
 
     @Test
@@ -176,7 +175,7 @@ public class PointerTest {
         try (Pointer<Pointer<Byte>> bytePointerPointer = nref(bytePointer);) {
             //then
             //FIXME use jni to read values
-            //TODO add dref Pointer
+            //TODO add test dref Pointer
             assertThat(bytePointerPointer.dref().address).isEqualTo(pointer);
             assertThat(bytePointerPointer.dref()
                                          .dref(4)).isEqualTo(b4);
@@ -200,8 +199,8 @@ public class PointerTest {
                                           b4);) {
             //then
             assertThat(pointer.address).isNotEqualTo(0L);
-//FIXME use jni to read values
-            //TODO add dref byte
+            //FIXME use jni to read values
+            //TODO add test dref byte
 
             assertThat(pointer.dref()).isEqualTo(b0);
             assertThat(pointer.dref(1)).isEqualTo(b1);
@@ -228,8 +227,8 @@ public class PointerTest {
                                            s4);) {
             //then
             assertThat(pointer.address).isNotEqualTo(0L);
-//FIXME use jni to read values
-            //TODO add dref short
+            //FIXME use jni to read values
+            //TODO add test dref short
 
             assertThat(pointer.dref()).isEqualTo(s0);
             assertThat(pointer.dref(1)).isEqualTo(s1);
@@ -256,8 +255,8 @@ public class PointerTest {
                                              i4);) {
             //then
             assertThat(pointer.address).isNotEqualTo(0L);
-//FIXME use jni to read values
-            //TODO add dref int
+            //FIXME use jni to read values
+            //TODO add test dref int
 
             assertThat(pointer.dref()).isEqualTo(i0);
             assertThat(pointer.dref(1)).isEqualTo(i1);
@@ -284,8 +283,8 @@ public class PointerTest {
                                            f4);) {
             //then
             assertThat(pointer.address).isNotEqualTo(0L);
-//FIXME use jni to read values
-            //TODO add dref float
+            //FIXME use jni to read values
+            //TODO add test dref float
 
             assertThat(pointer.dref()).isEqualTo(f0);
             assertThat(pointer.dref(1)).isEqualTo(f1);
@@ -312,8 +311,8 @@ public class PointerTest {
                                           l4);) {
             //then
             assertThat(pointer.address).isNotEqualTo(0L);
-//FIXME use jni to read values
-            //TODO add dref long
+            //FIXME use jni to read values
+            //TODO add test dref long
 
             assertThat(pointer.dref()).isEqualTo(l0);
             assertThat(pointer.dref(1)).isEqualTo(l1);
@@ -341,7 +340,7 @@ public class PointerTest {
             //then
             assertThat(pointer.address).isNotEqualTo(0L);
             //FIXME use jni to read values
-            //TODO add dref double
+            //TODO add test dref double
 
             assertThat(pointer.dref()).isEqualTo(d0);
             assertThat(pointer.dref(1)).isEqualTo(d1);
@@ -369,7 +368,7 @@ public class PointerTest {
             //then
             assertThat(pointer.address).isNotEqualTo(0L);
             //FIXME use jni to read values
-            //TODO add dref CLong
+            //TODO add test dref CLong
 
             assertThat(pointer.dref()).isEqualTo(cl0);
             assertThat(pointer.dref(1)).isEqualTo(cl1);
@@ -418,7 +417,7 @@ public class PointerTest {
 
         try (final Pointer<Void> voidPointer = wrap(pointer)) {
             //when
-            final int integer = voidPointer.cast(int.class);
+            final int integer = (int) voidPointer.address;
 
             //then
             assertThat(integer).isEqualTo((int) pointer);
@@ -481,8 +480,8 @@ public class PointerTest {
                                          .dref(4)).isEqualTo(b4);
 
             //throws error complaining about incomplete type
-            expectedException.expect(IllegalStateException.class);
-            expectedException.expectMessage("Can not dereference void pointer.");
+            this.expectedException.expect(IllegalStateException.class);
+            this.expectedException.expectMessage("Can not dereference void pointer.");
             pointerPointer.dref()
                           .dref();
         }

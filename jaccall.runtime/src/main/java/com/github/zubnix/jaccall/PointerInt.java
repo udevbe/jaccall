@@ -20,15 +20,13 @@ final class PointerInt extends Pointer<Integer> {
     }
 
     @Override
-    Integer dref(@Nonnull final ByteBuffer byteBuffer) {
-        return dref(0,
-                    byteBuffer);
+    public Integer dref() {
+        return dref(0);
     }
 
     @Override
-    Integer dref(@Nonnegative final int index,
-                 @Nonnull final ByteBuffer byteBuffer) {
-        final IntBuffer buffer = byteBuffer.asIntBuffer();
+    public Integer dref(@Nonnegative final int index) {
+        final IntBuffer buffer = this.byteBuffer.asIntBuffer();
         buffer.rewind();
         buffer.position(index);
         return buffer.get();

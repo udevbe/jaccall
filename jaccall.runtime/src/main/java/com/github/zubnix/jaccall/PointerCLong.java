@@ -21,24 +21,24 @@ final class PointerCLong extends Pointer<CLong> {
               sizeof((CLong) null));
     }
 
+    @Nonnull
     @Override
-    CLong dref(@Nonnull final ByteBuffer byteBuffer) {
-        return dref(0,
-                    byteBuffer);
+    public CLong dref() {
+        return dref(0);
     }
 
+    @Nonnull
     @Override
-    CLong dref(@Nonnegative final int index,
-               @Nonnull final ByteBuffer byteBuffer) {
+    public CLong dref(@Nonnegative final int index) {
         final long clong;
         if (this.typeSize == 8) {
-            final LongBuffer buffer = byteBuffer.asLongBuffer();
+            final LongBuffer buffer = this.byteBuffer.asLongBuffer();
             buffer.rewind();
             buffer.position(index);
             clong = buffer.get();
         }
         else {
-            final IntBuffer buffer = byteBuffer.asIntBuffer();
+            final IntBuffer buffer = this.byteBuffer.asIntBuffer();
             buffer.rewind();
             buffer.position(index);
             clong = buffer.get();

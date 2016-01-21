@@ -18,18 +18,18 @@ final class PointerByte extends Pointer<Byte> {
               sizeof((Byte) null));
     }
 
+    @Nonnull
     @Override
-    Byte dref(@Nonnull final ByteBuffer byteBuffer) {
-        return dref(0,
-                    byteBuffer);
+    public Byte dref() {
+        return dref(0);
     }
 
+    @Nonnull
     @Override
-    Byte dref(@Nonnegative final int index,
-              @Nonnull final ByteBuffer buffer) {
-        buffer.rewind();
-        buffer.position(index);
-        return buffer.get();
+    public Byte dref(@Nonnegative final int index) {
+        this.byteBuffer.rewind();
+        this.byteBuffer.position(index);
+        return this.byteBuffer.get();
     }
 
     @Override

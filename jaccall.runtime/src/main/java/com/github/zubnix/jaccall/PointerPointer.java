@@ -21,24 +21,24 @@ final class PointerPointer<T> extends Pointer<Pointer<T>> {
               sizeof((Pointer) null));
     }
 
+    @Nonnull
     @Override
-    Pointer<T> dref(@Nonnull final ByteBuffer byteBuffer) {
-        return dref(0,
-                    byteBuffer);
+    public Pointer<T> dref() {
+        return dref(0);
     }
 
+    @Nonnull
     @Override
-    Pointer<T> dref(@Nonnegative final int index,
-                    @Nonnull final ByteBuffer byteBuffer) {
+    public Pointer<T> dref(@Nonnegative final int index) {
         final long val;
         if (this.typeSize == 8) {
-            final LongBuffer buffer = byteBuffer.asLongBuffer();
+            final LongBuffer buffer = this.byteBuffer.asLongBuffer();
             buffer.rewind();
             buffer.position(index);
             val = buffer.get();
         }
         else {
-            final IntBuffer buffer = byteBuffer.asIntBuffer();
+            final IntBuffer buffer = this.byteBuffer.asIntBuffer();
             buffer.rewind();
             buffer.position(index);
             val = buffer.get();
@@ -86,14 +86,14 @@ final class PointerPointer<T> extends Pointer<Pointer<T>> {
             final LongBuffer buffer = this.byteBuffer.asLongBuffer();
             buffer.clear();
             buffer.position(index);
-            buffer.put(val.cast(Long.class));
+            buffer.put(val.address);
         }
         else if (pointerSize == 4) {
             //32-bit
             final IntBuffer buffer = this.byteBuffer.asIntBuffer();
             buffer.clear();
             buffer.position(index);
-            buffer.put(val.cast(Integer.class));
+            buffer.put((int) val.address);
         }
     }
 }

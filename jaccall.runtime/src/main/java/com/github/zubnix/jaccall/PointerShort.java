@@ -18,16 +18,16 @@ public class PointerShort extends Pointer<Short> {
               sizeof((Short) null));
     }
 
+    @Nonnull
     @Override
-    Short dref(@Nonnull final ByteBuffer byteBuffer) {
-        return dref(0,
-                    byteBuffer);
+    public Short dref() {
+        return dref(0);
     }
 
+    @Nonnull
     @Override
-    Short dref(@Nonnegative final int index,
-               @Nonnull final ByteBuffer byteBuffer) {
-        final ShortBuffer buffer = byteBuffer.asShortBuffer();
+    public Short dref(@Nonnegative final int index) {
+        final ShortBuffer buffer = this.byteBuffer.asShortBuffer();
         buffer.rewind();
         buffer.position(index);
         return buffer.get();

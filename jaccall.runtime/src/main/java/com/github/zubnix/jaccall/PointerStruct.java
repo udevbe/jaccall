@@ -22,20 +22,20 @@ final class PointerStruct extends Pointer<StructType> {
         this.structClass = (Class<? extends StructType>) toClass(type);
     }
 
+    @Nonnull
     @Override
-    StructType dref(@Nonnull final ByteBuffer byteBuffer) {
-        return dref(0,
-                    byteBuffer);
+    public StructType dref() {
+        return dref(0);
     }
 
+    @Nonnull
     @Override
-    StructType dref(@Nonnegative final int index,
-                    @Nonnull final ByteBuffer byteBuffer) {
+    public StructType dref(@Nonnegative final int index) {
         try {
             final StructType structType = this.structClass.newInstance();
-            byteBuffer.position(index * this.typeSize);
-            final ByteBuffer slice = byteBuffer.slice()
-                                               .order(ByteOrder.nativeOrder());
+            this.byteBuffer.position(index * this.typeSize);
+            final ByteBuffer slice = this.byteBuffer.slice()
+                                                    .order(ByteOrder.nativeOrder());
             slice.limit(this.typeSize);
             structType.buffer(slice);
             return structType;

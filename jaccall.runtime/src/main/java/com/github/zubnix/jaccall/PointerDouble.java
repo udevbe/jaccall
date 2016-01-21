@@ -20,15 +20,13 @@ final class PointerDouble extends Pointer<Double> {
     }
 
     @Override
-    Double dref(@Nonnull final ByteBuffer byteBuffer) {
-        return dref(0,
-                    byteBuffer);
+    public Double dref() {
+        return dref(0);
     }
 
     @Override
-    Double dref(@Nonnegative final int index,
-                @Nonnull final ByteBuffer byteBuffer) {
-        final DoubleBuffer buffer = byteBuffer.asDoubleBuffer();
+    public Double dref(@Nonnegative final int index) {
+        final DoubleBuffer buffer = this.byteBuffer.asDoubleBuffer();
         buffer.rewind();
         buffer.position(index);
         return buffer.get();

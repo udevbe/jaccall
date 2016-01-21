@@ -20,15 +20,13 @@ final class PointerLong extends Pointer<Long> {
     }
 
     @Override
-    Long dref(@Nonnull final ByteBuffer byteBuffer) {
-        return dref(0,
-                    byteBuffer);
+    public Long dref() {
+        return dref(0);
     }
 
     @Override
-    Long dref(@Nonnegative final int index,
-              @Nonnull final ByteBuffer byteBuffer) {
-        final LongBuffer buffer = byteBuffer.asLongBuffer();
+    public Long dref(@Nonnegative final int index) {
+        final LongBuffer buffer = this.byteBuffer.asLongBuffer();
         buffer.rewind();
         buffer.position(index);
         return buffer.get();
