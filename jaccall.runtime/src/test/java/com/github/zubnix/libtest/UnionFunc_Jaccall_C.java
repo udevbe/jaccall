@@ -11,7 +11,7 @@ final class UnionFunc_Jaccall_C extends PointerUnionFunc {
     static {
         JNI.linkFuncPtr(UnionFunc_Jaccall_C.class,
                         "_$",
-                        8,
+                        4,
                         "(JJIF)J",
                         FFI_CIF);
     }

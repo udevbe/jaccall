@@ -118,3 +118,7 @@ struct test* (*structTest2FunctionPointer(void))(struct test tst,
                                                  int *field3,
                                                  long long embedded_field0,
                                                  float embedded_field1);
+
+union testunion (*unionTestFunctionPointer(void))(union testunion *tst,
+                                                  int embedded_field0,
+                                                  float embedded_field1);

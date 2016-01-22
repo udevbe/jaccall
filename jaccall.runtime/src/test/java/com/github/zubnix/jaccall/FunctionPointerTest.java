@@ -1181,7 +1181,34 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void testUnionFunctionPointerFromC() {}
+    public void testUnionFunctionPointerFromC() {
+
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        final long             pointer          = Testing.unionTestFunctionPointer();
+        final PointerUnionFunc pointerUnionFunc = PointerUnionFunc.wrapFunc(pointer);
+
+        final Pointer<TestUnion> testUnionPointer = malloc(TestUnion.SIZE).castp(TestUnion.class);
+        final int                field0           = 123456789;
+        final float              field1           = 9876.54F;
+
+        //when
+        try (Pointer<TestUnion> tst = testUnionPointer) {
+            final Pointer<TestUnion> unionPointer = wrap(TestUnion.class,
+                                                         pointerUnionFunc.$(tst.address,
+                                                                            field0,
+                                                                            field1));
+
+            //then
+            assertThat(tst.dref()
+                          .field0()).isEqualTo(field0);
+            assertThat(unionPointer.dref()
+                                   .field1()).isEqualTo(field1);
+        }
+    }
 
     @Test
     public void testUnion2FunctionPointerFromC() {}
