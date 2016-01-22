@@ -456,9 +456,6 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1union(JNIEnv *env, jclass 
         }
     }
 
-    struct_description->size = 0;
-    struct_description->alignment = 0;
-
     return (jlong) (intptr_t) struct_description;
 }
 

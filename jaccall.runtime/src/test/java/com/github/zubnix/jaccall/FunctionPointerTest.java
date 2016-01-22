@@ -13,6 +13,7 @@ import com.github.zubnix.libtest.PointerPointerFunc;
 import com.github.zubnix.libtest.PointerShortFunc;
 import com.github.zubnix.libtest.PointerStructFunc;
 import com.github.zubnix.libtest.PointerStructFunc2;
+import com.github.zubnix.libtest.PointerUnionFunc;
 import com.github.zubnix.libtest.PointerUnsignedCharFunc;
 import com.github.zubnix.libtest.PointerUnsignedIntFunc;
 import com.github.zubnix.libtest.PointerUnsignedLongFunc;
@@ -733,23 +734,53 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void testUnionFunctionPointerFromJava() {}
+    public void testUnionFunctionPointerFromJava() {
+
+        final PointerUnionFunc pointerUnionFunc = PointerUnionFunc.nref(new Testing.UnionFunc() {
+            @Override
+            public long $(@Ptr(TestUnion.class) final long tst,
+                          final int field0,
+                          final float field1) {
+                return unionTest(tst,
+                                 field0,
+                                 field1);
+            }
+        });
+
+        final Pointer<TestUnion> testUnionPointer = malloc(TestUnion.SIZE).castp(TestUnion.class);
+        final int                field0           = 123456789;
+        final float              field1           = 9876.54F;
+
+        //when
+        try (Pointer<TestUnion> tst = testUnionPointer) {
+            final Pointer<TestUnion> unionPointer = wrap(TestUnion.class,
+                                                         pointerUnionFunc.$(tst.address,
+                                                                            field0,
+                                                                            field1));
+
+            //then
+            assertThat(tst.dref()
+                          .field0()).isEqualTo(field0);
+            assertThat(unionPointer.dref()
+                                   .field1()).isEqualTo(field1);
+        }
+    }
+
+    public long unionTest(final long tst,
+                          final int field0,
+                          final float field1) {
+        wrap(TestUnion.class,
+             tst).dref()
+                 .field0(field0);
+
+        final TestUnion someTest = new TestUnion();
+        someTest.field1(field1);
+
+        return Pointer.ref(someTest).address;
+    }
 
     @Test
     public void testUnion2FunctionPointerFromJava() {}
-
-    @ByVal(TestUnion.class)
-    public static long unionTestInJava(@Ptr(TestUnion.class) final long tst,
-                                       final int field0,
-                                       final float field1) {
-        return 0;
-    }
-
-    @Ptr(TestUnion.class)
-    public static long unionTest2InJava(@ByVal(TestUnion.class) final long tst,
-                                        final int field0) {
-        return 0;
-    }
 
     @Test
     public void testCharFunctionPointerFromC() {

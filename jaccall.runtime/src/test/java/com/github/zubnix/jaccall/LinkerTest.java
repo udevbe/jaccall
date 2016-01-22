@@ -62,7 +62,7 @@ public class LinkerTest {
                     new Testing_Jaccall_LinkSymbols());
 
         //when
-        byte       value    = Byte.MAX_VALUE;
+        final byte value    = Byte.MAX_VALUE;
         final byte returned = new Testing().charTest(value);
 
         //then
@@ -77,7 +77,7 @@ public class LinkerTest {
                     new Testing_Jaccall_LinkSymbols());
 
         //when
-        byte       value    = (byte) 0xFF;
+        final byte value    = (byte) 0xFF;
         final byte returned = new Testing().unsignedCharTest(value);
 
         //then
@@ -92,7 +92,7 @@ public class LinkerTest {
                     new Testing_Jaccall_LinkSymbols());
 
         //when
-        short       value    = Short.MAX_VALUE;
+        final short value    = Short.MAX_VALUE;
         final short returned = new Testing().shortTest(value);
 
         //then
@@ -107,7 +107,7 @@ public class LinkerTest {
                     new Testing_Jaccall_LinkSymbols());
 
         //when
-        short       value    = (short) 0xFFFF;
+        final short value    = (short) 0xFFFF;
         final short returned = new Testing().unsignedShortTest(value);
 
         //then
@@ -122,7 +122,7 @@ public class LinkerTest {
                     new Testing_Jaccall_LinkSymbols());
 
         //when
-        int       value    = Integer.MAX_VALUE;
+        final int value    = Integer.MAX_VALUE;
         final int returned = new Testing().intTest(value);
 
         //then
@@ -137,7 +137,7 @@ public class LinkerTest {
                     new Testing_Jaccall_LinkSymbols());
 
         //when
-        int       value    = 0xFFFFFFFF;
+        final int value    = 0xFFFFFFFF;
         final int returned = new Testing().unsignedIntTest(value);
 
         //then
@@ -152,7 +152,7 @@ public class LinkerTest {
                     new Testing_Jaccall_LinkSymbols());
 
         //when
-        long       value    = sizeof((CLong) null) == 8 ? Long.MAX_VALUE : Integer.MAX_VALUE;
+        final long value    = sizeof((CLong) null) == 8 ? Long.MAX_VALUE : Integer.MAX_VALUE;
         final long returned = new Testing().longTest(value);
 
         //then
@@ -167,7 +167,7 @@ public class LinkerTest {
                     new Testing_Jaccall_LinkSymbols());
 
         //when
-        long       value    = sizeof((CLong) null) == 8 ? 0xFFFFFFFFFFFFFFFFL : 0xFFFFFFFF;
+        final long value    = sizeof((CLong) null) == 8 ? 0xFFFFFFFFFFFFFFFFL : 0xFFFFFFFF;
         final long returned = new Testing().unsignedLongTest(value);
 
         //then
@@ -182,7 +182,7 @@ public class LinkerTest {
                     new Testing_Jaccall_LinkSymbols());
 
         //when
-        long       value    = Long.MAX_VALUE;
+        final long value    = Long.MAX_VALUE;
         final long returned = new Testing().longLongTest(value);
 
         //then
@@ -197,7 +197,7 @@ public class LinkerTest {
                     new Testing_Jaccall_LinkSymbols());
 
         //when
-        long       value    = 0xFFFFFFFFFFFFFFFFL;
+        final long value    = 0xFFFFFFFFFFFFFFFFL;
         final long returned = new Testing().unsignedLongLongTest(value);
 
         //then
@@ -211,7 +211,7 @@ public class LinkerTest {
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
         //when
-        float       value    = Float.MAX_VALUE;
+        final float value    = Float.MAX_VALUE;
         final float returned = new Testing().floatTest(value);
 
         //then
@@ -225,7 +225,7 @@ public class LinkerTest {
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
         //when
-        double       value    = Double.MAX_VALUE;
+        final double value    = Double.MAX_VALUE;
         final double returned = new Testing().doubleTest(value);
 
         //then
@@ -239,7 +239,7 @@ public class LinkerTest {
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
         //when
-        long       value    = Long.MAX_VALUE;
+        final long value    = Long.MAX_VALUE;
         final long returned = new Testing().pointerTest(value);
 
         //then
@@ -397,9 +397,9 @@ public class LinkerTest {
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
-        Pointer<TestUnion> testUnionPointer = malloc(TestUnion.SIZE).castp(TestUnion.class);
-        int                field0           = 123456789;
-        float              field1           = 9876.54F;
+        final Pointer<TestUnion> testUnionPointer = malloc(TestUnion.SIZE).castp(TestUnion.class);
+        final int                field0           = 123456789;
+        final float              field1           = 9876.54F;
 
         //when
         try (Pointer<TestUnion> tst = testUnionPointer) {
@@ -423,8 +423,8 @@ public class LinkerTest {
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
 
-        Pointer<TestUnion> testUnionPointer = malloc(TestUnion.SIZE).castp(TestUnion.class);
-        int                field0           = 123456789;
+        final Pointer<TestUnion> testUnionPointer = malloc(TestUnion.SIZE).castp(TestUnion.class);
+        final int                field0           = 123456789;
 
         //when
         try (Pointer<TestUnion> tst = testUnionPointer) {

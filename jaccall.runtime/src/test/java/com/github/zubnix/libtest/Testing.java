@@ -224,7 +224,7 @@ public class Testing {
                                         float field1);
 
     @Functor
-    interface UnionFunc {
+    public interface UnionFunc {
         @ByVal(TestUnion.class)
         long $(@Ptr(TestUnion.class) long tst,
                int field0,
@@ -236,7 +236,7 @@ public class Testing {
                                          int field0);
 
     @Functor
-    interface UnionFunc2 {
+    public interface UnionFunc2 {
         @Ptr(TestUnion.class)
         long $(@ByVal(TestUnion.class) long tst,
                int field0);
