@@ -23,6 +23,11 @@ struct test {
     } field4;
 };
 
+union testunion {
+    int field0;
+    float field1;
+};
+
 /*
  * Class:     com_github_zubnix_jaccall_JNITestUtil
  * Method:    byteArrayAsPointer
@@ -281,4 +286,28 @@ JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execStructTest2(JNIEnv *env, 
 
     struct test *result = ((struct test*(*)(struct test,char,short,int *,int *,long long,float))(intptr_t)func_ptr)(*((struct test*)(intptr_t)tst),(char)field0,(unsigned short) field1,(int*)(intptr_t)field2,(int*)(intptr_t)field3,(long long)embedded_field0,(float)embedded_field1);
     return (jlong)(intptr_t)result;
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execUnionTest
+ * Signature: (JJIF)J
+ */
+JNIEXPORT
+jlong
+JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execUnionTest(JNIEnv *env, jclass clazz, jlong func_ptr, jlong tst, jint field0, jfloat field1){
+    union testunion result = ((union testunion(*)(union testunion*, int, float))(intptr_t)func_ptr)((union testunion*)(intptr_t)tst, field0, field1);
+    void* ret_result = malloc(sizeof(union testunion));
+    memcpy(ret_result, &result, sizeof(union testunion));
+    return (jlong)(intptr_t)ret_result;
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    execUnionTest2
+ * Signature: (JJI)J
+ */
+JNIEXPORT
+jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execUnionTest2(JNIEnv *env, jclass clazz, jlong func_ptr, jlong tst, jint field0){
+     return (jlong)(intptr_t)((union testunion*(*)(union testunion, int))(intptr_t)func_ptr)(*((union testunion*)(intptr_t)tst), field0);
 }

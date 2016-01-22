@@ -14,6 +14,7 @@ import com.github.zubnix.libtest.PointerShortFunc;
 import com.github.zubnix.libtest.PointerStructFunc;
 import com.github.zubnix.libtest.PointerStructFunc2;
 import com.github.zubnix.libtest.PointerUnionFunc;
+import com.github.zubnix.libtest.PointerUnionFunc2;
 import com.github.zubnix.libtest.PointerUnsignedCharFunc;
 import com.github.zubnix.libtest.PointerUnsignedIntFunc;
 import com.github.zubnix.libtest.PointerUnsignedLongFunc;
@@ -735,7 +736,7 @@ public class FunctionPointerTest {
 
     @Test
     public void testUnionFunctionPointerFromJava() {
-
+        //given
         final PointerUnionFunc pointerUnionFunc = PointerUnionFunc.nref(new Testing.UnionFunc() {
             @Override
             public long $(@Ptr(TestUnion.class) final long tst,
@@ -754,9 +755,10 @@ public class FunctionPointerTest {
         //when
         try (Pointer<TestUnion> tst = testUnionPointer) {
             final Pointer<TestUnion> unionPointer = wrap(TestUnion.class,
-                                                         pointerUnionFunc.$(tst.address,
-                                                                            field0,
-                                                                            field1));
+                                                         JNITestUtil.execUnionTest(pointerUnionFunc.address,
+                                                                                   tst.address,
+                                                                                   field0,
+                                                                                   field1));
 
             //then
             assertThat(tst.dref()
@@ -780,7 +782,46 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void testUnion2FunctionPointerFromJava() {}
+    public void testUnion2FunctionPointerFromJava() {
+        //given
+        final PointerUnionFunc2 pointerUnionFunc = PointerUnionFunc2.nref(new Testing.UnionFunc2() {
+            @Override
+            public long $(@Ptr(TestUnion.class) final long tst,
+                          final int field0) {
+                return unionTest2(tst,
+                                  field0);
+            }
+        });
+
+
+        final Pointer<TestUnion> testUnionPointer = malloc(TestUnion.SIZE).castp(TestUnion.class);
+        final int                field0           = 123456789;
+
+        //when
+        try (Pointer<TestUnion> tst = testUnionPointer) {
+            final Pointer<TestUnion> unionPointer = wrap(TestUnion.class,
+                                                         JNITestUtil.execUnionTest2(pointerUnionFunc.address,
+                                                                                    tst.address,
+                                                                                    field0));
+
+            //then
+            assertThat(Float.floatToIntBits(unionPointer.dref()
+                                                        .field1())).isEqualTo(field0);
+            unionPointer.close();
+        }
+    }
+
+    public long unionTest2(final long tstPointer,
+                           final int field0) {
+        final TestUnion tst = wrap(TestUnion.class,
+                                   tstPointer).dref();
+        tst.field0(field0);
+
+        final Pointer<TestUnion> someTest = malloc(TestUnion.SIZE).castp(TestUnion.class);
+        someTest.dref()
+                .field1(tst.field1());
+        return someTest.address;
+    }
 
     @Test
     public void testCharFunctionPointerFromC() {
@@ -1211,5 +1252,27 @@ public class FunctionPointerTest {
     }
 
     @Test
-    public void testUnion2FunctionPointerFromC() {}
+    public void testUnion2FunctionPointerFromC() {
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        final long              pointer           = Testing.unionTest2FunctionPointer();
+        final PointerUnionFunc2 pointerUnionFunc2 = PointerUnionFunc2.wrapFunc(pointer);
+
+        final Pointer<TestUnion> testUnionPointer = malloc(TestUnion.SIZE).castp(TestUnion.class);
+        final int                field0           = 123456789;
+
+        //when
+        try (Pointer<TestUnion> tst = testUnionPointer) {
+            final Pointer<TestUnion> unionPointer = wrap(TestUnion.class,
+                                                         pointerUnionFunc2.$(tst.address,
+                                                                             field0));
+            //then
+            assertThat(Float.floatToIntBits(unionPointer.dref()
+                                                        .field1())).isEqualTo(field0);
+            unionPointer.close();
+        }
+    }
 }
