@@ -342,8 +342,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<U> pointer = (Pointer<U>) createStack(val[0].getClass(),
                                                             sizeof(val[0]),
                                                             length);
-        pointer.write(length,
-                      val);
+        pointer.write(val);
 
         return pointer;
     }
@@ -373,8 +372,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<U> pointer = (Pointer<U>) createStack(val[0].getClass(),
                                                             sizeof((Pointer) null),
                                                             length);
-        pointer.write(length,
-                      val);
+        pointer.write(val);
 
         return pointer;
     }
@@ -402,8 +400,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<Byte> pointer = createStack(Byte.class,
                                                   sizeof((Byte) null),
                                                   length);
-        pointer.write(length,
-                      val);
+        pointer.write(val);
 
         return pointer;
     }
@@ -431,8 +428,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<Short> pointer = createStack(Short.class,
                                                    sizeof((Short) null),
                                                    length);
-        pointer.write(length,
-                      val);
+        pointer.write(val);
 
         return pointer;
     }
@@ -460,8 +456,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<Integer> pointer = createStack(Integer.class,
                                                      sizeof((Integer) null),
                                                      length);
-        pointer.write(length,
-                      val);
+        pointer.write(val);
 
         return pointer;
     }
@@ -489,8 +484,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<Float> pointer = createStack(Float.class,
                                                    sizeof((Float) null),
                                                    length);
-        pointer.write(length,
-                      val);
+        pointer.write(val);
 
         return pointer;
     }
@@ -518,8 +512,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<Long> pointer = createStack(Long.class,
                                                   sizeof((Long) null),
                                                   length);
-        pointer.write(length,
-                      val);
+        pointer.write(val);
 
         return pointer;
     }
@@ -547,8 +540,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<Double> pointer = createStack(Double.class,
                                                     sizeof((Double) null),
                                                     length);
-        pointer.write(length,
-                      val);
+        pointer.write(val);
 
         return pointer;
     }
@@ -699,9 +691,8 @@ public abstract class Pointer<T> implements AutoCloseable {
     public abstract void writei(@Nonnegative final int index,
                                 @Nonnull final T val);
 
-    private void write(final int length,
-                       final T[] vals) {
-        for (int i = 0; i < length; i++) {
+    private void write(final T[] vals) {
+        for (int i = 0; i < vals.length; i++) {
             writei(i,
                    vals[i]);
         }

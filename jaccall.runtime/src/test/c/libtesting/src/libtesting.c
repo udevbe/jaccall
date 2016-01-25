@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include "testing.h"
 
 struct test structTest(struct test *tst,
@@ -255,4 +257,32 @@ union testunion (*unionTestFunctionPointer(void))(union testunion *tst,
 union testunion* (*unionTest2FunctionPointer(void))(union testunion tst,
                                                     int embedded_field0){
     return &unionTest2;
+}
+
+void writeFieldsTestStruct(struct fieldsTest *fTest,
+                           char charField,
+                           short shortField,
+                           int intField,
+                           long longField,
+                           long long longLongField,
+                           float floatField,
+                           double doubleField,
+                           void* pointerField,
+                           void** pointerArrayField,
+                           struct test_embedded structField,
+                           struct test_embedded structArrayField[],
+                           int structArrayFieldSize){
+    fTest->charField = charField;
+    fTest->shortField = shortField;
+    fTest->intField = intField;
+    fTest->longField = longField;
+    fTest->longLongField = longLongField;
+    fTest->floatField = floatField;
+    fTest->doubleField = doubleField;
+    fTest->pointerField = pointerField;
+    fTest->pointerArrayField[0] = pointerArrayField[0];
+    fTest->pointerArrayField[1] = pointerArrayField[1];
+    fTest->pointerArrayField[2] = pointerArrayField[2];
+    fTest->structField = structField;
+    memcpy(&fTest->structArrayField, &structArrayField[0], structArrayFieldSize * sizeof(struct test_embedded));
 }

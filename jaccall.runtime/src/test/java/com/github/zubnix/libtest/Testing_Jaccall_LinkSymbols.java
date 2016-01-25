@@ -174,8 +174,6 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                                                JNI.FFI_TYPE_DOUBLE,
                                                JNI.FFI_TYPE_POINTER,
                                                JNI.FFI_TYPE_POINTER,
-                                               JNI.FFI_TYPE_POINTER,
-                                               JNI.FFI_TYPE_POINTER,
                                                TestStructEmbedded.FFI_TYPE,
                                                JNI.FFI_TYPE_POINTER,
                                                JNI.FFI_TYPE_SINT32)

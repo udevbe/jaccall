@@ -19,6 +19,10 @@ abstract class FieldsTestStruct_Jaccall_StructType extends StructType {
                                                             JNI.FFI_TYPE_DOUBLE,
                                                             JNI.FFI_TYPE_POINTER,
                                                             JNI.FFI_TYPE_POINTER,
+                                                            JNI.FFI_TYPE_POINTER,
+                                                            JNI.FFI_TYPE_POINTER,
+                                                            TestStructEmbedded.FFI_TYPE,
+                                                            TestStructEmbedded.FFI_TYPE,
                                                             TestStructEmbedded.FFI_TYPE,
                                                             TestStructEmbedded.FFI_TYPE);
 
@@ -148,13 +152,8 @@ abstract class FieldsTestStruct_Jaccall_StructType extends StructType {
                         structField);
     }
 
-    public final TestStructEmbedded structArrayField() {
-        return readStructType(OFFSET_10,
-                              TestStructEmbedded.class);
-    }
-
-    public final void structArrayField(final TestStructEmbedded structArrayField) {
-        writeStructType(OFFSET_10,
-                        structArrayField);
+    public final Pointer<TestStructEmbedded> structArrayField() {
+        return readArray(OFFSET_10,
+                         TestStructEmbedded.class);
     }
 }
