@@ -433,6 +433,138 @@ public class StructWriterTest {
                                                      .that(fileObject)
                                                      .processedWith(new StructGenerator());
         //then
-        //TODO
+        //then
+        compileTester.compilesWithoutError()
+                     .and()
+                     .generatesSources(JavaFileObjects.forSourceString("com.github.zubnix.libtest.struct.FieldsTestStruct_Jaccall_StructType",
+                                                                       "package com.github.zubnix.libtest.struct;\n" +
+                                                                       "\n" +
+                                                                       "import com.github.zubnix.jaccall.CLong;\n" +
+                                                                       "import com.github.zubnix.jaccall.JNI;\n" +
+                                                                       "import com.github.zubnix.jaccall.Pointer;\n" +
+                                                                       "import com.github.zubnix.jaccall.Size;\n" +
+                                                                       "import com.github.zubnix.jaccall.StructType;\n" +
+                                                                       "import com.github.zubnix.jaccall.compiletime.linker.TestStructEmbedded;\n" +
+                                                                       "import java.lang.Byte;\n" +
+                                                                       "import java.lang.Double;\n" +
+                                                                       "import java.lang.Float;\n" +
+                                                                       "import java.lang.Integer;\n" +
+                                                                       "import java.lang.Long;\n" +
+                                                                       "import java.lang.Short;\n" +
+                                                                       "import java.lang.Void;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
+                                                                       "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.struct.StructGenerator\")\n" +
+                                                                       "abstract class FieldsTestStruct_Jaccall_StructType extends StructType {\n" +
+                                                                       "  public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_SINT8, JNI.FFI_TYPE_SINT16, JNI.FFI_TYPE_SINT32, JNI.FFI_TYPE_SLONG, JNI.FFI_TYPE_SINT64, JNI.FFI_TYPE_FLOAT, JNI.FFI_TYPE_DOUBLE, JNI.FFI_TYPE_POINTER, JNI.FFI_TYPE_POINTER, TestStructEmbedded.FFI_TYPE, TestStructEmbedded.FFI_TYPE);\n" +
+                                                                       "\n" +
+                                                                       "  public static final int SIZE = JNI.ffi_type_struct_size(FFI_TYPE);\n" +
+                                                                       "\n" +
+                                                                       "  private static final int OFFSET_0 = 0;\n" +
+                                                                       "\n" +
+                                                                       "  private static final int OFFSET_1 = newOffset(Size.sizeof((Short) null), OFFSET_0 + (Size.sizeof((Byte) null) * 1));\n" +
+                                                                       "\n" +
+                                                                       "  private static final int OFFSET_2 = newOffset(Size.sizeof((Integer) null), OFFSET_1 + (Size.sizeof((Short) null) * 1));\n" +
+                                                                       "\n" +
+                                                                       "  private static final int OFFSET_3 = newOffset(Size.sizeof((CLong) null), OFFSET_2 + (Size.sizeof((Integer) null) * 1));\n" +
+                                                                       "\n" +
+                                                                       "  private static final int OFFSET_4 = newOffset(Size.sizeof((Long) null), OFFSET_3 + (Size.sizeof((CLong) null) * 1));\n" +
+                                                                       "\n" +
+                                                                       "  private static final int OFFSET_5 = newOffset(Size.sizeof((Float) null), OFFSET_4 + (Size.sizeof((Long) null) * 1));\n" +
+                                                                       "\n" +
+                                                                       "  private static final int OFFSET_6 = newOffset(Size.sizeof((Double) null), OFFSET_5 + (Size.sizeof((Float) null) * 1));\n" +
+                                                                       "\n" +
+                                                                       "  private static final int OFFSET_7 = newOffset(Size.sizeof((Pointer) null), OFFSET_6 + (Size.sizeof((Double) null) * 1));\n" +
+                                                                       "\n" +
+                                                                       "  private static final int OFFSET_8 = newOffset(Size.sizeof((Pointer) null), OFFSET_7 + (Size.sizeof((Pointer) null) * 1));\n" +
+                                                                       "\n" +
+                                                                       "  private static final int OFFSET_9 = newOffset((Size.sizeof((Long) null)), OFFSET_8 + (Size.sizeof((Pointer) null) * 3));\n" +
+                                                                       "\n" +
+                                                                       "  private static final int OFFSET_10 = newOffset((Size.sizeof((Long) null)), OFFSET_9 + (TestStructEmbedded.SIZE * 1));\n" +
+                                                                       "\n" +
+                                                                       "  FieldsTestStruct_Jaccall_StructType() {\n" +
+                                                                       "    super(SIZE);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final byte charField() {\n" +
+                                                                       "    return readByte(OFFSET_0);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final void charField(final byte charField) {\n" +
+                                                                       "    writeByte(OFFSET_0, charField);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final short shortField() {\n" +
+                                                                       "    return readShort(OFFSET_1);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final void shortField(final short shortField) {\n" +
+                                                                       "    writeShort(OFFSET_1, shortField);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final int intField() {\n" +
+                                                                       "    return readInteger(OFFSET_2);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final void intField(final int intField) {\n" +
+                                                                       "    writeInteger(OFFSET_2, intField);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final CLong longField() {\n" +
+                                                                       "    return readCLong(OFFSET_3);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final void longField(final CLong longField) {\n" +
+                                                                       "    writeCLong(OFFSET_3, longField);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final long longLongField() {\n" +
+                                                                       "    return readLong(OFFSET_4);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final void longLongField(final long longLongField) {\n" +
+                                                                       "    writeLong(OFFSET_4, longLongField);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final float floatField() {\n" +
+                                                                       "    return readFloat(OFFSET_5);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final void floatField(final float floatField) {\n" +
+                                                                       "    writeFloat(OFFSET_5, floatField);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final double doubleField() {\n" +
+                                                                       "    return readDouble(OFFSET_6);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final void doubleField(final double doubleField) {\n" +
+                                                                       "    writeDouble(OFFSET_6, doubleField);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final Pointer<Void> pointerField() {\n" +
+                                                                       "    return readPointer(OFFSET_7, Void.class);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final void pointerField(final Pointer<Void> pointerField) {\n" +
+                                                                       "    writePointer(OFFSET_7, pointerField);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final Pointer<Pointer> pointerArrayField() {\n" +
+                                                                       "    return readArray(OFFSET_8, Pointer.class);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final TestStructEmbedded structField() {\n" +
+                                                                       "    return readStructType(OFFSET_9, TestStructEmbedded.class);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final void structField(final TestStructEmbedded structField) {\n" +
+                                                                       "    writeStructType(OFFSET_9, structField);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final Pointer<TestStructEmbedded> structArrayField() {\n" +
+                                                                       "    return readArray(OFFSET_10, TestStructEmbedded.class);\n" +
+                                                                       "  }\n" +
+                                                                       "}"));
     }
 }

@@ -35,7 +35,6 @@ import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -477,33 +476,47 @@ public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
                                                    structTypeName)
                                               .build();
 
-        final MethodSpec read = MethodSpec.methodBuilder(fieldName)
-                                          .addModifiers(Modifier.PUBLIC,
-                                                        Modifier.FINAL)
-                                          .returns(structTypeName)
-                                          .addStatement("return readStructType(OFFSET_$L, $T.class)",
-                                                        i,
-                                                        structTypeName)
-                                          .build();
+        final List<MethodSpec> accessors = new LinkedList<>();
+        if (cardinality > 1) {
+            accessors.add(MethodSpec.methodBuilder(fieldName)
+                                    .addModifiers(Modifier.PUBLIC,
+                                                  Modifier.FINAL)
+                                    .returns(ParameterizedTypeName.get(ClassName.get(Pointer.class),
+                                                                       structTypeName))
+                                    .addStatement("return readArray(OFFSET_$L, $T.class)",
+                                                  i,
+                                                  structTypeName)
+                                    .build());
+        }
+        else {
+            final MethodSpec read = MethodSpec.methodBuilder(fieldName)
+                                              .addModifiers(Modifier.PUBLIC,
+                                                            Modifier.FINAL)
+                                              .returns(structTypeName)
+                                              .addStatement("return readStructType(OFFSET_$L, $T.class)",
+                                                            i,
+                                                            structTypeName)
+                                              .build();
 
-        final MethodSpec write = MethodSpec.methodBuilder(fieldName)
-                                           .addModifiers(Modifier.PUBLIC,
-                                                         Modifier.FINAL)
-                                           .addParameter(structTypeName,
-                                                         fieldName,
-                                                         Modifier.FINAL)
-                                           .addStatement("writeStructType(OFFSET_$L, $N)",
-                                                         i,
-                                                         fieldName)
-                                           .build();
-
+            final MethodSpec write = MethodSpec.methodBuilder(fieldName)
+                                               .addModifiers(Modifier.PUBLIC,
+                                                             Modifier.FINAL)
+                                               .addParameter(structTypeName,
+                                                             fieldName,
+                                                             Modifier.FINAL)
+                                               .addStatement("writeStructType(OFFSET_$L, $N)",
+                                                             i,
+                                                             fieldName)
+                                               .build();
+            accessors.add(read);
+            accessors.add(write);
+        }
 
         fieldDefinitions.add(new FieldDefinition(ffiTypeCode,
                                                  offsetCode,
                                                  sizeOfCode,
                                                  cardinality,
-                                                 Arrays.asList(read,
-                                                               write)));
+                                                 accessors));
     }
 
     private Object findFirstNonStructField(final DeclaredType structTypeType) {
