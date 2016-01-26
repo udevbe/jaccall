@@ -559,8 +559,56 @@ public class StructWriterTest {
 
     @Test
     public void testFloatField() {
-        //TODO
-
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.struct.TestStructFloat",
+                                                                          "package com.github.zubnix.libtest.struct;\n" +
+                                                                          "\n" +
+                                                                          "import com.github.zubnix.jaccall.CType;\n" +
+                                                                          "import com.github.zubnix.jaccall.Field;\n" +
+                                                                          "import com.github.zubnix.jaccall.Struct;\n" +
+                                                                          "\n" +
+                                                                          "import static com.github.zubnix.jaccall.CType.FLOAT;\n" +
+                                                                          "\n" +
+                                                                          "@Struct(value = {\n" +
+                                                                          "             @Field(type = FLOAT,\n" +
+                                                                          "                    name = \"field0\")})\n" +
+                                                                          "public final class TestStructFloat extends TestStructFloat_Jaccall_StructType{\n" +
+                                                                          " \n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new StructGenerator());
+        //then
+        compileTester.compilesWithoutError()
+                     .and()
+                     .generatesSources(JavaFileObjects.forSourceString("com.github.zubnix.libtest.struct.TestStructFloat_Jaccall_StructType",
+                                                                       "package com.github.zubnix.libtest.struct;\n" +
+                                                                       "\n" +
+                                                                       "import com.github.zubnix.jaccall.JNI;\n" +
+                                                                       "import com.github.zubnix.jaccall.StructType;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
+                                                                       "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.struct.StructGenerator\")\n" +
+                                                                       "abstract class TestStructFloat_Jaccall_StructType extends StructType {\n" +
+                                                                       "  public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_FLOAT);\n" +
+                                                                       "\n" +
+                                                                       "  public static final int SIZE = JNI.ffi_type_struct_size(FFI_TYPE);\n" +
+                                                                       "\n" +
+                                                                       "  private static final int OFFSET_0 = 0;\n" +
+                                                                       "\n" +
+                                                                       "  TestStructFloat_Jaccall_StructType() {\n" +
+                                                                       "    super(SIZE);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final float field0() {\n" +
+                                                                       "    return readFloat(OFFSET_0);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final void field0(final float field0) {\n" +
+                                                                       "    writeFloat(OFFSET_0, field0);\n" +
+                                                                       "  }\n" +
+                                                                       "}"));
     }
 
     @Test
