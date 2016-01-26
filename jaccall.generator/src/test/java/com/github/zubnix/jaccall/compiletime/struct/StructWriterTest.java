@@ -782,8 +782,60 @@ public class StructWriterTest {
 
     @Test
     public void testStructField() {
-        //TODO
-
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.struct.TestStructStruct",
+                                                                          "package com.github.zubnix.libtest.struct;\n" +
+                                                                          "\n" +
+                                                                          "import com.github.zubnix.jaccall.compiletime.linker.TestStructEmbedded;\n" +
+                                                                          "import com.github.zubnix.jaccall.CType;\n" +
+                                                                          "import com.github.zubnix.jaccall.Field;\n" +
+                                                                          "import com.github.zubnix.jaccall.Struct;\n" +
+                                                                          "\n" +
+                                                                          "import static com.github.zubnix.jaccall.CType.STRUCT;\n" +
+                                                                          "\n" +
+                                                                          "@Struct(value = {\n" +
+                                                                          "             @Field(type = STRUCT,\n" +
+                                                                          "                    dataType = TestStructEmbedded.class,\n" +
+                                                                          "                    name = \"field0\")})\n" +
+                                                                          "public final class TestStructStruct extends TestStructStruct_Jaccall_StructType{\n" +
+                                                                          " \n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new StructGenerator());
+        //then
+        compileTester.compilesWithoutError()
+                     .and()
+                     .generatesSources(JavaFileObjects.forSourceString("com.github.zubnix.libtest.struct.TestStructStruct_Jaccall_StructType",
+                                                                       "package com.github.zubnix.libtest.struct;\n" +
+                                                                       "\n" +
+                                                                       "import com.github.zubnix.jaccall.JNI;\n" +
+                                                                       "import com.github.zubnix.jaccall.StructType;\n" +
+                                                                       "import com.github.zubnix.jaccall.compiletime.linker.TestStructEmbedded;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
+                                                                       "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.struct.StructGenerator\")\n" +
+                                                                       "abstract class TestStructStruct_Jaccall_StructType extends StructType {\n" +
+                                                                       "  public static final long FFI_TYPE = JNI.ffi_type_struct(TestStructEmbedded.FFI_TYPE);\n" +
+                                                                       "\n" +
+                                                                       "  public static final int SIZE = JNI.ffi_type_struct_size(FFI_TYPE);\n" +
+                                                                       "\n" +
+                                                                       "  private static final int OFFSET_0 = 0;\n" +
+                                                                       "  ;\n" +
+                                                                       "\n" +
+                                                                       "  TestStructStruct_Jaccall_StructType() {\n" +
+                                                                       "    super(SIZE);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final TestStructEmbedded field0() {\n" +
+                                                                       "    return readStructType(OFFSET_0, TestStructEmbedded.class);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final void field0(final TestStructEmbedded field0) {\n" +
+                                                                       "    writeStructType(OFFSET_0, field0);\n" +
+                                                                       "  }\n" +
+                                                                       "}"));
     }
 
     @Test
