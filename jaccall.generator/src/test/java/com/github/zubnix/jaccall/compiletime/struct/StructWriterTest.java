@@ -505,8 +505,56 @@ public class StructWriterTest {
 
     @Test
     public void testUnsignedLongLongField() {
-        //TODO
-
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.struct.TestStructUnsignedLongLong",
+                                                                          "package com.github.zubnix.libtest.struct;\n" +
+                                                                          "\n" +
+                                                                          "import com.github.zubnix.jaccall.CType;\n" +
+                                                                          "import com.github.zubnix.jaccall.Field;\n" +
+                                                                          "import com.github.zubnix.jaccall.Struct;\n" +
+                                                                          "\n" +
+                                                                          "import static com.github.zubnix.jaccall.CType.UNSIGNED_LONG_LONG;\n" +
+                                                                          "\n" +
+                                                                          "@Struct(value = {\n" +
+                                                                          "             @Field(type = UNSIGNED_LONG_LONG,\n" +
+                                                                          "                    name = \"field0\")})\n" +
+                                                                          "public final class TestStructUnsignedLongLong extends TestStructUnsignedLongLong_Jaccall_StructType{\n" +
+                                                                          " \n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new StructGenerator());
+        //then
+        compileTester.compilesWithoutError()
+                     .and()
+                     .generatesSources(JavaFileObjects.forSourceString("com.github.zubnix.libtest.struct.TestStructUnsignedLongLong_Jaccall_StructType",
+                                                                       "package com.github.zubnix.libtest.struct;\n" +
+                                                                       "\n" +
+                                                                       "import com.github.zubnix.jaccall.JNI;\n" +
+                                                                       "import com.github.zubnix.jaccall.StructType;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
+                                                                       "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.struct.StructGenerator\")\n" +
+                                                                       "abstract class TestStructUnsignedLongLong_Jaccall_StructType extends StructType {\n" +
+                                                                       "  public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_UINT64);\n" +
+                                                                       "\n" +
+                                                                       "  public static final int SIZE = JNI.ffi_type_struct_size(FFI_TYPE);\n" +
+                                                                       "\n" +
+                                                                       "  private static final int OFFSET_0 = 0;\n" +
+                                                                       "\n" +
+                                                                       "  TestStructUnsignedLongLong_Jaccall_StructType() {\n" +
+                                                                       "    super(SIZE);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final long field0() {\n" +
+                                                                       "    return readLong(OFFSET_0);\n" +
+                                                                       "  }\n" +
+                                                                       "\n" +
+                                                                       "  public final void field0(final long field0) {\n" +
+                                                                       "    writeLong(OFFSET_0, field0);\n" +
+                                                                       "  }\n" +
+                                                                       "}"));
     }
 
     @Test
