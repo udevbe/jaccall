@@ -59,7 +59,7 @@ final class CheckWellFormedFunctor implements BasicAnnotationProcessor.Processin
             this.functorGenerator.getProcessingEnvironment()
                                  .getMessager()
                                  .printMessage(Diagnostic.Kind.ERROR,
-                                               "Type must may not extend other interfaces.",
+                                               "Type may not extend other interfaces.",
                                                typeElement);
         }
     }

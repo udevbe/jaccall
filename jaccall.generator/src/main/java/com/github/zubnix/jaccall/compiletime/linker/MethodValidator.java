@@ -185,7 +185,7 @@ public class MethodValidator {
         if (!kind.isPrimitive() && !kind.equals(TypeKind.VOID)) {
             this.processingEnvironment.getMessager()
                                       .printMessage(Diagnostic.Kind.ERROR,
-                                                    "Native method should have supported primitive types only.",
+                                                    "Method should have supported primitive types only.",
                                                     element);
         }
     }
@@ -195,14 +195,14 @@ public class MethodValidator {
         if (kind.equals(TypeKind.BOOLEAN)) {
             this.processingEnvironment.getMessager()
                                       .printMessage(Diagnostic.Kind.ERROR,
-                                                    "Native method should not have a primitive type 'boolean'.",
+                                                    "Method should not have a primitive type 'boolean'.",
                                                     element);
         }
 
         if (kind.equals(TypeKind.CHAR)) {
             this.processingEnvironment.getMessager()
                                       .printMessage(Diagnostic.Kind.ERROR,
-                                                    "Native method should not have a primitive type 'char'.",
+                                                    "Method should not have a primitive type 'char'.",
                                                     element);
         }
     }

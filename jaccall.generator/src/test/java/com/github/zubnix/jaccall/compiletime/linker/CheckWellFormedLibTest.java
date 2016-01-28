@@ -93,7 +93,7 @@ public class CheckWellFormedLibTest {
                                                      .processedWith(new LinkerGenerator());
         //then
         compileTester.failsToCompile()
-                     .withErrorContaining("Native method should have supported primitive types only.")
+                     .withErrorContaining("Method should have supported primitive types only.")
                      .in(fileObject);
     }
 
