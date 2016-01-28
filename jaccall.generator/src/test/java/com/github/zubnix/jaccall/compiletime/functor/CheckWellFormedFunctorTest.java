@@ -13,7 +13,7 @@ import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
 public class CheckWellFormedFunctorTest {
 
     @Test
-    public void testNotAnInterface(){
+    public void testNotAnInterface() {
         //given
         final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
                                                                           "package com.github.zubnix.libtest;\n" +
@@ -23,11 +23,11 @@ public class CheckWellFormedFunctorTest {
                                                                           "\n" +
                                                                           "@Functor\n" +
                                                                           "public abstract class Testing {\n" +
-                                                                          "    abstract long doStaticTest(long tst,\n" +
-                                                                          "                               byte field0,\n" +
-                                                                          "                               @Unsigned short field1,\n" +
-                                                                          "                               @Ptr(int.class) long field2,\n" +
-                                                                          "                               @Ptr(int.class) long field3);\n" +
+                                                                          "    abstract long $(long tst,\n" +
+                                                                          "                    byte field0,\n" +
+                                                                          "                    @Unsigned short field1,\n" +
+                                                                          "                    @Ptr(int.class) long field2,\n" +
+                                                                          "                    @Ptr(int.class) long field3);\n" +
                                                                           "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
@@ -40,7 +40,7 @@ public class CheckWellFormedFunctorTest {
     }
 
     @Test
-    public void testIllegalExtends(){
+    public void testIllegalExtends() {
         //given
         final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
                                                                           "package com.github.zubnix.libtest;\n" +
@@ -51,12 +51,11 @@ public class CheckWellFormedFunctorTest {
                                                                           "\n" +
                                                                           "@Functor\n" +
                                                                           "public interface Testing extends Observer{\n" +
-                                                                          "    long doStaticTest(" + // <----
-                                                                          "                      long tst,\n" +
-                                                                          "                      byte field0,\n" +
-                                                                          "                      @Unsigned short field1,\n" +
-                                                                          "                      @Ptr(int.class) long field2,\n" +
-                                                                          "                      @Ptr(int.class) long field3);\n" +
+                                                                          "    long $(long tst,\n" +
+                                                                          "           byte field0,\n" +
+                                                                          "           @Unsigned short field1,\n" +
+                                                                          "           @Ptr(int.class) long field2,\n" +
+                                                                          "           @Ptr(int.class) long field3);\n" +
                                                                           "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
@@ -69,7 +68,7 @@ public class CheckWellFormedFunctorTest {
     }
 
     @Test
-    public void testDoesNotHaveSingleMethod(){
+    public void testDoesNotHaveSingleMethod() {
         //given
         final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
                                                                           "package com.github.zubnix.libtest;\n" +
@@ -79,7 +78,7 @@ public class CheckWellFormedFunctorTest {
                                                                           "\n" +
                                                                           "@Functor\n" +
                                                                           "public interface Testing {\n" +
-                                                                          "    long doStaticTest(long tst,\n" +
+                                                                          "    long $(long tst,\n" +
                                                                           "                      byte field0,\n" +
                                                                           "                      @Unsigned short field1,\n" +
                                                                           "                      @Ptr(int.class) long field2,\n" +
@@ -101,6 +100,33 @@ public class CheckWellFormedFunctorTest {
     }
 
     @Test
+    public void testNotDollarAsName() {
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Functor;\n" +
+                                                                          "import com.github.zubnix.jaccall.Ptr;\n" +
+                                                                          "import com.github.zubnix.jaccall.Unsigned;\n" +
+                                                                          "\n" +
+                                                                          "@Functor\n" +
+                                                                          "public interface Testing {\n" +
+                                                                          "    long doStaticTest(long tst,\n" +
+                                                                          "                      byte field0,\n" +
+                                                                          "                      @Unsigned short field1,\n" +
+                                                                          "                      @Ptr(int.class) long field2,\n" +
+                                                                          "                      @Ptr(int.class) long field3);\n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new FunctorGenerator());
+        //then
+        compileTester.failsToCompile()
+                     .withErrorContaining("Method name must be '$'.")
+                     .in(fileObject);
+    }
+
+    @Test
     public void testNotAPrimitive() {
         //given
         final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
@@ -111,12 +137,12 @@ public class CheckWellFormedFunctorTest {
                                                                           "\n" +
                                                                           "@Functor\n" +
                                                                           "public interface Testing {\n" +
-                                                                          "    Long doStaticTest(" + // <----
-                                                                          "                      long tst,\n" +
-                                                                          "                      byte field0,\n" +
-                                                                          "                      @Unsigned short field1,\n" +
-                                                                          "                      @Ptr(int.class) long field2,\n" +
-                                                                          "                      @Ptr(int.class) long field3);\n" +
+                                                                          "    Long $(" + // <----
+                                                                          "           long tst,\n" +
+                                                                          "           byte field0,\n" +
+                                                                          "           @Unsigned short field1,\n" +
+                                                                          "           @Ptr(int.class) long field2,\n" +
+                                                                          "           @Ptr(int.class) long field3);\n" +
                                                                           "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
@@ -139,11 +165,11 @@ public class CheckWellFormedFunctorTest {
                                                                           "\n" +
                                                                           "@Functor\n" +
                                                                           "public interface Testing {\n" +
-                                                                          "    long doStaticTest(long tst,\n" +
-                                                                          "                      byte field0,\n" +
-                                                                          "                      @Unsigned short field1,\n" +
-                                                                          "                      @Ptr(int.class) int field2,\n" + // <----
-                                                                          "                      @Ptr(int.class) long field3);\n" +
+                                                                          "    long $(long tst,\n" +
+                                                                          "           byte field0,\n" +
+                                                                          "           @Unsigned short field1,\n" +
+                                                                          "           @Ptr(int.class) int field2,\n" + // <----
+                                                                          "           @Ptr(int.class) long field3);\n" +
                                                                           "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
@@ -168,11 +194,11 @@ public class CheckWellFormedFunctorTest {
                                                                           "\n" +
                                                                           "@Functor\n" +
                                                                           "public interface Testing {\n" +
-                                                                          "    long doStaticTest(long tst,\n" +
-                                                                          "                      byte field0,\n" +
-                                                                          "                      @Unsigned short field1,\n" +
-                                                                          "                      @ByVal(StructType.class) int field2,\n" + // <----
-                                                                          "                      @Ptr(int.class) long field3);\n" +
+                                                                          "    long $(long tst,\n" +
+                                                                          "           byte field0,\n" +
+                                                                          "           @Unsigned short field1,\n" +
+                                                                          "           @ByVal(StructType.class) int field2,\n" + // <----
+                                                                          "           @Ptr(int.class) long field3);\n" +
                                                                           "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
@@ -197,11 +223,11 @@ public class CheckWellFormedFunctorTest {
                                                                           "\n" +
                                                                           "@Functor\n" +
                                                                           "public interface Testing {\n" +
-                                                                          "    long doStaticTest(long tst,\n" +
-                                                                          "                      byte field0,\n" +
-                                                                          "                      @Unsigned short field1,\n" +
-                                                                          "                      @ByVal(StructType.class) @Ptr(long.class) long field2,\n" + // <----
-                                                                          "                      @Ptr(int.class) long field3);\n" +
+                                                                          "    long $(long tst,\n" +
+                                                                          "           byte field0,\n" +
+                                                                          "           @Unsigned short field1,\n" +
+                                                                          "           @ByVal(StructType.class) @Ptr(long.class) long field2,\n" + // <----
+                                                                          "           @Ptr(int.class) long field3);\n" +
                                                                           "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
@@ -226,11 +252,11 @@ public class CheckWellFormedFunctorTest {
                                                                           "\n" +
                                                                           "@Functor\n" +
                                                                           "public interface Testing {\n" +
-                                                                          "    long doStaticTest(long tst,\n" +
-                                                                          "                      byte field0,\n" +
-                                                                          "                      @Unsigned short field1,\n" +
-                                                                          "                      @ByVal(StructType.class) @Unsigned long field2,\n" + // <----
-                                                                          "                      @Ptr(int.class) long field3);\n" +
+                                                                          "    long $(long tst,\n" +
+                                                                          "           byte field0,\n" +
+                                                                          "           @Unsigned short field1,\n" +
+                                                                          "           @ByVal(StructType.class) @Unsigned long field2,\n" + // <----
+                                                                          "           @Ptr(int.class) long field3);\n" +
                                                                           "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
@@ -254,11 +280,11 @@ public class CheckWellFormedFunctorTest {
                                                                           "\n" +
                                                                           "@Functor\n" +
                                                                           "public interface Testing {\n" +
-                                                                          "    long doStaticTest(long tst,\n" +
-                                                                          "                      byte field0,\n" +
-                                                                          "                      @Unsigned short field1,\n" +
-                                                                          "                      @Lng int field2,\n" + // <----
-                                                                          "                      @Ptr(int.class) long field3);\n" +
+                                                                          "    long $(long tst,\n" +
+                                                                          "           byte field0,\n" +
+                                                                          "           @Unsigned short field1,\n" +
+                                                                          "           @Lng int field2,\n" + // <----
+                                                                          "           @Ptr(int.class) long field3);\n" +
                                                                           "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
@@ -282,11 +308,11 @@ public class CheckWellFormedFunctorTest {
                                                                           "\n" +
                                                                           "@Functor\n" +
                                                                           "public interface Testing {\n" +
-                                                                          "    long doStaticTest(long tst,\n" +
-                                                                          "                      byte field0,\n" +
-                                                                          "                      @Unsigned short field1,\n" +
-                                                                          "                      @Lng @Ptr(long.class) long field2,\n" + // <----
-                                                                          "                      @Ptr(int.class) long field3);\n" +
+                                                                          "    long $(long tst,\n" +
+                                                                          "           byte field0,\n" +
+                                                                          "           @Unsigned short field1,\n" +
+                                                                          "           @Lng @Ptr(long.class) long field2,\n" + // <----
+                                                                          "           @Ptr(int.class) long field3);\n" +
                                                                           "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
@@ -312,11 +338,11 @@ public class CheckWellFormedFunctorTest {
                                                                           "\n" +
                                                                           "@Functor\n" +
                                                                           "public interface Testing {\n" +
-                                                                          "    long doStaticTest(long tst,\n" +
-                                                                          "                      byte field0,\n" +
-                                                                          "                      @Unsigned short field1,\n" +
-                                                                          "                      @Lng @ByVal(StructType.class) long field2,\n" + // <----
-                                                                          "                      @Ptr(int.class) long field3);\n" +
+                                                                          "    long $(long tst,\n" +
+                                                                          "           byte field0,\n" +
+                                                                          "           @Unsigned short field1,\n" +
+                                                                          "           @Lng @ByVal(StructType.class) long field2,\n" + // <----
+                                                                          "           @Ptr(int.class) long field3);\n" +
                                                                           "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
@@ -339,11 +365,11 @@ public class CheckWellFormedFunctorTest {
                                                                           "\n" +
                                                                           "@Functor\n" +
                                                                           "public interface Testing {\n" +
-                                                                          "    long doStaticTest(long tst,\n" +
-                                                                          "                      byte field0,\n" +
-                                                                          "                      @Unsigned short field1,\n" +
-                                                                          "                      @Unsigned float field2,\n" + // <----
-                                                                          "                      @Ptr(int.class) long field3);\n" +
+                                                                          "    long $(long tst,\n" +
+                                                                          "           byte field0,\n" +
+                                                                          "           @Unsigned short field1,\n" +
+                                                                          "           @Unsigned float field2,\n" + // <----
+                                                                          "           @Ptr(int.class) long field3);\n" +
                                                                           "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
@@ -366,11 +392,11 @@ public class CheckWellFormedFunctorTest {
                                                                           "\n" +
                                                                           "@Functor\n" +
                                                                           "public interface Testing {\n" +
-                                                                          "    long doStaticTest(long tst,\n" +
-                                                                          "                      byte field0,\n" +
-                                                                          "                      @Unsigned short field1,\n" +
-                                                                          "                      @Unsigned double field2,\n" +// <----
-                                                                          "                      @Ptr(int.class) long field3);\n" +
+                                                                          "    long $(long tst,\n" +
+                                                                          "           byte field0,\n" +
+                                                                          "           @Unsigned short field1,\n" +
+                                                                          "           @Unsigned double field2,\n" +// <----
+                                                                          "           @Ptr(int.class) long field3);\n" +
                                                                           "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())
@@ -393,11 +419,11 @@ public class CheckWellFormedFunctorTest {
                                                                           "\n" +
                                                                           "@Functor\n" +
                                                                           "public interface Testing {\n" +
-                                                                          "    long doStaticTest(long tst,\n" +
-                                                                          "                      byte field0,\n" +
-                                                                          "                      @Unsigned short field1,\n" +
-                                                                          "                      @Unsigned @Ptr(long.class) long field2,\n" + // <----
-                                                                          "                      @Ptr(int.class) long field3);\n" +
+                                                                          "    long $(long tst,\n" +
+                                                                          "           byte field0,\n" +
+                                                                          "           @Unsigned short field1,\n" +
+                                                                          "           @Unsigned @Ptr(long.class) long field2,\n" + // <----
+                                                                          "           @Ptr(int.class) long field3);\n" +
                                                                           "}");
         //when
         final CompileTester compileTester = assert_().about(javaSource())

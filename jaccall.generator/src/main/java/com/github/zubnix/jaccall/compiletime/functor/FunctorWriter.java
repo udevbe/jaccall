@@ -48,8 +48,20 @@ final class FunctorWriter implements BasicAnnotationProcessor.ProcessingStep {
     }
 
     private void writeFunctorImplementation(final ExecutableElement executableElement) {
-        //write Factory class
-        //write C functor
-        //write Java functor
+        writeFactory(executableElement);
+        writeCFunctor(executableElement);
+        writeJavaFunctor(executableElement);
+    }
+
+    private void writeJavaFunctor(final ExecutableElement executableElement) {
+
+    }
+
+    private void writeCFunctor(final ExecutableElement executableElement) {
+
+    }
+
+    private void writeFactory(final ExecutableElement executableElement) {
+
     }
 }

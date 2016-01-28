@@ -40,6 +40,7 @@ final class CheckWellFormedFunctor implements BasicAnnotationProcessor.Processin
                 final MethodValidator methodValidator = new MethodValidator(this.functorGenerator.getProcessingEnvironment());
 
                 for (final ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
+                    hasDollarAsName(executableElement);
                     methodValidator.validate(executableElement);
                 }
             }
@@ -50,6 +51,18 @@ final class CheckWellFormedFunctor implements BasicAnnotationProcessor.Processin
                                                    "Could not resolve all required compile time type information.",
                                                    typeElement);
             }
+        }
+    }
+
+    private void hasDollarAsName(final ExecutableElement executableElement) {
+        if (!executableElement.getSimpleName()
+                              .toString()
+                              .equals("$")) {
+            this.functorGenerator.getProcessingEnvironment()
+                                 .getMessager()
+                                 .printMessage(Diagnostic.Kind.ERROR,
+                                               "Method name must be '$'.",
+                                               executableElement);
         }
     }
 
