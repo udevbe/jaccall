@@ -16,6 +16,7 @@ public final class FunctorGenerator extends BasicAnnotationProcessor {
 
     @Override
     protected Iterable<? extends ProcessingStep> initSteps() {
-        return Arrays.asList(new CheckWellFormedFunctor(this));
+        return Arrays.asList(new CheckWellFormedFunctor(this),
+                             new FunctorWriter(this));
     }
 }

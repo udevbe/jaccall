@@ -2,7 +2,7 @@ package com.github.zubnix.jaccall.compiletime.functor;
 
 
 import com.github.zubnix.jaccall.Functor;
-import com.github.zubnix.jaccall.compiletime.linker.MethodValidator;
+import com.github.zubnix.jaccall.compiletime.MethodValidator;
 import com.google.auto.common.BasicAnnotationProcessor;
 import com.google.auto.common.SuperficialValidation;
 import com.google.common.collect.SetMultimap;
