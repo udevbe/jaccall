@@ -6,7 +6,7 @@ import com.squareup.javapoet.MethodSpec;
 
 import java.util.List;
 
-public class FieldDefinition {
+class FieldDefinition {
 
 
     private final CodeBlock        ffiTypeCode;
@@ -15,7 +15,7 @@ public class FieldDefinition {
     private final int              cardinality;
     private final List<MethodSpec> accessorsCode;
 
-    public FieldDefinition(final CodeBlock ffiTypeCode,
+    FieldDefinition(final CodeBlock ffiTypeCode,
                            final CodeBlock offsetCode,
                            final CodeBlock sizeOfCode,
                            final int cardinality,

@@ -6,7 +6,7 @@ import com.github.zubnix.jaccall.PointerFunc;
 import javax.annotation.Generated;
 import javax.annotation.Nonnull;
 
-@Generated("com.github.zubnix.jaccall.compiletime.funcptr.FunctionPointerGenerator")
+@Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
 public abstract class PointerUnionFunc2 extends PointerFunc<PointerUnionFunc2> implements Testing.UnionFunc2 {
 
     static final long FFI_CIF = JNI.ffi_callInterface(JNI.FFI_TYPE_POINTER,

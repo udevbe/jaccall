@@ -41,13 +41,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
+final class StructWriter implements BasicAnnotationProcessor.ProcessingStep {
 
     private static final String STRUCT = Struct.class.getSimpleName();
 
     private final StructGenerator structGenerator;
 
-    public StructWriter(final StructGenerator structGenerator) {
+    StructWriter(final StructGenerator structGenerator) {
         this.structGenerator = structGenerator;
     }
 

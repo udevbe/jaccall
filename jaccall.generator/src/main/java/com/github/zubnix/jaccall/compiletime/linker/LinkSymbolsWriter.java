@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public final class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingStep {
+final class LinkSymbolsWriter implements BasicAnnotationProcessor.ProcessingStep {
 
     private static final String UNSIGNED = Unsigned.class.getSimpleName();
     private static final String LNG      = Lng.class.getSimpleName();

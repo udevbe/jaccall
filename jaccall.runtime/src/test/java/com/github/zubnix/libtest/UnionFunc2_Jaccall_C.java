@@ -5,7 +5,7 @@ import com.github.zubnix.jaccall.JNI;
 
 import javax.annotation.Generated;
 
-@Generated("com.github.zubnix.jaccall.compiletime.funcptr.FunctionPointerGenerator")
+@Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
 final class UnionFunc2_Jaccall_C extends PointerUnionFunc2 {
 
     static {

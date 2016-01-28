@@ -4,7 +4,7 @@ import com.github.zubnix.jaccall.JNI;
 
 import javax.annotation.Generated;
 
-@Generated("com.github.zubnix.jaccall.compiletime.funcptr.FunctionPointerGenerator")
+@Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
 final class LongFunc_Jaccall_J extends PointerLongFunc {
 
     private static final long JNI_METHOD_ID = JNI.GetMethodID(Testing.LongFunc.class,

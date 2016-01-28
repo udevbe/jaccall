@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public final class CheckWellFormedStruct implements BasicAnnotationProcessor.ProcessingStep {
+final class CheckWellFormedStruct implements BasicAnnotationProcessor.ProcessingStep {
 
     private final StructGenerator structGenerator;
 

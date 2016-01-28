@@ -7,7 +7,7 @@ import com.github.zubnix.jaccall.PointerFunc;
 import javax.annotation.Generated;
 import javax.annotation.Nonnull;
 
-@Generated("com.github.zubnix.jaccall.compiletime.funcptr.FunctionPointerGenerator")
+@Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
 public abstract class PointerCharFunc extends PointerFunc<PointerCharFunc> implements Testing.CharFunc {
 
     static final long FFI_CIF = JNI.ffi_callInterface(JNI.FFI_TYPE_SINT8,
