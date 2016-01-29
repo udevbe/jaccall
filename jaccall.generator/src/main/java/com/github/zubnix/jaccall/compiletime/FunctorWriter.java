@@ -1,10 +1,14 @@
 package com.github.zubnix.jaccall.compiletime;
 
 
+import com.github.zubnix.jaccall.JNI;
 import com.github.zubnix.jaccall.PointerFunc;
 import com.google.auto.common.SuperficialValidation;
 import com.squareup.javapoet.AnnotationSpec;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
@@ -50,27 +54,42 @@ final class FunctorWriter {
         }
     }
 
-    private void writeFunctorImplementation(final TypeElement functorElment,
+    private void writeFunctorImplementation(final TypeElement typeElement,
                                             final ExecutableElement executableElement) {
-        writeFactory(functorElment,
+
+        final String factoryName     = "Pointer" + typeElement.getSimpleName();
+        final String cFunctorName    = typeElement.getSimpleName() + "_Jaccall_C";
+        final String javaFunctorName = typeElement.getSimpleName() + "_Jaccall_J";
+
+        writeFactory(factoryName,
+                     cFunctorName,
+                     javaFunctorName,
+                     typeElement,
                      executableElement);
-        writeCFunctor(functorElment,
+        writeCFunctor(cFunctorName,
+                      typeElement,
                       executableElement);
-        writeJavaFunctor(functorElment,
+        writeJavaFunctor(javaFunctorName,
+                         typeElement,
                          executableElement);
     }
 
-    private void writeJavaFunctor(final TypeElement functorElement,
+    private void writeJavaFunctor(final String javaFunctorName,
+                                  final TypeElement functorElement,
                                   final ExecutableElement executableElement) {
 
     }
 
-    private void writeCFunctor(final TypeElement functorElement,
+    private void writeCFunctor(final String cFunctorName,
+                               final TypeElement functorElement,
                                final ExecutableElement executableElement) {
 
     }
 
-    private void writeFactory(final TypeElement element,
+    private void writeFactory(final String factoryName,
+                              final String cFunctorName,
+                              final String javaFunctorName,
+                              final TypeElement element,
                               final ExecutableElement executableElement) {
 
         final AnnotationSpec annotationSpec = AnnotationSpec.builder(Generated.class)
@@ -79,18 +98,68 @@ final class FunctorWriter {
                                                                        JaccallGenerator.class.getName())
                                                             .build();
 
-        final TypeSpec typeSpec = TypeSpec.classBuilder("Pointer" + element.getSimpleName())
-                                          .addAnnotation(annotationSpec)
-                                          .addModifiers(Modifier.PUBLIC)
-                                          .addModifiers(Modifier.FINAL)
-                                          .superclass(PointerFunc.class)
-                .addSuperinterface(TypeName.get(element.asType()))
-                        //TODO   .addMethod(constructor)
-                .build();
-
         for (final PackageElement packageElement : ElementFilter.packagesIn(Collections.singletonList(element.getEnclosingElement()))) {
-            final JavaFile javaFile = JavaFile.builder(packageElement.getQualifiedName()
-                                                                     .toString(),
+
+            final String packageName = packageElement.getQualifiedName()
+                                                     .toString();
+
+            final FieldSpec ffiCif = FieldSpec.builder(long.class,
+                                                       "FFI_CIF",
+                                                       Modifier.STATIC,
+                                                       Modifier.FINAL)
+                                              .initializer("$T.ffi_callInterface($L)",
+                                                           JNI.class,
+                                                           new MethodParser(this.messager).parseFfiSignature(executableElement))
+                                              .build();
+
+            final MethodSpec constructor = MethodSpec.constructorBuilder()
+                                                     .addParameter(long.class,
+                                                                   "address")
+                                                     .addStatement("super($T.class, address)",
+                                                                   ClassName.get(packageName,
+                                                                                 factoryName))
+                                                     .build();
+
+            final MethodSpec wrapFunc = MethodSpec.methodBuilder("wrapFunc")
+                                                  .addModifiers(Modifier.PUBLIC,
+                                                                Modifier.STATIC)
+                                                  .addParameter(long.class,
+                                                                "address")
+                                                  .addStatement("return new $T(address)",
+                                                                ClassName.get(packageName,
+                                                                              cFunctorName))
+                                                  .build();
+
+            final MethodSpec nref = MethodSpec.methodBuilder("nref")
+                                              .addModifiers(Modifier.PUBLIC,
+                                                            Modifier.STATIC)
+                                              .addParameter(ClassName.get(element),
+                                                            "function")
+                                              .beginControlFlow("if(function instanceof $T)",
+                                                                ClassName.get(packageName,
+                                                                              factoryName))
+                                              .addStatement("return ($T)function",
+                                                            ClassName.get(packageName,
+                                                                          factoryName))
+                                              .endControlFlow()
+                                              .addStatement("new $T(function)",
+                                                            ClassName.get(packageName,
+                                                                          javaFunctorName))
+                                              .build();
+
+            final TypeSpec typeSpec = TypeSpec.classBuilder(factoryName)
+                                              .addAnnotation(annotationSpec)
+                                              .addModifiers(Modifier.PUBLIC,
+                                                            Modifier.ABSTRACT)
+                                              .superclass(PointerFunc.class)
+                                              .addSuperinterface(TypeName.get(element.asType()))
+                                              .addField(ffiCif)
+                                              .addMethod(constructor)
+                                              .addMethod(wrapFunc)
+                                              .addMethod(nref)
+                                              .build();
+
+            final JavaFile javaFile = JavaFile.builder(packageName,
                                                        typeSpec)
                                               .skipJavaLangImports(true)
                                               .build();
