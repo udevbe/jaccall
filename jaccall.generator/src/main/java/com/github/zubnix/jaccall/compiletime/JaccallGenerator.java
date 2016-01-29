@@ -14,6 +14,7 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Elements;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,6 +23,7 @@ public class JaccallGenerator extends AbstractProcessor {
 
     private Messager messager;
     private Filer    filer;
+    private Elements elementUtils;
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
@@ -42,6 +44,7 @@ public class JaccallGenerator extends AbstractProcessor {
     @Override
     public synchronized void init(final ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
+        this.elementUtils = processingEnv.getElementUtils();
         this.messager = processingEnv.getMessager();
         this.filer = processingEnv.getFiler();
     }
@@ -79,6 +82,7 @@ public class JaccallGenerator extends AbstractProcessor {
 
         new CheckWellFormedFunctor(this.messager).process(typeElements);
         new FunctorWriter(this.messager,
-                          this.filer).process(typeElements);
+                          this.filer,
+                          this.elementUtils).process(typeElements);
     }
 }
