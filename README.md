@@ -178,7 +178,7 @@ The generated linker data for this mapping:
 `SomeHeader_Jaccall_LinkSymbols.java`
 ```Java
 ...
-@Generated("com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator")
+@Generated("com.github.zubnix.jaccall.compiletime.LinkerGenerator")
 public final class SomeHeader_Jaccall_LinkSymbols extends LinkSymbols {
     public SomeHeader_Jaccall_LinkSymbols() {
         super(new String[]{"do_something"},

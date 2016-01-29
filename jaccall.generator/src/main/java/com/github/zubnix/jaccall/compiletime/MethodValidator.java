@@ -6,7 +6,7 @@ import com.github.zubnix.jaccall.Lng;
 import com.github.zubnix.jaccall.Ptr;
 import com.github.zubnix.jaccall.Unsigned;
 
-import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.Messager;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
@@ -17,16 +17,10 @@ import javax.tools.Diagnostic;
 
 public class MethodValidator {
 
-    private final ProcessingEnvironment processingEnvironment;
+    private final Messager messager;
 
-    private boolean inError;
-
-    public MethodValidator(final ProcessingEnvironment processingEnvironment) {
-        this.processingEnvironment = processingEnvironment;
-    }
-
-    public boolean isInError() {
-        return this.inError;
+    public MethodValidator(final Messager messager) {
+        this.messager = messager;
     }
 
     public void validate(final ExecutableElement executableElement) {
@@ -92,11 +86,9 @@ public class MethodValidator {
                                final String charSequence) {
         if (typeMirror.getKind()
                       .equals(aDouble)) {
-            this.processingEnvironment.getMessager()
-                                      .printMessage(Diagnostic.Kind.ERROR,
-                                                    charSequence,
-                                                    element);
-            this.inError = true;
+            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                       charSequence,
+                                       element);
         }
     }
 
@@ -117,11 +109,9 @@ public class MethodValidator {
     private void isNotByVal(final Element element,
                             final String charSequence) {
         if (element.getAnnotation(ByVal.class) != null) {
-            this.processingEnvironment.getMessager()
-                                      .printMessage(Diagnostic.Kind.ERROR,
-                                                    charSequence,
-                                                    element);
-            this.inError = true;
+            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                       charSequence,
+                                       element);
         }
     }
 
@@ -139,22 +129,18 @@ public class MethodValidator {
 
     private void isNotUnsigned(final Element element) {
         if (element.getAnnotation(Unsigned.class) != null) {
-            this.processingEnvironment.getMessager()
-                                      .printMessage(Diagnostic.Kind.ERROR,
-                                                    "@ByVal annotation can not be placed in conjunction with @Unsigned annotation.",
-                                                    element);
-            this.inError = true;
+            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                       "@ByVal annotation can not be placed in conjunction with @Unsigned annotation.",
+                                       element);
         }
     }
 
     private void isNotPtr(final Element element,
                           final String charSequence) {
         if (element.getAnnotation(Ptr.class) != null) {
-            this.processingEnvironment.getMessager()
-                                      .printMessage(Diagnostic.Kind.ERROR,
-                                                    charSequence,
-                                                    element);
-            this.inError = true;
+            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                       charSequence,
+                                       element);
         }
     }
 
@@ -172,11 +158,9 @@ public class MethodValidator {
                         final String charSequence) {
         if (!typeMirror.getKind()
                        .equals(TypeKind.LONG)) {
-            this.processingEnvironment.getMessager()
-                                      .printMessage(Diagnostic.Kind.ERROR,
-                                                    charSequence,
-                                                    element);
-            this.inError = true;
+            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                       charSequence,
+                                       element);
         }
     }
 
@@ -193,30 +177,24 @@ public class MethodValidator {
     private void isPrimitive(final Element element,
                              final TypeKind kind) {
         if (!kind.isPrimitive() && !kind.equals(TypeKind.VOID)) {
-            this.processingEnvironment.getMessager()
-                                      .printMessage(Diagnostic.Kind.ERROR,
-                                                    "Method should have supported primitive types only.",
-                                                    element);
-            this.inError = true;
+            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                       "Method should have supported primitive types only.",
+                                       element);
         }
     }
 
     private void isAllowedPrimitive(final Element element,
                                     final TypeKind kind) {
         if (kind.equals(TypeKind.BOOLEAN)) {
-            this.processingEnvironment.getMessager()
-                                      .printMessage(Diagnostic.Kind.ERROR,
-                                                    "Method should not have a primitive type 'boolean'.",
-                                                    element);
-            this.inError = true;
+            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                       "Method should not have a primitive type 'boolean'.",
+                                       element);
         }
 
         if (kind.equals(TypeKind.CHAR)) {
-            this.processingEnvironment.getMessager()
-                                      .printMessage(Diagnostic.Kind.ERROR,
-                                                    "Method should not have a primitive type 'char'.",
-                                                    element);
-            this.inError = true;
+            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                       "Method should not have a primitive type 'char'.",
+                                       element);
         }
     }
 }

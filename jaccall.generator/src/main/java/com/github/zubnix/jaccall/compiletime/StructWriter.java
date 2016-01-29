@@ -1,4 +1,4 @@
-package com.github.zubnix.jaccall.compiletime.struct;
+package com.github.zubnix.jaccall.compiletime;
 
 import com.github.zubnix.jaccall.CLong;
 import com.github.zubnix.jaccall.CType;
@@ -19,6 +19,8 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import javax.annotation.Generated;
+import javax.annotation.processing.Filer;
+import javax.annotation.processing.Messager;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ExecutableElement;
@@ -40,11 +42,14 @@ import java.util.Set;
 final class StructWriter {
 
     private static final String STRUCT = Struct.class.getSimpleName();
+    private final Messager messager;
+    private final Filer    filer;
 
-    private final StructGenerator structGenerator;
 
-    StructWriter(final StructGenerator structGenerator) {
-        this.structGenerator = structGenerator;
+    StructWriter(final Messager messager,
+                 final Filer filer) {
+        this.messager = messager;
+        this.filer = filer;
     }
 
     public void process(final Set<? extends TypeElement> typeElements) {
@@ -142,7 +147,7 @@ final class StructWriter {
         final AnnotationSpec annotationSpec = AnnotationSpec.builder(Generated.class)
                                                             .addMember("value",
                                                                        "$S",
-                                                                       StructGenerator.class.getName())
+                                                                       JaccallGenerator.class.getName())
                                                             .build();
 
         final TypeSpec typeSpec = TypeSpec.classBuilder(element.getSimpleName() + "_Jaccall_StructType")
@@ -163,15 +168,12 @@ final class StructWriter {
                                                        typeSpec)
                                               .build();
             try {
-                javaFile.writeTo(this.structGenerator.getProcessingEnvironment()
-                                                     .getFiler());
+                javaFile.writeTo(this.filer);
             }
             catch (final IOException e) {
-                this.structGenerator.getProcessingEnvironment()
-                                    .getMessager()
-                                    .printMessage(Diagnostic.Kind.ERROR,
-                                                  "Could not write struct type source file: \n" + javaFile.toString(),
-                                                  element);
+                this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                           "Could not write struct type source file: \n" + javaFile.toString(),
+                                           element);
                 e.printStackTrace();
             }
         }
@@ -207,11 +209,9 @@ final class StructWriter {
                     cardinality = (Integer) fieldAttribute.getValue()
                                                           .getValue();
                     if (cardinality < 1) {
-                        this.structGenerator.getProcessingEnvironment()
-                                            .getMessager()
-                                            .printMessage(Diagnostic.Kind.ERROR,
-                                                          "Cardinality of struct field must be at least 1.",
-                                                          fieldAttribute.getKey());
+                        this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                                   "Cardinality of struct field must be at least 1.",
+                                                   fieldAttribute.getKey());
                     }
                 }
                 else if (fieldAttribute.getKey()
@@ -221,11 +221,9 @@ final class StructWriter {
                     pointerDepth = (Integer) fieldAttribute.getValue()
                                                            .getValue();
                     if (pointerDepth < 0) {
-                        this.structGenerator.getProcessingEnvironment()
-                                            .getMessager()
-                                            .printMessage(Diagnostic.Kind.ERROR,
-                                                          "Pointer depth can not be negative.",
-                                                          fieldAttribute.getKey());
+                        this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                                   "Pointer depth can not be negative.",
+                                                   fieldAttribute.getKey());
                     }
                 }
                 else if (fieldAttribute.getKey()
@@ -426,11 +424,9 @@ final class StructWriter {
             }
             case STRUCT: {
                 if (dataType == null) {
-                    this.structGenerator.getProcessingEnvironment()
-                                        .getMessager()
-                                        .printMessage(Diagnostic.Kind.ERROR,
-                                                      "Data type of struct must be specified.",
-                                                      cType);
+                    this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                               "Data type of struct must be specified.",
+                                               cType);
                     return;
                 }
 
@@ -439,11 +435,9 @@ final class StructWriter {
                                   .getSimpleName()
                                   .toString()
                                   .equals("StructType")) {
-                    this.structGenerator.getProcessingEnvironment()
-                                        .getMessager()
-                                        .printMessage(Diagnostic.Kind.ERROR,
-                                                      "Declared struct type must be a subclass of 'com.github.zubnix.jaccall.StructType'.",
-                                                      cType);
+                    this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                               "Declared struct type must be a subclass of 'com.github.zubnix.jaccall.StructType'.",
+                                               cType);
                     return;
                 }
 

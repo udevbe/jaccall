@@ -1,6 +1,7 @@
 package com.github.zubnix.jaccall.compiletime.functor;
 
 
+import com.github.zubnix.jaccall.compiletime.JaccallGenerator;
 import com.google.testing.compile.CompileTester;
 import com.google.testing.compile.JavaFileObjects;
 import org.junit.Test;
@@ -32,7 +33,7 @@ public class CheckWellFormedFunctorTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new FunctorGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.failsToCompile()
                      .withErrorContaining("Type must be an interface.")
@@ -60,7 +61,7 @@ public class CheckWellFormedFunctorTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new FunctorGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.failsToCompile()
                      .withErrorContaining("Type may not extend other interfaces.")
@@ -92,7 +93,7 @@ public class CheckWellFormedFunctorTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new FunctorGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.failsToCompile()
                      .withErrorContaining("Type must have exactly one method.")
@@ -119,7 +120,7 @@ public class CheckWellFormedFunctorTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new FunctorGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.failsToCompile()
                      .withErrorContaining("Method name must be '$'.")
@@ -147,7 +148,7 @@ public class CheckWellFormedFunctorTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new FunctorGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.failsToCompile()
                      .withErrorContaining("Method should have supported primitive types only.")
@@ -174,7 +175,7 @@ public class CheckWellFormedFunctorTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new FunctorGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.failsToCompile()
                      .withErrorContaining("@Ptr annotation can only be placed on primitive type 'long'.")
@@ -203,7 +204,7 @@ public class CheckWellFormedFunctorTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new FunctorGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.failsToCompile()
                      .withErrorContaining("@ByVal annotation can only be placed on primitive type 'long'.")
@@ -232,7 +233,7 @@ public class CheckWellFormedFunctorTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new FunctorGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.failsToCompile()
                      .withErrorContaining("@ByVal annotation can not be placed in conjunction with @Ptr annotation.")
@@ -261,7 +262,7 @@ public class CheckWellFormedFunctorTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new FunctorGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.failsToCompile()
                      .withErrorContaining("@ByVal annotation can not be placed in conjunction with @Unsigned annotation.")
@@ -289,7 +290,7 @@ public class CheckWellFormedFunctorTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new FunctorGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.failsToCompile()
                      .withErrorContaining("@Lng annotation can only be placed on primitive type 'long'.")
@@ -317,7 +318,7 @@ public class CheckWellFormedFunctorTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new FunctorGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.failsToCompile()
                      .withErrorContaining("@Lng annotation can not be placed in conjunction with @Ptr annotation.")
@@ -347,7 +348,7 @@ public class CheckWellFormedFunctorTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new FunctorGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.failsToCompile()
                      .withErrorContaining("@Lng annotation can not be placed in conjunction with @ByVal annotation.")
@@ -374,7 +375,7 @@ public class CheckWellFormedFunctorTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new FunctorGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.failsToCompile()
                      .withErrorContaining("@Unsigned annotation can not be placed on primitive type 'float'.")
@@ -401,7 +402,7 @@ public class CheckWellFormedFunctorTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new FunctorGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.failsToCompile()
                      .withErrorContaining("@Unsigned annotation can not be placed on primitive type 'double'.")
@@ -428,7 +429,7 @@ public class CheckWellFormedFunctorTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new FunctorGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.failsToCompile()
                      .withErrorContaining("@Unsigned annotation can not be placed in conjunction with @Ptr annotation.")

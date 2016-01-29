@@ -1,7 +1,8 @@
-package com.github.zubnix.jaccall.compiletime.struct;
+package com.github.zubnix.jaccall.compiletime;
 
 import com.github.zubnix.jaccall.Struct;
 
+import javax.annotation.processing.Messager;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
@@ -16,7 +17,6 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -24,17 +24,11 @@ import java.util.Set;
 
 final class CheckWellFormedStruct {
 
-    private final StructGenerator structGenerator;
+    private final Messager messager;
 
-    private boolean inError;
+    CheckWellFormedStruct(final Messager messager) {
 
-    CheckWellFormedStruct(final StructGenerator structGenerator) {
-
-        this.structGenerator = structGenerator;
-    }
-
-    public boolean isInError() {
-        return this.inError;
+        this.messager = messager;
     }
 
     public void process(final Set<? extends TypeElement> typeElements) {
@@ -49,7 +43,7 @@ final class CheckWellFormedStruct {
             hasDefaultConstructor(typeElement);
             hasNonEmptyStructAnnotation(typeElement);
             doesNotHaveStaticSIZEField(typeElement);
-            //extendsGeneratedStructType(typeElement);
+            extendsGeneratedStructType(typeElement);
             doesNotHaveSameNameFields(typeElement);
         }
     }
@@ -81,12 +75,9 @@ final class CheckWellFormedStruct {
                                     final String fieldName = (String) fieldValue.getValue()
                                                                                 .getValue();
                                     if (fieldNames.contains(fieldName)) {
-                                        this.structGenerator.getProcessingEnvironment()
-                                                            .getMessager()
-                                                            .printMessage(Diagnostic.Kind.ERROR,
-                                                                          "@Struct annotation has duplicated field name '" + fieldName + "'.",
-                                                                          typeElement);
-                                        this.inError = true;
+                                        this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                                                   "@Struct annotation has duplicated field name '" + fieldName + "'.",
+                                                                   typeElement);
                                     }
                                     else {
                                         fieldNames.add(fieldName);
@@ -126,33 +117,20 @@ final class CheckWellFormedStruct {
         final Element      superTypeElement = declaredType.asElement();
         final String superTypeName = superTypeElement.getSimpleName()
                                                      .toString();
-        String                    superTypePackage = "";
-        final Set<PackageElement> packageElements  = ElementFilter.packagesIn(Collections.singleton(superTypeElement.getEnclosingElement()));
 
-        for (final PackageElement superPackageElement : packageElements) {
-            superTypePackage = superPackageElement.getQualifiedName()
-                                                  .toString();
-        }
-
-        if (!superTypeName.equals(expectedSuperTypeName) || !superTypePackage.equals(expectedPackage)) {
-            this.structGenerator.getProcessingEnvironment()
-                                .getMessager()
-                                .printMessage(Diagnostic.Kind.ERROR,
-                                              "@Struct annotation should be placed on type that extends '" + expectedSuperTypeName + "' from package '" + expectedPackage + "'",
-                                              typeElement);
-            this.inError = true;
+        if (!superTypeName.equals(expectedSuperTypeName)) {
+            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                       "@Struct annotation should be placed on type that extends '" + expectedSuperTypeName + "' from the same package'",
+                                       typeElement);
         }
     }
 
     private void isTopLevel(final TypeElement typeElement) {
         if (typeElement.getNestingKind()
                        .isNested()) {
-            this.structGenerator.getProcessingEnvironment()
-                                .getMessager()
-                                .printMessage(Diagnostic.Kind.ERROR,
-                                              "@Struct annotation should be placed on top level class types only.",
-                                              typeElement);
-            this.inError = true;
+            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                       "@Struct annotation should be placed on top level class types only.",
+                                       typeElement);
         }
     }
 
@@ -162,12 +140,9 @@ final class CheckWellFormedStruct {
                                .contains(Modifier.STATIC) && variableElement.getSimpleName()
                                                                             .toString()
                                                                             .equals("SIZE")) {
-                this.structGenerator.getProcessingEnvironment()
-                                    .getMessager()
-                                    .printMessage(Diagnostic.Kind.ERROR,
-                                                  "@Struct type may not contain a static field with name SIZE.",
-                                                  typeElement);
-                this.inError = true;
+                this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                           "@Struct type may not contain a static field with name SIZE.",
+                                           typeElement);
             }
         }
     }
@@ -188,12 +163,9 @@ final class CheckWellFormedStruct {
                         final List<? extends AnnotationValue> values = (List<? extends AnnotationValue>) entry.getValue()
                                                                                                               .getValue();
                         if (values.isEmpty()) {
-                            this.structGenerator.getProcessingEnvironment()
-                                                .getMessager()
-                                                .printMessage(Diagnostic.Kind.ERROR,
-                                                              "@Struct annotation must have at least one field.",
-                                                              typeElement);
-                            this.inError = true;
+                            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                                       "@Struct annotation must have at least one field.",
+                                                       typeElement);
                         }
                     }
                 }
@@ -204,12 +176,9 @@ final class CheckWellFormedStruct {
     private void isNotAbstract(final TypeElement typeElement) {
         if (typeElement.getModifiers()
                        .contains(Modifier.ABSTRACT)) {
-            this.structGenerator.getProcessingEnvironment()
-                                .getMessager()
-                                .printMessage(Diagnostic.Kind.ERROR,
-                                              "@Struct annotation can not be placed on an abstract type.",
-                                              typeElement);
-            this.inError = true;
+            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                       "@Struct annotation can not be placed on an abstract type.",
+                                       typeElement);
         }
     }
 
@@ -230,47 +199,35 @@ final class CheckWellFormedStruct {
             }
         }
 
-        this.structGenerator.getProcessingEnvironment()
-                            .getMessager()
-                            .printMessage(Diagnostic.Kind.ERROR,
-                                          "@Struct annotated type must contain a public no-arg constructor.",
-                                          typeElement);
-        this.inError = true;
+        this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                   "@Struct annotated type must contain a public no-arg constructor.",
+                                   typeElement);
     }
 
     private void isFinal(final TypeElement typeElement) {
         if (!typeElement.getModifiers()
                         .contains(Modifier.FINAL)) {
-            this.structGenerator.getProcessingEnvironment()
-                                .getMessager()
-                                .printMessage(Diagnostic.Kind.ERROR,
-                                              "@Struct annotation must be placed on a final type.",
-                                              typeElement);
-            this.inError = true;
+            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                       "@Struct annotation must be placed on a final type.",
+                                       typeElement);
         }
     }
 
     private void isPublic(final TypeElement typeElement) {
         if (!typeElement.getModifiers()
                         .contains(Modifier.PUBLIC)) {
-            this.structGenerator.getProcessingEnvironment()
-                                .getMessager()
-                                .printMessage(Diagnostic.Kind.ERROR,
-                                              "@Struct annotation must be placed on a public type.",
-                                              typeElement);
-            this.inError = true;
+            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                       "@Struct annotation must be placed on a public type.",
+                                       typeElement);
         }
     }
 
     private void isClass(final TypeElement typeElement) {
         if (!typeElement.getKind()
                         .isClass()) {
-            this.structGenerator.getProcessingEnvironment()
-                                .getMessager()
-                                .printMessage(Diagnostic.Kind.ERROR,
-                                              "@Struct annotation must be placed on a class type.",
-                                              typeElement);
-            this.inError = true;
+            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                       "@Struct annotation must be placed on a class type.",
+                                       typeElement);
         }
     }
 }

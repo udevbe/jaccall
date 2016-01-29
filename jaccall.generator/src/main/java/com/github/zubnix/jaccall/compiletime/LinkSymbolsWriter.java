@@ -1,9 +1,8 @@
-package com.github.zubnix.jaccall.compiletime.linker;
+package com.github.zubnix.jaccall.compiletime;
 
 
 import com.github.zubnix.jaccall.JNI;
 import com.github.zubnix.jaccall.LinkSymbols;
-import com.github.zubnix.jaccall.compiletime.MethodParser;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.CodeBlock;
@@ -12,6 +11,8 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 import javax.annotation.Generated;
+import javax.annotation.processing.Filer;
+import javax.annotation.processing.Messager;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
@@ -25,15 +26,18 @@ import java.util.Set;
 
 final class LinkSymbolsWriter {
 
-    private final LinkerGenerator linkerGenerator;
+    private final Messager messager;
+    private final Filer    filer;
 
-    LinkSymbolsWriter(final LinkerGenerator linkerGenerator) {
-        this.linkerGenerator = linkerGenerator;
+    public LinkSymbolsWriter(final Messager messager,
+                             final Filer filer) {
+        this.messager = messager;
+        this.filer = filer;
     }
 
     public void process(final Set<? extends TypeElement> typeElements) {
 
-        final MethodParser methodParser = new MethodParser(this.linkerGenerator.getProcessingEnvironment());
+        final MethodParser methodParser = new MethodParser(this.messager);
 
         for (final TypeElement typeElement : typeElements) {
 
@@ -89,7 +93,7 @@ final class LinkSymbolsWriter {
             final AnnotationSpec annotationSpec = AnnotationSpec.builder(Generated.class)
                                                                 .addMember("value",
                                                                            "$S",
-                                                                           LinkerGenerator.class.getName())
+                                                                           JaccallGenerator.class.getName())
                                                                 .build();
             final TypeSpec typeSpec = TypeSpec.classBuilder(typeElement.getSimpleName() + "_Jaccall_LinkSymbols")
                                               .addAnnotation(annotationSpec)
@@ -106,15 +110,12 @@ final class LinkSymbolsWriter {
                                                   .skipJavaLangImports(true)
                                                   .build();
                 try {
-                    javaFile.writeTo(this.linkerGenerator.getProcessingEnvironment()
-                                                         .getFiler());
+                    javaFile.writeTo(this.filer);
                 }
                 catch (final IOException e) {
-                    this.linkerGenerator.getProcessingEnvironment()
-                                        .getMessager()
-                                        .printMessage(Diagnostic.Kind.ERROR,
-                                                      "Could not write linksymbols source file: \n" + javaFile.toString(),
-                                                      typeElement);
+                    this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                               "Could not write linksymbols source file: \n" + javaFile.toString(),
+                                               typeElement);
                     e.printStackTrace();
                 }
             }

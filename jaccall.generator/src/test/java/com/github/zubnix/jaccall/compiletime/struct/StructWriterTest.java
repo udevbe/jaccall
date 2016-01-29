@@ -1,6 +1,7 @@
 package com.github.zubnix.jaccall.compiletime.struct;
 
 
+import com.github.zubnix.jaccall.compiletime.JaccallGenerator;
 import com.google.testing.compile.CompileTester;
 import com.google.testing.compile.JavaFileObjects;
 import org.junit.Test;
@@ -33,7 +34,7 @@ public class StructWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new StructGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -44,7 +45,7 @@ public class StructWriterTest {
                                                                        "import com.github.zubnix.jaccall.StructType;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.struct.StructGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "abstract class TestStructChar_Jaccall_StructType extends StructType {\n" +
                                                                        "  public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_SINT8);\n" +
                                                                        "\n" +
@@ -87,7 +88,7 @@ public class StructWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new StructGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -98,7 +99,7 @@ public class StructWriterTest {
                                                                        "import com.github.zubnix.jaccall.StructType;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.struct.StructGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "abstract class TestStructUnsignedChar_Jaccall_StructType extends StructType {\n" +
                                                                        "  public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_UINT8);\n" +
                                                                        "\n" +
@@ -141,7 +142,7 @@ public class StructWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new StructGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -152,7 +153,7 @@ public class StructWriterTest {
                                                                        "import com.github.zubnix.jaccall.StructType;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.struct.StructGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "abstract class TestStructShort_Jaccall_StructType extends StructType {\n" +
                                                                        "  public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_SINT16);\n" +
                                                                        "\n" +
@@ -196,7 +197,7 @@ public class StructWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new StructGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -207,7 +208,7 @@ public class StructWriterTest {
                                                                        "import com.github.zubnix.jaccall.StructType;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.struct.StructGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "abstract class TestStructUnsignedShort_Jaccall_StructType extends StructType {\n" +
                                                                        "  public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_UINT16);\n" +
                                                                        "\n" +
@@ -251,7 +252,7 @@ public class StructWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new StructGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -262,7 +263,7 @@ public class StructWriterTest {
                                                                        "import com.github.zubnix.jaccall.StructType;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.struct.StructGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "abstract class TestStructInteger_Jaccall_StructType extends StructType {\n" +
                                                                        "  public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_SINT32);\n" +
                                                                        "\n" +
@@ -306,7 +307,7 @@ public class StructWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new StructGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -317,7 +318,7 @@ public class StructWriterTest {
                                                                        "import com.github.zubnix.jaccall.StructType;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.struct.StructGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "abstract class TestStructUnsignedInteger_Jaccall_StructType extends StructType {\n" +
                                                                        "  public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_UINT32);\n" +
                                                                        "\n" +
@@ -360,7 +361,7 @@ public class StructWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new StructGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -372,7 +373,7 @@ public class StructWriterTest {
                                                                        "import com.github.zubnix.jaccall.StructType;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.struct.StructGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "abstract class TestStructLong_Jaccall_StructType extends StructType {\n" +
                                                                        "  public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_SLONG);\n" +
                                                                        "\n" +
@@ -415,7 +416,7 @@ public class StructWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new StructGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -427,7 +428,7 @@ public class StructWriterTest {
                                                                        "import com.github.zubnix.jaccall.StructType;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.struct.StructGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "abstract class TestStructUnsignedLong_Jaccall_StructType extends StructType {\n" +
                                                                        "  public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_ULONG);\n" +
                                                                        "\n" +
@@ -470,7 +471,7 @@ public class StructWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new StructGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -481,7 +482,7 @@ public class StructWriterTest {
                                                                        "import com.github.zubnix.jaccall.StructType;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.struct.StructGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "abstract class TestStructLongLong_Jaccall_StructType extends StructType {\n" +
                                                                        "  public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_SINT64);\n" +
                                                                        "\n" +
@@ -524,7 +525,7 @@ public class StructWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new StructGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -535,7 +536,7 @@ public class StructWriterTest {
                                                                        "import com.github.zubnix.jaccall.StructType;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.struct.StructGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "abstract class TestStructUnsignedLongLong_Jaccall_StructType extends StructType {\n" +
                                                                        "  public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_UINT64);\n" +
                                                                        "\n" +
@@ -578,7 +579,7 @@ public class StructWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new StructGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -589,7 +590,7 @@ public class StructWriterTest {
                                                                        "import com.github.zubnix.jaccall.StructType;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.struct.StructGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "abstract class TestStructFloat_Jaccall_StructType extends StructType {\n" +
                                                                        "  public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_FLOAT);\n" +
                                                                        "\n" +
@@ -632,7 +633,7 @@ public class StructWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new StructGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -643,7 +644,7 @@ public class StructWriterTest {
                                                                        "import com.github.zubnix.jaccall.StructType;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.struct.StructGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "abstract class TestStructDouble_Jaccall_StructType extends StructType {\n" +
                                                                        "  public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_DOUBLE);\n" +
                                                                        "\n" +
@@ -686,7 +687,7 @@ public class StructWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new StructGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -699,7 +700,7 @@ public class StructWriterTest {
                                                                        "import java.lang.Void;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.struct.StructGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "abstract class TestStructPointer_Jaccall_StructType extends StructType {\n" +
                                                                        "  public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_POINTER);\n" +
                                                                        "\n" +
@@ -744,7 +745,7 @@ public class StructWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new StructGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -757,7 +758,7 @@ public class StructWriterTest {
                                                                        "import java.lang.Void;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.struct.StructGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "abstract class TestStructPointer_Jaccall_StructType extends StructType {\n" +
                                                                        "  public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_POINTER);\n" +
                                                                        "\n" +
@@ -803,7 +804,7 @@ public class StructWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new StructGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -815,7 +816,7 @@ public class StructWriterTest {
                                                                        "import com.github.zubnix.jaccall.compiletime.linker.TestStructEmbedded;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.struct.StructGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "abstract class TestStructStruct_Jaccall_StructType extends StructType {\n" +
                                                                        "  public static final long FFI_TYPE = JNI.ffi_type_struct(TestStructEmbedded.FFI_TYPE);\n" +
                                                                        "\n" +
@@ -882,7 +883,7 @@ public class StructWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new StructGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         //then
         compileTester.compilesWithoutError()
@@ -905,7 +906,7 @@ public class StructWriterTest {
                                                                        "import java.lang.Void;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.struct.StructGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "abstract class FieldsTestStruct_Jaccall_StructType extends StructType {\n" +
                                                                        "  public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_SINT8, JNI.FFI_TYPE_SINT16, JNI.FFI_TYPE_SINT32, JNI.FFI_TYPE_SLONG, JNI.FFI_TYPE_SINT64, JNI.FFI_TYPE_FLOAT, JNI.FFI_TYPE_DOUBLE, JNI.FFI_TYPE_POINTER, JNI.FFI_TYPE_POINTER, TestStructEmbedded.FFI_TYPE, TestStructEmbedded.FFI_TYPE);\n" +
                                                                        "\n" +

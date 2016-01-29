@@ -1,4 +1,4 @@
-package com.github.zubnix.jaccall.compiletime.functor;
+package com.github.zubnix.jaccall.compiletime;
 
 
 import com.github.zubnix.jaccall.PointerFunc;
@@ -9,6 +9,8 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import javax.annotation.Generated;
+import javax.annotation.processing.Filer;
+import javax.annotation.processing.Messager;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
@@ -21,11 +23,14 @@ import java.util.Set;
 
 final class FunctorWriter {
 
-    private final FunctorGenerator functorGenerator;
+    private final Messager messager;
+    private final Filer    filer;
 
-    FunctorWriter(final FunctorGenerator functorGenerator) {
+    FunctorWriter(final Messager messager,
+                  final Filer filer) {
 
-        this.functorGenerator = functorGenerator;
+        this.messager = messager;
+        this.filer = filer;
     }
 
     public void process(final Set<? extends TypeElement> typeElements) {
@@ -38,11 +43,9 @@ final class FunctorWriter {
                 }
             }
             else {
-                this.functorGenerator.getProcessingEnvironment()
-                                     .getMessager()
-                                     .printMessage(Diagnostic.Kind.ERROR,
-                                                   "Could not resolve all required compile time type information.",
-                                                   typeElement);
+                this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                           "Could not resolve all required compile time type information.",
+                                           typeElement);
             }
         }
     }
@@ -73,7 +76,7 @@ final class FunctorWriter {
         final AnnotationSpec annotationSpec = AnnotationSpec.builder(Generated.class)
                                                             .addMember("value",
                                                                        "$S",
-                                                                       FunctorGenerator.class.getName())
+                                                                       JaccallGenerator.class.getName())
                                                             .build();
 
         final TypeSpec typeSpec = TypeSpec.classBuilder("Pointer" + element.getSimpleName())
@@ -92,15 +95,12 @@ final class FunctorWriter {
                                               .skipJavaLangImports(true)
                                               .build();
             try {
-                javaFile.writeTo(this.functorGenerator.getProcessingEnvironment()
-                                                      .getFiler());
+                javaFile.writeTo(this.filer);
             }
             catch (final IOException e) {
-                this.functorGenerator.getProcessingEnvironment()
-                                     .getMessager()
-                                     .printMessage(Diagnostic.Kind.ERROR,
-                                                   "Could not write linksymbols source file: \n" + javaFile.toString(),
-                                                   element);
+                this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                           "Could not write linksymbols source file: \n" + javaFile.toString(),
+                                           element);
                 e.printStackTrace();
             }
         }

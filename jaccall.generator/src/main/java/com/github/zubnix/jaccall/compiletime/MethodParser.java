@@ -9,7 +9,7 @@ import com.github.zubnix.jaccall.Unsigned;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 
-import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.Messager;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
@@ -32,10 +32,10 @@ public final class MethodParser {
     private static final String PTR      = Ptr.class.getSimpleName();
     private static final String BY_VAL   = ByVal.class.getSimpleName();
 
-    private final ProcessingEnvironment processingEnvironment;
+    private final Messager messager;
 
-    public MethodParser(final ProcessingEnvironment processingEnvironment) {
-        this.processingEnvironment = processingEnvironment;
+    public MethodParser(final Messager messager) {
+        this.messager = messager;
     }
 
     public String parseMethodName(final ExecutableElement executableElement) {
@@ -82,10 +82,9 @@ public final class MethodParser {
             case VOID:
                 return 'V';
             default:
-                this.processingEnvironment.getMessager()
-                                          .printMessage(Diagnostic.Kind.ERROR,
-                                                        "Unsupported type " + typeMirror,
-                                                        element);
+                this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                           "Unsupported type " + typeMirror,
+                                           element);
                 return 0;
         }
     }
@@ -215,10 +214,9 @@ public final class MethodParser {
                             JNI.class);
                 break;
             default:
-                this.processingEnvironment.getMessager()
-                                          .printMessage(Diagnostic.Kind.ERROR,
-                                                        "Unsupported type " + typeMirror,
-                                                        element);
+                this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                           "Unsupported type " + typeMirror,
+                                           element);
         }
 
         return builder.build();
@@ -250,10 +248,9 @@ public final class MethodParser {
         final String structTypeName = structTypeElement.getSimpleName()
                                                        .toString();
         if (structTypeName.equals("StructType")) {
-            this.processingEnvironment.getMessager()
-                                      .printMessage(Diagnostic.Kind.ERROR,
-                                                    "Declared struct type must be a subclass of 'com.github.zubnix.jaccall.StructType'.",
-                                                    element);
+            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                       "Declared struct type must be a subclass of 'com.github.zubnix.jaccall.StructType'.",
+                                       element);
         }
 
         //TODO check if struct type element has a struct annotation and fail if it does not
@@ -261,10 +258,9 @@ public final class MethodParser {
 
         final Set<PackageElement> packageElements = ElementFilter.packagesIn(Collections.singleton(structTypeElement.getEnclosingElement()));
         if (packageElements.isEmpty()) {
-            this.processingEnvironment.getMessager()
-                                      .printMessage(Diagnostic.Kind.ERROR,
-                                                    "Declared struct type must be a top level type.",
-                                                    element);
+            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                       "Declared struct type must be a top level type.",
+                                       element);
         }
 
         final CodeBlock.Builder builder = CodeBlock.builder();

@@ -1,6 +1,7 @@
 package com.github.zubnix.jaccall.compiletime.linker;
 
 
+import com.github.zubnix.jaccall.compiletime.JaccallGenerator;
 import com.google.testing.compile.CompileTester;
 import com.google.testing.compile.JavaFileObjects;
 import org.junit.Test;
@@ -26,7 +27,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -37,7 +38,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -71,7 +72,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -82,7 +83,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -115,7 +116,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -126,7 +127,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -160,7 +161,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -171,7 +172,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -204,7 +205,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -215,7 +216,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -249,7 +250,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -260,7 +261,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -293,7 +294,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -304,7 +305,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -338,7 +339,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -349,7 +350,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -383,7 +384,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -394,7 +395,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -429,7 +430,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -440,7 +441,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -473,7 +474,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -484,7 +485,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -517,7 +518,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -528,7 +529,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -562,7 +563,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -573,7 +574,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -608,7 +609,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -620,7 +621,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.compiletime.linker.TestStruct;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -655,7 +656,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -667,7 +668,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.compiletime.linker.TestUnion;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -700,7 +701,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -711,7 +712,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -746,7 +747,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -757,7 +758,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -790,7 +791,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -801,7 +802,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -836,7 +837,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -847,7 +848,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -880,7 +881,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -891,7 +892,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -926,7 +927,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -937,7 +938,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -970,7 +971,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -981,7 +982,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -1016,7 +1017,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -1027,7 +1028,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -1062,7 +1063,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -1073,7 +1074,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -1109,7 +1110,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -1120,7 +1121,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -1153,7 +1154,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -1164,7 +1165,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -1197,7 +1198,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -1208,7 +1209,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -1243,7 +1244,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -1254,7 +1255,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.LinkSymbols;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -1290,7 +1291,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -1302,7 +1303,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.compiletime.linker.TestStruct;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
@@ -1344,7 +1345,7 @@ public class LinkSymbolsWriterTest {
         //when
         final CompileTester compileTester = assert_().about(javaSource())
                                                      .that(fileObject)
-                                                     .processedWith(new LinkerGenerator());
+                                                     .processedWith(new JaccallGenerator());
         //then
         compileTester.compilesWithoutError()
                      .and()
@@ -1356,7 +1357,7 @@ public class LinkSymbolsWriterTest {
                                                                        "import com.github.zubnix.jaccall.compiletime.linker.TestStruct;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
-                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.linker.LinkerGenerator\")\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
                                                                        "  public Testing_Jaccall_LinkSymbols() {\n" +
                                                                        "    super(new String[]{ /*method name*/\n" +
