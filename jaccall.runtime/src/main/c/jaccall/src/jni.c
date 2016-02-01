@@ -20,6 +20,55 @@ struct java_call_data {
     jobject object;
 };
 
+struct char_alignment {
+    char a;
+    char b;
+};
+
+struct short_alignment {
+    char a;
+    short b;
+};
+
+struct int_alignment {
+    char a;
+    int b;
+};
+
+struct long_alignment {
+    char a;
+    long b;
+};
+
+struct long_long_alignment {
+    char a;
+    long long b;
+};
+
+struct pointer_alignment {
+    char a;
+    void* b;
+};
+
+struct float_alignment {
+    char a;
+    float b;
+};
+
+struct double_alignment {
+    char a;
+    double b;
+};
+
+size_t offset_of_char = offsetof(struct char_alignment, b);
+size_t offset_of_short = offsetof(struct short_alignment, b);
+size_t offset_of_int = offsetof(struct int_alignment, b);
+size_t offset_of_long = offsetof(struct long_alignment, b);
+size_t offset_of_long_long = offsetof(struct long_long_alignment, b);
+size_t offset_of_pointer = offsetof(struct pointer_alignment, b);
+size_t offset_of_float = offsetof(struct float_alignment, b);
+size_t offset_of_double = offsetof(struct double_alignment, b);
+
 void throwError( JNIEnv *env, char *message, ...)
 {
     jclass exClass;
@@ -680,13 +729,91 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1closure(JNIEnv *env, jclass claz
     return (jlong)(intptr_t)target_func;
 }
 
-/*
- * Class:     com_github_zubnix_jaccall_JNI
- * Method:    ffi_closure_free
- * Signature: (J)V
- */
 JNIEXPORT
 void
 JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1closure_1free(JNIEnv *env, jclass clazz, jlong closure) {
     ffi_closure_free((void *) (intptr_t) closure);
+}
+
+JNIEXPORT
+jint
+JNICALL Java_com_github_zubnix_jaccall_JNI_charAlignment(JNIEnv *env, jclass clazz){
+    return offset_of_char;
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    shortAlignment
+ * Signature: ()I
+ */
+JNIEXPORT
+jint
+JNICALL Java_com_github_zubnix_jaccall_JNI_shortAlignment(JNIEnv *env, jclass clazz){
+    return offset_of_short;
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    intAlignment
+ * Signature: ()I
+ */
+JNIEXPORT
+jint
+JNICALL Java_com_github_zubnix_jaccall_JNI_intAlignment(JNIEnv *env, jclass clazz){
+    return offset_of_int;
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    longAlignment
+ * Signature: ()I
+ */
+JNIEXPORT
+jint
+JNICALL Java_com_github_zubnix_jaccall_JNI_longAlignment(JNIEnv *env, jclass clazz){
+    return offset_of_long;
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    longLongAlignment
+ * Signature: ()I
+ */
+JNIEXPORT
+jint
+JNICALL Java_com_github_zubnix_jaccall_JNI_longLongAlignment(JNIEnv *env, jclass clazz){
+    return offset_of_long_long;
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    pointerAlignment
+ * Signature: ()I
+ */
+JNIEXPORT
+jint
+JNICALL Java_com_github_zubnix_jaccall_JNI_pointerAlignment(JNIEnv *env, jclass clazz){
+    return offset_of_pointer;
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    floatAlignment
+ * Signature: ()I
+ */
+JNIEXPORT
+jint
+JNICALL Java_com_github_zubnix_jaccall_JNI_floatAlignment(JNIEnv *env, jclass clazz){
+    return offset_of_float;
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    doubleAlignment
+ * Signature: ()I
+ */
+JNIEXPORT
+jint
+JNICALL Java_com_github_zubnix_jaccall_JNI_doubleAlignment(JNIEnv *env, jclass clazz){
+    return offset_of_double;
 }

@@ -9,26 +9,19 @@ public class Types {
         return (offset + alignment - 1) & ~(alignment - 1);
     }
 
-    public static int alignment(@Nullable final Byte b) { return 1; }
+    public static int alignment(@Nullable final Byte b) { return JNI.CHAR_ALIGNMENT; }
 
-    public static int alignment(@Nullable final Character b) { return 2; }
+    public static int alignment(@Nullable final Short b) { return JNI.SHORT_ALIGNMENT; }
 
-    public static int alignment(@Nullable final Short b) { return 2; }
+    public static int alignment(@Nullable final Integer b) { return JNI.INT_ALIGNMENT; }
 
-    public static int alignment(@Nullable final Integer b) { return 4; }
+    public static int alignment(@Nullable final CLong cLong) { return JNI.LONG_ALIGNMENT; }
 
-    public static int alignment(@Nullable final CLong cLong) { return platformAlignment(); }
+    public static int alignment(@Nullable final Long b) { return JNI.LONG_LONG_ALIGNMENT; }
 
-    public static int alignment(@Nullable final Long b) { return platformAlignment(); }
+    public static int alignment(@Nullable final Pointer<?> pointer) { return JNI.POINTER_ALIGNMENT; }
 
-    public static int alignment(@Nullable final Pointer<?> pointer) { return platformAlignment(); }
+    public static int alignment(@Nullable final Float b) { return JNI.FLOAT_ALIGNMENT; }
 
-    public static int alignment(@Nullable final Float b) { return 4; }
-
-    public static int alignment(@Nullable final Double b) { return platformAlignment(); }
-
-    private static int platformAlignment() {
-        //assume pointer size corresponds to memory cycle size
-        return Size.sizeof((Pointer) null);
-    }
+    public static int alignment(@Nullable final Double b) { return JNI.DOUBLE_ALIGNMENT; }
 }

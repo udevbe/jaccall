@@ -81,6 +81,70 @@ JNIEXPORT jint JNICALL Java_com_github_zubnix_jaccall_JNI_sizeOfCLong
 
 /*
  * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    charAlignment
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_com_github_zubnix_jaccall_JNI_charAlignment
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    shortAlignment
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_com_github_zubnix_jaccall_JNI_shortAlignment
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    intAlignment
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_com_github_zubnix_jaccall_JNI_intAlignment
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    longAlignment
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_com_github_zubnix_jaccall_JNI_longAlignment
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    longLongAlignment
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_com_github_zubnix_jaccall_JNI_longLongAlignment
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    pointerAlignment
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_com_github_zubnix_jaccall_JNI_pointerAlignment
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    floatAlignment
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_com_github_zubnix_jaccall_JNI_floatAlignment
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    doubleAlignment
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_com_github_zubnix_jaccall_JNI_doubleAlignment
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
  * Method:    ffi_type_void
  * Signature: ()J
  */

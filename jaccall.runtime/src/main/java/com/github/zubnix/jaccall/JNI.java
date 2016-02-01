@@ -79,6 +79,38 @@ public final class JNI {
 
     public static native int sizeOfCLong();
 
+    public static final int CHAR_ALIGNMENT = JNI.charAlignment();
+
+    private static native int charAlignment();
+
+    public static final int SHORT_ALIGNMENT = JNI.shortAlignment();
+
+    private static native int shortAlignment();
+
+    public static final int INT_ALIGNMENT = JNI.intAlignment();
+
+    private static native int intAlignment();
+
+    public static final int LONG_ALIGNMENT = JNI.longAlignment();
+
+    private static native int longAlignment();
+
+    public static final int LONG_LONG_ALIGNMENT = JNI.longLongAlignment();
+
+    private static native int longLongAlignment();
+
+    public static final int POINTER_ALIGNMENT = JNI.pointerAlignment();
+
+    private static native int pointerAlignment();
+
+    public static final int FLOAT_ALIGNMENT = JNI.floatAlignment();
+
+    private static native int floatAlignment();
+
+    public static final int DOUBLE_ALIGNMENT = JNI.doubleAlignment();
+
+    private static native int doubleAlignment();
+
     /*
      * <- std
      */
