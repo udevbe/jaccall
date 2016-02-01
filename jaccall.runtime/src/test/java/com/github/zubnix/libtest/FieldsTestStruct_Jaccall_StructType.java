@@ -5,6 +5,7 @@ import com.github.zubnix.jaccall.JNI;
 import com.github.zubnix.jaccall.Pointer;
 import com.github.zubnix.jaccall.Size;
 import com.github.zubnix.jaccall.StructType;
+import com.github.zubnix.jaccall.Types;
 
 import javax.annotation.Generated;
 
@@ -30,35 +31,35 @@ abstract class FieldsTestStruct_Jaccall_StructType extends StructType {
 
     private static final int OFFSET_0 = 0;
 
-    private static final int OFFSET_1 = newOffset(Size.sizeof((Short) null),
-                                                  OFFSET_0 + (Size.sizeof((Byte) null) * 1));
+    private static final int OFFSET_1 = Types.newOffset(Types.alignment((Short) null),
+                                                        OFFSET_0 + (Size.sizeof((Byte) null) * 1));
 
-    private static final int OFFSET_2 = newOffset(Size.sizeof((Integer) null),
-                                                  OFFSET_1 + (Size.sizeof((Short) null) * 1));
+    private static final int OFFSET_2 = Types.newOffset(Types.alignment((Integer) null),
+                                                        OFFSET_1 + (Size.sizeof((Short) null) * 1));
 
-    private static final int OFFSET_3 = newOffset(Size.sizeof((CLong) null),
-                                                  OFFSET_2 + (Size.sizeof((Integer) null) * 1));
+    private static final int OFFSET_3 = Types.newOffset(Types.alignment((CLong) null),
+                                                        OFFSET_2 + (Size.sizeof((Integer) null) * 1));
 
-    private static final int OFFSET_4 = newOffset(Size.sizeof((Long) null),
-                                                  OFFSET_3 + (Size.sizeof((CLong) null) * 1));
+    private static final int OFFSET_4 = Types.newOffset(Types.alignment((Long) null),
+                                                        OFFSET_3 + (Size.sizeof((CLong) null) * 1));
 
-    private static final int OFFSET_5 = newOffset(Size.sizeof((Float) null),
-                                                  OFFSET_4 + (Size.sizeof((Long) null) * 1));
+    private static final int OFFSET_5 = Types.newOffset(Types.alignment((Float) null),
+                                                        OFFSET_4 + (Size.sizeof((Long) null) * 1));
 
-    private static final int OFFSET_6 = newOffset(Size.sizeof((Double) null),
-                                                  OFFSET_5 + (Size.sizeof((Float) null) * 1));
+    private static final int OFFSET_6 = Types.newOffset(Types.alignment((Double) null),
+                                                        OFFSET_5 + (Size.sizeof((Float) null) * 1));
 
-    private static final int OFFSET_7 = newOffset(Size.sizeof((Pointer) null),
-                                                  OFFSET_6 + (Size.sizeof((Double) null) * 1));
+    private static final int OFFSET_7 = Types.newOffset(Types.alignment((Pointer) null),
+                                                        OFFSET_6 + (Size.sizeof((Double) null) * 1));
 
-    private static final int OFFSET_8 = newOffset(Size.sizeof((Pointer) null),
-                                                  OFFSET_7 + (Size.sizeof((Pointer) null) * 1));
+    private static final int OFFSET_8 = Types.newOffset(Types.alignment((Pointer) null),
+                                                        OFFSET_7 + (Size.sizeof((Pointer) null) * 1));
 
-    private static final int OFFSET_9 = newOffset((Size.sizeof((Long) null)),
-                                                  OFFSET_8 + (Size.sizeof((Pointer) null) * 3));
+    private static final int OFFSET_9 = Types.newOffset(Types.alignment((Long) null),
+                                                        OFFSET_8 + (Size.sizeof((Pointer) null) * 3));
 
-    private static final int OFFSET_10 = newOffset((Size.sizeof((Long) null)),
-                                                   OFFSET_9 + (TestStructEmbedded.SIZE * 1));
+    private static final int OFFSET_10 = Types.newOffset(Types.alignment((Long) null),
+                                                         OFFSET_9 + (TestStructEmbedded.SIZE * 1));
 
     FieldsTestStruct_Jaccall_StructType() {
         super(SIZE);

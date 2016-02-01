@@ -7,6 +7,7 @@ import com.github.zubnix.jaccall.Pointer;
 import com.github.zubnix.jaccall.Size;
 import com.github.zubnix.jaccall.Struct;
 import com.github.zubnix.jaccall.StructType;
+import com.github.zubnix.jaccall.Types;
 import com.google.common.primitives.Primitives;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
@@ -505,8 +506,9 @@ final class StructWriter {
             final FieldDefinition previous = fieldDefinitions.get(i - 1);
 
             offsetCode = CodeBlock.builder()
-                                  .add("$[newOffset(($T.sizeof(($T) null)), OFFSET_$L + ($L * $L))$]",
-                                       Size.class,
+                                  .add("$[$T.newOffset($T.alignment(($T) null), OFFSET_$L + ($L * $L))$]",
+                                       Types.class,
+                                       Types.class,
                                        findFirstNonStructField(structTypeType),
                                        i - 1,
                                        previous.getSizeOfCode(),
@@ -655,6 +657,11 @@ final class StructWriter {
                                                   final Boolean union,
                                                   final Integer cardinality,
                                                   Integer pointerDepth) {
+        final CodeBlock alignmentCode = CodeBlock.builder()
+                                                 .add("$T.alignment(($T) null)",
+                                                      Types.class,
+                                                      javaType)
+                                                 .build();
         final CodeBlock sizeOfCode = CodeBlock.builder()
                                               .add("$T.sizeof(($T) null)",
                                                    Size.class,
@@ -677,8 +684,9 @@ final class StructWriter {
             final FieldDefinition previous = fieldDefinitions.get(i - 1);
 
             offsetCode = CodeBlock.builder()
-                                  .add("$[newOffset($L, OFFSET_$L + ($L * $L))$]",
-                                       sizeOfCode,
+                                  .add("$[$T.newOffset($L, OFFSET_$L + ($L * $L))$]",
+                                       Types.class,
+                                       alignmentCode,
                                        i - 1,
                                        previous.getSizeOfCode(),
                                        previous.getCardinality())

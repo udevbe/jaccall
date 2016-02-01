@@ -10,11 +10,6 @@ import static java.nio.ByteBuffer.allocateDirect;
 
 public abstract class StructType {
 
-    protected static int newOffset(final int align,
-                                   final int offset) {
-        return (offset + align - 1) & ~(align - 1);
-    }
-
     final int size;
 
     private ByteBuffer buffer;
