@@ -191,6 +191,18 @@ void prep_jni_cif(JNIEnv *env, ffi_cif *jni_cif, const char *jni_sig, int arg_si
     }
 }
 
+void print_bytes(const void *object, size_t size)
+{
+  size_t i;
+
+  printf("[ ");
+  for(i = 0; i < size; i++)
+  {
+    printf("%02x ", ((const unsigned char *) object)[i] & 0xff);
+  }
+  printf("]\n");
+}
+
 static
 void jni_call_handler(ffi_cif *cif, void *ret, void **jargs, void *user_data) {
 
@@ -211,6 +223,15 @@ void jni_call_handler(ffi_cif *cif, void *ret, void **jargs, void *user_data) {
         }
     }
 
+    cif->
+
+    printf("ret: ");
+    print_bytes(ret, cif->rtype->size);
+
+    memset(ret,0,cif->rtype->size);
+    printf("ret after memset 0: ");
+    print_bytes(ret, cif->rtype->size);
+
     if (rtype->type == FFI_TYPE_STRUCT) {
         //struct by value
         void *rval = malloc(rtype->size);
@@ -219,6 +240,9 @@ void jni_call_handler(ffi_cif *cif, void *ret, void **jargs, void *user_data) {
     } else {
         ffi_call(call_data->cif, FFI_FN(call_data->symaddr), ret, args);
     }
+
+    printf("ret after ffi_call: ");
+    print_bytes(ret, cif->rtype->size);
 }
 
 static
