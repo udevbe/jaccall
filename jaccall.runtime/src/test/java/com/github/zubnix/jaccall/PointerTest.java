@@ -503,23 +503,24 @@ public class PointerTest {
     @Test
     public void testWriteByteAtIndex() throws Exception {
         //given
-        final int  index  = 3;
-        final int  offset = index;
-        final byte b0     = 0x45;
-        final byte b1     = 0x67;
-        final byte b2     = 0x76;
-        try (Pointer<Byte> bytePointer = malloc((sizeof((Byte) null) * 3) + offset).castp(byte.class)) {
+        final byte b0 = 0x45;
+        final byte b1 = 0x67;
+        final byte b2 = 0x76;
+
+        try (Pointer<Byte> bytePointer = malloc(sizeof((Byte) null) * 6).castp(byte.class)) {
             //when
-            bytePointer.writei(index,
+            bytePointer.writei(3,
                                b0);
-            bytePointer.writei(index + 1,
+            bytePointer.writei(4,
                                b1);
-            bytePointer.writei(index + 2,
+            bytePointer.writei(5,
                                b2);
             //then
-            assertThat(JNITestUtil.readByte(bytePointer.address + offset)).isEqualTo(b0);
-            assertThat(JNITestUtil.readByte(bytePointer.address + offset + 1)).isEqualTo(b1);
-            assertThat(JNITestUtil.readByte(bytePointer.address + offset + 2)).isEqualTo(b2);
+            final int byteOffset = sizeof((Byte) null) * 3;
+
+            assertThat(JNITestUtil.readByte(bytePointer.address + byteOffset)).isEqualTo(b0);
+            assertThat(JNITestUtil.readByte(bytePointer.address + byteOffset + 1)).isEqualTo(b1);
+            assertThat(JNITestUtil.readByte(bytePointer.address + byteOffset + 2)).isEqualTo(b2);
         }
     }
 
@@ -543,24 +544,23 @@ public class PointerTest {
     @Test
     public void testWriteShortAtIndex() throws Exception {
         //given
-        final int index  = 3;
-        final int offset = index * 2;
-
         final short s0 = 0x4567;
         final short s1 = (short) 0x8901;
 
-        try (Pointer<Short> shortPointer = malloc((sizeof(s0) * 2) + offset).castp(short.class)) {
+        try (Pointer<Short> shortPointer = malloc(sizeof((Short) null) * 5).castp(short.class)) {
             //when
-            shortPointer.writei(index,
+            shortPointer.writei(3,
                                 s0);
-            shortPointer.writei(index + 1,
+            shortPointer.writei(4,
                                 s1);
 
             //then
-            assertThat(JNITestUtil.readByte(shortPointer.address + offset)).isEqualTo((byte) 0x67);
-            assertThat(JNITestUtil.readByte(shortPointer.address + offset + 1)).isEqualTo((byte) 0x45);
-            assertThat(JNITestUtil.readByte(shortPointer.address + offset + 2)).isEqualTo((byte) 0x01);
-            assertThat(JNITestUtil.readByte(shortPointer.address + offset + 3)).isEqualTo((byte) 0x89);
+            final int byteOffset = sizeof((Short) null) * 3;
+
+            assertThat(JNITestUtil.readByte(shortPointer.address + byteOffset)).isEqualTo((byte) 0x67);
+            assertThat(JNITestUtil.readByte(shortPointer.address + byteOffset + 1)).isEqualTo((byte) 0x45);
+            assertThat(JNITestUtil.readByte(shortPointer.address + byteOffset + 2)).isEqualTo((byte) 0x01);
+            assertThat(JNITestUtil.readByte(shortPointer.address + byteOffset + 3)).isEqualTo((byte) 0x89);
         }
     }
 
@@ -589,28 +589,27 @@ public class PointerTest {
     @Test
     public void testWriteIntAtIndex() throws Exception {
         //given
-        final int index  = 3;
-        final int offset = index * 4;
-
         final int i0 = 0x45678901;
         final int i1 = 0x12345678;
 
-        try (Pointer<Integer> integerPointer = malloc((sizeof(i0) * 2) + offset).castp(int.class)) {
+        try (Pointer<Integer> integerPointer = malloc(sizeof((Integer) null) * 5).castp(int.class)) {
             //when
-            integerPointer.writei(index,
+            integerPointer.writei(3,
                                   i0);
-            integerPointer.writei(index + 1,
+            integerPointer.writei(4,
                                   i1);
             //then
-            assertThat(JNITestUtil.readByte(integerPointer.address + offset)).isEqualTo((byte) 0x01);
-            assertThat(JNITestUtil.readByte(integerPointer.address + offset + 1)).isEqualTo((byte) 0x89);
-            assertThat(JNITestUtil.readByte(integerPointer.address + offset + 2)).isEqualTo((byte) 0x67);
-            assertThat(JNITestUtil.readByte(integerPointer.address + offset + 3)).isEqualTo((byte) 0x45);
+            final int byteOffset = sizeof((Integer) null) * 3;
 
-            assertThat(JNITestUtil.readByte(integerPointer.address + offset + 4)).isEqualTo((byte) 0x78);
-            assertThat(JNITestUtil.readByte(integerPointer.address + offset + 5)).isEqualTo((byte) 0x56);
-            assertThat(JNITestUtil.readByte(integerPointer.address + offset + 6)).isEqualTo((byte) 0x34);
-            assertThat(JNITestUtil.readByte(integerPointer.address + offset + 7)).isEqualTo((byte) 0x12);
+            assertThat(JNITestUtil.readByte(integerPointer.address + byteOffset)).isEqualTo((byte) 0x01);
+            assertThat(JNITestUtil.readByte(integerPointer.address + byteOffset + 1)).isEqualTo((byte) 0x89);
+            assertThat(JNITestUtil.readByte(integerPointer.address + byteOffset + 2)).isEqualTo((byte) 0x67);
+            assertThat(JNITestUtil.readByte(integerPointer.address + byteOffset + 3)).isEqualTo((byte) 0x45);
+
+            assertThat(JNITestUtil.readByte(integerPointer.address + byteOffset + 4)).isEqualTo((byte) 0x78);
+            assertThat(JNITestUtil.readByte(integerPointer.address + byteOffset + 5)).isEqualTo((byte) 0x56);
+            assertThat(JNITestUtil.readByte(integerPointer.address + byteOffset + 6)).isEqualTo((byte) 0x34);
+            assertThat(JNITestUtil.readByte(integerPointer.address + byteOffset + 7)).isEqualTo((byte) 0x12);
         }
     }
 
@@ -630,19 +629,17 @@ public class PointerTest {
     @Test
     public void testWriteFloatAtIndex() throws Exception {
         //given
-        final int index  = 3;
-        final int offset = index * 4;
-
         final float f0 = 0x45678901;
         final float f1 = 0x12345678;
 
-        try (Pointer<Float> floatPointer = malloc(sizeof(f0) * 2).castp(float.class)) {
+        try (Pointer<Float> floatPointer = malloc(sizeof(sizeof((Float) null)) * 5).castp(float.class)) {
             //when
-            floatPointer.writei(index,
+            floatPointer.writei(3,
                                 f0);
-            floatPointer.writei(index + 1,
+            floatPointer.writei(4,
                                 f1);
             //then
+            final int offset = 3 * sizeof((Float) null);
             assertThat(JNITestUtil.readFloat(floatPointer.address + offset)).isEqualTo(f0);
             assertThat(JNITestUtil.readFloat(floatPointer.address + offset + 4)).isEqualTo(f1);
         }
@@ -681,36 +678,35 @@ public class PointerTest {
     @Test
     public void testWriteLongAtIndex() throws Exception {
         //given
-        final int index  = 3;
-        final int offset = index * 8;
 
         final long l0 = 0x4567_8901_2345_6789L;
         final long l1 = 0x1234_5678_9012_3456L;
 
-        try (Pointer<Long> longPointer = malloc((sizeof(l0) * 2) + offset).castp(long.class)) {
+        try (Pointer<Long> longPointer = malloc((sizeof((Long) null) * 5)).castp(long.class)) {
             //when
-            longPointer.writei(index,
+            longPointer.writei(3,
                                l0);
-            longPointer.writei(index + 1,
+            longPointer.writei(4,
                                l1);
             //then
-            assertThat(JNITestUtil.readByte(longPointer.address + offset)).isEqualTo((byte) 0x89);
-            assertThat(JNITestUtil.readByte(longPointer.address + offset + 1)).isEqualTo((byte) 0x67);
-            assertThat(JNITestUtil.readByte(longPointer.address + offset + 2)).isEqualTo((byte) 0x45);
-            assertThat(JNITestUtil.readByte(longPointer.address + offset + 3)).isEqualTo((byte) 0x23);
-            assertThat(JNITestUtil.readByte(longPointer.address + offset + 4)).isEqualTo((byte) 0x01);
-            assertThat(JNITestUtil.readByte(longPointer.address + offset + 5)).isEqualTo((byte) 0x89);
-            assertThat(JNITestUtil.readByte(longPointer.address + offset + 6)).isEqualTo((byte) 0x67);
-            assertThat(JNITestUtil.readByte(longPointer.address + offset + 7)).isEqualTo((byte) 0x45);
+            final int byteOffest = 3 * sizeof((Long) null);
+            assertThat(JNITestUtil.readByte(longPointer.address + byteOffest)).isEqualTo((byte) 0x89);
+            assertThat(JNITestUtil.readByte(longPointer.address + byteOffest + 1)).isEqualTo((byte) 0x67);
+            assertThat(JNITestUtil.readByte(longPointer.address + byteOffest + 2)).isEqualTo((byte) 0x45);
+            assertThat(JNITestUtil.readByte(longPointer.address + byteOffest + 3)).isEqualTo((byte) 0x23);
+            assertThat(JNITestUtil.readByte(longPointer.address + byteOffest + 4)).isEqualTo((byte) 0x01);
+            assertThat(JNITestUtil.readByte(longPointer.address + byteOffest + 5)).isEqualTo((byte) 0x89);
+            assertThat(JNITestUtil.readByte(longPointer.address + byteOffest + 6)).isEqualTo((byte) 0x67);
+            assertThat(JNITestUtil.readByte(longPointer.address + byteOffest + 7)).isEqualTo((byte) 0x45);
 
-            assertThat(JNITestUtil.readByte(longPointer.address + offset + 8)).isEqualTo((byte) 0x56);
-            assertThat(JNITestUtil.readByte(longPointer.address + offset + 9)).isEqualTo((byte) 0x34);
-            assertThat(JNITestUtil.readByte(longPointer.address + offset + 10)).isEqualTo((byte) 0x12);
-            assertThat(JNITestUtil.readByte(longPointer.address + offset + 11)).isEqualTo((byte) 0x90);
-            assertThat(JNITestUtil.readByte(longPointer.address + offset + 12)).isEqualTo((byte) 0x78);
-            assertThat(JNITestUtil.readByte(longPointer.address + offset + 13)).isEqualTo((byte) 0x56);
-            assertThat(JNITestUtil.readByte(longPointer.address + offset + 14)).isEqualTo((byte) 0x34);
-            assertThat(JNITestUtil.readByte(longPointer.address + offset + 15)).isEqualTo((byte) 0x12);
+            assertThat(JNITestUtil.readByte(longPointer.address + byteOffest + 8)).isEqualTo((byte) 0x56);
+            assertThat(JNITestUtil.readByte(longPointer.address + byteOffest + 9)).isEqualTo((byte) 0x34);
+            assertThat(JNITestUtil.readByte(longPointer.address + byteOffest + 10)).isEqualTo((byte) 0x12);
+            assertThat(JNITestUtil.readByte(longPointer.address + byteOffest + 11)).isEqualTo((byte) 0x90);
+            assertThat(JNITestUtil.readByte(longPointer.address + byteOffest + 12)).isEqualTo((byte) 0x78);
+            assertThat(JNITestUtil.readByte(longPointer.address + byteOffest + 13)).isEqualTo((byte) 0x56);
+            assertThat(JNITestUtil.readByte(longPointer.address + byteOffest + 14)).isEqualTo((byte) 0x34);
+            assertThat(JNITestUtil.readByte(longPointer.address + byteOffest + 15)).isEqualTo((byte) 0x12);
         }
     }
 
@@ -732,21 +728,20 @@ public class PointerTest {
     @Test
     public void testWriteDoubleAtIndex() throws Exception {
         //given
-        final int index  = 3;
-        final int offset = index * 8;
 
         final double d0 = 0x4567_8901_2345_6789L;
         final double d1 = 0x1234_5678_9012_3456L;
 
-        try (Pointer<Double> doublePointer = malloc((sizeof(d0) * 2) + offset).castp(double.class)) {
+        try (Pointer<Double> doublePointer = malloc(sizeof((Double) null) * 5).castp(double.class)) {
             //when
-            doublePointer.writei(index,
+            doublePointer.writei(3,
                                  d0);
-            doublePointer.writei(index + 1,
+            doublePointer.writei(4,
                                  d1);
             //then
-            assertThat((float) JNITestUtil.readDouble(doublePointer.address + offset)).isEqualTo((float) d0);
-            assertThat((float) JNITestUtil.readDouble(doublePointer.address + offset + 8)).isEqualTo((float) d1);
+            final int byteOffset = 3 * sizeof((Double) null);
+            assertThat((float) JNITestUtil.readDouble(doublePointer.address + byteOffset)).isEqualTo((float) d0);
+            assertThat((float) JNITestUtil.readDouble(doublePointer.address + byteOffset + sizeof((Double) null))).isEqualTo((float) d1);
         }
     }
 
@@ -775,9 +770,6 @@ public class PointerTest {
     @Test
     public void testWritePointerAtIndex() throws Exception {
         //given
-        final int index  = 3;
-        final int offset = index * sizeof((Pointer) null);
-
         final long p0 = JNITestUtil.byteArrayAsPointer(0,
                                                        0,
                                                        0,
@@ -789,15 +781,15 @@ public class PointerTest {
                                                        0,
                                                        0);
 
-        try (Pointer<Pointer> pointerPointer = malloc((sizeof(p0) * 2) + offset).castp(Pointer.class)) {
+        try (Pointer<Pointer> pointerPointer = malloc(sizeof((Pointer) null) * 5).castp(Pointer.class)) {
             //when
-            pointerPointer.writei(index,
+            pointerPointer.writei(3,
                                   wrap(p0));
-            pointerPointer.writei(index + 1,
+            pointerPointer.writei(4,
                                   wrap(p1));
             //then
-            assertThat(JNITestUtil.readPointer(pointerPointer.address + offset)).isEqualTo(p0);
-            assertThat(JNITestUtil.readPointer(pointerPointer.address + offset + sizeof((Pointer) null))).isEqualTo(p1);
+            assertThat(JNITestUtil.readPointer(pointerPointer.address + 3 * sizeof((Pointer) null))).isEqualTo(p0);
+            assertThat(JNITestUtil.readPointer(pointerPointer.address + 4 * sizeof((Pointer) null))).isEqualTo(p1);
         }
     }
 
@@ -819,21 +811,18 @@ public class PointerTest {
     @Test
     public void testWriteCLongAtIndex() throws Exception {
         //given
-        final int index  = 3;
-        final int offset = index * sizeof((CLong) null);
-
         final CLong cl0 = new CLong(0x45678901);
         final CLong cl1 = new CLong(0x12345678);
 
-        try (Pointer<CLong> cLongPointer = malloc((sizeof(cl0) * 2) + offset).castp(CLong.class)) {
+        try (Pointer<CLong> cLongPointer = malloc(sizeof(cl0) * 5).castp(CLong.class)) {
             //when
-            cLongPointer.writei(index,
+            cLongPointer.writei(3,
                                 cl0);
-            cLongPointer.writei(index + 1,
+            cLongPointer.writei(4,
                                 cl1);
             //then
-            assertThat(JNITestUtil.readCLong(cLongPointer.address + offset)).isEqualTo(cl0.longValue());
-            assertThat(JNITestUtil.readCLong(cLongPointer.address + offset + sizeof((CLong) null))).isEqualTo(cl1.longValue());
+            assertThat(JNITestUtil.readCLong(cLongPointer.address + 3 * sizeof((CLong) null))).isEqualTo(cl0.longValue());
+            assertThat(JNITestUtil.readCLong(cLongPointer.address + 4 * sizeof((CLong) null))).isEqualTo(cl1.longValue());
         }
     }
 
