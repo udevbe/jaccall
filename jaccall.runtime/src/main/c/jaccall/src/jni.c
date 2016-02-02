@@ -223,8 +223,6 @@ void jni_call_handler(ffi_cif *cif, void *ret, void **jargs, void *user_data) {
         }
     }
 
-    cif->
-
     printf("ret: ");
     print_bytes(ret, cif->rtype->size);
 
