@@ -167,7 +167,7 @@ public class LinkerTest {
                     new Testing_Jaccall_LinkSymbols());
 
         //when
-        final long value    = sizeof((CLong) null) == 8 ? 0xFFFFFFFFFFFFFFFFL : 0xFFFFFFFF;
+        final long value    = 0xFFFFFFFFFFFFFFFFL;
         final long returned = new Testing().unsignedLongTest(value);
 
         //then
@@ -239,7 +239,7 @@ public class LinkerTest {
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
         //when
-        final long value    = Long.MAX_VALUE;
+        final long value    = sizeof((Pointer) null) == 8 ? Long.MAX_VALUE : Integer.MAX_VALUE;
         final long returned = new Testing().pointerTest(value);
 
         //then
