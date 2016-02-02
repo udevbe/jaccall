@@ -172,14 +172,13 @@ public class PointerTest {
                                                pointer);
 
         //when
-        try (Pointer<Pointer<Byte>> bytePointerPointer = nref(bytePointer);) {
-            //then
-            //FIXME use jni to read values
-            //TODO add test dref Pointer
-            assertThat(bytePointerPointer.dref().address).isEqualTo(pointer);
-            assertThat(bytePointerPointer.dref()
-                                         .dref(4)).isEqualTo(b4);
-        }
+        final Pointer<Pointer<Byte>> bytePointerPointer = nref(bytePointer);
+        //then
+        //FIXME use jni to read values
+        //TODO add test dref Pointer
+        assertThat(bytePointerPointer.dref().address).isEqualTo(pointer);
+        assertThat(bytePointerPointer.dref()
+                                     .dref(4)).isEqualTo(b4);
     }
 
     @Test
@@ -192,22 +191,21 @@ public class PointerTest {
         final byte b4 = (byte) 0x90;
 
         //when
-        try (Pointer<Byte> pointer = nref(b0,
-                                          b1,
-                                          b2,
-                                          b3,
-                                          b4);) {
-            //then
-            assertThat(pointer.address).isNotEqualTo(0L);
-            //FIXME use jni to read values
-            //TODO add test dref byte
+        final Pointer<Byte> pointer = nref(b0,
+                                           b1,
+                                           b2,
+                                           b3,
+                                           b4);
+        //then
+        assertThat(pointer.address).isNotEqualTo(0L);
+        //FIXME use jni to read values
+        //TODO add test dref byte
 
-            assertThat(pointer.dref()).isEqualTo(b0);
-            assertThat(pointer.dref(1)).isEqualTo(b1);
-            assertThat(pointer.dref(2)).isEqualTo(b2);
-            assertThat(pointer.dref(3)).isEqualTo(b3);
-            assertThat(pointer.dref(4)).isEqualTo(b4);
-        }
+        assertThat(pointer.dref()).isEqualTo(b0);
+        assertThat(pointer.dref(1)).isEqualTo(b1);
+        assertThat(pointer.dref(2)).isEqualTo(b2);
+        assertThat(pointer.dref(3)).isEqualTo(b3);
+        assertThat(pointer.dref(4)).isEqualTo(b4);
     }
 
     @Test
@@ -220,22 +218,21 @@ public class PointerTest {
         final short s4 = (short) 0x9012;
 
         //when
-        try (Pointer<Short> pointer = nref(s0,
-                                           s1,
-                                           s2,
-                                           s3,
-                                           s4);) {
-            //then
-            assertThat(pointer.address).isNotEqualTo(0L);
-            //FIXME use jni to read values
-            //TODO add test dref short
+        final Pointer<Short> pointer = nref(s0,
+                                            s1,
+                                            s2,
+                                            s3,
+                                            s4);
+        //then
+        assertThat(pointer.address).isNotEqualTo(0L);
+        //FIXME use jni to read values
+        //TODO add test dref short
 
-            assertThat(pointer.dref()).isEqualTo(s0);
-            assertThat(pointer.dref(1)).isEqualTo(s1);
-            assertThat(pointer.dref(2)).isEqualTo(s2);
-            assertThat(pointer.dref(3)).isEqualTo(s3);
-            assertThat(pointer.dref(4)).isEqualTo(s4);
-        }
+        assertThat(pointer.dref()).isEqualTo(s0);
+        assertThat(pointer.dref(1)).isEqualTo(s1);
+        assertThat(pointer.dref(2)).isEqualTo(s2);
+        assertThat(pointer.dref(3)).isEqualTo(s3);
+        assertThat(pointer.dref(4)).isEqualTo(s4);
     }
 
     @Test
@@ -248,22 +245,21 @@ public class PointerTest {
         final int i4 = 0x90123456;
 
         //when
-        try (Pointer<Integer> pointer = nref(i0,
-                                             i1,
-                                             i2,
-                                             i3,
-                                             i4);) {
-            //then
-            assertThat(pointer.address).isNotEqualTo(0L);
-            //FIXME use jni to read values
-            //TODO add test dref int
+        final Pointer<Integer> pointer = nref(i0,
+                                              i1,
+                                              i2,
+                                              i3,
+                                              i4);
+        //then
+        assertThat(pointer.address).isNotEqualTo(0L);
+        //FIXME use jni to read values
+        //TODO add test dref int
 
-            assertThat(pointer.dref()).isEqualTo(i0);
-            assertThat(pointer.dref(1)).isEqualTo(i1);
-            assertThat(pointer.dref(2)).isEqualTo(i2);
-            assertThat(pointer.dref(3)).isEqualTo(i3);
-            assertThat(pointer.dref(4)).isEqualTo(i4);
-        }
+        assertThat(pointer.dref()).isEqualTo(i0);
+        assertThat(pointer.dref(1)).isEqualTo(i1);
+        assertThat(pointer.dref(2)).isEqualTo(i2);
+        assertThat(pointer.dref(3)).isEqualTo(i3);
+        assertThat(pointer.dref(4)).isEqualTo(i4);
     }
 
     @Test
@@ -276,22 +272,21 @@ public class PointerTest {
         final float f4 = 0x90123456;
 
         //when
-        try (Pointer<Float> pointer = nref(f0,
-                                           f1,
-                                           f2,
-                                           f3,
-                                           f4);) {
-            //then
-            assertThat(pointer.address).isNotEqualTo(0L);
-            //FIXME use jni to read values
-            //TODO add test dref float
+        final Pointer<Float> pointer = nref(f0,
+                                            f1,
+                                            f2,
+                                            f3,
+                                            f4);
+        //then
+        assertThat(pointer.address).isNotEqualTo(0L);
+        //FIXME use jni to read values
+        //TODO add test dref float
 
-            assertThat(pointer.dref()).isEqualTo(f0);
-            assertThat(pointer.dref(1)).isEqualTo(f1);
-            assertThat(pointer.dref(2)).isEqualTo(f2);
-            assertThat(pointer.dref(3)).isEqualTo(f3);
-            assertThat(pointer.dref(4)).isEqualTo(f4);
-        }
+        assertThat(pointer.dref()).isEqualTo(f0);
+        assertThat(pointer.dref(1)).isEqualTo(f1);
+        assertThat(pointer.dref(2)).isEqualTo(f2);
+        assertThat(pointer.dref(3)).isEqualTo(f3);
+        assertThat(pointer.dref(4)).isEqualTo(f4);
     }
 
     @Test
@@ -304,22 +299,22 @@ public class PointerTest {
         final long l4 = 0x9012345678901234L;
 
         //when
-        try (Pointer<Long> pointer = nref(l0,
-                                          l1,
-                                          l2,
-                                          l3,
-                                          l4);) {
-            //then
-            assertThat(pointer.address).isNotEqualTo(0L);
-            //FIXME use jni to read values
-            //TODO add test dref long
+        final Pointer<Long> pointer = nref(l0,
+                                           l1,
+                                           l2,
+                                           l3,
+                                           l4);
+        //then
+        assertThat(pointer.address).isNotEqualTo(0L);
+        //FIXME use jni to read values
+        //TODO add test dref long
 
-            assertThat(pointer.dref()).isEqualTo(l0);
-            assertThat(pointer.dref(1)).isEqualTo(l1);
-            assertThat(pointer.dref(2)).isEqualTo(l2);
-            assertThat(pointer.dref(3)).isEqualTo(l3);
-            assertThat(pointer.dref(4)).isEqualTo(l4);
-        }
+        assertThat(pointer.dref()).isEqualTo(l0);
+        assertThat(pointer.dref(1)).isEqualTo(l1);
+        assertThat(pointer.dref(2)).isEqualTo(l2);
+        assertThat(pointer.dref(3)).isEqualTo(l3);
+        assertThat(pointer.dref(4)).isEqualTo(l4);
+
     }
 
     @Test
@@ -332,22 +327,22 @@ public class PointerTest {
         final double d4 = 0x9012345678901234L;
 
         //when
-        try (Pointer<Double> pointer = nref(d0,
-                                            d1,
-                                            d2,
-                                            d3,
-                                            d4);) {
-            //then
-            assertThat(pointer.address).isNotEqualTo(0L);
-            //FIXME use jni to read values
-            //TODO add test dref double
+        final Pointer<Double> pointer = nref(d0,
+                                             d1,
+                                             d2,
+                                             d3,
+                                             d4);
+        //then
+        assertThat(pointer.address).isNotEqualTo(0L);
+        //FIXME use jni to read values
+        //TODO add test dref double
 
-            assertThat(pointer.dref()).isEqualTo(d0);
-            assertThat(pointer.dref(1)).isEqualTo(d1);
-            assertThat(pointer.dref(2)).isEqualTo(d2);
-            assertThat(pointer.dref(3)).isEqualTo(d3);
-            assertThat(pointer.dref(4)).isEqualTo(d4);
-        }
+        assertThat(pointer.dref()).isEqualTo(d0);
+        assertThat(pointer.dref(1)).isEqualTo(d1);
+        assertThat(pointer.dref(2)).isEqualTo(d2);
+        assertThat(pointer.dref(3)).isEqualTo(d3);
+        assertThat(pointer.dref(4)).isEqualTo(d4);
+
     }
 
     @Test
@@ -360,22 +355,22 @@ public class PointerTest {
         final CLong cl4 = new CLong(0x90123456);
 
         //when
-        try (Pointer<CLong> pointer = nref(cl0,
-                                           cl1,
-                                           cl2,
-                                           cl3,
-                                           cl4);) {
-            //then
-            assertThat(pointer.address).isNotEqualTo(0L);
-            //FIXME use jni to read values
-            //TODO add test dref CLong
+        final Pointer<CLong> pointer = nref(cl0,
+                                            cl1,
+                                            cl2,
+                                            cl3,
+                                            cl4);
+        //then
+        assertThat(pointer.address).isNotEqualTo(0L);
+        //FIXME use jni to read values
+        //TODO add test dref CLong
 
-            assertThat(pointer.dref()).isEqualTo(cl0);
-            assertThat(pointer.dref(1)).isEqualTo(cl1);
-            assertThat(pointer.dref(2)).isEqualTo(cl2);
-            assertThat(pointer.dref(3)).isEqualTo(cl3);
-            assertThat(pointer.dref(4)).isEqualTo(cl4);
-        }
+        assertThat(pointer.dref()).isEqualTo(cl0);
+        assertThat(pointer.dref(1)).isEqualTo(cl1);
+        assertThat(pointer.dref(2)).isEqualTo(cl2);
+        assertThat(pointer.dref(3)).isEqualTo(cl3);
+        assertThat(pointer.dref(4)).isEqualTo(cl4);
+
     }
 
     @Test
@@ -388,16 +383,16 @@ public class PointerTest {
         final byte b4 = (byte) 0x90;
 
         //when
-        try (Pointer<Byte> bytePointer = nref(b0,
-                                              b1,
-                                              b2,
-                                              b3,
-                                              b4);) {
-            final Pointer<Byte> offsetBytePointer = bytePointer.offset(3);
+        final Pointer<Byte> bytePointer = nref(b0,
+                                               b1,
+                                               b2,
+                                               b3,
+                                               b4);
+        final Pointer<Byte> offsetBytePointer = bytePointer.offset(3);
 
-            //then
-            assertThat(offsetBytePointer.dref(0)).isEqualTo(b3);
-        }
+        //then
+        assertThat(offsetBytePointer.dref(0)).isEqualTo(b3);
+
     }
 
     @Test
