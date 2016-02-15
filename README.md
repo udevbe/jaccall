@@ -611,4 +611,39 @@ The important thing to remember here is that in the case of `nref` the memory li
 
 #### A function pointer example
 
+C
+```
+typedef char(*testFunc)(struct test*, unsigned int, struct test);
+```
+
+Java
+```
+@Functor
+public interface TestFunc {
+    byte $(@Ptr(TestStruct.class) long arg0, @Unsigned int arg1, @ByVal(TestStruct.class) long arg2);
+}
+```
+
+Defining a single method interface as a `@Functor` will signal Jaccall to generate Java stubs as well as a factory for instantiating those stubs. The rules for mapping a function pointer are the same as for mapping a native method in the Linker API, except that the method name MUST be defined as `$`. This allows a user to go from a C pointer to a callable Java object, as well as defining a Java method and expose it as a C function pointer!
+
+The factory is generated in the same package as the annoated interface, and will have it's named derived from the declared interface: `Pointer+<interface name>`. The factory for our `TestFunc` will thus be named `PointerTestFunc`.
+
+The generated factory can be used like this.
+
+When invoking a function pointer from C:
+```
+//get an address from C through jni or jacall.
+long c_func_ptr = ...;
+//wrap the address so we can invoke it on the Java side.
+PointerTestFunc cFuncPointer = PointerTestFunc.wrapFunc(c_func_ptr);
+...
+//invoke the function, this will execute the actual C function.
+cFuncPointer.$(arg0, arg1, arg2);
+...
+//PointerTestFunc extends from the Pointer class, and as such, is a pointer itself.
+assert(cFuncPointer.address == c_func_ptr);
+```
+
+When constructing a function pointer from Java.
+
 MORE TODO
