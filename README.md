@@ -612,26 +612,26 @@ The important thing to remember here is that in the case of `nref` the memory li
 #### A function pointer example
 
 C
-```
+```C
 typedef char(*testFunc)(struct test*, unsigned int, struct test);
 ```
 
 Java
-```
+```Java
 @Functor
 public interface TestFunc {
     byte $(@Ptr(TestStruct.class) long arg0, @Unsigned int arg1, @ByVal(TestStruct.class) long arg2);
 }
 ```
 
-Defining a single method interface as a `@Functor` will signal Jaccall to generate Java stubs as well as a factory for instantiating those stubs. The rules for mapping a function pointer are the same as for mapping a native method in the Linker API, except that the method name MUST be defined as `$`. This allows a user to go from a C pointer to a callable Java object, as well as defining a Java method and expose it as a C function pointer!
+Defining a single method interface as a `@Functor` will signal Jaccall to generate Java stubs as well as a factory for instantiating those stubs. The rules for mapping a function pointer are the same as for mapping a native method in the Linker API, in addition the method name MUST be defined as `$`. This allows a user to go from a C pointer to a callable Java object, as well as defining a Java method and expose it as a C function pointer!
 
 The factory is generated in the same package as the annoated interface, and will have it's named derived from the declared interface: `Pointer+<interface name>`. The factory for our `TestFunc` will thus be named `PointerTestFunc`.
 
 The generated factory can be used like this.
 
 When invoking a function pointer from C:
-```
+```Java
 //get an address from C through jni or jacall.
 long c_func_ptr = ...;
 //wrap the address so we can invoke it on the Java side.
@@ -645,5 +645,28 @@ assert(cFuncPointer.address == c_func_ptr);
 ```
 
 When constructing a function pointer from Java.
+```Java
+//the implementation in Java of a C function
+public byte javaFunction(@Ptr(StructType.class) final long arg0, @Unsigned final int arg1, @ByVal(TestStruct.class) final long arg2) {
+...
+}
+...
+//create a function pointer that points to the above java function.
+final PointerTestFunc pointerTestFunc = PointerTestFunc.nref(new TestFunc() {
+                    @Override
+                    public byte $(@Ptr final long arg0, @Unsigned final int arg1, @ByVal(TestStruct.class) final long arg2) {
+                        return javaFunction(arg0, arg1, arg2);
+                    }
+                });
+
+//or more briefly by utilized Java 8's Java function pointer syntax.
+final PointerTestFunc pointerTestFunc = PointerTestFunc.nref(this::javaFunction);
+...
+//pass on the function pointer address to the native side
+someNativeFunction(pointerTestFunc.address);
+...
+//we can also execute the function pointer
+pointerTestFunc.$(arg0, arg1, arg2);
+```
 
 MORE TODO
