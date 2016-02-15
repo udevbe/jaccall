@@ -237,7 +237,15 @@ int_p.close();
 
 #### Stack vs Heap
 
-C has the concept of stack and heap allocated memory. Unfortunately this doesn't translate well in Java. Jaccall tries to alleviate this by defining a `Pointer<...>` as an `AutoClosable`. Using Java's try-with-resource concept, we can mimic the concept of stack allocated memory.
+C has the concept of stack and heap allocated memory. Unfortunately this doesn't translate well in Java. Jaccall tries to alleviate this by utilizing Java's garbage collector mechanism. To understand the idea behind this, it's important to know the difference between memory allocated with `Pointer.malloc(..)` and `Pointer.nref(..)`. 
+
+A pointer that refers to `malloc` memory is not subject to Java's garbage collector and will never be freed manualy. Just like in C, the program is expected to free the memory when it's done with it.
+
+A pointer that refers to `nref` memory is subject to Java's garbage collector and as such requires no manual call to free. It is meant to mimic C's stack allocated memory. It is strongly advices to use this memory solely within the scope of the method that called `nref`.
+
+One can also specifically scope heap allocated memory as Jacall defines a `Pointer<...>` as an `AutoClosable`. Using Java's try-with-resource concept, we can precisely scope heap allocated memory. 
+
+Do not use try-with-resource on `nref` allocated memory, as it will result in a segfault caused by a double `free`.
 
 C
 ```C
@@ -247,7 +255,7 @@ int* int_p = &some_int;
 //`int_p` becomes invalid once method ends
 ```
 
-Using Jaccall this translates to
+Using Jaccall `nref` this translates to
 ```Java
 //(Optional) Define a static import of the Pointer class to avoid prefixing all static method calls.
 import static com.github.zubnix.jaccall.Pointer.*
@@ -255,9 +263,24 @@ import static com.github.zubnix.jaccall.Pointer.*
 //define an integer
 int some_int = 5;
 //allocate a new block of scoped memory with `some_int` as it's value.
-try(Pointer<Integer> int_p = nref(some_int)){
+Pointer<Integer> int_p = nref(some_int);
 ...
+//`int_p` becomes invalid once Java's garbage collector kicks in.
+```
+
+Using Jaccall `malloc` this translates to
+```Java
+//(Optional) Define a static import of the Pointer class to avoid prefixing all static method calls.
+import static com.github.zubnix.jaccall.Pointer.*
+import static com.github.zubnix.jaccall.Size.*
+...
+//define an integer
+int some_int = 5;
+//allocate a new block of scoped memory with `some_int` as it's value.
+try(Pointer<Integer> int_p = malloc(sizeof((Integer)null).castp(Integer.class)){
+ ...
 }
+...
 //`int_p` becomes invalid once try block ends.
 ```
 
@@ -399,7 +422,7 @@ import static com.github.zubnix.jaccall.Pointer.*;
 ...
 //nref uses a vararg parameter, so we can use it with both arrays and classic function arguments
 Pointer<Integer> int_p_varargs = nref(1,2,3,4,5);
-int[] array = {1,2,3,4,5);
+Integer[] array = {1,2,3,4,5);
 Pointer<Integer> int_p_array = nref(array);
 ```
 
