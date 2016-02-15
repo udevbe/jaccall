@@ -651,7 +651,7 @@ public byte javaFunction(@Ptr(StructType.class) final long arg0, @Unsigned final
 ...
 }
 ...
-//create a function pointer that points to the above java function.
+//create a new function pointer that points to the above java function.
 final PointerTestFunc pointerTestFunc = PointerTestFunc.nref(new TestFunc() {
                     @Override
                     public byte $(@Ptr final long arg0, @Unsigned final int arg1, @ByVal(TestStruct.class) final long arg2) {
@@ -659,14 +659,14 @@ final PointerTestFunc pointerTestFunc = PointerTestFunc.nref(new TestFunc() {
                     }
                 });
 
-//or more briefly by utilized Java 8's Java function pointer syntax.
+//or more briefly (Java 8)
 final PointerTestFunc pointerTestFunc = PointerTestFunc.nref(this::javaFunction);
 ...
 //pass on the function pointer address to the native side
 someNativeFunction(pointerTestFunc.address);
 ...
-//we can also execute the function pointer
+//we can also execute the function pointer in Java
 pointerTestFunc.$(arg0, arg1, arg2);
 ```
 
-MORE TODO
+It's important to notice that a a call to `nref` in this case will not (yet) automatically reclaim memory once the functor object goes out of scope. As such it is a source of potential memory leaks which will be addressed in a future release of Jaccall.
