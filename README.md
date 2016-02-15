@@ -44,7 +44,10 @@ Jaccall tries to remedy this by strictly adhering to the KISS princicple.
   - [Pointer types](#pointer-types)
 - [Struct API](#struct-api)
   - [A struct example](#a-struct-example)
+  - [Field definitions](#field-definitions)
   - [Usage](#usage)
+- [Function Pointer API](#function-pointer-api)
+  - [A function pointer example](#a-function-pointer-example)
 
 # Linker API
 
@@ -549,6 +552,9 @@ The following rules apply when annotating a class with `@Struct`.
 - A class annotated with `@Struct` must be a class.
 - A class annotated with `@Struct` must be a top level class.
 
+#### Field definitions
+TODO
+
 #### Usage
 
 Using a Jaccall struct in Java is very similar as how you would use a C struct. You can create a new one directly
@@ -590,5 +596,19 @@ testStruct.field0((byte)123);
 ...
 int field1 = testStruct.field1();
 ```
+
+The important difference between the 2 cases is that the first one creates a struct on the stack (for C), which translated to memory subject to garbage collection in Java. While in the second case the memory has to be mannually freed.
+
+To get a pointer to a 'stack' allocated struct, use `Pointer.ref(..)`. This will consistently return the same address of the struct.
+
+#### Ref vs Nref
+
+In our previous (non struct) examples we saw that a call to `nref` would allocated a new block of managed memory and return it's address. This in contrast with `ref`, which consistenly returns the same memory address and only accepts a struct. The important difference to notice here is that `nref` is short for 'new reference', while `ref` simply means 'reference', as the 'new' already happened with a call to `new FooStruct()`.
+
+The important thing to remember here is that in the case of `nref` the memory lifecycle is determined by the pointer object that was returned. In case of `ref` the memory lifecycle is determined by struct object itself.
+
+# Function Pointer API
+
+#### A function pointer example
 
 MORE TODO
