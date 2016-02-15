@@ -277,7 +277,8 @@ import static com.github.zubnix.jaccall.Size.*
 //define an integer
 int some_int = 5;
 //allocate a new block of scoped memory with `some_int` as it's value.
-try(Pointer<Integer> int_p = malloc(sizeof((Integer)null).castp(Integer.class)){
+try(Pointer<Integer> int_p = malloc(sizeof(some_int).castp(Integer.class)){
+int_p.write(some_int);
  ...
 }
 ...
@@ -286,12 +287,13 @@ try(Pointer<Integer> int_p = malloc(sizeof((Integer)null).castp(Integer.class)){
 
 There are some notable differences between the C and Java example. In the C example, only one block of memory is used to define `some_int`, `int_p` is simply a reference to this memory. This block of memory is method scoped (stack allocated). Once the method exits, the memory is cleaned up. 
 
-On the Java side however things are a bit different. A Java object (primitive) is defined as `some_int`. Next a new block of memory `int_p` is allocated on the heap, and the value of `some_int` is copied into it. This operation is reflected in the call `Pointer.nref(some_int)`. Because we defined `int_p` inside a try-with-resources, it will be freed automatically with a call to `close()` once the try block ends.
+On the Java side however things are a bit different. A Java object (primitive) is defined as `some_int`. Next a new block of memory `int_p` is allocated on the heap, and the value of `some_int` is copied into it. This operation is reflected in the call `Pointer.write(some_int)`. Because we defined `int_p` inside a try-with-resources, it will be freed automatically with a call to `close()` once the try block ends.
 
 It is important to notice that there is nothing special about `Pointer.nref(some_int)`. It's merely a shortcut for
 ```Java
 Pointer.malloc(Size.sizeof(some_int)).castp(Integer.class).write(some_int);
 ```
+but unlike a plain `malloc` has it's lifecycle tracked by the Java garbage collector.
 
 #### Memory read write
 
