@@ -100,15 +100,15 @@ final class StructWriter {
 
         final LinkedList<FieldDefinition> fieldDefinitions = new LinkedList<>();
 
+        Boolean union = Boolean.FALSE;
         for (final AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
             if (annotationMirror.getAnnotationType()
                                 .asElement()
                                 .getSimpleName()
                                 .toString()
                                 .equals(STRUCT)) {
-                Boolean union = false;
-                List<? extends AnnotationValue> fieldAnnotations = new LinkedList<>();
 
+                List<? extends AnnotationValue> fieldAnnotations = new LinkedList<>();
                 for (final Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> structAttribute : annotationMirror.getElementValues()
                                                                                                                                .entrySet()) {
                     if (structAttribute.getKey()
@@ -137,7 +137,7 @@ final class StructWriter {
 
         final List<FieldSpec> offsetFields = new LinkedList<>();
         final CodeBlock.Builder ffiTypeCodeBuilder = CodeBlock.builder()
-                                                              .add("$[$T.ffi_type_struct(",
+                                                              .add(union ? "$[$T.ffi_type_union(" : "$[$T.ffi_type_struct(",
                                                                    JNI.class);
         final List<MethodSpec> accessors = new LinkedList<>();
         for (int i = 0; i < fieldDefinitions.size(); i++) {
