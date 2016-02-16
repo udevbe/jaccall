@@ -1,7 +1,5 @@
 package com.github.zubnix.jaccall.compiletime;
 
-import com.google.auto.common.SuperficialValidation;
-
 import javax.annotation.processing.Messager;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -22,21 +20,13 @@ final class CheckWellFormedLib {
 
         for (final TypeElement typeElement : typeElements) {
 
-            if (SuperficialValidation.validateElement(typeElement)) {
+            isClass(typeElement);
+            isNotNested(typeElement);
 
-                isClass(typeElement);
-                isNotNested(typeElement);
+            final MethodValidator methodValidator = new MethodValidator(this.messager);
 
-                final MethodValidator methodValidator = new MethodValidator(this.messager);
-
-                for (final ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
-                    methodValidator.validateIfNative(executableElement);
-                }
-            }
-            else {
-                this.messager.printMessage(Diagnostic.Kind.ERROR,
-                                           "Could not resolve all required compile time type information.",
-                                           typeElement);
+            for (final ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
+                methodValidator.validateIfNative(executableElement);
             }
         }
     }

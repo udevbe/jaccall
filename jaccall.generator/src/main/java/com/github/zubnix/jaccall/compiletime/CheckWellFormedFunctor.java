@@ -1,8 +1,6 @@
 package com.github.zubnix.jaccall.compiletime;
 
 
-import com.google.auto.common.SuperficialValidation;
-
 import javax.annotation.processing.Messager;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -19,22 +17,15 @@ final class CheckWellFormedFunctor {
 
     public void process(final Set<? extends TypeElement> typeElements) {
         for (final TypeElement typeElement : typeElements) {
-            if (SuperficialValidation.validateElement(typeElement)) {
-                isInterface(typeElement);
-                doesNotExtend(typeElement);
-                hasSingleMethod(typeElement);
+            isInterface(typeElement);
+            doesNotExtend(typeElement);
+            hasSingleMethod(typeElement);
 
-                final MethodValidator methodValidator = new MethodValidator(this.messager);
+            final MethodValidator methodValidator = new MethodValidator(this.messager);
 
-                for (final ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
-                    hasDollarAsName(executableElement);
-                    methodValidator.validate(executableElement);
-                }
-            }
-            else {
-                this.messager.printMessage(Diagnostic.Kind.ERROR,
-                                           "Could not resolve all required compile time type information.",
-                                           typeElement);
+            for (final ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
+                hasDollarAsName(executableElement);
+                methodValidator.validate(executableElement);
             }
         }
     }

@@ -3,7 +3,6 @@ package com.github.zubnix.jaccall.compiletime;
 
 import com.github.zubnix.jaccall.JNI;
 import com.github.zubnix.jaccall.PointerFunc;
-import com.google.auto.common.SuperficialValidation;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -48,17 +47,10 @@ final class FunctorWriter {
 
     public void process(final Set<? extends TypeElement> typeElements) {
         for (final TypeElement typeElement : typeElements) {
-            if (SuperficialValidation.validateElement(typeElement)) {
-                for (final ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
-                    writeFunctorImplementation(typeElement,
-                                               executableElement);
-                    break;
-                }
-            }
-            else {
-                this.messager.printMessage(Diagnostic.Kind.ERROR,
-                                           "Could not resolve all required compile time type information.",
-                                           typeElement);
+            for (final ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
+                writeFunctorImplementation(typeElement,
+                                           executableElement);
+                break;
             }
         }
     }
