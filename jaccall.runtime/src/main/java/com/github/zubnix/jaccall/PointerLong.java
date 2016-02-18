@@ -2,7 +2,6 @@ package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.LongBuffer;
 
@@ -10,10 +9,9 @@ import static com.github.zubnix.jaccall.Size.sizeof;
 
 
 final class PointerLong extends Pointer<Long> {
-    PointerLong(@Nonnull final Type type,
-                final long address,
+    PointerLong(final long address,
                 @Nonnull final ByteBuffer byteBuffer) {
-        super(type,
+        super(Long.class,
               address,
               byteBuffer,
               sizeof((Long) null));

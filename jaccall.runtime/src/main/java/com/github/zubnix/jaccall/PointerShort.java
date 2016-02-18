@@ -2,17 +2,15 @@ package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
 
 import static com.github.zubnix.jaccall.Size.sizeof;
 
-public class PointerShort extends Pointer<Short> {
-    public PointerShort(@Nonnull final Type type,
-                        final long address,
+final class PointerShort extends Pointer<Short> {
+    PointerShort(final long address,
                         @Nonnull final ByteBuffer byteBuffer) {
-        super(type,
+        super(Short.class,
               address,
               byteBuffer,
               sizeof((Short) null));

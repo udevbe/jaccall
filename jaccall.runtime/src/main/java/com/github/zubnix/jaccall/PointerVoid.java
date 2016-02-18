@@ -2,14 +2,12 @@ package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 
 final class PointerVoid extends Pointer<Void> {
-    PointerVoid(final Type type,
-                final long address,
+    PointerVoid(final long address,
                 final ByteBuffer byteBuffer) {
-        super(type,
+        super(Void.class,
               address,
               byteBuffer,
               1);

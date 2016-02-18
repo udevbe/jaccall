@@ -2,17 +2,15 @@ package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 import static com.github.zubnix.jaccall.Size.sizeof;
 
 final class PointerFloat extends Pointer<Float> {
-    PointerFloat(@Nonnull final Type type,
-                 final long address,
+    PointerFloat(final long address,
                  @Nonnull final ByteBuffer byteBuffer) {
-        super(type,
+        super(Float.class,
               address,
               byteBuffer,
               sizeof((Float) null));

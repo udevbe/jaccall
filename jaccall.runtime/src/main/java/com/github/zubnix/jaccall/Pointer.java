@@ -7,11 +7,61 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.github.zubnix.jaccall.Size.sizeof;
 
 public abstract class Pointer<T> implements AutoCloseable {
+
+    protected static final Map<Class, PointerFactory<?>> POINTER_FACTORIES = new HashMap<>();
+
+    static {
+        final PointerByteFactory pointerByteFactory = new PointerByteFactory();
+        POINTER_FACTORIES.put(Byte.class,
+                              pointerByteFactory);
+        POINTER_FACTORIES.put(byte.class,
+                              pointerByteFactory);
+        POINTER_FACTORIES.put(CLong.class,
+                              new PointerCLongFactory());
+        final PointerDoubleFactory pointerDoubleFactory = new PointerDoubleFactory();
+        POINTER_FACTORIES.put(Double.class,
+                              pointerDoubleFactory);
+        POINTER_FACTORIES.put(double.class,
+                              pointerDoubleFactory);
+        final PointerFloatFactory pointerFloatFactory = new PointerFloatFactory();
+        POINTER_FACTORIES.put(Float.class,
+                              pointerFloatFactory);
+        POINTER_FACTORIES.put(float.class,
+                              pointerFloatFactory);
+        final PointerIntFactory pointerIntFactory = new PointerIntFactory();
+        POINTER_FACTORIES.put(Integer.class,
+                              pointerIntFactory);
+        POINTER_FACTORIES.put(int.class,
+                              pointerIntFactory);
+        final PointerLongFactory pointerLongFactory = new PointerLongFactory();
+        POINTER_FACTORIES.put(Long.class,
+                              pointerLongFactory);
+        POINTER_FACTORIES.put(long.class,
+                              pointerLongFactory);
+        POINTER_FACTORIES.put(Pointer.class,
+                              new PointerPointerFactory());
+        final PointerShortFactory pointerShortFactory = new PointerShortFactory();
+        POINTER_FACTORIES.put(Short.class,
+                              pointerShortFactory);
+        POINTER_FACTORIES.put(short.class,
+                              pointerShortFactory);
+        POINTER_FACTORIES.put(String.class,
+                              new PointerStringFactory());
+        POINTER_FACTORIES.put(StructType.class,
+                              new PointerStructFactory());
+        final PointerVoidFactory pointerVoidFactory = new PointerVoidFactory();
+        POINTER_FACTORIES.put(Void.class,
+                              pointerVoidFactory);
+        POINTER_FACTORIES.put(void.class,
+                              pointerVoidFactory);
+    }
 
     /**
      * Wrap byte buffer in a void pointer.
@@ -102,79 +152,41 @@ public abstract class Pointer<T> implements AutoCloseable {
                                @Nonnull final ByteBuffer byteBuffer) {
 
         final Class<?> rawType = toClass(type);
+        final Class<?> lookupType;
 
         if (StructType.class.isAssignableFrom(rawType)) {
-            try {
-                return (Pointer<U>) new PointerStruct(type,
-                                                      address,
-                                                      byteBuffer);
+            lookupType = StructType.class;
+        }
+        else if (Pointer.class.isAssignableFrom(rawType)) {
+            lookupType = Pointer.class;
+        }
+        else {
+            lookupType = rawType;
+        }
+
+        PointerFactory<?> pointerFactory = POINTER_FACTORIES.get(lookupType);
+        if (pointerFactory == null) {
+            //check if we're dealing with an unregistered functor type
+            if (rawType.getAnnotation(Functor.class) != null) {
+                try {
+                    final Class<?> functorPointerFactory = rawType.getClassLoader()
+                                                                  .loadClass(rawType.getName() + "PointerFactory");
+                    pointerFactory = (PointerFactory<?>) functorPointerFactory.newInstance();
+                    POINTER_FACTORIES.put(lookupType,
+                                          pointerFactory);
+                }
+                catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                    throw new Error(e);
+                }
             }
-            catch (IllegalAccessException | InstantiationException e) {
-                throw new RuntimeException(e);
+            else {
+                throw new IllegalArgumentException("Type " + rawType + " does not have a known native size.");
             }
         }
 
-        if (rawType.equals(Integer.class) || rawType.equals(int.class)) {
-            return (Pointer<U>) new PointerInt(type,
-                                               address,
-                                               byteBuffer);
-        }
-
-        if (rawType.equals(Float.class) || rawType.equals(float.class)) {
-            return (Pointer<U>) new PointerFloat(type,
-                                                 address,
-                                                 byteBuffer);
-        }
-
-        if (Pointer.class.isAssignableFrom(rawType)) {
-            return (Pointer<U>) new PointerPointer(type,
-                                                   address,
-                                                   byteBuffer);
-        }
-
-        if (type.equals(String.class)) {
-            return (Pointer<U>) new PointerString(type,
+        return (Pointer<U>) pointerFactory.create(type,
                                                   address,
                                                   byteBuffer);
-        }
-
-        if (rawType.equals(Void.class) || rawType.equals(void.class)) {
-            return (Pointer<U>) new PointerVoid(type,
-                                                address,
-                                                byteBuffer);
-        }
-
-        if (rawType.equals(Byte.class) || rawType.equals(byte.class)) {
-            return (Pointer<U>) new PointerByte(type,
-                                                address,
-                                                byteBuffer);
-        }
-
-        if (rawType.equals(Short.class) || rawType.equals(short.class)) {
-            return (Pointer<U>) new PointerShort(type,
-                                                 address,
-                                                 byteBuffer);
-        }
-
-        if (rawType.equals(Long.class) || rawType.equals(long.class)) {
-            return (Pointer<U>) new PointerLong(type,
-                                                address,
-                                                byteBuffer);
-        }
-
-        if (rawType.equals(Double.class) || rawType.equals(double.class)) {
-            return (Pointer<U>) new PointerDouble(type,
-                                                  address,
-                                                  byteBuffer);
-        }
-
-        if (rawType.equals(CLong.class)) {
-            return (Pointer<U>) new PointerCLong(type,
-                                                 address,
-                                                 byteBuffer);
-        }
-
-        throw new IllegalArgumentException("Type " + rawType + " does not have a known native size.");
     }
 
     /**

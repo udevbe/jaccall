@@ -2,7 +2,6 @@ package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 
@@ -10,10 +9,9 @@ import static com.github.zubnix.jaccall.Size.sizeof;
 
 
 final class PointerDouble extends Pointer<Double> {
-    PointerDouble(@Nonnull final Type type,
-                  final long address,
+    PointerDouble(final long address,
                   @Nonnull final ByteBuffer byteBuffer) {
-        super(type,
+        super(Double.class,
               address,
               byteBuffer,
               sizeof((Double) null));

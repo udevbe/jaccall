@@ -3,7 +3,6 @@ package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharsetEncoder;
@@ -15,10 +14,9 @@ final class PointerString extends Pointer<String> {
 
     private static final CharsetEncoder CHARSET_ENCODER = StandardCharsets.US_ASCII.newEncoder();
 
-    PointerString(final Type type,
-                  final long address,
+    PointerString(final long address,
                   @Nonnull final ByteBuffer byteBuffer) {
-        super(type,
+        super(String.class,
               address,
               byteBuffer,
               sizeof((Byte) null));
