@@ -8,7 +8,7 @@ import javax.annotation.Generated;
 import javax.annotation.Nonnull;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
-public abstract class PointerUnsignedLongFunc extends PointerFunc<PointerUnsignedLongFunc> implements Testing.LongFunc {
+public abstract class PointerUnsignedLongFunc extends PointerFunc<PointerUnsignedLongFunc> implements Testing.UnsignedLongFunc {
 
     static final long FFI_CIF = JNI.ffi_callInterface(JNI.FFI_TYPE_ULONG,
                                                       JNI.FFI_TYPE_ULONG);
