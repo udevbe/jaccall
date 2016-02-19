@@ -8,7 +8,7 @@ import javax.annotation.Generated;
 import javax.annotation.Nonnull;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
-public abstract class PointerIntFunc extends PointerFunc<PointerIntFunc> implements Testing.IntFunc {
+public abstract class PointerIntFunc extends PointerFunc<PointerIntFunc> implements IntFunc {
 
     static final long FFI_CIF = JNI.ffi_callInterface(JNI.FFI_TYPE_SINT32,
                                                       JNI.FFI_TYPE_SINT32);
@@ -24,7 +24,7 @@ public abstract class PointerIntFunc extends PointerFunc<PointerIntFunc> impleme
     }
 
     @Nonnull
-    public static PointerIntFunc nref(@Nonnull final Testing.IntFunc function) {
+    public static PointerIntFunc nref(@Nonnull final IntFunc function) {
         if (function instanceof PointerIntFunc) {
             return (PointerIntFunc) function;
         }

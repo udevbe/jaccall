@@ -7,7 +7,7 @@ import javax.annotation.Generated;
 import javax.annotation.Nonnull;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
-public abstract class PointerStructFunc extends PointerFunc<PointerStructFunc> implements Testing.StructFunc {
+public abstract class PointerStructFunc extends PointerFunc<PointerStructFunc> implements StructFunc {
 
     static final long FFI_CIF = JNI.ffi_callInterface(TestStruct.FFI_TYPE,
                                                       JNI.FFI_TYPE_POINTER,
@@ -29,7 +29,7 @@ public abstract class PointerStructFunc extends PointerFunc<PointerStructFunc> i
     }
 
     @Nonnull
-    public static PointerStructFunc nref(@Nonnull final Testing.StructFunc function) {
+    public static PointerStructFunc nref(@Nonnull final StructFunc function) {
         if (function instanceof PointerStructFunc) {
             return (PointerStructFunc) function;
         }

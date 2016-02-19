@@ -33,9 +33,7 @@ final class CheckWellFormedStruct {
 
     public void process(final Set<? extends TypeElement> typeElements) {
         for (final TypeElement typeElement : typeElements) {
-            //TODO we should allow non-top level structs and simply fail on name clash
             isTopLevel(typeElement);
-
             isClass(typeElement);
             isPublic(typeElement);
             isFinal(typeElement);

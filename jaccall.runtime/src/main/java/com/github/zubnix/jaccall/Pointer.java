@@ -170,7 +170,7 @@ public abstract class Pointer<T> implements AutoCloseable {
             if (rawType.getAnnotation(Functor.class) != null) {
                 try {
                     final Class<?> functorPointerFactory = rawType.getClassLoader()
-                                                                  .loadClass(rawType.getName() + "PointerFactory");
+                                                                  .loadClass(rawType.getName() + "_PointerFactory");
                     pointerFactory = (PointerFactory<?>) functorPointerFactory.newInstance();
                     POINTER_FACTORIES.put(lookupType,
                                           pointerFactory);

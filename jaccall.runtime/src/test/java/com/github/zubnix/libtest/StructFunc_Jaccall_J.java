@@ -7,12 +7,12 @@ import javax.annotation.Generated;
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
 final class StructFunc_Jaccall_J extends PointerStructFunc {
 
-    private static final long JNI_METHOD_ID = JNI.GetMethodID(Testing.StructFunc.class,
+    private static final long JNI_METHOD_ID = JNI.GetMethodID(StructFunc.class,
                                                               "$",
                                                               "(JBSJJJF)J");
-    private final Testing.StructFunc function;
+    private final StructFunc function;
 
-    public StructFunc_Jaccall_J(final Testing.StructFunc function) {
+    public StructFunc_Jaccall_J(final StructFunc function) {
         super(JNI.ffi_closure(FFI_CIF,
                               function,
                               JNI_METHOD_ID));

@@ -2,6 +2,7 @@ package com.github.zubnix.jaccall.compiletime;
 
 
 import com.github.zubnix.jaccall.JNI;
+import com.github.zubnix.jaccall.PointerFactory;
 import com.github.zubnix.jaccall.PointerFunc;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
@@ -27,6 +28,8 @@ import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -58,9 +61,11 @@ final class FunctorWriter {
     private void writeFunctorImplementation(final TypeElement typeElement,
                                             final ExecutableElement executableElement) {
 
-        final String factoryName     = "Pointer" + typeElement.getSimpleName();
-        final String cFunctorName    = typeElement.getSimpleName() + "_Jaccall_C";
-        final String javaFunctorName = typeElement.getSimpleName() + "_Jaccall_J";
+        final String factoryName        = "Pointer" + typeElement.getSimpleName();
+        final String cFunctorName       = typeElement.getSimpleName() + "_Jaccall_C";
+        final String javaFunctorName    = typeElement.getSimpleName() + "_Jaccall_J";
+        final String pointerFactoryName = typeElement.getSimpleName() + "_PointerFactory";
+
 
         writeFactory(factoryName,
                      cFunctorName,
@@ -75,6 +80,67 @@ final class FunctorWriter {
                          javaFunctorName,
                          typeElement,
                          executableElement);
+        writePointerFactory(factoryName,
+                            pointerFactoryName,
+                            cFunctorName,
+                            typeElement,
+                            executableElement);
+    }
+
+    private void writePointerFactory(final String factoryName,
+                                     final String pointerFactoryName,
+                                     final String cFunctorName,
+                                     final TypeElement element,
+                                     final ExecutableElement executableElement) {
+
+        final AnnotationSpec annotationSpec = AnnotationSpec.builder(Generated.class)
+                                                                 .addMember("value",
+                                                                            "$S",
+                                                                            JaccallGenerator.class.getName())
+                                                                 .build();
+
+        final String packageName = this.elementUtils.getPackageOf(element)
+                                                    .toString();
+
+        final MethodSpec createFunc = MethodSpec.methodBuilder("create")
+                                                .addAnnotation(Override.class)
+                                                .addModifiers(Modifier.PUBLIC)
+                                                .returns(ClassName.get(packageName,
+                                                                       factoryName))
+                                                .addParameter(Type.class,
+                                                              "type")
+                                                .addParameter(long.class,
+                                                              "address")
+                                                .addParameter(ByteBuffer.class,
+                                                              "buffer")
+                                                .addStatement("return new $T(address)",
+                                                              ClassName.get(packageName,
+                                                                            cFunctorName))
+                                                .build();
+
+        final TypeSpec typeSpec = TypeSpec.classBuilder(pointerFactoryName)
+                                          .addAnnotation(annotationSpec)
+                                          .addModifiers(Modifier.PUBLIC,
+                                                        Modifier.FINAL)
+                                          .addSuperinterface(ParameterizedTypeName.get(ClassName.get(PointerFactory.class),
+                                                                                       ClassName.get(packageName,
+                                                                                                     factoryName)))
+                                          .addMethod(createFunc)
+                                          .build();
+
+        final JavaFile javaFile = JavaFile.builder(packageName,
+                                                   typeSpec)
+                                          .skipJavaLangImports(true)
+                                          .build();
+        try {
+            javaFile.writeTo(this.filer);
+        }
+        catch (final IOException e) {
+            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                       "Could not write linksymbols source file: \n" + javaFile.toString(),
+                                       element);
+            e.printStackTrace();
+        }
     }
 
     private void writeJavaFunctor(final String factoryName,
@@ -309,18 +375,6 @@ final class FunctorWriter {
                                                                              factoryName))
                                                  .build();
 
-        final MethodSpec wrapFunc = MethodSpec.methodBuilder("wrapFunc")
-                                              .addModifiers(Modifier.PUBLIC,
-                                                            Modifier.STATIC)
-                                              .returns(ClassName.get(packageName,
-                                                                     factoryName))
-                                              .addParameter(long.class,
-                                                            "address")
-                                              .addStatement("return new $T(address)",
-                                                            ClassName.get(packageName,
-                                                                          cFunctorName))
-                                              .build();
-
         final MethodSpec nref = MethodSpec.methodBuilder("nref")
                                           .addModifiers(Modifier.PUBLIC,
                                                         Modifier.STATIC)
@@ -350,7 +404,6 @@ final class FunctorWriter {
                                           .addSuperinterface(TypeName.get(element.asType()))
                                           .addField(ffiCif)
                                           .addMethod(constructor)
-                                          .addMethod(wrapFunc)
                                           .addMethod(nref)
                                           .build();
 

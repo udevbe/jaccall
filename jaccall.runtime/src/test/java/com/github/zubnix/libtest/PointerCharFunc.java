@@ -8,7 +8,7 @@ import javax.annotation.Generated;
 import javax.annotation.Nonnull;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
-public abstract class PointerCharFunc extends PointerFunc<PointerCharFunc> implements Testing.CharFunc {
+public abstract class PointerCharFunc extends PointerFunc<PointerCharFunc> implements CharFunc {
 
     static final long FFI_CIF = JNI.ffi_callInterface(JNI.FFI_TYPE_SINT8,
                                                       JNI.FFI_TYPE_SINT8);
@@ -24,7 +24,7 @@ public abstract class PointerCharFunc extends PointerFunc<PointerCharFunc> imple
     }
 
     @Nonnull
-    public static PointerCharFunc nref(@Nonnull final Testing.CharFunc function) {
+    public static PointerCharFunc nref(@Nonnull final CharFunc function) {
         if (function instanceof PointerCharFunc) {
             return (PointerCharFunc) function;
         }

@@ -8,7 +8,7 @@ import javax.annotation.Generated;
 import javax.annotation.Nonnull;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
-public abstract class PointerDoubleFunc extends PointerFunc<PointerDoubleFunc> implements Testing.DoubleFunc {
+public abstract class PointerDoubleFunc extends PointerFunc<PointerDoubleFunc> implements DoubleFunc {
 
     static final long FFI_CIF = JNI.ffi_callInterface(JNI.FFI_TYPE_DOUBLE,
                                                       JNI.FFI_TYPE_DOUBLE);
@@ -24,7 +24,7 @@ public abstract class PointerDoubleFunc extends PointerFunc<PointerDoubleFunc> i
     }
 
     @Nonnull
-    public static PointerDoubleFunc nref(@Nonnull final Testing.DoubleFunc function) {
+    public static PointerDoubleFunc nref(@Nonnull final DoubleFunc function) {
         if (function instanceof PointerDoubleFunc) {
             return (PointerDoubleFunc) function;
         }

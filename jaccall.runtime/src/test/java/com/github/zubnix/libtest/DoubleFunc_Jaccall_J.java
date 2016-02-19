@@ -7,12 +7,12 @@ import javax.annotation.Generated;
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
 final class DoubleFunc_Jaccall_J extends PointerDoubleFunc {
 
-    private static final long JNI_METHOD_ID = JNI.GetMethodID(Testing.DoubleFunc.class,
+    private static final long JNI_METHOD_ID = JNI.GetMethodID(DoubleFunc.class,
                                                               "$",
                                                               "(D)D");
-    private final Testing.DoubleFunc function;
+    private final DoubleFunc function;
 
-    public DoubleFunc_Jaccall_J(final Testing.DoubleFunc function) {
+    public DoubleFunc_Jaccall_J(final DoubleFunc function) {
         super(JNI.ffi_closure(FFI_CIF,
                               function,
                               JNI_METHOD_ID));

@@ -7,12 +7,12 @@ import javax.annotation.Generated;
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
 final class ShortFunc_Jaccall_J extends PointerShortFunc {
 
-    private static final long JNI_METHOD_ID = JNI.GetMethodID(Testing.ShortFunc.class,
+    private static final long JNI_METHOD_ID = JNI.GetMethodID(ShortFunc.class,
                                                               "$",
                                                               "(S)S");
-    private final Testing.ShortFunc function;
+    private final ShortFunc function;
 
-    public ShortFunc_Jaccall_J(final Testing.ShortFunc function) {
+    public ShortFunc_Jaccall_J(final ShortFunc function) {
         super(JNI.ffi_closure(FFI_CIF,
                               function,
                               JNI_METHOD_ID));

@@ -8,7 +8,7 @@ import javax.annotation.Generated;
 import javax.annotation.Nonnull;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
-public abstract class PointerShortFunc extends PointerFunc<PointerShortFunc> implements Testing.ShortFunc {
+public abstract class PointerShortFunc extends PointerFunc<PointerShortFunc> implements ShortFunc {
 
     static final long FFI_CIF = JNI.ffi_callInterface(JNI.FFI_TYPE_SINT16,
                                                       JNI.FFI_TYPE_SINT16);
@@ -24,7 +24,7 @@ public abstract class PointerShortFunc extends PointerFunc<PointerShortFunc> imp
     }
 
     @Nonnull
-    public static PointerShortFunc nref(@Nonnull final Testing.ShortFunc function) {
+    public static PointerShortFunc nref(@Nonnull final ShortFunc function) {
         if (function instanceof PointerShortFunc) {
             return (PointerShortFunc) function;
         }

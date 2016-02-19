@@ -45,10 +45,6 @@ public class FunctorWriterTest {
                                                                        "    super(PointerCharFunc.class, address);\n" +
                                                                        "  }\n" +
                                                                        "\n" +
-                                                                       "  public static PointerCharFunc wrapFunc(long address) {\n" +
-                                                                       "    return new CharFunc_Jaccall_C(address);\n" +
-                                                                       "  }\n" +
-                                                                       "\n" +
                                                                        "  public static PointerCharFunc nref(CharFunc function) {\n" +
                                                                        "    if(function instanceof PointerCharFunc) {\n" +
                                                                        "      return (PointerCharFunc)function;\n" +
@@ -99,6 +95,21 @@ public class FunctorWriterTest {
                                                                        "  @Override\n" +
                                                                        "  public byte $(byte value) {\n" +
                                                                        "    return this.function.$(value);\n" +
+                                                                       "  }\n" +
+                                                                       "}"),
+                                       JavaFileObjects.forSourceString("com.github.zubnix.libtest.CharFunc_PointerFactory",
+                                                                       "package com.github.zubnix.libtest;\n" +
+                                                                       "\n" +
+                                                                       "import com.github.zubnix.jaccall.PointerFactory;\n" +
+                                                                       "import java.lang.reflect.Type;\n" +
+                                                                       "import java.nio.ByteBuffer;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
+                                                                       "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
+                                                                       "public final class CharFunc_PointerFactory implements PointerFactory<PointerCharFunc> {\n" +
+                                                                       "  @Override\n" +
+                                                                       "  public PointerCharFunc create(Type type, long address, ByteBuffer buffer) {\n" +
+                                                                       "    return new CharFunc_Jaccall_C(address);\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }

@@ -8,7 +8,7 @@ import javax.annotation.Generated;
 import javax.annotation.Nonnull;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
-public abstract class PointerUnsignedIntFunc extends PointerFunc<PointerUnsignedIntFunc> implements Testing.UnsignedIntFunc {
+public abstract class PointerUnsignedIntFunc extends PointerFunc<PointerUnsignedIntFunc> implements UnsignedIntFunc {
 
     static final long FFI_CIF = JNI.ffi_callInterface(JNI.FFI_TYPE_UINT32,
                                                       JNI.FFI_TYPE_UINT32);
@@ -24,7 +24,7 @@ public abstract class PointerUnsignedIntFunc extends PointerFunc<PointerUnsigned
     }
 
     @Nonnull
-    public static PointerUnsignedIntFunc nref(@Nonnull final Testing.UnsignedIntFunc function) {
+    public static PointerUnsignedIntFunc nref(@Nonnull final UnsignedIntFunc function) {
         if (function instanceof PointerUnsignedIntFunc) {
             return (PointerUnsignedIntFunc) function;
         }

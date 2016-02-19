@@ -7,7 +7,7 @@ import javax.annotation.Generated;
 import javax.annotation.Nonnull;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
-public abstract class PointerUnionFunc extends PointerFunc<PointerUnionFunc> implements Testing.UnionFunc {
+public abstract class PointerUnionFunc extends PointerFunc<PointerUnionFunc> implements UnionFunc {
 
     static final long FFI_CIF = JNI.ffi_callInterface(TestUnion.FFI_TYPE,
                                                       JNI.FFI_TYPE_POINTER,
@@ -25,7 +25,7 @@ public abstract class PointerUnionFunc extends PointerFunc<PointerUnionFunc> imp
     }
 
     @Nonnull
-    public static PointerUnionFunc nref(@Nonnull final Testing.UnionFunc function) {
+    public static PointerUnionFunc nref(@Nonnull final UnionFunc function) {
         if (function instanceof PointerUnionFunc) {
             return (PointerUnionFunc) function;
         }

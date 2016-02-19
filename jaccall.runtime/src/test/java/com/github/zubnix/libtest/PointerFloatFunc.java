@@ -8,7 +8,7 @@ import javax.annotation.Generated;
 import javax.annotation.Nonnull;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
-public abstract class PointerFloatFunc extends PointerFunc<PointerFloatFunc> implements Testing.FloatFunc {
+public abstract class PointerFloatFunc extends PointerFunc<PointerFloatFunc> implements FloatFunc {
 
     static final long FFI_CIF = JNI.ffi_callInterface(JNI.FFI_TYPE_FLOAT,
                                                       JNI.FFI_TYPE_FLOAT);
@@ -24,7 +24,7 @@ public abstract class PointerFloatFunc extends PointerFunc<PointerFloatFunc> imp
     }
 
     @Nonnull
-    public static PointerFloatFunc nref(@Nonnull final Testing.FloatFunc function) {
+    public static PointerFloatFunc nref(@Nonnull final FloatFunc function) {
         if (function instanceof PointerFloatFunc) {
             return (PointerFloatFunc) function;
         }

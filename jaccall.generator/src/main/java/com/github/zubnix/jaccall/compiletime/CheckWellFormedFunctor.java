@@ -17,6 +17,7 @@ final class CheckWellFormedFunctor {
 
     public void process(final Set<? extends TypeElement> typeElements) {
         for (final TypeElement typeElement : typeElements) {
+            isTopLevel(typeElement);
             isInterface(typeElement);
             doesNotExtend(typeElement);
             hasSingleMethod(typeElement);
@@ -27,6 +28,15 @@ final class CheckWellFormedFunctor {
                 hasDollarAsName(executableElement);
                 methodValidator.validate(executableElement);
             }
+        }
+    }
+
+    private void isTopLevel(final TypeElement typeElement) {
+        if (typeElement.getNestingKind()
+                       .isNested()) {
+            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                       "@Struct annotation should be placed on top level class types only.",
+                                       typeElement);
         }
     }
 

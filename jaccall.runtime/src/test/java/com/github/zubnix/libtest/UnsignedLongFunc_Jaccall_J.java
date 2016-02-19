@@ -7,12 +7,12 @@ import javax.annotation.Generated;
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
 final class UnsignedLongFunc_Jaccall_J extends PointerUnsignedLongFunc {
 
-    private static final long JNI_METHOD_ID = JNI.GetMethodID(Testing.UnsignedLongFunc.class,
+    private static final long JNI_METHOD_ID = JNI.GetMethodID(UnsignedLongFunc.class,
                                                               "$",
                                                               "(J)J");
-    private final Testing.UnsignedLongFunc function;
+    private final UnsignedLongFunc function;
 
-    public UnsignedLongFunc_Jaccall_J(final Testing.UnsignedLongFunc function) {
+    public UnsignedLongFunc_Jaccall_J(final UnsignedLongFunc function) {
         super(JNI.ffi_closure(FFI_CIF,
                               function,
                               JNI_METHOD_ID));

@@ -7,12 +7,12 @@ import javax.annotation.Generated;
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
 final class UnionFunc_Jaccall_J extends PointerUnionFunc {
 
-    private static final long JNI_METHOD_ID = JNI.GetMethodID(Testing.UnionFunc.class,
+    private static final long JNI_METHOD_ID = JNI.GetMethodID(UnionFunc.class,
                                                               "$",
                                                               "(JIF)J");
-    private final Testing.UnionFunc function;
+    private final UnionFunc function;
 
-    public UnionFunc_Jaccall_J(final Testing.UnionFunc function) {
+    public UnionFunc_Jaccall_J(final UnionFunc function) {
         super(JNI.ffi_closure(FFI_CIF,
                               function,
                               JNI_METHOD_ID));

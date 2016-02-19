@@ -7,12 +7,12 @@ import javax.annotation.Generated;
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
 final class FloatFunc_Jaccall_J extends PointerFloatFunc {
 
-    private static final long JNI_METHOD_ID = JNI.GetMethodID(Testing.FloatFunc.class,
+    private static final long JNI_METHOD_ID = JNI.GetMethodID(FloatFunc.class,
                                                               "$",
                                                               "(F)F");
-    private final Testing.FloatFunc function;
+    private final FloatFunc function;
 
-    public FloatFunc_Jaccall_J(final Testing.FloatFunc function) {
+    public FloatFunc_Jaccall_J(final FloatFunc function) {
         super(JNI.ffi_closure(FFI_CIF,
                               function,
                               JNI_METHOD_ID));
