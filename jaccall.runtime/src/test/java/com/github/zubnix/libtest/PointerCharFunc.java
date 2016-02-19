@@ -19,11 +19,6 @@ public abstract class PointerCharFunc extends PointerFunc<PointerCharFunc> imple
     }
 
     @Nonnull
-    public static PointerCharFunc wrapFunc(final long address) {
-        return new CharFunc_Jaccall_C(address);
-    }
-
-    @Nonnull
     public static PointerCharFunc nref(@Nonnull final CharFunc function) {
         if (function instanceof PointerCharFunc) {
             return (PointerCharFunc) function;

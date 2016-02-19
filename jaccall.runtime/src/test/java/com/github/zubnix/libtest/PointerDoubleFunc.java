@@ -19,11 +19,6 @@ public abstract class PointerDoubleFunc extends PointerFunc<PointerDoubleFunc> i
     }
 
     @Nonnull
-    public static PointerDoubleFunc wrapFunc(final long address) {
-        return new DoubleFunc_Jaccall_C(address);
-    }
-
-    @Nonnull
     public static PointerDoubleFunc nref(@Nonnull final DoubleFunc function) {
         if (function instanceof PointerDoubleFunc) {
             return (PointerDoubleFunc) function;

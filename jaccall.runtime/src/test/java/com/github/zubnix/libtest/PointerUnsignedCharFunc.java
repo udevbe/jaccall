@@ -19,11 +19,6 @@ public abstract class PointerUnsignedCharFunc extends PointerFunc<PointerUnsigne
     }
 
     @Nonnull
-    public static PointerUnsignedCharFunc wrapFunc(final long address) {
-        return new UnsignedCharFunc_Jaccall_C(address);
-    }
-
-    @Nonnull
     public static PointerUnsignedCharFunc nref(@Nonnull final UnsignedCharFunc function) {
         if (function instanceof PointerUnsignedCharFunc) {
             return (PointerUnsignedCharFunc) function;

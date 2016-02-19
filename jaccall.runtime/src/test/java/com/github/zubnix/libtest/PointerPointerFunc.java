@@ -19,11 +19,6 @@ public abstract class PointerPointerFunc extends PointerFunc<PointerPointerFunc>
     }
 
     @Nonnull
-    public static PointerPointerFunc wrapFunc(final long address) {
-        return new PointerFunc_Jaccall_C(address);
-    }
-
-    @Nonnull
     public static PointerPointerFunc nref(@Nonnull final com.github.zubnix.libtest.PointerFunc function) {
         if (function instanceof PointerPointerFunc) {
             return (PointerPointerFunc) function;

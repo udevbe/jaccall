@@ -19,11 +19,6 @@ public abstract class PointerShortFunc extends PointerFunc<PointerShortFunc> imp
     }
 
     @Nonnull
-    public static PointerShortFunc wrapFunc(final long address) {
-        return new ShortFunc_Jaccall_C(address);
-    }
-
-    @Nonnull
     public static PointerShortFunc nref(@Nonnull final ShortFunc function) {
         if (function instanceof PointerShortFunc) {
             return (PointerShortFunc) function;

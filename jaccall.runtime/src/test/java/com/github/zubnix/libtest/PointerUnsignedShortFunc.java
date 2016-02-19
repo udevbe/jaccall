@@ -19,11 +19,6 @@ public abstract class PointerUnsignedShortFunc extends PointerFunc<PointerUnsign
     }
 
     @Nonnull
-    public static PointerUnsignedShortFunc wrapFunc(final long address) {
-        return new UnsignedShortFunc_Jaccall_C(address);
-    }
-
-    @Nonnull
     public static PointerUnsignedShortFunc nref(@Nonnull final UnsignedShortFunc function) {
         if (function instanceof UnsignedShortFunc_Jaccall_J) {
             return (PointerUnsignedShortFunc) function;

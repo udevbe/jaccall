@@ -19,11 +19,6 @@ public abstract class PointerUnionFunc2 extends PointerFunc<PointerUnionFunc2> i
     }
 
     @Nonnull
-    public static PointerUnionFunc2 wrapFunc(final long address) {
-        return new UnionFunc2_Jaccall_C(address);
-    }
-
-    @Nonnull
     public static PointerUnionFunc2 nref(@Nonnull final UnionFunc2 function) {
         if (function instanceof PointerUnionFunc2) {
             return (PointerUnionFunc2) function;

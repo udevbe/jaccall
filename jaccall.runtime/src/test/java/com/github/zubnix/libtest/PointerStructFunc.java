@@ -24,11 +24,6 @@ public abstract class PointerStructFunc extends PointerFunc<PointerStructFunc> i
     }
 
     @Nonnull
-    public static PointerStructFunc wrapFunc(final long address) {
-        return new StructFunc_Jaccall_C(address);
-    }
-
-    @Nonnull
     public static PointerStructFunc nref(@Nonnull final StructFunc function) {
         if (function instanceof PointerStructFunc) {
             return (PointerStructFunc) function;

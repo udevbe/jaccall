@@ -19,11 +19,6 @@ public abstract class PointerIntFunc extends PointerFunc<PointerIntFunc> impleme
     }
 
     @Nonnull
-    public static PointerIntFunc wrapFunc(final long address) {
-        return new IntFunc_Jaccall_C(address);
-    }
-
-    @Nonnull
     public static PointerIntFunc nref(@Nonnull final IntFunc function) {
         if (function instanceof PointerIntFunc) {
             return (PointerIntFunc) function;

@@ -19,11 +19,6 @@ public abstract class PointerUnsignedLongLongFunc extends PointerFunc<PointerUns
     }
 
     @Nonnull
-    public static PointerUnsignedLongLongFunc wrapFunc(final long address) {
-        return new UnsignedLongLongFunc_Jaccall_C(address);
-    }
-
-    @Nonnull
     public static PointerUnsignedLongLongFunc nref(@Nonnull final UnsignedLongLongFunc function) {
         if (function instanceof PointerUnsignedLongLongFunc) {
             return (PointerUnsignedLongLongFunc) function;

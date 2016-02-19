@@ -19,11 +19,6 @@ public abstract class PointerLongFunc extends PointerFunc<PointerLongFunc> imple
     }
 
     @Nonnull
-    public static PointerLongFunc wrapFunc(final long address) {
-        return new LongFunc_Jaccall_C(address);
-    }
-
-    @Nonnull
     public static PointerLongFunc nref(@Nonnull final LongFunc function) {
         if (function instanceof PointerLongFunc) {
             return (PointerLongFunc) function;

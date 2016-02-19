@@ -19,11 +19,6 @@ public abstract class PointerFloatFunc extends PointerFunc<PointerFloatFunc> imp
     }
 
     @Nonnull
-    public static PointerFloatFunc wrapFunc(final long address) {
-        return new FloatFunc_Jaccall_C(address);
-    }
-
-    @Nonnull
     public static PointerFloatFunc nref(@Nonnull final FloatFunc function) {
         if (function instanceof PointerFloatFunc) {
             return (PointerFloatFunc) function;
