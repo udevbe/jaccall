@@ -12,6 +12,7 @@ public final class CharFunc_PointerFactory implements PointerFactory<PointerChar
     public PointerCharFunc create(final Type type,
                                   final long address,
                                   final ByteBuffer buffer) {
-        return new CharFunc_Jaccall_C(address);
+        return new CharFunc_Jaccall_C(address,
+                                      buffer);
     }
 }

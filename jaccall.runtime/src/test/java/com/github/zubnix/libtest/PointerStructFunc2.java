@@ -1,13 +1,15 @@
 package com.github.zubnix.libtest;
 
 import com.github.zubnix.jaccall.JNI;
+import com.github.zubnix.jaccall.Pointer;
 import com.github.zubnix.jaccall.PointerFunc;
 
 import javax.annotation.Generated;
 import javax.annotation.Nonnull;
+import java.nio.ByteBuffer;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
-public abstract class PointerStructFunc2 extends PointerFunc<PointerStructFunc2> implements StructFunc2 {
+public abstract class PointerStructFunc2 extends PointerFunc<StructFunc2> implements StructFunc2 {
 
     static final long FFI_CIF = JNI.ffi_callInterface(JNI.FFI_TYPE_POINTER,
                                                       TestStruct.FFI_TYPE,
@@ -18,13 +20,15 @@ public abstract class PointerStructFunc2 extends PointerFunc<PointerStructFunc2>
                                                       JNI.FFI_TYPE_SINT64,
                                                       JNI.FFI_TYPE_FLOAT);
 
-    PointerStructFunc2(final long address) {
-        super(PointerStructFunc2.class,
-              address);
+    PointerStructFunc2(final long address,
+                       final ByteBuffer buffer) {
+        super(StructFunc2.class,
+              address,
+              buffer);
     }
 
     @Nonnull
-    public static PointerStructFunc2 nref(@Nonnull final StructFunc2 function) {
+    public static Pointer<StructFunc2> nref(@Nonnull final StructFunc2 function) {
         if (function instanceof PointerStructFunc2) {
             return (PointerStructFunc2) function;
         }

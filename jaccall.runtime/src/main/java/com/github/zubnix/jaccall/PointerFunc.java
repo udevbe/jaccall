@@ -8,10 +8,11 @@ import static com.github.zubnix.jaccall.Size.sizeof;
 
 public abstract class PointerFunc<T> extends Pointer<T> {
     protected PointerFunc(@Nonnull final Class<T> type,
-                          final long address) {
+                          final long address,
+                          final ByteBuffer buffer) {
         super(type,
               address,
-              ByteBuffer.allocate(0),
+              buffer,
               sizeof((Pointer) null));
     }
 

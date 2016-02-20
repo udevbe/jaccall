@@ -13,6 +13,7 @@ public final class StructFunc2_PointerFactory implements PointerFactory<PointerS
     public PointerStructFunc2 create(final Type type,
                                      final long address,
                                      final ByteBuffer buffer) {
-        return new StructFunc2_Jaccall_C(address);
+        return new StructFunc2_Jaccall_C(address,
+                                         buffer);
     }
 }

@@ -14,6 +14,7 @@ public final class DoubleFunc_PointerFactory implements PointerFactory<PointerDo
     public PointerDoubleFunc create(final Type type,
                                     final long address,
                                     final ByteBuffer buffer) {
-        return new DoubleFunc_Jaccall_C(address);
+        return new DoubleFunc_Jaccall_C(address,
+                                        buffer);
     }
 }

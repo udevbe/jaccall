@@ -13,6 +13,7 @@ public final class StructFunc_PointerFactory implements PointerFactory<PointerSt
     public PointerStructFunc create(final Type type,
                                     final long address,
                                     final ByteBuffer buffer) {
-        return new StructFunc_Jaccall_C(address);
+        return new StructFunc_Jaccall_C(address,
+                                        buffer);
     }
 }

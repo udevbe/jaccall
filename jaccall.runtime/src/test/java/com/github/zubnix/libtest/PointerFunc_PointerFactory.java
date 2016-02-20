@@ -14,6 +14,7 @@ public final class PointerFunc_PointerFactory implements PointerFactory<PointerP
     public PointerPointerFunc create(final Type type,
                                      final long address,
                                      final ByteBuffer buffer) {
-        return new PointerFunc_Jaccall_C(address);
+        return new PointerFunc_Jaccall_C(address,
+                                         buffer);
     }
 }

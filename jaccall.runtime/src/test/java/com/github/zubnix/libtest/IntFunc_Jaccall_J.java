@@ -3,6 +3,7 @@ package com.github.zubnix.libtest;
 import com.github.zubnix.jaccall.JNI;
 
 import javax.annotation.Generated;
+import java.nio.ByteBuffer;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
 final class IntFunc_Jaccall_J extends PointerIntFunc {
@@ -15,7 +16,8 @@ final class IntFunc_Jaccall_J extends PointerIntFunc {
     public IntFunc_Jaccall_J(final IntFunc function) {
         super(JNI.ffi_closure(FFI_CIF,
                               function,
-                              JNI_METHOD_ID));
+                              JNI_METHOD_ID),
+              ByteBuffer.allocate(0));
         this.function = function;
     }
 

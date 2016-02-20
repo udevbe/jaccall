@@ -311,3 +311,40 @@ JNIEXPORT
 jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execUnionTest2(JNIEnv *env, jclass clazz, jlong func_ptr, jlong tst, jint field0){
      return (jlong)(intptr_t)((union testunion*(*)(union testunion, int))(intptr_t)func_ptr)(*((union testunion*)(intptr_t)tst), field0);
 }
+
+struct test_function_pointer {
+    long (*field0)(long);
+    int (*field1[3])(int);
+};
+
+long func_long(long arg0){
+    return arg0;
+}
+
+int func_int0(int arg0){
+    return arg0;
+}
+
+int func_int1(int arg0){
+    return arg0+1;
+}
+
+int func_int2(int arg0){
+    return arg0+2;
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    allocStructFp
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL
+Java_com_github_zubnix_jaccall_JNITestUtil_allocStructFp(JNIEnv *env, jclass clazz){
+    struct test_function_pointer* struct_fp = malloc(sizeof(struct test_function_pointer));
+    struct_fp->field0 = &func_long;
+    struct_fp->field1[0] = &func_int0;
+    struct_fp->field1[1] = &func_int1;
+    struct_fp->field1[2] = &func_int2;
+
+    return (jlong)(intptr_t)struct_fp;
+}

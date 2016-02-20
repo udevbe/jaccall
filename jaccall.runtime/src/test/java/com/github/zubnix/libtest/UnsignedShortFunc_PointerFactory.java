@@ -14,6 +14,7 @@ public final class UnsignedShortFunc_PointerFactory implements PointerFactory<Po
     public PointerUnsignedShortFunc create(final Type type,
                                            final long address,
                                            final ByteBuffer buffer) {
-        return new UnsignedShortFunc_Jaccall_C(address);
+        return new UnsignedShortFunc_Jaccall_C(address,
+                                               buffer);
     }
 }

@@ -14,6 +14,7 @@ public final class UnsignedCharFunc_PointerFactory implements PointerFactory<Poi
     public PointerUnsignedCharFunc create(final Type type,
                                           final long address,
                                           final ByteBuffer buffer) {
-        return new UnsignedCharFunc_Jaccall_C(address);
+        return new UnsignedCharFunc_Jaccall_C(address,
+                                              buffer);
     }
 }

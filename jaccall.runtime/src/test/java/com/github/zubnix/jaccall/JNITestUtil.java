@@ -127,4 +127,6 @@ public class JNITestUtil {
     public static native long execUnionTest2(long functionPointer,
                                              long tst,
                                              int field0);
+
+    public static native long allocStructFp();
 }

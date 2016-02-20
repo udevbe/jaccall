@@ -3,6 +3,7 @@ package com.github.zubnix.libtest;
 import com.github.zubnix.jaccall.JNI;
 
 import javax.annotation.Generated;
+import java.nio.ByteBuffer;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
 final class UnsignedIntFunc_Jaccall_C extends PointerUnsignedIntFunc {
@@ -15,8 +16,10 @@ final class UnsignedIntFunc_Jaccall_C extends PointerUnsignedIntFunc {
                         FFI_CIF);
     }
 
-    UnsignedIntFunc_Jaccall_C(final long address) {
-        super(address);
+    UnsignedIntFunc_Jaccall_C(final long address,
+                              final ByteBuffer buffer) {
+        super(address,
+              buffer);
     }
 
     @Override

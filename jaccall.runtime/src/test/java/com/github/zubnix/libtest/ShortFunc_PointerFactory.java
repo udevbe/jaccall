@@ -14,6 +14,7 @@ public final class ShortFunc_PointerFactory implements PointerFactory<PointerSho
     public PointerShortFunc create(final Type type,
                                    final long address,
                                    final ByteBuffer buffer) {
-        return new ShortFunc_Jaccall_C(address);
+        return new ShortFunc_Jaccall_C(address,
+                                       buffer);
     }
 }

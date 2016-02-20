@@ -14,6 +14,7 @@ public final class UnsignedIntFunc_PointerFactory implements PointerFactory<Poin
     public PointerUnsignedIntFunc create(final Type type,
                                          final long address,
                                          final ByteBuffer buffer) {
-        return new UnsignedIntFunc_Jaccall_C(address);
+        return new UnsignedIntFunc_Jaccall_C(address,
+                                             buffer);
     }
 }

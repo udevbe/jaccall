@@ -2,24 +2,28 @@ package com.github.zubnix.libtest;
 
 
 import com.github.zubnix.jaccall.JNI;
+import com.github.zubnix.jaccall.Pointer;
 import com.github.zubnix.jaccall.PointerFunc;
 
 import javax.annotation.Generated;
 import javax.annotation.Nonnull;
+import java.nio.ByteBuffer;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
-public abstract class PointerUnsignedCharFunc extends PointerFunc<PointerUnsignedCharFunc> implements UnsignedCharFunc {
+public abstract class PointerUnsignedCharFunc extends PointerFunc<UnsignedCharFunc> implements UnsignedCharFunc {
 
     static final long FFI_CIF = JNI.ffi_callInterface(JNI.FFI_TYPE_UINT8,
                                                       JNI.FFI_TYPE_UINT8);
 
-    PointerUnsignedCharFunc(final long address) {
-        super(PointerUnsignedCharFunc.class,
-              address);
+    PointerUnsignedCharFunc(final long address,
+                            final ByteBuffer buffer) {
+        super(UnsignedCharFunc.class,
+              address,
+              buffer);
     }
 
     @Nonnull
-    public static PointerUnsignedCharFunc nref(@Nonnull final UnsignedCharFunc function) {
+    public static Pointer<UnsignedCharFunc> nref(@Nonnull final UnsignedCharFunc function) {
         if (function instanceof PointerUnsignedCharFunc) {
             return (PointerUnsignedCharFunc) function;
         }

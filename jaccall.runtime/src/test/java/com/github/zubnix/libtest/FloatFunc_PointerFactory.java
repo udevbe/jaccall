@@ -14,6 +14,7 @@ public final class FloatFunc_PointerFactory implements PointerFactory<PointerFlo
     public PointerFloatFunc create(final Type type,
                                    final long address,
                                    final ByteBuffer buffer) {
-        return new FloatFunc_Jaccall_C(address);
+        return new FloatFunc_Jaccall_C(address,
+                                       buffer);
     }
 }

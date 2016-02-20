@@ -13,6 +13,7 @@ public final class UnionFunc_PointerFactory implements PointerFactory<PointerUni
     public PointerUnionFunc create(final Type type,
                                    final long address,
                                    final ByteBuffer buffer) {
-        return new UnionFunc_Jaccall_C(address);
+        return new UnionFunc_Jaccall_C(address,
+                                       buffer);
     }
 }

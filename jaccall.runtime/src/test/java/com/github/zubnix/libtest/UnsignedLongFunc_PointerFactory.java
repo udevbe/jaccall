@@ -14,6 +14,7 @@ public final class UnsignedLongFunc_PointerFactory implements PointerFactory<Poi
     public PointerUnsignedLongFunc create(final Type type,
                                           final long address,
                                           final ByteBuffer buffer) {
-        return new UnsignedLongFunc_Jaccall_C(address);
+        return new UnsignedLongFunc_Jaccall_C(address,
+                                              buffer);
     }
 }

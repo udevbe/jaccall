@@ -199,6 +199,14 @@ JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execUnionTest
 JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execUnionTest2
   (JNIEnv *, jclass, jlong, jlong, jint);
 
+/*
+ * Class:     com_github_zubnix_jaccall_JNITestUtil
+ * Method:    allocStructFp
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_allocStructFp
+  (JNIEnv *, jclass);
+
 #ifdef __cplusplus
 }
 #endif

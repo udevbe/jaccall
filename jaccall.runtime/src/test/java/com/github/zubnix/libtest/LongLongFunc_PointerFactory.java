@@ -13,6 +13,7 @@ public final class LongLongFunc_PointerFactory implements PointerFactory<Pointer
     public PointerLongLongFunc create(final Type type,
                                       final long address,
                                       final ByteBuffer buffer) {
-        return new LongLongFunc_Jaccall_C(address);
+        return new LongLongFunc_Jaccall_C(address,
+                                          buffer);
     }
 }

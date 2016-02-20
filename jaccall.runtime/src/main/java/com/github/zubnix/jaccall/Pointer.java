@@ -674,7 +674,8 @@ public abstract class Pointer<T> implements AutoCloseable {
     @Nonnull
     public <U> Pointer<U> castp(@Nonnull final Class<U> type) {
         return wrap(type,
-                    this.address);
+                    this.address,
+                    this.byteBuffer);
     }
 
     /**
