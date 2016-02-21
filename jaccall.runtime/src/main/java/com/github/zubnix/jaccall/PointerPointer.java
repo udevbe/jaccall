@@ -11,7 +11,7 @@ import java.nio.LongBuffer;
 import static com.github.zubnix.jaccall.Size.sizeof;
 
 
-final class PointerPointer<T> extends Pointer<Pointer<T>> {
+class PointerPointer<T> extends Pointer<Pointer<T>> {
     PointerPointer(@Nonnull final Type type,
                    final long address,
                    @Nonnull final ByteBuffer byteBuffer) {

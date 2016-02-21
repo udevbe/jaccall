@@ -3,6 +3,8 @@ package com.github.zubnix.jaccall;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.nio.LongBuffer;
 
 import static com.github.zubnix.jaccall.Size.sizeof;
 
@@ -25,7 +27,24 @@ public abstract class PointerFunc<T> extends Pointer<T> {
     @Nonnull
     @Override
     public final T dref(@Nonnegative final int index) {
-        throw new UnsupportedOperationException();
+        final long val;
+        if (this.typeSize == 8) {
+            final LongBuffer buffer = this.byteBuffer.asLongBuffer();
+            buffer.rewind();
+            buffer.position(index);
+            val = buffer.get();
+        }
+        else {
+            final IntBuffer buffer = this.byteBuffer.asIntBuffer();
+            buffer.rewind();
+            buffer.position(index);
+            val = buffer.get();
+        }
+
+        return (T) wrap(type,
+                        val,
+                        JNI.wrap(val,
+                                 Integer.MAX_VALUE));
     }
 
     @Override

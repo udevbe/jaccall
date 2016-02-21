@@ -157,7 +157,8 @@ public abstract class Pointer<T> implements AutoCloseable {
         if (StructType.class.isAssignableFrom(rawType)) {
             lookupType = StructType.class;
         }
-        else if (Pointer.class.isAssignableFrom(rawType)) {
+        else if (Pointer.class.isAssignableFrom(rawType) &&
+                 !PointerFunc.class.isAssignableFrom(rawType)) {
             lookupType = Pointer.class;
         }
         else {
@@ -167,10 +168,10 @@ public abstract class Pointer<T> implements AutoCloseable {
         PointerFactory<?> pointerFactory = POINTER_FACTORIES.get(lookupType);
         if (pointerFactory == null) {
             //check if we're dealing with an unregistered functor type
-            if (rawType.getAnnotation(Functor.class) != null) {
+            if (PointerFunc.class.isAssignableFrom(rawType)) {
                 try {
                     final Class<?> functorPointerFactory = rawType.getClassLoader()
-                                                                  .loadClass(rawType.getName() + "_PointerFactory");
+                                                                  .loadClass(rawType.getName() + "_Factory");
                     pointerFactory = (PointerFactory<?>) functorPointerFactory.newInstance();
                     POINTER_FACTORIES.put(lookupType,
                                           pointerFactory);

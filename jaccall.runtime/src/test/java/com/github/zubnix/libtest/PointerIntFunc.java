@@ -10,20 +10,20 @@ import javax.annotation.Nonnull;
 import java.nio.ByteBuffer;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
-public abstract class PointerIntFunc extends PointerFunc<IntFunc> implements IntFunc {
+public abstract class PointerIntFunc extends PointerFunc<PointerIntFunc> implements IntFunc {
 
     static final long FFI_CIF = JNI.ffi_callInterface(JNI.FFI_TYPE_SINT32,
                                                       JNI.FFI_TYPE_SINT32);
 
     PointerIntFunc(final long address,
                    final ByteBuffer buffer) {
-        super(IntFunc.class,
+        super(PointerIntFunc.class,
               address,
               buffer);
     }
 
     @Nonnull
-    public static Pointer<IntFunc> nref(@Nonnull final IntFunc function) {
+    public static PointerIntFunc nref(@Nonnull final IntFunc function) {
         if (function instanceof PointerIntFunc) {
             return (PointerIntFunc) function;
         }

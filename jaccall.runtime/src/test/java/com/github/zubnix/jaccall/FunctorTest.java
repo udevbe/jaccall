@@ -12,6 +12,8 @@ import com.github.zubnix.libtest.PointerDoubleFunc;
 import com.github.zubnix.libtest.PointerFloatFunc;
 import com.github.zubnix.libtest.PointerFooFunc;
 import com.github.zubnix.libtest.PointerFunc;
+import com.github.zubnix.libtest.PointerIntFunc;
+import com.github.zubnix.libtest.PointerLongFunc;
 import com.github.zubnix.libtest.ShortFunc;
 import com.github.zubnix.libtest.StructFunc;
 import com.github.zubnix.libtest.StructFunc2;
@@ -310,7 +312,7 @@ public class FunctorTest {
     @Test
     public void testIntFunctionPointerFromJava() {
         //given
-        final Pointer<IntFunc> pointerIntTest = nref(new IntFunc() {
+        final PointerIntFunc pointerIntTest = nref(new IntFunc() {
             @Override
             public int $(final int value) {
                 return intTest(value);
@@ -355,7 +357,7 @@ public class FunctorTest {
     @Test
     public void testLongFunctionPointerFromJava() {
         //given
-        final Pointer<LongFunc> pointerLongTest = nref(new LongFunc() {
+        final PointerLongFunc pointerLongTest = nref(new LongFunc() {
             @Override
             public long $(final long value) {
                 return longTest(value);
