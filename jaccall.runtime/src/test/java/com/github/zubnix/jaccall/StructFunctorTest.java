@@ -20,19 +20,23 @@ public class StructFunctorTest {
         //function pointers are called in java
         final long field0Result = structFpPointer.dref()
                                                  .field0()
+                                                 .dref()
                                                  .$(123456);
         final long field10Result = structFpPointer.dref()
                                                   .field1()
                                                   .dref(0)
+                                                  .dref()
                                                   .$(123456);
         final long field11Result = structFpPointer.dref()
                                                   .field1()
                                                   .dref(1)
+                                                  .dref()
                                                   .$(123456);
 
         final long field12Result = structFpPointer.dref()
                                                   .field1()
                                                   .dref(2)
+                                                  .dref()
                                                   .$(123456);
 
 

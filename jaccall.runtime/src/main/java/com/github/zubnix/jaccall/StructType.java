@@ -143,8 +143,8 @@ public abstract class StructType {
             address = buffer().getInt(offset);
         }
 
-        return Pointer.wrap(type,
-                            address);
+        return Pointer.wrap(address)
+                      .castp(type);
     }
 
     protected final void writePointer(@Nonnegative final int offset,

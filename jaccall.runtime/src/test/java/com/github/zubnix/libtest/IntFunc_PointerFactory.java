@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
-public final class PointerIntFunc_Factory implements PointerFactory<PointerIntFunc> {
+public final class IntFunc_PointerFactory implements PointerFactory<PointerIntFunc> {
 
     @Override
     public PointerIntFunc create(final Type type,

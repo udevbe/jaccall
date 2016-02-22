@@ -7,10 +7,11 @@ import com.github.zubnix.jaccall.Struct;
 @Struct({
                 @Field(name = "field0",
                        type = CType.POINTER,
-                       dataType = PointerLongFunc.class),
+                       dataType = LongFunc.class),
                 @Field(name = "field1",
                        type = CType.POINTER,
-                       dataType = PointerIntFunc.class,
+                       pointerDepth = 1,
+                       dataType = IntFunc.class,
                        cardinality = 3)
         })
 public final class TestStructFunctionPointer extends TestStructFunctionPointer_Jaccall_StructType {

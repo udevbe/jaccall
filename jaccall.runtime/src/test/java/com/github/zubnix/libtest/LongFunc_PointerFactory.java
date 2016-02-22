@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
-public final class PointerLongFunc_Factory implements PointerFactory<PointerLongFunc> {
+public final class LongFunc_PointerFactory implements PointerFactory<PointerLongFunc> {
     @Override
     public PointerLongFunc create(final Type type,
                                   final long address,

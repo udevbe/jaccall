@@ -20,9 +20,9 @@ abstract class TestStructFunctionPointer_Jaccall_StructType extends StructType {
         super(SIZE);
     }
 
-    public final PointerLongFunc field0() {
-        return (PointerLongFunc) readPointer(OFFSET_0,
-                                             PointerLongFunc.class);
+    public final Pointer<LongFunc> field0() {
+        return readPointer(OFFSET_0,
+                           LongFunc.class);
     }
 
     public final void field0(final Pointer<LongFunc> field0) {
@@ -30,8 +30,8 @@ abstract class TestStructFunctionPointer_Jaccall_StructType extends StructType {
                      field0);
     }
 
-    public final Pointer<PointerIntFunc> field1() {
+    public final Pointer<Pointer<IntFunc>> field1() {
         return readArray(OFFSET_1,
-                         PointerIntFunc.class);
+                         IntFunc.class).castpp();
     }
 }
