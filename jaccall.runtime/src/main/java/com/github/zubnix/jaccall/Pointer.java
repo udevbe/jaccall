@@ -15,7 +15,7 @@ import static com.github.zubnix.jaccall.Size.sizeof;
 
 public abstract class Pointer<T> implements AutoCloseable {
 
-    protected static final Map<Class, PointerFactory<?>> POINTER_FACTORIES = new HashMap<>();
+    protected static final Map<Class, PointerFactory<?>> POINTER_FACTORIES = new HashMap<>(32);
 
     static {
         final PointerByteFactory pointerByteFactory = new PointerByteFactory();
@@ -61,6 +61,8 @@ public abstract class Pointer<T> implements AutoCloseable {
                               pointerVoidFactory);
         POINTER_FACTORIES.put(void.class,
                               pointerVoidFactory);
+        POINTER_FACTORIES.put(JObject.class,
+                              new PointerJObjectFactory());
     }
 
     /**
@@ -180,7 +182,7 @@ public abstract class Pointer<T> implements AutoCloseable {
                 }
             }
             else {
-                throw new IllegalArgumentException("Type " + rawType + " does not have a known native size.");
+                throw new IllegalArgumentException("Type " + rawType + " does not have a known mapping.");
             }
         }
 
@@ -314,6 +316,21 @@ public abstract class Pointer<T> implements AutoCloseable {
             pointer.writei(i,
                            val[i]);
         }
+
+        return pointer;
+    }
+
+    public static Pointer<JObject> nref(@Nonnull final JObject... val) {
+        final int length = Objects.requireNonNull(val,
+                                                  "Argument val must not be null").length;
+        if (length == 0) {
+            throw new IllegalArgumentException("Cannot allocate zero length array.");
+        }
+
+        final Pointer<JObject> pointer = (Pointer<JObject>) createStack(val[0].getClass(),
+                                                                        sizeof(val[0]),
+                                                                        length);
+        pointer.write(val);
 
         return pointer;
     }

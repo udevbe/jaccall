@@ -56,11 +56,15 @@ public final class JNI {
 
     public static native long unwrap(@Nonnull ByteBuffer byteBuffer);
 
+    public static native long NewGlobalRef(@Nonnull final Object object);
+
     public static native void DeleteGlobalRef(@Nonnull final Object object);
 
     public static native long GetMethodID(final Class<?> clazz,
                                           final String methodName,
                                           final String jniSignature);
+
+    public static native JObject toJObject(final long jobject);
     /*
      * <- JNI
      */
@@ -209,7 +213,6 @@ public final class JNI {
                                           @Nonnegative int argumentSize,/*number of arguments for the method*/
                                           @Nonnull String jniSignature,/*jni method signature*/
                                           long ffiCallInterface/*ffi call interface*/);
-
     /*
      * <- linker
      */

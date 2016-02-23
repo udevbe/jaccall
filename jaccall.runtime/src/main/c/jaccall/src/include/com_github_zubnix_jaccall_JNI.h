@@ -25,6 +25,14 @@ JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_unwrap
 
 /*
  * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    NewGlobalRef
+ * Signature: (Ljava/lang/Object;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_NewGlobalRef
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
  * Method:    DeleteGlobalRef
  * Signature: (Ljava/lang/Object;)V
  */
@@ -38,6 +46,14 @@ JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_DeleteGlobalRef
  */
 JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_GetMethodID
   (JNIEnv *, jclass, jclass, jstring, jstring);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    toJObject
+ * Signature: (J)Lcom/github/zubnix/jaccall/JObject;
+ */
+JNIEXPORT jobject JNICALL Java_com_github_zubnix_jaccall_JNI_toJObject
+  (JNIEnv *, jclass, jlong);
 
 /*
  * Class:     com_github_zubnix_jaccall_JNI

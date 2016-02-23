@@ -117,4 +117,6 @@ public class FunctorWriterTest {
                                                                        "  }\n" +
                                                                        "}"));
     }
+
+    //TODO test all data types
 }

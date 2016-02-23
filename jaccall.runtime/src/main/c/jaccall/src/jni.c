@@ -101,6 +101,22 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_unwrap(JNIEnv *env, jclass clazz, job
 }
 
 JNIEXPORT
+jlong
+JNICALL Java_com_github_zubnix_jaccall_JNI_NewGlobalRef(JNIEnv *env, jclass clazz, jobject object){
+    return (jlong) (intptr_t) (*env)->NewGlobalRef(env, object);
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    toJObject
+ * Signature: (J)Lcom/github/zubnix/jaccall/JObject;
+ */
+JNIEXPORT
+jobject JNICALL Java_com_github_zubnix_jaccall_JNI_toJObject(JNIEnv *env, jclass clazz, jlong jobject_address){
+    return (jobject)(intptr_t)jobject_address;
+}
+
+JNIEXPORT
 void
 JNICALL Java_com_github_zubnix_jaccall_JNI_DeleteGlobalRef(JNIEnv *env, jclass clazz, jobject object){
     (*env)->DeleteGlobalRef(env, object);

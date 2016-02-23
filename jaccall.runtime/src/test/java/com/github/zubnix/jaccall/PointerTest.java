@@ -7,6 +7,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.nio.ByteBuffer;
+import java.util.LinkedList;
+import java.util.List;
 
 import static com.github.zubnix.jaccall.JNITestUtil.byteArrayAsPointer;
 import static com.github.zubnix.jaccall.JNITestUtil.pointerOfPointer;
@@ -873,11 +875,66 @@ public class PointerTest {
 
     @Test
     public void testWriteStruct() throws Exception {
-
+        //TODO
+        //throw new UnsupportedOperationException();
     }
 
     @Test
     public void testWriteStructAtIndex() throws Exception {
+        //TODO
+        //throw new UnsupportedOperationException();
+    }
 
+    @Test
+    public void testWriteJObject() throws Exception {
+        //given
+        final List<String> strings = new LinkedList<>();
+        final String       elm0    = "foo";
+        strings.add(elm0);
+
+        final Pointer<JObject> jObjectPointer = Pointer.nref(new JObject(strings));
+        //when
+        final Pointer<JObject> wrap = Pointer.wrap(JObject.class,
+                                                   jObjectPointer.address);
+        final List<String> stringsFromPointer = (List<String>) wrap.dref()
+                                                                   .pojo();
+        //then
+        assertThat(stringsFromPointer.get(0)).isSameAs(elm0);
+        assertThat(strings).isSameAs(stringsFromPointer);
+    }
+
+    @Test
+    public void testWriteJObjectAtIndex() throws Exception {
+        //given
+        final List<String> strings0 = new LinkedList<>();
+        final String       elm0     = "foo";
+        strings0.add(elm0);
+
+        final List<String> strings1 = new LinkedList<>();
+        final String       elm1     = "bar";
+        strings1.add(elm1);
+
+        final Pointer<JObject> jObjectPointer = malloc(sizeof((JObject) null) * 5,
+                                                       JObject.class);
+        //when
+        jObjectPointer.writei(3,
+                              new JObject(strings0));
+        jObjectPointer.writei(4,
+                              new JObject(strings1));
+
+        final Pointer<JObject> wrap = Pointer.wrap(JObject.class,
+                                                   jObjectPointer.address);
+
+        final List<String> strings0FromPointer = (List<String>) wrap.dref(3)
+                                                                    .pojo();
+        final List<String> strings1FromPointer = (List<String>) wrap.dref(4)
+                                                                    .pojo();
+
+        //then
+        assertThat(strings0FromPointer.get(0)).isSameAs(elm0);
+        assertThat(strings0).isSameAs(strings0FromPointer);
+
+        assertThat(strings1FromPointer.get(0)).isSameAs(elm1);
+        assertThat(strings1).isSameAs(strings1FromPointer);
     }
 }
