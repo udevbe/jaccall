@@ -2,6 +2,7 @@ package com.github.zubnix.jaccall.compiletime;
 
 
 import com.github.zubnix.jaccall.JNI;
+import com.github.zubnix.jaccall.Pointer;
 import com.github.zubnix.jaccall.PointerFactory;
 import com.github.zubnix.jaccall.PointerFunc;
 import com.squareup.javapoet.AnnotationSpec;
@@ -83,21 +84,19 @@ final class FunctorWriter {
         writePointerFactory(factoryName,
                             pointerFactoryName,
                             cFunctorName,
-                            typeElement,
-                            executableElement);
+                            typeElement);
     }
 
     private void writePointerFactory(final String factoryName,
                                      final String pointerFactoryName,
                                      final String cFunctorName,
-                                     final TypeElement element,
-                                     final ExecutableElement executableElement) {
+                                     final TypeElement element) {
 
         final AnnotationSpec annotationSpec = AnnotationSpec.builder(Generated.class)
-                                                                 .addMember("value",
-                                                                            "$S",
-                                                                            JaccallGenerator.class.getName())
-                                                                 .build();
+                                                            .addMember("value",
+                                                                       "$S",
+                                                                       JaccallGenerator.class.getName())
+                                                            .build();
 
         final String packageName = this.elementUtils.getPackageOf(element)
                                                     .toString();
@@ -113,7 +112,7 @@ final class FunctorWriter {
                                                               "address")
                                                 .addParameter(ByteBuffer.class,
                                                               "buffer")
-                                                .addStatement("return new $T(address)",
+                                                .addStatement("return new $T(address, buffer)",
                                                               ClassName.get(packageName,
                                                                             cFunctorName))
                                                 .build();
@@ -193,8 +192,9 @@ final class FunctorWriter {
         final MethodSpec constructor = MethodSpec.constructorBuilder()
                                                  .addParameter(ClassName.get(element),
                                                                "function")
-                                                 .addStatement("super($T.ffi_closure(FFI_CIF, function, JNI_METHOD_ID))",
-                                                               JNI.class)
+                                                 .addStatement("super($T.ffi_closure(FFI_CIF, function, JNI_METHOD_ID), $T.allocate(0))",
+                                                               JNI.class,
+                                                               ByteBuffer.class)
                                                  .addStatement("this.function = function")
                                                  .build();
 
@@ -256,7 +256,9 @@ final class FunctorWriter {
         final MethodSpec constructor = MethodSpec.constructorBuilder()
                                                  .addParameter(long.class,
                                                                "address")
-                                                 .addStatement("super(address)")
+                                                 .addParameter(ByteBuffer.class,
+                                                               "buffer")
+                                                 .addStatement("super(address, buffer)")
                                                  .build();
 
         final TypeMirror                returnType      = executableElement.getReturnType();
@@ -370,16 +372,17 @@ final class FunctorWriter {
         final MethodSpec constructor = MethodSpec.constructorBuilder()
                                                  .addParameter(long.class,
                                                                "address")
-                                                 .addStatement("super($T.class, address)",
-                                                               ClassName.get(packageName,
-                                                                             factoryName))
+                                                 .addParameter(ByteBuffer.class,
+                                                               "buffer")
+                                                 .addStatement("super($T.class, address, buffer)",
+                                                               ClassName.get(element))
                                                  .build();
 
         final MethodSpec nref = MethodSpec.methodBuilder("nref")
                                           .addModifiers(Modifier.PUBLIC,
                                                         Modifier.STATIC)
-                                          .returns(ClassName.get(packageName,
-                                                                 factoryName))
+                                          .returns(ParameterizedTypeName.get(ClassName.get(Pointer.class),
+                                                                             ClassName.get(element)))
                                           .addParameter(ClassName.get(element),
                                                         "function")
                                           .beginControlFlow("if(function instanceof $T)",
@@ -399,8 +402,7 @@ final class FunctorWriter {
                                           .addModifiers(Modifier.PUBLIC,
                                                         Modifier.ABSTRACT)
                                           .superclass(ParameterizedTypeName.get(ClassName.get(PointerFunc.class),
-                                                                                ClassName.get(packageName,
-                                                                                              factoryName)))
+                                                                                ClassName.get(element)))
                                           .addSuperinterface(TypeName.get(element.asType()))
                                           .addField(ffiCif)
                                           .addMethod(constructor)

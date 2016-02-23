@@ -34,18 +34,20 @@ public class FunctorWriterTest {
                                                                        "package com.github.zubnix.libtest;\n" +
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
+                                                                       "import com.github.zubnix.jaccall.Pointer;\n" +
                                                                        "import com.github.zubnix.jaccall.PointerFunc;\n" +
+                                                                       "import java.nio.ByteBuffer;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
                                                                        "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
-                                                                       "public abstract class PointerCharFunc extends PointerFunc<PointerCharFunc> implements CharFunc {\n" +
+                                                                       "public abstract class PointerCharFunc extends PointerFunc<CharFunc> implements CharFunc {\n" +
                                                                        "  static final long FFI_CIF = JNI.ffi_callInterface(JNI.FFI_TYPE_SINT8, JNI.FFI_TYPE_SINT8);\n" +
                                                                        "\n" +
-                                                                       "  PointerCharFunc(long address) {\n" +
-                                                                       "    super(PointerCharFunc.class, address);\n" +
+                                                                       "  PointerCharFunc(long address, ByteBuffer buffer) {\n" +
+                                                                       "    super(CharFunc.class, address, buffer);\n" +
                                                                        "  }\n" +
                                                                        "\n" +
-                                                                       "  public static PointerCharFunc nref(CharFunc function) {\n" +
+                                                                       "  public static Pointer<CharFunc> nref(CharFunc function) {\n" +
                                                                        "    if(function instanceof PointerCharFunc) {\n" +
                                                                        "      return (PointerCharFunc)function;\n" +
                                                                        "    }\n" +
@@ -56,6 +58,7 @@ public class FunctorWriterTest {
                                                                        "package com.github.zubnix.libtest;\n" +
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
+                                                                       "import java.nio.ByteBuffer;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
                                                                        "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
@@ -64,8 +67,8 @@ public class FunctorWriterTest {
                                                                        "    JNI.linkFuncPtr(CharFunc_Jaccall_C.class,  \"_$\", 2, \"(JB)B\", FFI_CIF);\n" +
                                                                        "  }\n" +
                                                                        "\n" +
-                                                                       "  CharFunc_Jaccall_C(long address) {\n" +
-                                                                       "    super(address);\n" +
+                                                                       "  CharFunc_Jaccall_C(long address, ByteBuffer buffer) {\n" +
+                                                                       "    super(address, buffer);\n" +
                                                                        "  }\n" +
                                                                        "\n" +
                                                                        "  @Override\n" +
@@ -79,6 +82,7 @@ public class FunctorWriterTest {
                                                                        "package com.github.zubnix.libtest;\n" +
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
+                                                                       "import java.nio.ByteBuffer;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
                                                                        "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
@@ -88,7 +92,7 @@ public class FunctorWriterTest {
                                                                        "  private final CharFunc function;\n" +
                                                                        "\n" +
                                                                        "  CharFunc_Jaccall_J(CharFunc function) {\n" +
-                                                                       "    super(JNI.ffi_closure(FFI_CIF, function, JNI_METHOD_ID));\n" +
+                                                                       "    super(JNI.ffi_closure(FFI_CIF, function, JNI_METHOD_ID), ByteBuffer.allocate(0));\n" +
                                                                        "    this.function = function;\n" +
                                                                        "  }\n" +
                                                                        "\n" +
@@ -109,7 +113,7 @@ public class FunctorWriterTest {
                                                                        "public final class CharFunc_PointerFactory implements PointerFactory<PointerCharFunc> {\n" +
                                                                        "  @Override\n" +
                                                                        "  public PointerCharFunc create(Type type, long address, ByteBuffer buffer) {\n" +
-                                                                       "    return new CharFunc_Jaccall_C(address);\n" +
+                                                                       "    return new CharFunc_Jaccall_C(address, buffer);\n" +
                                                                        "  }\n" +
                                                                        "}"));
     }
