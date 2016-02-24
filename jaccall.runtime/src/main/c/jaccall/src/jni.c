@@ -10,8 +10,15 @@
 
 static JavaVM *jvm;
 
+//TODO we can write out specific call back handlers for all cases instead of checking at runtime.
 struct jni_call_data {
-    ffi_cif *cif;
+    /* if the symbol is a function pointer (1) or a global variable (0) */
+    unsigned short sym_func;
+    /* if the symbol deals with struct(s) by value  */
+    unsigned short by_value;
+    /* cif or one of ffi_type_... */
+    void *sym_type;
+    /* address of the symbol */
     void *symaddr;
 };
 
@@ -187,7 +194,7 @@ find_libaddr(JNIEnv *env, jstring library) {
 }
 
 static inline
-void prep_jni_cif(JNIEnv *env, ffi_cif *jni_cif, const char *jni_sig, int arg_size) {
+void prep_jni_cif(JNIEnv *env, ffi_cif *jni_cif, const char *jni_sig, jbyte arg_size) {
     //prepare jni ffi_cif by parsing jni signature
     //compensate for jnienv & jobject/jclass arguments
     ffi_type **args = malloc((sizeof(ffi_type *) * (arg_size + 2)));

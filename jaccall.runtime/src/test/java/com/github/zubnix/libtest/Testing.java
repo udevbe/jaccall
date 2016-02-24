@@ -1,6 +1,7 @@
 package com.github.zubnix.libtest;
 
 import com.github.zubnix.jaccall.ByVal;
+import com.github.zubnix.jaccall.GlobalVar;
 import com.github.zubnix.jaccall.Lib;
 import com.github.zubnix.jaccall.Lng;
 import com.github.zubnix.jaccall.Ptr;
@@ -8,6 +9,10 @@ import com.github.zubnix.jaccall.Unsigned;
 
 @Lib("testing")
 public class Testing {
+
+    @Ptr
+    @GlobalVar
+    public static native long globalPointer();
 
     @Ptr
     public native long charTestFunctionPointer();

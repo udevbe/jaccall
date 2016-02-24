@@ -64,15 +64,20 @@ public class JaccallGenerator extends AbstractProcessor {
         final Set<TypeElement> typeElements = ElementFilter.typesIn(roundEnv.getElementsAnnotatedWith(Lib.class));
 
         new CheckWellFormedLib(this.messager).process(typeElements);
+        if (roundEnv.errorRaised()) {
+            return;
+        }
         new LinkSymbolsWriter(this.messager,
                               this.filer).process(typeElements);
-
     }
 
     private void processStructs(final RoundEnvironment roundEnv) {
         final Set<TypeElement> typeElements = ElementFilter.typesIn(roundEnv.getElementsAnnotatedWith(Struct.class));
 
         new CheckWellFormedStruct(this.messager).process(typeElements);
+        if (roundEnv.errorRaised()) {
+            return;
+        }
         new StructWriter(this.messager,
                          this.filer).process(typeElements);
     }
@@ -81,6 +86,9 @@ public class JaccallGenerator extends AbstractProcessor {
         final Set<TypeElement> typeElements = ElementFilter.typesIn(roundEnv.getElementsAnnotatedWith(Functor.class));
 
         new CheckWellFormedFunctor(this.messager).process(typeElements);
+        if (roundEnv.errorRaised()) {
+            return;
+        }
         new FunctorWriter(this.messager,
                           this.filer,
                           this.elementUtils).process(typeElements);

@@ -197,4 +197,27 @@ public class MethodValidator {
                                        element);
         }
     }
+
+    public void validateGlobalVar(final ExecutableElement executableElement) {
+
+        if (!executableElement.getParameters()
+                              .isEmpty()) {
+            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                       "Global variable method should not have arguments.",
+                                       executableElement);
+        }
+
+        if (!executableElement.getModifiers()
+                              .contains(Modifier.NATIVE)) {
+            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                       "Global variable method should be native.",
+                                       executableElement);
+        }
+
+        isAllowedElement(executableElement,
+                         executableElement.getReturnType()
+                                          .getKind());
+        hasAllowedAnnotations(executableElement.getReturnType(),
+                              executableElement);
+    }
 }

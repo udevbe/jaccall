@@ -1,6 +1,9 @@
 package com.github.zubnix.jaccall.compiletime;
 
+import com.github.zubnix.jaccall.GlobalVar;
+
 import javax.annotation.processing.Messager;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -26,7 +29,27 @@ final class CheckWellFormedLib {
             final MethodValidator methodValidator = new MethodValidator(this.messager);
 
             for (final ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
-                methodValidator.validateIfNative(executableElement);
+
+                boolean globalVar = false;
+                for (final AnnotationMirror annotationMirror : executableElement.getAnnotationMirrors()) {
+                    if (annotationMirror.getAnnotationType()
+                                        .asElement()
+                                        .getSimpleName()
+                                        .toString()
+                                        .equals(GlobalVar.class.getSimpleName())) {
+                        globalVar = true;
+                        break;
+                    }
+                }
+
+                //validate as C global variable
+                if (globalVar) {
+                    methodValidator.validateGlobalVar(executableElement);
+                }
+                else {
+                    //validate as C method
+                    methodValidator.validateIfNative(executableElement);
+                }
             }
         }
     }
