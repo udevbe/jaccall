@@ -47,8 +47,9 @@ final class LinkSymbolsWriter {
             final CodeBlock.Builder jniSignaturesArray = CodeBlock.builder();
 
             final List<ExecutableElement> methodsIn = ElementFilter.methodsIn(typeElement.getEnclosedElements());
-            for (int i = 0; i < methodsIn.size(); i++) {
-                final ExecutableElement executableElement = methodsIn.get(i);
+
+            int i = 0;
+            for (final ExecutableElement executableElement : methodsIn) {
                 if (executableElement.getModifiers()
                                      .contains(Modifier.NATIVE)) {
                     if (i != 0) {
@@ -71,6 +72,7 @@ final class LinkSymbolsWriter {
                     jniSignaturesArray.add("/*$L*/ $S",
                                            methodName,
                                            methodParser.parseJniSignature(executableElement));
+                    i++;
                 }
             }
 
