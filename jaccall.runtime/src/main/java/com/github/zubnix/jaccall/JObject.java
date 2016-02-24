@@ -16,7 +16,7 @@ public final class JObject implements AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         JNI.DeleteGlobalRef(this);
     }
 }
