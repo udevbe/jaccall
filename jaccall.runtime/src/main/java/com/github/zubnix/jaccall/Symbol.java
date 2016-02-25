@@ -1,5 +1,5 @@
 package com.github.zubnix.jaccall;
 
 
-public @interface GlobalVar {
+public @interface Symbol {
 }

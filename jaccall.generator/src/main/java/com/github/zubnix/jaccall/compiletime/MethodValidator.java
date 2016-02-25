@@ -155,11 +155,11 @@ public class MethodValidator {
 
     private void isLong(final Element element,
                         final TypeMirror typeMirror,
-                        final String charSequence) {
+                        final String errorMsg) {
         if (!typeMirror.getKind()
                        .equals(TypeKind.LONG)) {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
-                                       charSequence,
+                                       errorMsg,
                                        element);
         }
     }
@@ -198,26 +198,33 @@ public class MethodValidator {
         }
     }
 
-    public void validateGlobalVar(final ExecutableElement executableElement) {
+    public void validateSymbol(final ExecutableElement executableElement) {
 
         if (!executableElement.getParameters()
                               .isEmpty()) {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
-                                       "Global variable method should not have arguments.",
+                                       "Symbol should not have arguments.",
                                        executableElement);
         }
 
         if (!executableElement.getModifiers()
                               .contains(Modifier.NATIVE)) {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
-                                       "Global variable method should be native.",
+                                       "Symbol should be native.",
                                        executableElement);
         }
 
         isAllowedElement(executableElement,
                          executableElement.getReturnType()
                                           .getKind());
-        hasAllowedAnnotations(executableElement.getReturnType(),
-                              executableElement);
+
+        if (executableElement.getAnnotation(Ptr.class) == null) {
+            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                       "Symbol should be annotated with @Ptr.",
+                                       executableElement);
+        }
+
+        hasWellPlacedPtr(executableElement.getReturnType(),
+                         executableElement);
     }
 }
