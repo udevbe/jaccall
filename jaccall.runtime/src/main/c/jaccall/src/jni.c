@@ -265,7 +265,7 @@ void prep_jni_cif(JNIEnv *env, ffi_cif *jni_cif, const char *jni_sig, jbyte arg_
 }
 
 /*
- * call handler for functions that return a symbol (pointer)
+ * call handler for functions that return an undefined symbol
  */
 static
 void jni_call_handler_symbol(ffi_cif *cif, void *ret, void **jargs, void *user_data){
@@ -384,15 +384,9 @@ void create_closure(JNIEnv *env,
 
         void (*jni_call_handler) (ffi_cif *cif, void *ret, void **args, void *user_data);
 
-        if((void*) cif == (void*) &ffi_type_pointer){
-            //symbol is a global variable
-            jni_call_handler = &jni_call_handler_symbol;
-
-        } else {
+        if(cif){
             //symbol is a function
             call_data->cif = cif;
-
-            //TODO check if we're dealing with a function pointer or global variable pointer
 
             //check for struct by value as argument
             int jni_call_type= NO_BYVAL;
@@ -423,6 +417,9 @@ void create_closure(JNIEnv *env,
                     jni_call_handler = &jni_call_handler_ret_by_value_arg_by_value;
                     break;
             }
+        } else {
+            //symbol is not defined
+            jni_call_handler = &jni_call_handler_symbol;
         }
 
         ffi_status status = ffi_prep_closure_loc(closure, jni_cif, jni_call_handler, call_data, jni_func);
