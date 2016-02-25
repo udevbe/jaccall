@@ -265,6 +265,17 @@ void prep_jni_cif(JNIEnv *env, ffi_cif *jni_cif, const char *jni_sig, jbyte arg_
 }
 
 /*
+ * call handler for functions that return a symbol (pointer)
+ */
+static
+void jni_call_handler_symbol(ffi_cif *cif, void *ret, void **jargs, void *user_data){
+    struct jni_call_data *call_data = user_data;
+
+    memset(ret, 0, cif->rtype->size);
+    *((void **) ret) = call_data->symaddr;
+}
+
+/*
  * call handler for functions that return a struct by value and accept a struct by value as one of its arguments
  */
 static
@@ -370,39 +381,48 @@ void create_closure(JNIEnv *env,
 
         struct jni_call_data *call_data = malloc(sizeof(struct jni_call_data));
         call_data->symaddr = symaddr;
-        call_data->cif = cif;
-
-        //TODO check if we're dealing with a function pointer or global variable pointer
-
-        //check for struct by value as argument
-        int jni_call_type= NO_BYVAL;
-        int i = 0;
-        for (; i < cif->nargs; i++) {
-            if (cif->arg_types[i]->type == FFI_TYPE_STRUCT) {
-                jni_call_type |= ARG_BYVAL;
-                break;
-            }
-        }
-
-        //check for struct by value as return
-        if (cif->rtype->type == FFI_TYPE_STRUCT) {
-            jni_call_type |= RET_BYVAL;
-        }
 
         void (*jni_call_handler) (ffi_cif *cif, void *ret, void **args, void *user_data);
-        switch(jni_call_type){
-            case NO_BYVAL:
-                jni_call_handler = &jni_call_handler_no_by_value;
-                break;
-            case ARG_BYVAL:
-                jni_call_handler = &jni_call_handler_arg_by_value;
-                break;
-            case RET_BYVAL:
-                jni_call_handler = &jni_call_handler_ret_by_value;
-                break;
-            case BYVAL:
-                jni_call_handler = &jni_call_handler_ret_by_value_arg_by_value;
-                break;
+
+        if((void*) cif == (void*) &ffi_type_pointer){
+            //symbol is a global variable
+            jni_call_handler = &jni_call_handler_symbol;
+
+        } else {
+            //symbol is a function
+            call_data->cif = cif;
+
+            //TODO check if we're dealing with a function pointer or global variable pointer
+
+            //check for struct by value as argument
+            int jni_call_type= NO_BYVAL;
+            int i = 0;
+            for (; i < cif->nargs; i++) {
+                if (cif->arg_types[i]->type == FFI_TYPE_STRUCT) {
+                    jni_call_type |= ARG_BYVAL;
+                    break;
+                }
+            }
+
+            //check for struct by value as return
+            if (cif->rtype->type == FFI_TYPE_STRUCT) {
+                jni_call_type |= RET_BYVAL;
+            }
+
+            switch(jni_call_type){
+                case NO_BYVAL:
+                    jni_call_handler = &jni_call_handler_no_by_value;
+                    break;
+                case ARG_BYVAL:
+                    jni_call_handler = &jni_call_handler_arg_by_value;
+                    break;
+                case RET_BYVAL:
+                    jni_call_handler = &jni_call_handler_ret_by_value;
+                    break;
+                case BYVAL:
+                    jni_call_handler = &jni_call_handler_ret_by_value_arg_by_value;
+                    break;
+            }
         }
 
         ffi_status status = ffi_prep_closure_loc(closure, jni_cif, jni_call_handler, call_data, jni_func);
@@ -646,8 +666,7 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1callInterface(JNIEnv *env, jclas
     }
 
     ffi_cif *cif = malloc(sizeof(ffi_cif));
-    if (ffi_prep_cif(cif, FFI_DEFAULT_ABI, (unsigned int) nro_args, (ffi_type *) (intptr_t) ffi_return_type, args) !=
-        FFI_OK) {
+    if (ffi_prep_cif(cif, FFI_DEFAULT_ABI, (unsigned int) nro_args, (ffi_type *) (intptr_t) ffi_return_type, args) != FFI_OK) {
         throwError(env, "ffi_prep_cif failed.\n");
         exit(1);
     }
