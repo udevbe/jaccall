@@ -9,8 +9,7 @@ import javax.annotation.Generated;
 @Generated("com.github.zubnix.jaccall.compiletime.LinkerGenerator")
 public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
     public Testing_Jaccall_LinkSymbols() {
-        super(new String[]{"globalPointer",
-                           "charTest",
+        super(new String[]{"charTest",
                            "unsignedCharTest",
                            "shortTest",
                            "unsignedShortTest",
@@ -50,8 +49,7 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                            "unionTest2FunctionPointer",
                            "writeFieldsTestStruct"
               },
-              new byte[]{0,
-                         1,
+              new byte[]{1,
                          1,
                          1,
                          1,
@@ -91,8 +89,7 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                          0,
                          13
               },
-              new long[]{JNI.FFI_TYPE_POINTER,
-                         JNI.ffi_callInterface(JNI.FFI_TYPE_SINT8,
+              new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_SINT8,
                                                JNI.FFI_TYPE_SINT8),
                          JNI.ffi_callInterface(JNI.FFI_TYPE_UINT8,
                                                JNI.FFI_TYPE_UINT8),
@@ -181,8 +178,7 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                                                JNI.FFI_TYPE_POINTER,
                                                JNI.FFI_TYPE_SINT32)
               },
-              new String[]{"()J",
-                           "(B)B",
+              new String[]{"(B)B",
                            "(B)B",
                            "(S)S",
                            "(S)S",

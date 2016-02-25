@@ -10,14 +10,15 @@
 
 static JavaVM *jvm;
 
+#define NO_BYVAL 0x00
+#define ARG_BYVAL 0x01
+#define RET_BYVAL 0x02
+#define BYVAL (ARG_BYVAL|RET_BYVAL)
+
 //TODO we can write out specific call back handlers for all cases instead of checking at runtime.
 struct jni_call_data {
-    /* if the symbol is a function pointer (1) or a global variable (0) */
-    unsigned short sym_func;
-    /* if the symbol deals with struct(s) by value  */
-    unsigned short by_value;
     /* cif or one of ffi_type_... */
-    void *sym_type;
+    ffi_cif *cif;
     /* address of the symbol */
     void *symaddr;
 };
@@ -263,9 +264,11 @@ void prep_jni_cif(JNIEnv *env, ffi_cif *jni_cif, const char *jni_sig, jbyte arg_
     }
 }
 
+/*
+ * call handler for functions that return a struct by value and accept a struct by value as one of its arguments
+ */
 static
-void jni_call_handler(ffi_cif *cif, void *ret, void **jargs, void *user_data) {
-
+void jni_call_handler_ret_by_value_arg_by_value(ffi_cif *cif, void *ret, void **jargs, void *user_data){
     struct jni_call_data *call_data = user_data;
 
     ffi_type **arg_types = call_data->cif->arg_types;
@@ -274,7 +277,6 @@ void jni_call_handler(ffi_cif *cif, void *ret, void **jargs, void *user_data) {
 
     void **args = (nargs ? jargs + 2 : NULL);
 
-    //TODO (optional speed improvement) analyse cif in advance and check for struct types, so we can avoid struct_type loops if not needed
     int i = 0;
     for (; i < nargs; i++) {
         if (arg_types[i]->type == FFI_TYPE_STRUCT) {
@@ -285,14 +287,69 @@ void jni_call_handler(ffi_cif *cif, void *ret, void **jargs, void *user_data) {
 
     memset(ret, 0, cif->rtype->size);
 
-    if (rtype->type == FFI_TYPE_STRUCT) {
-        //struct by value
-        void *rval = malloc(rtype->size);
-        ffi_call(call_data->cif, FFI_FN(call_data->symaddr), rval, args);
-        *((void **) ret) = rval;
-    } else {
-        ffi_call(call_data->cif, FFI_FN(call_data->symaddr), ret, args);
+    //struct by value
+    void *rval = malloc(rtype->size);
+    ffi_call(call_data->cif, FFI_FN(call_data->symaddr), rval, args);
+    *((void **) ret) = rval;
+}
+
+/*
+ * call handler for functions that return a struct by value but none of its arguments are by value
+ */
+static
+void jni_call_handler_ret_by_value(ffi_cif *cif, void *ret, void **jargs, void *user_data){
+
+    struct jni_call_data *call_data = user_data;
+
+    ffi_type **arg_types = call_data->cif->arg_types;
+    unsigned int nargs = call_data->cif->nargs;
+    ffi_type *rtype = call_data->cif->rtype;
+
+    void **args = (nargs ? jargs + 2 : NULL);
+
+    memset(ret, 0, cif->rtype->size);
+
+    void *rval = malloc(rtype->size);
+    ffi_call(call_data->cif, FFI_FN(call_data->symaddr), rval, args);
+    *((void **) ret) = rval;
+}
+
+/*
+ * call handler for functions that do not return a struct by value but accept a struct by value as one of its arguments
+ */
+static
+void jni_call_handler_arg_by_value(ffi_cif *cif, void *ret, void **jargs, void *user_data){
+    struct jni_call_data *call_data = user_data;
+
+    ffi_type **arg_types = call_data->cif->arg_types;
+    unsigned int nargs = call_data->cif->nargs;
+
+    void **args = (nargs ? jargs + 2 : NULL);
+
+    int i = 0;
+    for (; i < nargs; i++) {
+        if (arg_types[i]->type == FFI_TYPE_STRUCT) {
+            //struct by value
+            args[i] = *((void **) args[i]);
+        }
     }
+
+    memset(ret, 0, call_data->cif->rtype->size);
+    ffi_call(call_data->cif, FFI_FN(call_data->symaddr), ret, args);
+}
+
+/*
+ * call handler for functions that do not return a struct by value and do not accept a struct by value as one of its arguments
+ */
+static
+void jni_call_handler_no_by_value(ffi_cif *cif, void *ret, void **jargs, void *user_data) {
+
+    struct jni_call_data *call_data = user_data;
+
+    void **args = (call_data->cif->nargs ? jargs + 2 : NULL);
+
+    memset(ret, 0, call_data->cif->rtype->size);
+    ffi_call(call_data->cif, FFI_FN(call_data->symaddr), ret, args);
 }
 
 static
@@ -309,14 +366,47 @@ void create_closure(JNIEnv *env,
     if (closure) {
 
         ffi_cif *jni_cif = malloc(sizeof(ffi_cif));
-
         prep_jni_cif(env, jni_cif, jni_sig, argSize);
 
         struct jni_call_data *call_data = malloc(sizeof(struct jni_call_data));
-        call_data->cif = cif;
         call_data->symaddr = symaddr;
+        call_data->cif = cif;
 
-        ffi_status status = ffi_prep_closure_loc(closure, jni_cif, &jni_call_handler, call_data, jni_func);
+        //TODO check if we're dealing with a function pointer or global variable pointer
+
+        //check for struct by value as argument
+        int jni_call_type= NO_BYVAL;
+        int i = 0;
+        for (; i < cif->nargs; i++) {
+            if (cif->arg_types[i]->type == FFI_TYPE_STRUCT) {
+                jni_call_type |= ARG_BYVAL;
+                break;
+            }
+        }
+
+        //check for struct by value as return
+        if (cif->rtype->type == FFI_TYPE_STRUCT) {
+            jni_call_type |= RET_BYVAL;
+        }
+
+        void (*jni_call_handler) (ffi_cif *cif, void *ret, void **args, void *user_data);
+        switch(jni_call_type){
+            case NO_BYVAL:
+                jni_call_handler = &jni_call_handler_no_by_value;
+                break;
+            case ARG_BYVAL:
+                jni_call_handler = &jni_call_handler_arg_by_value;
+                break;
+            case RET_BYVAL:
+                jni_call_handler = &jni_call_handler_ret_by_value;
+                break;
+            case BYVAL:
+                jni_call_handler = &jni_call_handler_ret_by_value_arg_by_value;
+                break;
+        }
+
+        ffi_status status = ffi_prep_closure_loc(closure, jni_cif, jni_call_handler, call_data, jni_func);
+
         if (status == FFI_OK) {
             jniMethods_i->name = (char *) symstr;
             jniMethods_i->signature = (char *) jni_sig;
@@ -651,6 +741,7 @@ JNI_OnLoad(JavaVM *vm, void *reserved){
     return JNI_VERSION_1_6;
 }
 
+//TODO implement a func_ptr_handler for each specific arguments case (speed improvement)
 static
 void
 java_func_ptr_handler(ffi_cif *jni_cif, void *ret, void **jargs, void *user_data) {
