@@ -4,6 +4,7 @@ import com.github.zubnix.jaccall.ByVal;
 import com.github.zubnix.jaccall.Lib;
 import com.github.zubnix.jaccall.Lng;
 import com.github.zubnix.jaccall.Ptr;
+import com.github.zubnix.jaccall.Symbol;
 import com.github.zubnix.jaccall.Unsigned;
 
 @Lib("testing")
@@ -147,5 +148,17 @@ public class Testing {
 
     @Ptr
     public native long noArgsFuncPtrTest();
+
+    @Symbol
+    @Ptr
+    public static native long readGlobalVar();
+
+    @Symbol
+    @Ptr
+    public static native long writeGlobalVar();
+
+    @Symbol
+    @Ptr
+    public static native long globalvar();
 
 }

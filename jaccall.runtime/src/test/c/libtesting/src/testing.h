@@ -1,3 +1,5 @@
+extern int globalvar;
+
 struct test_embedded {
         long long embedded_field0;
         float embedded_field1;
@@ -155,3 +157,7 @@ void writeFieldsTestStruct(struct fieldsTest *fTest,
                            struct test_embedded structField,
                            struct test_embedded structArrayField[],
                            int structArrayFieldSize);
+
+int readGlobalVar(void);
+
+void writeGlobalVar(int var);

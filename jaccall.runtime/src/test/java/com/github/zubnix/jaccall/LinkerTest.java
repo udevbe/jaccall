@@ -463,4 +463,15 @@ public class LinkerTest {
         //then
         assertThat(funcPtr).isNotEqualTo(0);
     }
+
+    @Test
+    public void testSymbols(){
+        //given
+        Linker.link(libFilePath(),
+                    Testing.class,
+                    new Testing_Jaccall_LinkSymbols());
+
+        //when
+
+    }
 }

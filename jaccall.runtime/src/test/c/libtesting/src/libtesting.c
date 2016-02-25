@@ -3,6 +3,8 @@
 #include <string.h>
 #include "testing.h"
 
+int globalvar = 5;
+
 struct test structTest(struct test *tst,
                        char field0,
                        short field1,
@@ -285,4 +287,12 @@ void writeFieldsTestStruct(struct fieldsTest *fTest,
     fTest->pointerArrayField[2] = pointerArrayField[2];
     fTest->structField = structField;
     memcpy(&fTest->structArrayField, &structArrayField[0], structArrayFieldSize * sizeof(struct test_embedded));
+}
+
+int readGlobalVar(void){
+    return globalvar;
+}
+
+void writeGlobalVar(int var){
+    globalvar = var;
 }
