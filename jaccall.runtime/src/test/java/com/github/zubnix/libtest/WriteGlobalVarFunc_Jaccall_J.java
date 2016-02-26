@@ -5,14 +5,14 @@ import com.github.zubnix.jaccall.JNI;
 
 import java.nio.ByteBuffer;
 
-final class ReadGlobalVarFunc_Jaccall_J extends PointerReadGlobalVarFunc {
+final class WriteGlobalVarFunc_Jaccall_J extends PointerWriteGlobalVarFunc {
 
-    private static final long JNI_METHOD_ID = JNI.GetMethodID(ReadGlobalVarFunc.class,
+    private static final long JNI_METHOD_ID = JNI.GetMethodID(WriteGlobalVarFunc.class,
                                                               "$",
                                                               "()I");
-    private final ReadGlobalVarFunc function;
+    private final WriteGlobalVarFunc function;
 
-    ReadGlobalVarFunc_Jaccall_J(final ReadGlobalVarFunc function) {
+    WriteGlobalVarFunc_Jaccall_J(final WriteGlobalVarFunc function) {
         super(JNI.ffi_closure(FFI_CIF,
                               function,
                               JNI_METHOD_ID),
@@ -21,7 +21,7 @@ final class ReadGlobalVarFunc_Jaccall_J extends PointerReadGlobalVarFunc {
     }
 
     @Override
-    public int $() {
-        return this.function.$();
+    public void $(final int var) {
+        this.function.$(var);
     }
 }
