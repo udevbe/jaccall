@@ -26,6 +26,7 @@ import com.github.zubnix.libtest.UnsignedIntFunc;
 import com.github.zubnix.libtest.UnsignedLongFunc;
 import com.github.zubnix.libtest.UnsignedLongLongFunc;
 import com.github.zubnix.libtest.UnsignedShortFunc;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
@@ -92,14 +93,16 @@ public class FunctorTest {
         libStream.close();
     }
 
-    @Test
-    public void testCallFromC() {
-
-        //given
+    @BeforeClass
+    public static void beforeClass() {
         Linker.link(libFilePath(),
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
+    }
 
+    @Test
+    public void testCallFromC() {
+        //given
         final long funcPtrAddr = new Testing().getFunctionPointerTest();
         final Pointer<FooFunc> pointerTestFunc = wrap(FooFunc.class,
                                                       funcPtrAddr);
@@ -140,10 +143,6 @@ public class FunctorTest {
     @Test
     public void testCallFromJava() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
-
         final PointerFooFunc pointerTestFunc = PointerFooFunc.nref(
                 new FooFunc() {
                     @Override
@@ -554,19 +553,19 @@ public class FunctorTest {
         try (Pointer<TestStruct> tst = testStructPointer;
              Pointer<Integer> intp = Pointer.nref(44)) {
 
-            final byte  newField0   = 'a';
-            final short newField1   = 22;
-            final int   newField2_0 = 123;
-            final int   newField2_1 = 456;
-            final int   newField2_2 = 789;
+            final byte newField0 = 'a';
+            final short newField1 = 22;
+            final int newField2_0 = 123;
+            final int newField2_1 = 456;
+            final int newField2_2 = 789;
 
             final Pointer<Integer> newField2 = Pointer.nref(newField2_0,
                                                             newField2_1,
                                                             newField2_2);
 
-            final Pointer<Integer> newField3       = intp;
-            final long             embedded_field0 = 1234567890L;
-            final float            embedded_field1 = 9876543.21F;
+            final Pointer<Integer> newField3 = intp;
+            final long embedded_field0 = 1234567890L;
+            final float embedded_field1 = 9876543.21F;
 
             final Pointer<TestStruct> testStructByValue = wrap(TestStruct.class,
                                                                JNITestUtil.execStructTest(pointerStructFunc.address,
@@ -639,7 +638,6 @@ public class FunctorTest {
 
     @Test
     public void testStruct2FunctionPointerFromJava() {
-
         //given
         final Pointer<StructFunc2> pointerStructFunc2 = nref(new StructFunc2() {
             @Override
@@ -664,19 +662,19 @@ public class FunctorTest {
         try (Pointer<TestStruct> tst = ref(new TestStruct());
              Pointer<Integer> intp = Pointer.nref(44)) {
 
-            final byte  field0   = 'a';
-            final short field1   = 22;
-            final int   field2_0 = 123;
-            final int   field2_1 = 456;
-            final int   field2_2 = 789;
+            final byte field0 = 'a';
+            final short field1 = 22;
+            final int field2_0 = 123;
+            final int field2_1 = 456;
+            final int field2_2 = 789;
 
             final Pointer<Integer> field2 = Pointer.nref(field2_0,
                                                          field2_1,
                                                          field2_2);
 
-            final Pointer<Integer> field3          = intp;
-            final long             embedded_field0 = 1234567890L;
-            final float            embedded_field1 = 9876543.21F;
+            final Pointer<Integer> field3 = intp;
+            final long embedded_field0 = 1234567890L;
+            final float embedded_field1 = 9876543.21F;
 
             final Pointer<TestStruct> testStruct = wrap(TestStruct.class,
                                                         JNITestUtil.execStructTest2(pointerStructFunc2.address,
@@ -725,7 +723,6 @@ public class FunctorTest {
                             final long field3,
                             final long embedded_field0,
                             final float embedded_field1) {
-
         //@formatter:off
         final Pointer<TestStruct> someTest = malloc(TestStruct.SIZE, TestStruct.class);
         final TestStruct tst = wrap(TestStruct.class, tstPointer).dref();
@@ -845,10 +842,6 @@ public class FunctorTest {
     @Test
     public void testCharFunctionPointerFromC() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
-
         final long pointer = new Testing().charTestFunctionPointer();
         final Pointer<CharFunc> pointerCharFunc = wrap(CharFunc.class,
                                                        pointer);
@@ -866,10 +859,6 @@ public class FunctorTest {
     @Test
     public void testUnsignedCharFunctionPointerFromC() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
-
         final long pointer = new Testing().unsignedCharTestFunctionPointer();
         final Pointer<UnsignedCharFunc> pointerUnsignedCharFunc = wrap(UnsignedCharFunc.class,
                                                                        pointer);
@@ -887,10 +876,6 @@ public class FunctorTest {
     @Test
     public void testShortFunctionPointerFromC() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
-
         final long pointer = new Testing().shortTestFunctionPointer();
         final Pointer<ShortFunc> pointerShortFunc = wrap(ShortFunc.class,
                                                          pointer);
@@ -908,10 +893,6 @@ public class FunctorTest {
     @Test
     public void testUnsignedShortFunctionPointerFromC() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
-
         final long pointer = new Testing().unsignedShortTestFunctionPointer();
         final Pointer<UnsignedShortFunc> pointerUnsignedShortFunc = wrap(UnsignedShortFunc.class,
                                                                          pointer);
@@ -929,10 +910,6 @@ public class FunctorTest {
     @Test
     public void testIntFunctionPointerFromC() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
-
         final long pointer = new Testing().intTestFunctionPointer();
         final Pointer<IntFunc> pointerIntFunc = wrap(IntFunc.class,
                                                      pointer);
@@ -950,10 +927,6 @@ public class FunctorTest {
     @Test
     public void testUnsignedIntFunctionPointerFromC() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
-
         final long pointer = new Testing().unsignedIntTestFunctionPointer();
         final Pointer<UnsignedIntFunc> pointerUnsignedIntFunc = wrap(UnsignedIntFunc.class,
                                                                      pointer);
@@ -971,10 +944,6 @@ public class FunctorTest {
     @Test
     public void testLongFunctionPointerFromC() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
-
         final long pointer = new Testing().longTestFunctionPointer();
         final Pointer<LongFunc> pointerLongFunc = wrap(LongFunc.class,
                                                        pointer);
@@ -992,10 +961,6 @@ public class FunctorTest {
     @Test
     public void testUnsignedLongFunctionPointerFromC() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
-
         final long pointer = new Testing().unsignedLongTestFunctionPointer();
         final Pointer<UnsignedLongFunc> pointerUnsignedLongFunc = wrap(UnsignedLongFunc.class,
                                                                        pointer);
@@ -1014,10 +979,6 @@ public class FunctorTest {
     @Test
     public void testLongLongFunctionPointerFromC() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
-
         final long pointer = new Testing().longLongTestFunctionPointer();
         final Pointer<LongLongFunc> pointerLongLongFunc = wrap(LongLongFunc.class,
                                                                pointer);
@@ -1035,10 +996,6 @@ public class FunctorTest {
     @Test
     public void testUnsignedLongLongFunctionPointerFromC() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
-
         final long pointer = new Testing().unsignedLongLongTestFunctionPointer();
         final Pointer<UnsignedLongLongFunc> pointerUnsignedLongLongFunc = wrap(UnsignedLongLongFunc.class,
                                                                                pointer);
@@ -1056,10 +1013,6 @@ public class FunctorTest {
     @Test
     public void testFloatFunctionPointerFromC() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
-
         final long pointer = new Testing().floatTestFunctionPointer();
         final Pointer<FloatFunc> pointerFloatFunc = wrap(FloatFunc.class,
                                                          pointer);
@@ -1077,10 +1030,6 @@ public class FunctorTest {
     @Test
     public void testDoubleFunctionPointerFromC() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
-
         final long pointer = new Testing().doubleTestFunctionPointer();
         final Pointer<DoubleFunc> pointerDoubleFunc = wrap(DoubleFunc.class,
                                                            pointer);
@@ -1098,10 +1047,6 @@ public class FunctorTest {
     @Test
     public void testPointerFunctionPointerFromC() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
-
         final long pointer = new Testing().pointerTestFunctionPointer();
         final Pointer<PointerFunc> pointerPointerFunc = wrap(PointerFunc.class,
                                                              pointer);
@@ -1119,10 +1064,6 @@ public class FunctorTest {
     @Test
     public void testStructFunctionPointerFromC() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
-
         final long pointer = Testing.structTestFunctionPointer();
         final Pointer<StructFunc> pointerStructFunc = wrap(StructFunc.class,
                                                            pointer);
@@ -1151,19 +1092,19 @@ public class FunctorTest {
         try (Pointer<TestStruct> tst = testStructPointer;
              Pointer<Integer> intp = Pointer.nref(44)) {
 
-            final byte  newField0   = 'a';
-            final short newField1   = 22;
-            final int   newField2_0 = 123;
-            final int   newField2_1 = 456;
-            final int   newField2_2 = 789;
+            final byte newField0 = 'a';
+            final short newField1 = 22;
+            final int newField2_0 = 123;
+            final int newField2_1 = 456;
+            final int newField2_2 = 789;
 
             final Pointer<Integer> newField2 = Pointer.nref(newField2_0,
                                                             newField2_1,
                                                             newField2_2);
 
-            final Pointer<Integer> newField3       = intp;
-            final long             embedded_field0 = 1234567890L;
-            final float            embedded_field1 = 9876543.21F;
+            final Pointer<Integer> newField3 = intp;
+            final long embedded_field0 = 1234567890L;
+            final float embedded_field1 = 9876543.21F;
 
             final Pointer<TestStruct> testStructByValue = wrap(TestStruct.class,
                                                                pointerStructFunc.dref()
@@ -1204,10 +1145,6 @@ public class FunctorTest {
     @Test
     public void testStruct2FunctionPointerFromC() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
-
         final long pointer = Testing.structTest2FunctionPointer();
         final Pointer<StructFunc2> pointerStructFunc2 = wrap(StructFunc2.class,
                                                              pointer);
@@ -1216,19 +1153,19 @@ public class FunctorTest {
         try (Pointer<TestStruct> tst = ref(new TestStruct());
              Pointer<Integer> intp = Pointer.nref(44)) {
 
-            final byte  field0   = 'a';
-            final short field1   = 22;
-            final int   field2_0 = 123;
-            final int   field2_1 = 456;
-            final int   field2_2 = 789;
+            final byte field0 = 'a';
+            final short field1 = 22;
+            final int field2_0 = 123;
+            final int field2_1 = 456;
+            final int field2_2 = 789;
 
             final Pointer<Integer> field2 = Pointer.nref(field2_0,
                                                          field2_1,
                                                          field2_2);
 
-            final Pointer<Integer> field3          = intp;
-            final long             embedded_field0 = 1234567890L;
-            final float            embedded_field1 = 9876543.21F;
+            final Pointer<Integer> field3 = intp;
+            final long embedded_field0 = 1234567890L;
+            final float embedded_field1 = 9876543.21F;
 
             final Pointer<TestStruct> testStruct = wrap(TestStruct.class,
                                                         pointerStructFunc2.dref()
@@ -1272,12 +1209,7 @@ public class FunctorTest {
 
     @Test
     public void testUnionFunctionPointerFromC() {
-
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
-
         final long pointer = Testing.unionTestFunctionPointer();
         final Pointer<UnionFunc> pointerUnionFunc = wrap(UnionFunc.class,
                                                          pointer);
@@ -1305,10 +1237,6 @@ public class FunctorTest {
     @Test
     public void testUnion2FunctionPointerFromC() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
-
         final long pointer = Testing.unionTest2FunctionPointer();
         final Pointer<UnionFunc2> pointerUnionFunc2 = wrap(UnionFunc2.class,
                                                            pointer);

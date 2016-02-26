@@ -5,9 +5,8 @@ import com.github.zubnix.libtest.FieldsTestStruct;
 import com.github.zubnix.libtest.TestStructEmbedded;
 import com.github.zubnix.libtest.Testing;
 import com.github.zubnix.libtest.Testing_Jaccall_LinkSymbols;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,7 +15,6 @@ import java.io.InputStream;
 
 import static com.google.common.truth.Truth.assertThat;
 
-@RunWith(JUnit4.class)
 public class StructTest {
 
     private static final String LIB_PREFIX  = "lib";
@@ -53,13 +51,16 @@ public class StructTest {
         libStream.close();
     }
 
-    @Test
-    public void testReadStructFieldTypes() {
-        //given
+    @BeforeClass
+    public static void beforeClass() {
         Linker.link(libFilePath(),
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
+    }
 
+    @Test
+    public void testReadStructFieldTypes() {
+        //given
         final FieldsTestStruct fieldsTestStruct = new FieldsTestStruct();
         final byte             charField        = 123;
         final short            shortField       = 12345;
