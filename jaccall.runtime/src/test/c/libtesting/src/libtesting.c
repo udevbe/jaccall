@@ -3,8 +3,6 @@
 #include <string.h>
 #include "testing.h"
 
-int globalvar = 5;
-
 struct test structTest(struct test *tst,
                        char field0,
                        short field1,

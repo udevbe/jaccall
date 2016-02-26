@@ -1,4 +1,4 @@
-extern int globalvar;
+int globalvar;
 
 struct test_embedded {
         long long embedded_field0;
