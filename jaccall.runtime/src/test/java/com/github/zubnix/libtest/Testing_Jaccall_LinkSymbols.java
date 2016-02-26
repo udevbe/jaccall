@@ -47,7 +47,10 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                            "structTest2FunctionPointer",
                            "unionTestFunctionPointer",
                            "unionTest2FunctionPointer",
-                           "writeFieldsTestStruct"
+                           "writeFieldsTestStruct",
+                           "readGlobalVar",
+                           "writeGlobalVar",
+                           "globalvar"
               },
               new byte[]{1,
                          1,
@@ -87,7 +90,10 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                          0,
                          0,
                          0,
-                         13
+                         13,
+                         0,
+                         0,
+                         0
               },
               new long[]{JNI.ffi_callInterface(JNI.FFI_TYPE_SINT8,
                                                JNI.FFI_TYPE_SINT8),
@@ -176,7 +182,10 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                                                JNI.FFI_TYPE_POINTER,
                                                TestStructEmbedded.FFI_TYPE,
                                                JNI.FFI_TYPE_POINTER,
-                                               JNI.FFI_TYPE_SINT32)
+                                               JNI.FFI_TYPE_SINT32),
+                         0,
+                         0,
+                         0
               },
               new String[]{"(B)B",
                            "(B)B",
@@ -216,7 +225,10 @@ public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
                            "()J",
                            "()J",
                            "()J",
-                           "(JBSIJJFDJJJJI)V"
+                           "(JBSIJJFDJJJJI)V",
+                           "()J",
+                           "()J",
+                           "()J"
               });
     }
 }
