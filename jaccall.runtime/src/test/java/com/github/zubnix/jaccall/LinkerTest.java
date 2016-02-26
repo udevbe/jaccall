@@ -1,10 +1,13 @@
 package com.github.zubnix.jaccall;
 
 
+import com.github.zubnix.libtest.ReadGlobalVarFunc;
 import com.github.zubnix.libtest.TestStruct;
 import com.github.zubnix.libtest.TestUnion;
 import com.github.zubnix.libtest.Testing;
 import com.github.zubnix.libtest.Testing_Jaccall_LinkSymbols;
+import com.github.zubnix.libtest.WriteGlobalVarFunc;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
@@ -54,15 +57,19 @@ public class LinkerTest {
         libStream.close();
     }
 
-    @Test
-    public void testChar() {
-        //given
+    @BeforeClass
+    public static void beforeClass() {
         Linker.link(libFilePath(),
                     Testing.class,
                     new Testing_Jaccall_LinkSymbols());
+    }
+
+    @Test
+    public void testChar() {
+        //given
+        final byte value = Byte.MAX_VALUE;
 
         //when
-        final byte value    = Byte.MAX_VALUE;
         final byte returned = new Testing().charTest(value);
 
         //then
@@ -72,12 +79,9 @@ public class LinkerTest {
     @Test
     public void testUnsignedChar() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
+        final byte value = (byte) 0xFF;
 
         //when
-        final byte value    = (byte) 0xFF;
         final byte returned = new Testing().unsignedCharTest(value);
 
         //then
@@ -87,12 +91,9 @@ public class LinkerTest {
     @Test
     public void testShort() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
+        final short value = Short.MAX_VALUE;
 
         //when
-        final short value    = Short.MAX_VALUE;
         final short returned = new Testing().shortTest(value);
 
         //then
@@ -102,12 +103,9 @@ public class LinkerTest {
     @Test
     public void testUnsignedShort() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
+        final short value = (short) 0xFFFF;
 
         //when
-        final short value    = (short) 0xFFFF;
         final short returned = new Testing().unsignedShortTest(value);
 
         //then
@@ -117,12 +115,9 @@ public class LinkerTest {
     @Test
     public void testInt() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
+        final int value = Integer.MAX_VALUE;
 
         //when
-        final int value    = Integer.MAX_VALUE;
         final int returned = new Testing().intTest(value);
 
         //then
@@ -132,12 +127,9 @@ public class LinkerTest {
     @Test
     public void testUnsignedInt() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
+        final int value = 0xFFFFFFFF;
 
         //when
-        final int value    = 0xFFFFFFFF;
         final int returned = new Testing().unsignedIntTest(value);
 
         //then
@@ -147,12 +139,9 @@ public class LinkerTest {
     @Test
     public void testLong() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
+        final long value = sizeof((CLong) null) == 8 ? Long.MAX_VALUE : Integer.MAX_VALUE;
 
         //when
-        final long value    = sizeof((CLong) null) == 8 ? Long.MAX_VALUE : Integer.MAX_VALUE;
         final long returned = new Testing().longTest(value);
 
         //then
@@ -162,12 +151,9 @@ public class LinkerTest {
     @Test
     public void testUnsignedLong() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
+        final long value = sizeof((CLong) null) == 8 ? 0xFFFFFFFFFFFFFFFFL : 0x00000000FFFFFFFFL;
 
         //when
-        final long value    = sizeof((CLong) null) == 8 ? 0xFFFFFFFFFFFFFFFFL : 0x00000000FFFFFFFFL;
         final long returned = new Testing().unsignedLongTest(value);
 
         //then
@@ -177,12 +163,9 @@ public class LinkerTest {
     @Test
     public void testLongLong() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
+        final long value = Long.MAX_VALUE;
 
         //when
-        final long value    = Long.MAX_VALUE;
         final long returned = new Testing().longLongTest(value);
 
         //then
@@ -192,12 +175,9 @@ public class LinkerTest {
     @Test
     public void testUnsignedLongLong() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
+        final long value = 0xFFFFFFFFFFFFFFFFL;
 
         //when
-        final long value    = 0xFFFFFFFFFFFFFFFFL;
         final long returned = new Testing().unsignedLongLongTest(value);
 
         //then
@@ -207,11 +187,9 @@ public class LinkerTest {
     @Test
     public void testFloat() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
+        final float value = Float.MAX_VALUE;
+
         //when
-        final float value    = Float.MAX_VALUE;
         final float returned = new Testing().floatTest(value);
 
         //then
@@ -221,11 +199,9 @@ public class LinkerTest {
     @Test
     public void testDouble() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
+        final double value = Double.MAX_VALUE;
+
         //when
-        final double value    = Double.MAX_VALUE;
         final double returned = new Testing().doubleTest(value);
 
         //then
@@ -235,11 +211,9 @@ public class LinkerTest {
     @Test
     public void testPointer() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
+        final long value = sizeof((Pointer) null) == 8 ? Long.MAX_VALUE : Integer.MAX_VALUE;
+
         //when
-        final long value    = sizeof((Pointer) null) == 8 ? Long.MAX_VALUE : Integer.MAX_VALUE;
         final long returned = new Testing().pointerTest(value);
 
         //then
@@ -249,11 +223,6 @@ public class LinkerTest {
     @Test
     public void testStructReturnByReferencePassByValue() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
-
-        //when
         final Pointer<TestStruct> tst  = Pointer.ref(new TestStruct());
         final Pointer<Integer>    intp = nref(44);
 
@@ -271,6 +240,7 @@ public class LinkerTest {
         final long             embedded_field0 = 1234567890L;
         final float            embedded_field1 = 9876543.21F;
 
+        //when
         final Pointer<TestStruct> testStruct = wrap(TestStruct.class,
                                                     Testing.structTest2(tst.address,
                                                                         field0,
@@ -312,10 +282,6 @@ public class LinkerTest {
     @Test
     public void testStructReturnByValuePassByReference() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
-
         final Pointer<TestStruct> testStructPointer = malloc(TestStruct.SIZE).castp(TestStruct.class);
         final TestStruct          testStruct        = testStructPointer.dref();
 
@@ -391,10 +357,6 @@ public class LinkerTest {
     @Test
     public void testUnionReturnByValuePassByReference() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
-
         final Pointer<TestUnion> testUnionPointer = malloc(TestUnion.SIZE).castp(TestUnion.class);
         final int                field0           = 123456789;
         final float              field1           = 9876.54F;
@@ -417,10 +379,6 @@ public class LinkerTest {
     @Test
     public void testUnionReturnByReferencePassByValue() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
-
         final Pointer<TestUnion> testUnionPointer = malloc(TestUnion.SIZE).castp(TestUnion.class);
         final int                field0           = 123456789;
 
@@ -439,9 +397,6 @@ public class LinkerTest {
     @Test
     public void testNoArgs() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
 
         //when
         new Testing().noArgsTest();
@@ -453,9 +408,6 @@ public class LinkerTest {
     @Test
     public void testNoArgsFuncPtr() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
 
         //when
         final long funcPtr = new Testing().noArgsFuncPtrTest();
@@ -465,13 +417,28 @@ public class LinkerTest {
     }
 
     @Test
-    public void testSymbols(){
+    public void testSymbols() {
         //given
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
+
+        final long readGlobalVarSymbol = Testing.readGlobalVar();
+        final Pointer<ReadGlobalVarFunc> readGlobalVarFuncPointer = wrap(ReadGlobalVarFunc.class,
+                                                                         readGlobalVarSymbol);
+
+        final long globalvarSymbol = Testing.globalvar();
+        final Pointer<Integer> globalVar = wrap(Integer.class,
+                                                globalvarSymbol);
+
+        final long writeGlobalVarSymbol = Testing.writeGlobalVar();
+        final Pointer<WriteGlobalVarFunc> writeGlobalVarFuncPointer = wrap(WriteGlobalVarFunc.class,
+                                                                           writeGlobalVarSymbol);
 
         //when
+        writeGlobalVarFuncPointer.dref()
+                                 .$(10);
 
+        //then
+        assertThat(readGlobalVarFuncPointer.dref()
+                                           .$()).isEqualTo(10);
+        assertThat(globalVar.dref()).isEqualTo(10);
     }
 }
