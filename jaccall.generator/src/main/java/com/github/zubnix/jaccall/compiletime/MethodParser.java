@@ -5,6 +5,7 @@ import com.github.zubnix.jaccall.ByVal;
 import com.github.zubnix.jaccall.JNI;
 import com.github.zubnix.jaccall.Lng;
 import com.github.zubnix.jaccall.Ptr;
+import com.github.zubnix.jaccall.Symbol;
 import com.github.zubnix.jaccall.Unsigned;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -30,6 +31,7 @@ public final class MethodParser {
     private static final String UNSIGNED = Unsigned.class.getSimpleName();
     private static final String LNG      = Lng.class.getSimpleName();
     private static final String PTR      = Ptr.class.getSimpleName();
+    private static final String SYM      = Symbol.class.getSimpleName();
     private static final String BY_VAL   = ByVal.class.getSimpleName();
 
     private final Messager messager;
@@ -124,6 +126,12 @@ public final class MethodParser {
             final String simpleName = annotationType.asElement()
                                                     .getSimpleName()
                                                     .toString();
+
+            if (simpleName.equals(SYM)) {
+                builder.add("0L");
+                return builder.build();
+            }
+
             if (simpleName.equals(PTR)) {
                 ptr = elementValues;
             }

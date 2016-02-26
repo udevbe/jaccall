@@ -1,7 +1,10 @@
 package com.github.zubnix.jaccall.compiletime;
 
 
+import com.github.zubnix.jaccall.Symbol;
+
 import javax.annotation.processing.Messager;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
@@ -10,23 +13,48 @@ import java.util.Set;
 
 final class CheckWellFormedFunctor {
     private final Messager messager;
+    private       boolean  error;
 
     CheckWellFormedFunctor(final Messager messager) {
         this.messager = messager;
     }
 
-    public void process(final Set<? extends TypeElement> typeElements) {
+    public boolean process(final Set<? extends TypeElement> typeElements) {
         for (final TypeElement typeElement : typeElements) {
             isTopLevel(typeElement);
             isInterface(typeElement);
             doesNotExtend(typeElement);
             hasSingleMethod(typeElement);
+            isNotSymbol(typeElement);
 
             final MethodValidator methodValidator = new MethodValidator(this.messager);
 
             for (final ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
                 hasDollarAsName(executableElement);
                 methodValidator.validate(executableElement);
+            }
+
+            this.error |= methodValidator.errorRaised();
+        }
+
+        return this.error;
+    }
+
+    private void raiseError() {
+        this.error |= true;
+    }
+
+    private void isNotSymbol(final TypeElement typeElement) {
+        for (final AnnotationMirror annotationMirror : typeElement.getAnnotationMirrors()) {
+            if (annotationMirror.getAnnotationType()
+                                .asElement()
+                                .getSimpleName()
+                                .toString()
+                                .equals(Symbol.class.getSimpleName())) {
+                this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                           "@Symbol annotation can not be placed on functor.");
+                raiseError();
+                return;
             }
         }
     }
@@ -37,6 +65,7 @@ final class CheckWellFormedFunctor {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        "@Struct annotation should be placed on top level class types only.",
                                        typeElement);
+            raiseError();
         }
     }
 
@@ -47,6 +76,7 @@ final class CheckWellFormedFunctor {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        "Method name must be '$'.",
                                        executableElement);
+            raiseError();
         }
     }
 
@@ -56,6 +86,7 @@ final class CheckWellFormedFunctor {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        "Type may not extend other interfaces.",
                                        typeElement);
+            raiseError();
         }
     }
 
@@ -66,6 +97,7 @@ final class CheckWellFormedFunctor {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        "Type must be an interface.",
                                        typeElement);
+            raiseError();
         }
     }
 
@@ -75,6 +107,7 @@ final class CheckWellFormedFunctor {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        "Type must have exactly one method.",
                                        typeElement);
+            raiseError();
         }
     }
 }

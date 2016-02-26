@@ -54,7 +54,6 @@ final class FunctorWriter {
             for (final ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
                 writeFunctorImplementation(typeElement,
                                            executableElement);
-                break;
             }
         }
     }
@@ -69,7 +68,6 @@ final class FunctorWriter {
 
 
         writeFactory(factoryName,
-                     cFunctorName,
                      javaFunctorName,
                      typeElement,
                      executableElement);
@@ -346,7 +344,6 @@ final class FunctorWriter {
     }
 
     private void writeFactory(final String factoryName,
-                              final String cFunctorName,
                               final String javaFunctorName,
                               final TypeElement element,
                               final ExecutableElement executableElement) {

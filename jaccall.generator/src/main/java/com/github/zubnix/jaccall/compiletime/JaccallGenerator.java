@@ -63,34 +63,29 @@ public class JaccallGenerator extends AbstractProcessor {
     private void processLib(final RoundEnvironment roundEnv) {
         final Set<TypeElement> typeElements = ElementFilter.typesIn(roundEnv.getElementsAnnotatedWith(Lib.class));
 
-        new CheckWellFormedLib(this.messager).process(typeElements);
-        if (roundEnv.errorRaised()) {
-            return;
+        if (new CheckWellFormedLib(this.messager).process(typeElements)) {
+            new LinkSymbolsWriter(this.messager,
+                                  this.filer).process(typeElements);
         }
-        new LinkSymbolsWriter(this.messager,
-                              this.filer).process(typeElements);
+
     }
 
     private void processStructs(final RoundEnvironment roundEnv) {
         final Set<TypeElement> typeElements = ElementFilter.typesIn(roundEnv.getElementsAnnotatedWith(Struct.class));
 
-        new CheckWellFormedStruct(this.messager).process(typeElements);
-        if (roundEnv.errorRaised()) {
-            return;
+        if (new CheckWellFormedStruct(this.messager).process(typeElements)) {
+            new StructWriter(this.messager,
+                             this.filer).process(typeElements);
         }
-        new StructWriter(this.messager,
-                         this.filer).process(typeElements);
+
     }
 
     private void processFunctors(final RoundEnvironment roundEnv) {
         final Set<TypeElement> typeElements = ElementFilter.typesIn(roundEnv.getElementsAnnotatedWith(Functor.class));
-
-        new CheckWellFormedFunctor(this.messager).process(typeElements);
-        if (roundEnv.errorRaised()) {
-            return;
+        if (new CheckWellFormedFunctor(this.messager).process(typeElements)) {
+            new FunctorWriter(this.messager,
+                              this.filer,
+                              this.elementUtils).process(typeElements);
         }
-        new FunctorWriter(this.messager,
-                          this.filer,
-                          this.elementUtils).process(typeElements);
     }
 }

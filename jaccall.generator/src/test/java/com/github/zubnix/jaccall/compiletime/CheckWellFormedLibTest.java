@@ -1,7 +1,6 @@
 package com.github.zubnix.jaccall.compiletime;
 
 
-import com.github.zubnix.jaccall.compiletime.JaccallGenerator;
 import com.google.testing.compile.CompileTester;
 import com.google.testing.compile.JavaFileObjects;
 import org.junit.Test;
@@ -376,6 +375,29 @@ public class CheckWellFormedLibTest {
         //then
         compileTester.failsToCompile()
                      .withErrorContaining("@Unsigned annotation can not be placed in conjunction with @Ptr annotation.")
+                     .in(fileObject);
+    }
+
+    @Test
+    public void testSymbolAnnotationNotAPtr(){
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "import com.github.zubnix.jaccall.Symbol;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    @Symbol\n" +
+                                                                          "    public static native long globalVariable();\n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new JaccallGenerator());
+        //then
+        compileTester.failsToCompile()
+                     .withErrorContaining("Symbol should be annotated with @Ptr.")
                      .in(fileObject);
     }
 }

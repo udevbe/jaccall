@@ -18,9 +18,14 @@ import javax.tools.Diagnostic;
 public class MethodValidator {
 
     private final Messager messager;
+    private       boolean  error;
 
     public MethodValidator(final Messager messager) {
         this.messager = messager;
+    }
+
+    private void raiseError() {
+        this.error |= true;
     }
 
     public void validate(final ExecutableElement executableElement) {
@@ -89,6 +94,7 @@ public class MethodValidator {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        charSequence,
                                        element);
+            raiseError();
         }
     }
 
@@ -112,6 +118,7 @@ public class MethodValidator {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        charSequence,
                                        element);
+            raiseError();
         }
     }
 
@@ -132,6 +139,7 @@ public class MethodValidator {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        "@ByVal annotation can not be placed in conjunction with @Unsigned annotation.",
                                        element);
+            raiseError();
         }
     }
 
@@ -141,6 +149,7 @@ public class MethodValidator {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        charSequence,
                                        element);
+            raiseError();
         }
     }
 
@@ -161,6 +170,7 @@ public class MethodValidator {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        errorMsg,
                                        element);
+            raiseError();
         }
     }
 
@@ -180,6 +190,7 @@ public class MethodValidator {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        "Method should have supported primitive types only.",
                                        element);
+            raiseError();
         }
     }
 
@@ -189,12 +200,14 @@ public class MethodValidator {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        "Method should not have a primitive type 'boolean'.",
                                        element);
+            raiseError();
         }
 
         if (kind.equals(TypeKind.CHAR)) {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        "Method should not have a primitive type 'char'.",
                                        element);
+            raiseError();
         }
     }
 
@@ -205,6 +218,7 @@ public class MethodValidator {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        "Symbol should not have arguments.",
                                        executableElement);
+            raiseError();
         }
 
         if (!executableElement.getModifiers()
@@ -212,6 +226,7 @@ public class MethodValidator {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        "Symbol should be native.",
                                        executableElement);
+            raiseError();
         }
 
         isAllowedElement(executableElement,
@@ -222,9 +237,14 @@ public class MethodValidator {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        "Symbol should be annotated with @Ptr.",
                                        executableElement);
+            raiseError();
         }
 
         hasWellPlacedPtr(executableElement.getReturnType(),
                          executableElement);
+    }
+
+    public boolean errorRaised() {
+        return this.error;
     }
 }

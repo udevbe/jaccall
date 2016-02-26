@@ -14,12 +14,13 @@ import java.util.Set;
 final class CheckWellFormedLib {
 
     private final Messager messager;
+    private       boolean  error;
 
     CheckWellFormedLib(final Messager messager) {
         this.messager = messager;
     }
 
-    public void process(final Set<? extends TypeElement> typeElements) {
+    public boolean process(final Set<? extends TypeElement> typeElements) {
 
         for (final TypeElement typeElement : typeElements) {
 
@@ -51,7 +52,15 @@ final class CheckWellFormedLib {
                     methodValidator.validateIfNative(executableElement);
                 }
             }
+
+            this.error |= methodValidator.errorRaised();
         }
+
+        return this.error;
+    }
+
+    private void raiseError() {
+        this.error |= true;
     }
 
     private void isNotNested(final TypeElement typeElement) {
@@ -62,6 +71,7 @@ final class CheckWellFormedLib {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        "@Lib annotation should be placed on top level class types only.",
                                        typeElement);
+            raiseError();
         }
     }
 
@@ -71,6 +81,7 @@ final class CheckWellFormedLib {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        "@Lib annotation should be placed on class type only.",
                                        typeElement);
+            raiseError();
         }
     }
 }

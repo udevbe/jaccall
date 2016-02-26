@@ -25,13 +25,14 @@ import java.util.Set;
 final class CheckWellFormedStruct {
 
     private final Messager messager;
+    private       boolean  error;
 
     CheckWellFormedStruct(final Messager messager) {
 
         this.messager = messager;
     }
 
-    public void process(final Set<? extends TypeElement> typeElements) {
+    public boolean process(final Set<? extends TypeElement> typeElements) {
         for (final TypeElement typeElement : typeElements) {
             isTopLevel(typeElement);
             isClass(typeElement);
@@ -44,6 +45,12 @@ final class CheckWellFormedStruct {
             extendsGeneratedStructType(typeElement);
             doesNotHaveSameNameFields(typeElement);
         }
+
+        return this.error;
+    }
+
+    private void raiseError() {
+        this.error |= true;
     }
 
     private void doesNotHaveSameNameFields(final TypeElement typeElement) {
@@ -76,6 +83,7 @@ final class CheckWellFormedStruct {
                                         this.messager.printMessage(Diagnostic.Kind.ERROR,
                                                                    "@Struct annotation has duplicated field name '" + fieldName + "'.",
                                                                    typeElement);
+                                        raiseError();
                                     }
                                     else {
                                         fieldNames.add(fieldName);
@@ -120,6 +128,7 @@ final class CheckWellFormedStruct {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        "@Struct annotation should be placed on type that extends '" + expectedSuperTypeName + "' from the same package'",
                                        typeElement);
+            raiseError();
         }
     }
 
@@ -129,6 +138,7 @@ final class CheckWellFormedStruct {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        "@Struct annotation should be placed on top level class types only.",
                                        typeElement);
+            raiseError();
         }
     }
 
@@ -141,6 +151,7 @@ final class CheckWellFormedStruct {
                 this.messager.printMessage(Diagnostic.Kind.ERROR,
                                            "@Struct type may not contain a static field with name SIZE.",
                                            typeElement);
+                raiseError();
             }
         }
     }
@@ -164,6 +175,7 @@ final class CheckWellFormedStruct {
                             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                                        "@Struct annotation must have at least one field.",
                                                        typeElement);
+                            raiseError();
                         }
                     }
                 }
@@ -177,6 +189,7 @@ final class CheckWellFormedStruct {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        "@Struct annotation can not be placed on an abstract type.",
                                        typeElement);
+            raiseError();
         }
     }
 
@@ -200,6 +213,7 @@ final class CheckWellFormedStruct {
         this.messager.printMessage(Diagnostic.Kind.ERROR,
                                    "@Struct annotated type must contain a public no-arg constructor.",
                                    typeElement);
+        raiseError();
     }
 
     private void isFinal(final TypeElement typeElement) {
@@ -208,6 +222,7 @@ final class CheckWellFormedStruct {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        "@Struct annotation must be placed on a final type.",
                                        typeElement);
+            raiseError();
         }
     }
 
@@ -217,6 +232,7 @@ final class CheckWellFormedStruct {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        "@Struct annotation must be placed on a public type.",
                                        typeElement);
+            raiseError();
         }
     }
 
@@ -226,6 +242,7 @@ final class CheckWellFormedStruct {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
                                        "@Struct annotation must be placed on a class type.",
                                        typeElement);
+            raiseError();
         }
     }
 }

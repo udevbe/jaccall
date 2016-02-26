@@ -1,7 +1,6 @@
 package com.github.zubnix.jaccall.compiletime;
 
 
-import com.github.zubnix.jaccall.compiletime.JaccallGenerator;
 import com.google.testing.compile.CompileTester;
 import com.google.testing.compile.JavaFileObjects;
 import org.junit.Test;
