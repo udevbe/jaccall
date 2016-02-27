@@ -39,7 +39,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 final class StructWriter {
 
@@ -90,10 +89,8 @@ final class StructWriter {
         this.filer = filer;
     }
 
-    public void process(final Set<? extends TypeElement> typeElements) {
-        for (final TypeElement typeElement : typeElements) {
-            parseStructFields(typeElement);
-        }
+    public void process(final TypeElement typeElement) {
+        parseStructFields(typeElement);
     }
 
     private void parseStructFields(final TypeElement element) {
@@ -142,7 +139,7 @@ final class StructWriter {
         final List<MethodSpec> accessors = new LinkedList<>();
         for (int i = 0; i < fieldDefinitions.size(); i++) {
             final FieldDefinition fieldDefinition = fieldDefinitions.get(i);
-            final CodeBlock offsetCode = fieldDefinition.getOffsetCode();
+            final CodeBlock       offsetCode      = fieldDefinition.getOffsetCode();
             final FieldSpec fieldSpec = FieldSpec.builder(TypeName.INT,
                                                           "OFFSET_" + i,
                                                           Modifier.PRIVATE,
@@ -221,14 +218,14 @@ final class StructWriter {
                                        final LinkedList<FieldDefinition> fieldDefinitions,
                                        final List<? extends AnnotationValue> fieldAnnotations) {
         for (int i = 0; i < fieldAnnotations.size(); i++) {
-            final AnnotationValue fieldAnnotation = fieldAnnotations.get(i);
+            final AnnotationValue  fieldAnnotation       = fieldAnnotations.get(i);
             final AnnotationMirror fieldAnnotationMirror = (AnnotationMirror) fieldAnnotation.getValue();
 
-            VariableElement cType = null;
-            Integer cardinality = 1;
-            Integer pointerDepth = 0;
-            TypeMirror dataType = null;
-            String name = null;
+            VariableElement cType        = null;
+            Integer         cardinality  = 1;
+            Integer         pointerDepth = 0;
+            TypeMirror      dataType     = null;
+            String          name         = null;
 
             for (final Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> fieldAttribute : fieldAnnotationMirror.getElementValues()
 
@@ -581,11 +578,11 @@ final class StructWriter {
                              .equals("value")) {
                         final List<? extends AnnotationValue> fields = (List<? extends AnnotationValue>) entry.getValue()
                                                                                                               .getValue();
-                        final AnnotationValue firstField = fields.get(0);
+                        final AnnotationValue  firstField            = fields.get(0);
                         final AnnotationMirror fieldAnnotationMirror = (AnnotationMirror) firstField.getValue();
 
-                        VariableElement cType = null;
-                        TypeMirror dataType = null;
+                        VariableElement cType    = null;
+                        TypeMirror      dataType = null;
                         for (final Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> fieldAttribute : fieldAnnotationMirror.getElementValues()
                                                                                                                                            .entrySet()) {
                             if (fieldAttribute.getKey()

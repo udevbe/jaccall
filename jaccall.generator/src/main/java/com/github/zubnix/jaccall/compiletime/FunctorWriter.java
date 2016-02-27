@@ -32,7 +32,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
-import java.util.Set;
 
 final class FunctorWriter {
 
@@ -49,12 +48,10 @@ final class FunctorWriter {
         this.elementUtils = elementUtils;
     }
 
-    public void process(final Set<? extends TypeElement> typeElements) {
-        for (final TypeElement typeElement : typeElements) {
-            for (final ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
-                writeFunctorImplementation(typeElement,
-                                           executableElement);
-            }
+    public void process(final TypeElement typeElement) {
+        for (final ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
+            writeFunctorImplementation(typeElement,
+                                       executableElement);
         }
     }
 

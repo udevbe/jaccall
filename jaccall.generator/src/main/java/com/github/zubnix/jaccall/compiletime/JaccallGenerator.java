@@ -63,29 +63,34 @@ public class JaccallGenerator extends AbstractProcessor {
     private void processLib(final RoundEnvironment roundEnv) {
         final Set<TypeElement> typeElements = ElementFilter.typesIn(roundEnv.getElementsAnnotatedWith(Lib.class));
 
-        if (new CheckWellFormedLib(this.messager).process(typeElements)) {
-            new LinkSymbolsWriter(this.messager,
-                                  this.filer).process(typeElements);
+        for (TypeElement typeElement : typeElements) {
+            if (!new CheckWellFormedLib(this.messager).hasErrors(typeElement)) {
+                new LinkSymbolsWriter(this.messager,
+                                      this.filer).process(typeElement);
+            }
         }
-
     }
 
     private void processStructs(final RoundEnvironment roundEnv) {
         final Set<TypeElement> typeElements = ElementFilter.typesIn(roundEnv.getElementsAnnotatedWith(Struct.class));
 
-        if (new CheckWellFormedStruct(this.messager).process(typeElements)) {
-            new StructWriter(this.messager,
-                             this.filer).process(typeElements);
+        for (TypeElement typeElement : typeElements) {
+            if (!new CheckWellFormedStruct(this.messager).hasErrors(typeElement)) {
+                new StructWriter(this.messager,
+                                 this.filer).process(typeElement);
+            }
         }
-
     }
 
     private void processFunctors(final RoundEnvironment roundEnv) {
         final Set<TypeElement> typeElements = ElementFilter.typesIn(roundEnv.getElementsAnnotatedWith(Functor.class));
-        if (new CheckWellFormedFunctor(this.messager).process(typeElements)) {
-            new FunctorWriter(this.messager,
-                              this.filer,
-                              this.elementUtils).process(typeElements);
+
+        for (TypeElement typeElement : typeElements) {
+            if (!new CheckWellFormedFunctor(this.messager).hasErrors(typeElement)) {
+                new FunctorWriter(this.messager,
+                                  this.filer,
+                                  this.elementUtils).process(typeElement);
+            }
         }
     }
 }

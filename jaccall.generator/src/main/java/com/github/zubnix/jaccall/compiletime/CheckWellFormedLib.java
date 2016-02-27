@@ -9,7 +9,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
-import java.util.Set;
 
 final class CheckWellFormedLib {
 
@@ -20,41 +19,38 @@ final class CheckWellFormedLib {
         this.messager = messager;
     }
 
-    public boolean process(final Set<? extends TypeElement> typeElements) {
+    public boolean hasErrors(final TypeElement typeElement) {
 
-        for (final TypeElement typeElement : typeElements) {
+        isClass(typeElement);
+        isNotNested(typeElement);
 
-            isClass(typeElement);
-            isNotNested(typeElement);
+        final MethodValidator methodValidator = new MethodValidator(this.messager);
 
-            final MethodValidator methodValidator = new MethodValidator(this.messager);
+        for (final ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
 
-            for (final ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
-
-                boolean symbol = false;
-                for (final AnnotationMirror annotationMirror : executableElement.getAnnotationMirrors()) {
-                    if (annotationMirror.getAnnotationType()
-                                        .asElement()
-                                        .getSimpleName()
-                                        .toString()
-                                        .equals(Symbol.class.getSimpleName())) {
-                        symbol = true;
-                        break;
-                    }
-                }
-
-                //validate as C symbol
-                if (symbol) {
-                    methodValidator.validateSymbol(executableElement);
-                }
-                else {
-                    //validate as C method
-                    methodValidator.validateIfNative(executableElement);
+            boolean symbol = false;
+            for (final AnnotationMirror annotationMirror : executableElement.getAnnotationMirrors()) {
+                if (annotationMirror.getAnnotationType()
+                                    .asElement()
+                                    .getSimpleName()
+                                    .toString()
+                                    .equals(Symbol.class.getSimpleName())) {
+                    symbol = true;
+                    break;
                 }
             }
 
-            this.error |= methodValidator.errorRaised();
+            //validate as C symbol
+            if (symbol) {
+                methodValidator.validateSymbol(executableElement);
+            }
+            else {
+                //validate as C method
+                methodValidator.validateIfNative(executableElement);
+            }
         }
+
+        this.error |= methodValidator.errorRaised();
 
         return this.error;
     }

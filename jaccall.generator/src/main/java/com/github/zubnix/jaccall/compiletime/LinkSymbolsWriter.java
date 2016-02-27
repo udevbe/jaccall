@@ -22,7 +22,6 @@ import javax.tools.Diagnostic;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 final class LinkSymbolsWriter {
 
@@ -35,91 +34,88 @@ final class LinkSymbolsWriter {
         this.filer = filer;
     }
 
-    public void process(final Set<? extends TypeElement> typeElements) {
+    public void process(final TypeElement typeElement) {
 
         final MethodParser methodParser = new MethodParser(this.messager);
 
-        for (final TypeElement typeElement : typeElements) {
+        final CodeBlock.Builder methodNamesArray   = CodeBlock.builder();
+        final CodeBlock.Builder argSizesArray      = CodeBlock.builder();
+        final CodeBlock.Builder ffiSignaturesArray = CodeBlock.builder();
+        final CodeBlock.Builder jniSignaturesArray = CodeBlock.builder();
 
-            final CodeBlock.Builder methodNamesArray = CodeBlock.builder();
-            final CodeBlock.Builder argSizesArray = CodeBlock.builder();
-            final CodeBlock.Builder ffiSignaturesArray = CodeBlock.builder();
-            final CodeBlock.Builder jniSignaturesArray = CodeBlock.builder();
+        final List<ExecutableElement> methodsIn = ElementFilter.methodsIn(typeElement.getEnclosedElements());
 
-            final List<ExecutableElement> methodsIn = ElementFilter.methodsIn(typeElement.getEnclosedElements());
-
-            int i = 0;
-            for (final ExecutableElement executableElement : methodsIn) {
-                if (executableElement.getModifiers()
-                                     .contains(Modifier.NATIVE)) {
-                    if (i != 0) {
-                        methodNamesArray.add(",\n");
-                        argSizesArray.add(",\n");
-                        ffiSignaturesArray.add(",\n");
-                        jniSignaturesArray.add(",\n");
-                    }
-
-                    final String methodName = methodParser.parseMethodName(executableElement);
-                    methodNamesArray.add("$S",
-                                         methodName);
-                    argSizesArray.add("/*$L*/ $L",
-                                      methodName,
-                                      (byte) methodParser.parseArgSize(executableElement));
-                    ffiSignaturesArray.add("/*$L*/ $T.ffi_callInterface($L)",
-                                           methodName,
-                                           JNI.class,
-                                           methodParser.parseFfiSignature(executableElement));
-                    jniSignaturesArray.add("/*$L*/ $S",
-                                           methodName,
-                                           methodParser.parseJniSignature(executableElement));
-                    i++;
+        int i = 0;
+        for (final ExecutableElement executableElement : methodsIn) {
+            if (executableElement.getModifiers()
+                                 .contains(Modifier.NATIVE)) {
+                if (i != 0) {
+                    methodNamesArray.add(",\n");
+                    argSizesArray.add(",\n");
+                    ffiSignaturesArray.add(",\n");
+                    jniSignaturesArray.add(",\n");
                 }
+
+                final String methodName = methodParser.parseMethodName(executableElement);
+                methodNamesArray.add("$S",
+                                     methodName);
+                argSizesArray.add("/*$L*/ $L",
+                                  methodName,
+                                  (byte) methodParser.parseArgSize(executableElement));
+                ffiSignaturesArray.add("/*$L*/ $T.ffi_callInterface($L)",
+                                       methodName,
+                                       JNI.class,
+                                       methodParser.parseFfiSignature(executableElement));
+                jniSignaturesArray.add("/*$L*/ $S",
+                                       methodName,
+                                       methodParser.parseJniSignature(executableElement));
+                i++;
             }
+        }
 
-            final MethodSpec constructor = MethodSpec.constructorBuilder()
-                                                     .addModifiers(Modifier.PUBLIC)
-                                                     .addStatement("super(new $T{ /*method name*/\n $L\n },\n" +
-                                                                   "new $T{ /*number of arguments*/\n $L\n },\n" +
-                                                                   "new $T{ /*FFI call interface*/\n $L\n },\n" +
-                                                                   "new $T{ /*JNI method signature*/\n $L\n })",
-                                                                   ArrayTypeName.of(String.class),
-                                                                   methodNamesArray.build(),
-                                                                   ArrayTypeName.of(byte.class),
-                                                                   argSizesArray.build(),
-                                                                   ArrayTypeName.of(long.class),
-                                                                   ffiSignaturesArray.build(),
-                                                                   ArrayTypeName.of(String.class),
-                                                                   jniSignaturesArray.build())
-                                                     .build();
+        final MethodSpec constructor = MethodSpec.constructorBuilder()
+                                                 .addModifiers(Modifier.PUBLIC)
+                                                 .addStatement("super(new $T{ /*method name*/\n $L\n },\n" +
+                                                               "new $T{ /*number of arguments*/\n $L\n },\n" +
+                                                               "new $T{ /*FFI call interface*/\n $L\n },\n" +
+                                                               "new $T{ /*JNI method signature*/\n $L\n })",
+                                                               ArrayTypeName.of(String.class),
+                                                               methodNamesArray.build(),
+                                                               ArrayTypeName.of(byte.class),
+                                                               argSizesArray.build(),
+                                                               ArrayTypeName.of(long.class),
+                                                               ffiSignaturesArray.build(),
+                                                               ArrayTypeName.of(String.class),
+                                                               jniSignaturesArray.build())
+                                                 .build();
 
-            final AnnotationSpec annotationSpec = AnnotationSpec.builder(Generated.class)
-                                                                .addMember("value",
-                                                                           "$S",
-                                                                           JaccallGenerator.class.getName())
-                                                                .build();
-            final TypeSpec typeSpec = TypeSpec.classBuilder(typeElement.getSimpleName() + "_Jaccall_LinkSymbols")
-                                              .addAnnotation(annotationSpec)
-                                              .addModifiers(Modifier.PUBLIC)
-                                              .addModifiers(Modifier.FINAL)
-                                              .superclass(LinkSymbols.class)
-                                              .addMethod(constructor)
+        final AnnotationSpec annotationSpec = AnnotationSpec.builder(Generated.class)
+                                                            .addMember("value",
+                                                                       "$S",
+                                                                       JaccallGenerator.class.getName())
+                                                            .build();
+        final TypeSpec typeSpec = TypeSpec.classBuilder(typeElement.getSimpleName() + "_Jaccall_LinkSymbols")
+                                          .addAnnotation(annotationSpec)
+                                          .addModifiers(Modifier.PUBLIC)
+                                          .addModifiers(Modifier.FINAL)
+                                          .superclass(LinkSymbols.class)
+                                          .addMethod(constructor)
+                                          .build();
+
+        for (final PackageElement packageElement : ElementFilter.packagesIn(Collections.singletonList(typeElement.getEnclosingElement()))) {
+            final JavaFile javaFile = JavaFile.builder(packageElement.getQualifiedName()
+                                                                     .toString(),
+                                                       typeSpec)
+                                              .skipJavaLangImports(true)
                                               .build();
-
-            for (final PackageElement packageElement : ElementFilter.packagesIn(Collections.singletonList(typeElement.getEnclosingElement()))) {
-                final JavaFile javaFile = JavaFile.builder(packageElement.getQualifiedName()
-                                                                         .toString(),
-                                                           typeSpec)
-                                                  .skipJavaLangImports(true)
-                                                  .build();
-                try {
-                    javaFile.writeTo(this.filer);
-                }
-                catch (final IOException e) {
-                    this.messager.printMessage(Diagnostic.Kind.ERROR,
-                                               "Could not write linksymbols source file: \n" + javaFile.toString(),
-                                               typeElement);
-                    e.printStackTrace();
-                }
+            try {
+                javaFile.writeTo(this.filer);
+            }
+            catch (final IOException e) {
+                this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                           "Could not write linksymbols source file: \n" + javaFile.toString(),
+                                           typeElement);
+                e.printStackTrace();
             }
         }
     }

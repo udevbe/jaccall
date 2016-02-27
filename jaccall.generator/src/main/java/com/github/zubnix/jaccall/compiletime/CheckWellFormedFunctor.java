@@ -9,7 +9,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
-import java.util.Set;
 
 final class CheckWellFormedFunctor {
     private final Messager messager;
@@ -19,23 +18,21 @@ final class CheckWellFormedFunctor {
         this.messager = messager;
     }
 
-    public boolean process(final Set<? extends TypeElement> typeElements) {
-        for (final TypeElement typeElement : typeElements) {
-            isTopLevel(typeElement);
-            isInterface(typeElement);
-            doesNotExtend(typeElement);
-            hasSingleMethod(typeElement);
-            isNotSymbol(typeElement);
+    public boolean hasErrors(final TypeElement typeElement) {
+        isTopLevel(typeElement);
+        isInterface(typeElement);
+        doesNotExtend(typeElement);
+        hasSingleMethod(typeElement);
+        isNotSymbol(typeElement);
 
-            final MethodValidator methodValidator = new MethodValidator(this.messager);
+        final MethodValidator methodValidator = new MethodValidator(this.messager);
 
-            for (final ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
-                hasDollarAsName(executableElement);
-                methodValidator.validate(executableElement);
-            }
-
-            this.error |= methodValidator.errorRaised();
+        for (final ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
+            hasDollarAsName(executableElement);
+            methodValidator.validate(executableElement);
         }
+
+        this.error |= methodValidator.errorRaised();
 
         return this.error;
     }

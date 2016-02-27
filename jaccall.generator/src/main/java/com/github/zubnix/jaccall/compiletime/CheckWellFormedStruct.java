@@ -32,19 +32,17 @@ final class CheckWellFormedStruct {
         this.messager = messager;
     }
 
-    public boolean process(final Set<? extends TypeElement> typeElements) {
-        for (final TypeElement typeElement : typeElements) {
-            isTopLevel(typeElement);
-            isClass(typeElement);
-            isPublic(typeElement);
-            isFinal(typeElement);
-            isNotAbstract(typeElement);
-            hasDefaultConstructor(typeElement);
-            hasNonEmptyStructAnnotation(typeElement);
-            doesNotHaveStaticSIZEField(typeElement);
-            extendsGeneratedStructType(typeElement);
-            doesNotHaveSameNameFields(typeElement);
-        }
+    public boolean hasErrors(final TypeElement typeElement) {
+        isTopLevel(typeElement);
+        isClass(typeElement);
+        isPublic(typeElement);
+        isFinal(typeElement);
+        isNotAbstract(typeElement);
+        hasDefaultConstructor(typeElement);
+        hasNonEmptyStructAnnotation(typeElement);
+        doesNotHaveStaticSIZEField(typeElement);
+        extendsGeneratedStructType(typeElement);
+        doesNotHaveSameNameFields(typeElement);
 
         return this.error;
     }
