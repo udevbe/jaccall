@@ -150,15 +150,15 @@ public class Testing {
     public native long noArgsFuncPtrTest();
 
     @Symbol
-    @Ptr
+    @Ptr(ReadGlobalVarFunc.class)
     public static native long readGlobalVar();
 
     @Symbol
-    @Ptr
+    @Ptr(WriteGlobalVarFunc.class)
     public static native long writeGlobalVar();
 
     @Symbol
-    @Ptr
+    @Ptr(int.class)
     public static native long globalvar();
 
 }
