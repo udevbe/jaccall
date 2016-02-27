@@ -3,6 +3,7 @@ package com.github.zubnix.jaccall.compiletime;
 
 import com.github.zubnix.jaccall.JNI;
 import com.github.zubnix.jaccall.LinkSymbols;
+import com.github.zubnix.jaccall.Symbol;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.CodeBlock;
@@ -13,6 +14,7 @@ import com.squareup.javapoet.TypeSpec;
 import javax.annotation.Generated;
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
@@ -62,10 +64,33 @@ final class LinkSymbolsWriter {
                 argSizesArray.add("/*$L*/ $L",
                                   methodName,
                                   (byte) methodParser.parseArgSize(executableElement));
-                ffiSignaturesArray.add("/*$L*/ $T.ffi_callInterface($L)",
-                                       methodName,
-                                       JNI.class,
-                                       methodParser.parseFfiSignature(executableElement));
+
+                boolean isSymobl = false;
+                for (AnnotationMirror annotationMirror : executableElement.getAnnotationMirrors()) {
+                    isSymobl = annotationMirror.getAnnotationType()
+                                               .asElement()
+                                               .getSimpleName()
+                                               .toString()
+                                               .equals(Symbol.class.getSimpleName());
+                    if (isSymobl) {
+                        break;
+                    }
+                }
+
+                if (isSymobl) {
+                    //symbol
+                    ffiSignaturesArray.add("/*$L*/ 0",
+                                           methodName);
+                }
+                else {
+                    //function
+                    ffiSignaturesArray.add("/*$L*/ $T.ffi_callInterface($L)",
+                                           methodName,
+                                           JNI.class,
+                                           methodParser.parseFfiSignature(executableElement));
+                }
+
+
                 jniSignaturesArray.add("/*$L*/ $S",
                                        methodName,
                                        methodParser.parseJniSignature(executableElement));

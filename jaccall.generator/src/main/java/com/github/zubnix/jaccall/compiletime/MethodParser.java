@@ -31,7 +31,6 @@ public final class MethodParser {
     private static final String UNSIGNED = Unsigned.class.getSimpleName();
     private static final String LNG      = Lng.class.getSimpleName();
     private static final String PTR      = Ptr.class.getSimpleName();
-    private static final String SYM      = Symbol.class.getSimpleName();
     private static final String BY_VAL   = ByVal.class.getSimpleName();
 
     private final Messager messager;
@@ -126,11 +125,6 @@ public final class MethodParser {
             final String simpleName = annotationType.asElement()
                                                     .getSimpleName()
                                                     .toString();
-
-            if (simpleName.equals(SYM)) {
-                builder.add("0L");
-                return builder.build();
-            }
 
             if (simpleName.equals(PTR)) {
                 ptr = elementValues;

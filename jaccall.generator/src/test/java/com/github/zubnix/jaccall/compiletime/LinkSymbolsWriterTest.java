@@ -1,7 +1,6 @@
 package com.github.zubnix.jaccall.compiletime;
 
 
-import com.github.zubnix.jaccall.compiletime.JaccallGenerator;
 import com.google.testing.compile.CompileTester;
 import com.google.testing.compile.JavaFileObjects;
 import org.junit.Test;
@@ -1375,6 +1374,53 @@ public class LinkSymbolsWriterTest {
                                                                        "        new String[]{ /*JNI method signature*/\n" +
                                                                        "        /*doStaticTest*/ \"(IFDB)J\",\n" +
                                                                        "        /*doTest*/ \"(JJJ)J\"\n" +
+                                                                       "        });\n" +
+                                                                       "  }\n" +
+                                                                       "}"));
+    }
+
+    @Test
+    public void testSymbolGeneration() {
+        //given
+        final JavaFileObject fileObject = JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing",
+                                                                          "package com.github.zubnix.libtest;\n" +
+                                                                          "import com.github.zubnix.jaccall.Lib;\n" +
+                                                                          "import com.github.zubnix.jaccall.Ptr;\n" +
+                                                                          "import com.github.zubnix.jaccall.Symbol;\n" +
+                                                                          "\n" +
+                                                                          "@Lib(\"testing\")\n" +
+                                                                          "public class Testing {\n" +
+                                                                          "    @Symbol\n" +
+                                                                          "    @Ptr" +
+                                                                          "    public static native long globalVar();\n" +
+                                                                          "}");
+        //when
+        final CompileTester compileTester = assert_().about(javaSource())
+                                                     .that(fileObject)
+                                                     .processedWith(new JaccallGenerator());
+        //then
+        compileTester.compilesWithoutError()
+                     .and()
+                     .generatesSources(JavaFileObjects.forSourceString("com.github.zubnix.libtest.Testing_Jaccall_LinkSymbols",
+                                                                       "package com.github.zubnix.libtest;\n" +
+                                                                       "\n" +
+                                                                       "import com.github.zubnix.jaccall.LinkSymbols;\n" +
+                                                                       "import javax.annotation.Generated;\n" +
+                                                                       "\n" +
+                                                                       "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
+                                                                       "public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {\n" +
+                                                                       "  public Testing_Jaccall_LinkSymbols() {\n" +
+                                                                       "    super(new String[]{ /*method name*/\n" +
+                                                                       "        \"globalVar\"\n" +
+                                                                       "        },\n" +
+                                                                       "        new byte[]{ /*number of arguments*/\n" +
+                                                                       "        /*globalVar*/ 0\n" +
+                                                                       "        },\n" +
+                                                                       "        new long[]{ /*FFI call interface*/\n" +
+                                                                       "        /*globalVar*/ 0\n" +
+                                                                       "        },\n" +
+                                                                       "        new String[]{ /*JNI method signature*/\n" +
+                                                                       "        /*globalVar*/ \"()J\"\n" +
                                                                        "        });\n" +
                                                                        "  }\n" +
                                                                        "}"));
