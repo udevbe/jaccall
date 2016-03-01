@@ -63,7 +63,7 @@ public class JaccallGenerator extends AbstractProcessor {
     private void processLib(final RoundEnvironment roundEnv) {
         final Set<TypeElement> typeElements = ElementFilter.typesIn(roundEnv.getElementsAnnotatedWith(Lib.class));
 
-        for (TypeElement typeElement : typeElements) {
+        for (final TypeElement typeElement : typeElements) {
             if (!new CheckWellFormedLib(this.messager).hasErrors(typeElement)) {
                 new LinkSymbolsWriter(this.messager,
                                       this.filer).process(typeElement);
@@ -74,7 +74,7 @@ public class JaccallGenerator extends AbstractProcessor {
     private void processStructs(final RoundEnvironment roundEnv) {
         final Set<TypeElement> typeElements = ElementFilter.typesIn(roundEnv.getElementsAnnotatedWith(Struct.class));
 
-        for (TypeElement typeElement : typeElements) {
+        for (final TypeElement typeElement : typeElements) {
             if (!new CheckWellFormedStruct(this.messager).hasErrors(typeElement)) {
                 new StructWriter(this.messager,
                                  this.filer).process(typeElement);
@@ -85,7 +85,7 @@ public class JaccallGenerator extends AbstractProcessor {
     private void processFunctors(final RoundEnvironment roundEnv) {
         final Set<TypeElement> typeElements = ElementFilter.typesIn(roundEnv.getElementsAnnotatedWith(Functor.class));
 
-        for (TypeElement typeElement : typeElements) {
+        for (final TypeElement typeElement : typeElements) {
             if (!new CheckWellFormedFunctor(this.messager).hasErrors(typeElement)) {
                 new FunctorWriter(this.messager,
                                   this.filer,
