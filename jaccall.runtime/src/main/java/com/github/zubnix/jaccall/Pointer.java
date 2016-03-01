@@ -434,6 +434,22 @@ public abstract class Pointer<T> implements AutoCloseable {
         return pointer;
     }
 
+    @Nonnull
+    public static Pointer<Byte> nref(@Nonnull final byte[] val) {
+        final int length = Objects.requireNonNull(val,
+                                                  "Argument val must not be null").length;
+        if (length == 0) {
+            throw new IllegalArgumentException("Cannot allocate zero length array.");
+        }
+
+        final Byte[] bytes = new Byte[val.length];
+        for (int i = 0, bytesLength = bytes.length; i < bytesLength; i++) {
+            bytes[i] = val[i];
+        }
+
+        return nref(bytes);
+    }
+
     /**
      * Create a pointer with newly allocated memory. The memory is initialized with the given short arguments.
      * The memory is subject to Java's GC and as such should only be used in case where one would need stack
@@ -460,6 +476,22 @@ public abstract class Pointer<T> implements AutoCloseable {
         pointer.write(val);
 
         return pointer;
+    }
+
+    @Nonnull
+    public static Pointer<Short> nref(@Nonnull final short[] val) {
+        final int length = Objects.requireNonNull(val,
+                                                  "Argument val must not be null").length;
+        if (length == 0) {
+            throw new IllegalArgumentException("Cannot allocate zero length array.");
+        }
+
+        final Short[] shorts = new Short[val.length];
+        for (int i = 0; i < shorts.length; i++) {
+            shorts[i] = val[i];
+        }
+
+        return nref(shorts);
     }
 
     /**
@@ -490,6 +522,22 @@ public abstract class Pointer<T> implements AutoCloseable {
         return pointer;
     }
 
+    @Nonnull
+    public static Pointer<Integer> nref(@Nonnull final int[] val) {
+        final int length = Objects.requireNonNull(val,
+                                                  "Argument val must not be null").length;
+        if (length == 0) {
+            throw new IllegalArgumentException("Cannot allocate zero length array.");
+        }
+
+        final Integer[] ints = new Integer[val.length];
+        for (int i = 0; i < ints.length; i++) {
+            ints[i] = val[i];
+        }
+
+        return nref(ints);
+    }
+
     /**
      * Create a new pointer object with newly allocated memory. The memory is initialized with the given floats.
      * The memory is subject to Java's GC and as such should only be used in case where one would need stack
@@ -516,6 +564,22 @@ public abstract class Pointer<T> implements AutoCloseable {
         pointer.write(val);
 
         return pointer;
+    }
+
+    @Nonnull
+    public static Pointer<Float> nref(@Nonnull final float[] val) {
+        final int length = Objects.requireNonNull(val,
+                                                  "Argument val must not be null").length;
+        if (length == 0) {
+            throw new IllegalArgumentException("Cannot allocate zero length array.");
+        }
+
+        final Float[] floats = new Float[val.length];
+        for (int i = 0, floatsLength = floats.length; i < floatsLength; i++) {
+            floats[i] = val[i];
+        }
+
+        return nref(floats);
     }
 
     /**
@@ -546,6 +610,22 @@ public abstract class Pointer<T> implements AutoCloseable {
         return pointer;
     }
 
+    @Nonnull
+    public static Pointer<Long> nref(@Nonnull final long[] val) {
+        final int length = Objects.requireNonNull(val,
+                                                  "Argument val must not be null").length;
+        if (length == 0) {
+            throw new IllegalArgumentException("Cannot allocate zero length array.");
+        }
+
+        final Long[] longs = new Long[val.length];
+        for (int i = 0, longsLength = longs.length; i < longsLength; i++) {
+            longs[i] = val[i];
+        }
+
+        return nref(longs);
+    }
+
     /**
      * Create a new pointer object with newly allocated memory. The memory is initialized with the given doubles.
      * The memory is subject to Java's GC and as such should only be used in case where one would need stack
@@ -572,6 +652,22 @@ public abstract class Pointer<T> implements AutoCloseable {
         pointer.write(val);
 
         return pointer;
+    }
+
+    @Nonnull
+    public static Pointer<Double> nref(@Nonnull final double[] val) {
+        final int length = Objects.requireNonNull(val,
+                                                  "Argument val must not be null").length;
+        if (length == 0) {
+            throw new IllegalArgumentException("Cannot allocate zero length array.");
+        }
+
+        final Double[] doubles = new Double[val.length];
+        for (int i = 0; i < doubles.length; i++) {
+            doubles[i] = val[i];
+        }
+
+        return nref(doubles);
     }
 
     /**
