@@ -30,7 +30,7 @@ final class PointerString extends Pointer<String> {
     @Override
     public String dref(@Nonnegative final int index) {
         this.byteBuffer.position(index);
-        final StringBuilder sb = new StringBuilder(this.byteBuffer.limit());
+        final StringBuilder sb = new StringBuilder(512);
         while (this.byteBuffer.remaining() > 0) {
             final char c = (char) this.byteBuffer.get();
             if (c == '\0') {
