@@ -10,10 +10,15 @@ import java.nio.ByteOrder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.github.zubnix.jaccall.Size.sizeof;
 
 public abstract class Pointer<T> implements AutoCloseable {
+
+    private static final boolean ENABLE_LOG = Logger.getLogger("jaccall")
+                                                    .isLoggable(Level.FINE);
 
     protected static final Map<Class, PointerFactory<?>> POINTER_FACTORIES = new HashMap<>(32);
 
@@ -153,6 +158,14 @@ public abstract class Pointer<T> implements AutoCloseable {
                                final long address,
                                @Nonnull final ByteBuffer byteBuffer) {
 
+        if (ENABLE_LOG) {
+            Logger.getLogger("jaccall")
+                  .log(Level.FINE,
+                       "Creating pointer POJO of type=" + type +
+                       " with address=0x" + String.format("%016X",
+                                                          address));
+        }
+
         final Class<?> rawType = toClass(type);
         final Class<?> lookupType;
 
@@ -207,7 +220,14 @@ public abstract class Pointer<T> implements AutoCloseable {
         if (size < 0) {
             throw new IllegalArgumentException("Given size argument is not a positive number.");
         }
-        return wrap(JNI.malloc(size));
+        final long address = JNI.malloc(size);
+        if (ENABLE_LOG) {
+            Logger.getLogger("jaccall")
+                  .log(Level.FINE,
+                       "Heap allocated memory at address=0x" + String.format("%016X",
+                                                                             address));
+        }
+        return wrap(address);
     }
 
     /**
@@ -723,7 +743,15 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Free the memory pointed to by this pointer.
      */
-    public void close() { JNI.free(this.address); }
+    public void close() {
+        if (ENABLE_LOG) {
+            Logger.getLogger("jaccall")
+                  .log(Level.FINE,
+                       "Explicit call to free for Pointer POJO of type=" + this.type + " with address=0x" + String.format("%016X",
+                                                                                                                          this.address));
+        }
+        JNI.free(this.address);
+    }
 
     /**
      * Java:<br>
@@ -838,5 +866,16 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         return rawType;
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        if (ENABLE_LOG) {
+            Logger.getLogger("jaccall")
+                  .log(Level.FINE,
+                       "Pointer POJO of type=" + this.type + " with address=0x" + String.format("%016X",
+                                                                                                this.address) + " garbage collected.");
+        }
     }
 }
