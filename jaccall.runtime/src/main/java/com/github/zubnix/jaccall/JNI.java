@@ -58,7 +58,7 @@ public final class JNI {
 
     public static native long NewGlobalRef(@Nonnull final Object object);
 
-    public static native void DeleteGlobalRef(@Nonnull final Object object);
+    public static native void DeleteGlobalRef(final long object);
 
     public static native long GetMethodID(final Class<?> clazz,
                                           final String methodName,

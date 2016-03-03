@@ -126,8 +126,8 @@ jobject JNICALL Java_com_github_zubnix_jaccall_JNI_toJObject(JNIEnv *env, jclass
 
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_DeleteGlobalRef(JNIEnv *env, jclass clazz, jobject object){
-    (*env)->DeleteGlobalRef(env, object);
+JNICALL Java_com_github_zubnix_jaccall_JNI_DeleteGlobalRef(JNIEnv *env, jclass clazz, jlong object){
+    (*env)->DeleteGlobalRef(env, (jobject)object);
 }
 
 JNIEXPORT

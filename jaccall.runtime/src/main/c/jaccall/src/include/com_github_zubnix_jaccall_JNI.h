@@ -34,10 +34,10 @@ JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_NewGlobalRef
 /*
  * Class:     com_github_zubnix_jaccall_JNI
  * Method:    DeleteGlobalRef
- * Signature: (Ljava/lang/Object;)V
+ * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_DeleteGlobalRef
-  (JNIEnv *, jclass, jobject);
+  (JNIEnv *, jclass, jlong);
 
 /*
  * Class:     com_github_zubnix_jaccall_JNI
