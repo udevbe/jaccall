@@ -22,7 +22,7 @@
         <truth.version>0.27</truth.version>
 
         <!-- plugins -->
-        <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.5</maven-compiler-plugin.version>
         <exec-maven-plugin.version>1.4.0</exec-maven-plugin.version>
     </properties>
 
@@ -67,6 +67,9 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                    <useIncrementalCompilation>false</useIncrementalCompilation>
                 </configuration>
             </plugin>
 

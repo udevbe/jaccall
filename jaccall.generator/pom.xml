@@ -18,6 +18,7 @@
         <auto-common.version>0.4</auto-common.version>
         <auto-service.version>1.0-rc2</auto-service.version>
         <javapoet.version>1.4.0</javapoet.version>
+        <guava.version>18.0</guava.version>
 
         <!-- test -->
         <compile-testing.version>0.6</compile-testing.version>
@@ -41,7 +42,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>18.0</version>
+            <version>${guava.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.auto.service</groupId>
@@ -73,7 +74,26 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                    <useIncrementalCompilation>false</useIncrementalCompilation>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <minimizeJar>true</minimizeJar>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
