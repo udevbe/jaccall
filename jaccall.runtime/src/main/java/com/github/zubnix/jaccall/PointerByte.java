@@ -2,17 +2,14 @@ package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.nio.ByteBuffer;
 
 import static com.github.zubnix.jaccall.Size.sizeof;
 
 final class PointerByte extends Pointer<Byte> {
 
-    PointerByte(final long address,
-                final ByteBuffer buffer) {
+    PointerByte(final long address) {
         super(Byte.class,
               address,
-              buffer,
               sizeof((Byte) null));
     }
 
@@ -25,9 +22,8 @@ final class PointerByte extends Pointer<Byte> {
     @Nonnull
     @Override
     public Byte dref(@Nonnegative final int index) {
-        this.byteBuffer.rewind();
-        this.byteBuffer.position(index);
-        return this.byteBuffer.get();
+        return JNI.drefByte(address,
+                            index);
     }
 
     @Override
@@ -39,13 +35,13 @@ final class PointerByte extends Pointer<Byte> {
     @Override
     public void writei(@Nonnegative final int index,
                        @Nonnull final Byte val) {
-        this.byteBuffer.clear();
-        this.byteBuffer.position(index);
-        this.byteBuffer.put(val);
+        JNI.writeByte(address,
+                      index,
+                      val.byteValue());
     }
 
     void write(final byte[] val) {
-        this.byteBuffer.clear();
-        this.byteBuffer.put(val);
+        JNI.writeBytes(address,
+                       val);
     }
 }

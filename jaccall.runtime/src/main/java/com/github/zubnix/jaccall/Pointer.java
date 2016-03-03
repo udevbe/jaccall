@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -89,8 +88,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         return wrap(Void.class,
-                    JNI.unwrap(byteBuffer),
-                    byteBuffer);
+                    JNI.unwrap(byteBuffer));
     }
 
     /**
@@ -116,8 +114,7 @@ public abstract class Pointer<T> implements AutoCloseable {
 
         return wrap((Type) Objects.requireNonNull(type,
                                                   "Argument type must not be null."),
-                    JNI.unwrap(byteBuffer),
-                    byteBuffer);
+                    JNI.unwrap(byteBuffer));
     }
 
     /**
@@ -149,14 +146,11 @@ public abstract class Pointer<T> implements AutoCloseable {
                                       final long address) {
         return wrap((Type) Objects.requireNonNull(type,
                                                   "Argument type must not be null."),
-                    address,
-                    JNI.wrap(address,
-                             Integer.MAX_VALUE));
+                    address);
     }
 
     static <U> Pointer<U> wrap(@Nonnull final Type type,
-                               final long address,
-                               @Nonnull final ByteBuffer byteBuffer) {
+                               final long address) {
 
         if (ENABLE_LOG) {
             Logger.getLogger("jaccall")
@@ -200,8 +194,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         return (Pointer<U>) pointerFactory.create(type,
-                                                  address,
-                                                  byteBuffer);
+                                                  address);
     }
 
     /**
@@ -342,14 +335,13 @@ public abstract class Pointer<T> implements AutoCloseable {
 
     public static Pointer<Object> from(@Nonnull final Object val) {
         return wrap(Object.class,
-                    JNI.NewGlobalRef(val),
-                    ByteBuffer.allocate(0));
+                    JNI.NewGlobalRef(val));
     }
 
     /**
      * Get a pointer object that refers to the memory used by the given struct. The memory pointed to can be either
      * heap allocated memory or memory subject to Java's GC, depending on how the given struct was created.
-     * <p/>
+     * <p>
      * A struct created through a call to {@code new} will be subject to Java's GC while a struct
      * dereferenced from a pointer created with {@link #malloc(int)} or {@link #calloc(int, int)} will live on the heap
      * until it is explicitly freed with a call to {@link #close()}.
@@ -607,21 +599,17 @@ public abstract class Pointer<T> implements AutoCloseable {
         return pointer;
     }
 
-    public final long       address;
+    public final long address;
     @Nonnull
-    final        ByteBuffer byteBuffer;
-    @Nonnull
-    final        Type       type;
-    final        int        typeSize;
+    final        Type type;
+    final        int  typeSize;
 
     Pointer(@Nonnull final Type type,
             final long address,
-            @Nonnull final ByteBuffer byteBuffer,
             final int typeSize) {
         this.address = address;
         this.type = type;
         this.typeSize = typeSize;
-        this.byteBuffer = byteBuffer.order(ByteOrder.nativeOrder());
     }
 
     @Override
@@ -653,7 +641,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code T value = foo.dref();}
-     * <p/>
+     * <p>
      * C equivalent:<br>
      * {@code T value = *foo}
      *
@@ -665,7 +653,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code T value = foo.dref(i);}
-     * <p/>
+     * <p>
      * C equivalent:<br>
      * {@code T value = foo[i]}
      *
@@ -679,7 +667,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code offsetFoo = foo.offset(i);}
-     * <p/>
+     * <p>
      * C equivalent:<br>
      * {@code offsetFoo = foo+i;}
      *
@@ -691,14 +679,8 @@ public abstract class Pointer<T> implements AutoCloseable {
     public final Pointer<T> offset(final int offset) {
         final int byteOffset = offset * this.typeSize;
 
-        final long newAddress = this.address + byteOffset;
-
-        this.byteBuffer.rewind();
-        this.byteBuffer.position(byteOffset);
-
         return wrap((Type) this.type,
-                    newAddress,
-                    this.byteBuffer.slice());
+                    this.address + byteOffset);
     }
 
     /**
@@ -712,8 +694,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     @Nonnull
     public <U> Pointer<U> castp(@Nonnull final Class<U> type) {
         return wrap(type,
-                    this.address,
-                    this.byteBuffer);
+                    this.address);
     }
 
     /**
@@ -733,8 +714,7 @@ public abstract class Pointer<T> implements AutoCloseable {
                         @Override
                         public Type getOwnerType() { return null; }
                     },
-                    this.address,
-                    this.byteBuffer);
+                    this.address);
     }
 
     public abstract void write(@Nonnull final T val);

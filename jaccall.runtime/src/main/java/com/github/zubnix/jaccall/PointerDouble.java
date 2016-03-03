@@ -2,18 +2,14 @@ package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.nio.ByteBuffer;
-import java.nio.DoubleBuffer;
 
 import static com.github.zubnix.jaccall.Size.sizeof;
 
 
 final class PointerDouble extends Pointer<Double> {
-    PointerDouble(final long address,
-                  @Nonnull final ByteBuffer byteBuffer) {
+    PointerDouble(final long address) {
         super(Double.class,
               address,
-              byteBuffer,
               sizeof((Double) null));
     }
 
@@ -22,12 +18,11 @@ final class PointerDouble extends Pointer<Double> {
         return dref(0);
     }
 
+    @Nonnull
     @Override
     public Double dref(@Nonnegative final int index) {
-        final DoubleBuffer buffer = this.byteBuffer.asDoubleBuffer();
-        buffer.rewind();
-        buffer.position(index);
-        return buffer.get();
+        return JNI.drefDouble(address,
+                              index);
     }
 
     @Override
@@ -39,15 +34,13 @@ final class PointerDouble extends Pointer<Double> {
     @Override
     public void writei(@Nonnegative final int index,
                        @Nonnull final Double val) {
-        final DoubleBuffer buffer = this.byteBuffer.asDoubleBuffer();
-        buffer.clear();
-        buffer.position(index);
-        buffer.put(val);
+        JNI.writeDouble(address,
+                        index,
+                        val.doubleValue());
     }
 
     void write(final double[] val) {
-        final DoubleBuffer buffer = this.byteBuffer.asDoubleBuffer();
-        buffer.clear();
-        buffer.put(val);
+        JNI.writeDoubles(address,
+                         val);
     }
 }

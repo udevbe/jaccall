@@ -2,20 +2,15 @@ package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-import java.nio.LongBuffer;
 
 import static com.github.zubnix.jaccall.Size.sizeof;
 
 
 final class PointerCLong extends Pointer<CLong> {
 
-    PointerCLong(final long address,
-                 @Nonnull final ByteBuffer byteBuffer) {
+    PointerCLong(final long address) {
         super(CLong.class,
               address,
-              byteBuffer,
               sizeof((CLong) null));
     }
 
@@ -28,20 +23,8 @@ final class PointerCLong extends Pointer<CLong> {
     @Nonnull
     @Override
     public CLong dref(@Nonnegative final int index) {
-        final long clong;
-        if (this.typeSize == 8) {
-            final LongBuffer buffer = this.byteBuffer.asLongBuffer();
-            buffer.rewind();
-            buffer.position(index);
-            clong = buffer.get();
-        }
-        else {
-            final IntBuffer buffer = this.byteBuffer.asIntBuffer();
-            buffer.rewind();
-            buffer.position(index);
-            clong = buffer.get();
-        }
-        return new CLong(clong);
+        return new CLong(JNI.drefCLong(address,
+                                       index));
     }
 
     @Override
@@ -53,22 +36,8 @@ final class PointerCLong extends Pointer<CLong> {
     @Override
     public void writei(@Nonnegative final int index,
                        @Nonnull final CLong val) {
-
-        final long clongSize = sizeof((CLong) null);
-
-        if (clongSize == 8) {
-            //64-bit
-            final LongBuffer buffer = this.byteBuffer.asLongBuffer();
-            buffer.clear();
-            buffer.position(index);
-            buffer.put(val.longValue());
-        }
-        else if (clongSize == 4) {
-            //32-bit
-            final IntBuffer buffer = this.byteBuffer.asIntBuffer();
-            buffer.clear();
-            buffer.position(index);
-            buffer.put(val.intValue());
-        }
+        JNI.writeCLong(address,
+                       index,
+                       val.longValue());
     }
 }

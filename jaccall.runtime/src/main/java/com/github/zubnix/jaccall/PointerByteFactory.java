@@ -7,9 +7,7 @@ final class PointerByteFactory implements PointerFactory<PointerByte> {
 
     @Override
     public PointerByte create(final Type type,
-                              final long address,
-                              final ByteBuffer buffer) {
-        return new PointerByte(address,
-                               buffer);
+                              final long address) {
+        return new PointerByte(address);
     }
 }

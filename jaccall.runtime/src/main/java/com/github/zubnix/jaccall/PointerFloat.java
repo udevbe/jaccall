@@ -8,11 +8,9 @@ import java.nio.FloatBuffer;
 import static com.github.zubnix.jaccall.Size.sizeof;
 
 final class PointerFloat extends Pointer<Float> {
-    PointerFloat(final long address,
-                 @Nonnull final ByteBuffer byteBuffer) {
+    PointerFloat(final long address) {
         super(Float.class,
               address,
-              byteBuffer,
               sizeof((Float) null));
     }
 
