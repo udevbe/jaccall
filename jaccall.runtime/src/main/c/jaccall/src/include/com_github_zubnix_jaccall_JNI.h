@@ -49,10 +49,10 @@ JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_GetMethodID
 
 /*
  * Class:     com_github_zubnix_jaccall_JNI
- * Method:    toJObject
- * Signature: (J)Lcom/github/zubnix/jaccall/JObject;
+ * Method:    toObject
+ * Signature: (J)Ljava/lang/Object;
  */
-JNIEXPORT jobject JNICALL Java_com_github_zubnix_jaccall_JNI_toJObject
+JNIEXPORT jobject JNICALL Java_com_github_zubnix_jaccall_JNI_toObject
   (JNIEnv *, jclass, jlong);
 
 /*

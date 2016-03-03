@@ -43,4 +43,10 @@ final class PointerFloat extends Pointer<Float> {
         buffer.position(index);
         buffer.put(val);
     }
+
+    void write(final float[] val) {
+        final FloatBuffer buffer = this.byteBuffer.asFloatBuffer();
+        buffer.clear();
+        buffer.put(val);
+    }
 }

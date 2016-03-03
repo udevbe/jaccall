@@ -43,4 +43,9 @@ final class PointerByte extends Pointer<Byte> {
         this.byteBuffer.position(index);
         this.byteBuffer.put(val);
     }
+
+    void write(final byte[] val) {
+        this.byteBuffer.clear();
+        this.byteBuffer.put(val);
+    }
 }

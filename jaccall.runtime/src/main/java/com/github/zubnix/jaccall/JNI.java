@@ -64,7 +64,7 @@ public final class JNI {
                                           final String methodName,
                                           final String jniSignature);
 
-    public static native JObject toJObject(final long jobject);
+    public static native Object toObject(final long jobject);
     /*
      * <- JNI
      */

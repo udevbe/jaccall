@@ -44,4 +44,10 @@ final class PointerDouble extends Pointer<Double> {
         buffer.position(index);
         buffer.put(val);
     }
+
+    void write(final double[] val) {
+        final DoubleBuffer buffer = this.byteBuffer.asDoubleBuffer();
+        buffer.clear();
+        buffer.put(val);
+    }
 }

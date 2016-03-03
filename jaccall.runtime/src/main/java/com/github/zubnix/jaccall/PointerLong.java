@@ -43,4 +43,10 @@ final class PointerLong extends Pointer<Long> {
         buffer.position(index);
         buffer.put(val);
     }
+
+    void write(final long[] val) {
+        final LongBuffer buffer = this.byteBuffer.asLongBuffer();
+        buffer.clear();
+        buffer.put(val);
+    }
 }

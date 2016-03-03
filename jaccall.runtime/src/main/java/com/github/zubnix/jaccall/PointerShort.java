@@ -9,7 +9,7 @@ import static com.github.zubnix.jaccall.Size.sizeof;
 
 final class PointerShort extends Pointer<Short> {
     PointerShort(final long address,
-                        @Nonnull final ByteBuffer byteBuffer) {
+                 @Nonnull final ByteBuffer byteBuffer) {
         super(Short.class,
               address,
               byteBuffer,
@@ -43,6 +43,12 @@ final class PointerShort extends Pointer<Short> {
         final ShortBuffer buffer = this.byteBuffer.asShortBuffer();
         buffer.clear();
         buffer.position(index);
+        buffer.put(val);
+    }
+
+    void write(final short[] val) {
+        final ShortBuffer buffer = this.byteBuffer.asShortBuffer();
+        buffer.clear();
         buffer.put(val);
     }
 }

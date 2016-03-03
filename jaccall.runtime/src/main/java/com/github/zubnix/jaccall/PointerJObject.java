@@ -3,69 +3,51 @@ package com.github.zubnix.jaccall;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-import java.nio.LongBuffer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.github.zubnix.jaccall.Size.sizeof;
 
-final class PointerJObject extends Pointer<JObject> {
+final class PointerJObject extends Pointer<Object> {
     public PointerJObject(final long address,
                           @Nonnull final ByteBuffer byteBuffer) {
-        super(JObject.class,
+        super(Object.class,
               address,
               byteBuffer,
-              sizeof((JObject) null));
+              sizeof((Pointer) null));
     }
 
     @Nonnull
     @Override
-    public JObject dref() {
-        return dref(0);
+    public Object dref() {
+        return JNI.toObject(this.address);
     }
 
     @Nonnull
     @Override
-    public JObject dref(@Nonnegative final int index) {
-        final long jobject;
-        if (this.typeSize == 8) {
-            final LongBuffer buffer = this.byteBuffer.asLongBuffer();
-            buffer.rewind();
-            buffer.position(index);
-            jobject = buffer.get();
-        }
-        else {
-            final IntBuffer buffer = this.byteBuffer.asIntBuffer();
-            buffer.rewind();
-            buffer.position(index);
-            jobject = buffer.get();
-        }
-
-        return JNI.toJObject(jobject);
+    public Object dref(@Nonnegative final int index) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public void write(@Nonnull final JObject val) {
-        writei(0,
-               val);
+    public void write(@Nonnull final Object val) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void writei(@Nonnegative final int index,
-                       @Nonnull final JObject val) {
-        final long pointerSize = sizeof((Pointer) null);
-        if (pointerSize == 8) {
-            //64-bit
-            final LongBuffer buffer = this.byteBuffer.asLongBuffer();
-            buffer.clear();
-            buffer.position(index);
-            buffer.put(val.address);
+                       @Nonnull final Object val) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void close() {
+        if (ENABLE_LOG) {
+            Logger.getLogger("jaccall")
+                  .log(Level.FINE,
+                       "Explicit call to free for Pointer POJO of type=" + this.type + " with address=0x" + String.format("%016X",
+                                                                                                                          this.address));
         }
-        else if (pointerSize == 4) {
-            //32-bit
-            final IntBuffer buffer = this.byteBuffer.asIntBuffer();
-            buffer.clear();
-            buffer.position(index);
-            buffer.put((int) val.address);
-        }
+        JNI.DeleteGlobalRef(this.address);
     }
 }

@@ -17,8 +17,8 @@ import static com.github.zubnix.jaccall.Size.sizeof;
 
 public abstract class Pointer<T> implements AutoCloseable {
 
-    private static final boolean ENABLE_LOG = Logger.getLogger("jaccall")
-                                                    .isLoggable(Level.FINE);
+    static final boolean ENABLE_LOG = Logger.getLogger("jaccall")
+                                            .isLoggable(Level.FINE);
 
     protected static final Map<Class, PointerFactory<?>> POINTER_FACTORIES = new HashMap<>(32);
 
@@ -66,7 +66,7 @@ public abstract class Pointer<T> implements AutoCloseable {
                               pointerVoidFactory);
         POINTER_FACTORIES.put(void.class,
                               pointerVoidFactory);
-        POINTER_FACTORIES.put(JObject.class,
+        POINTER_FACTORIES.put(Object.class,
                               new PointerJObjectFactory());
     }
 
@@ -340,19 +340,10 @@ public abstract class Pointer<T> implements AutoCloseable {
         return pointer;
     }
 
-    public static Pointer<JObject> nref(@Nonnull final JObject... val) {
-        final int length = Objects.requireNonNull(val,
-                                                  "Argument val must not be null").length;
-        if (length == 0) {
-            throw new IllegalArgumentException("Cannot allocate zero length array.");
-        }
-
-        final Pointer<JObject> pointer = (Pointer<JObject>) createStack(val[0].getClass(),
-                                                                        sizeof(val[0]),
-                                                                        length);
-        pointer.write(val);
-
-        return pointer;
+    public static Pointer<Object> from(@Nonnull final Object val) {
+        return wrap(Object.class,
+                    JNI.NewGlobalRef(val),
+                    ByteBuffer.allocate(0));
     }
 
     /**
@@ -439,35 +430,20 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @throws NullPointerException     thrown if the given val argument is null.
      */
     @Nonnull
-    public static Pointer<Byte> nref(@Nonnull final Byte... val) {
+    public static Pointer<Byte> nref(@Nonnull final byte... val) {
         final int length = Objects.requireNonNull(val,
                                                   "Argument val must not be null").length;
         if (length == 0) {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
 
-        final Pointer<Byte> pointer = createStack(Byte.class,
-                                                  sizeof((Byte) null),
-                                                  length);
+        final PointerByte pointer = (PointerByte) createStack(Byte.class,
+                                                              sizeof((Byte) null),
+                                                              length);
+        //shortcut to avoid autoboxing
         pointer.write(val);
 
         return pointer;
-    }
-
-    @Nonnull
-    public static Pointer<Byte> nref(@Nonnull final byte[] val) {
-        final int length = Objects.requireNonNull(val,
-                                                  "Argument val must not be null").length;
-        if (length == 0) {
-            throw new IllegalArgumentException("Cannot allocate zero length array.");
-        }
-
-        final Byte[] bytes = new Byte[val.length];
-        for (int i = 0, bytesLength = bytes.length; i < bytesLength; i++) {
-            bytes[i] = val[i];
-        }
-
-        return nref(bytes);
     }
 
     /**
@@ -483,35 +459,20 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @throws NullPointerException     thrown if the given val argument is null.
      */
     @Nonnull
-    public static Pointer<Short> nref(@Nonnull final Short... val) {
+    public static Pointer<Short> nref(@Nonnull final short... val) {
         final int length = Objects.requireNonNull(val,
                                                   "Argument val must not be null").length;
         if (length == 0) {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
 
-        final Pointer<Short> pointer = createStack(Short.class,
-                                                   sizeof((Short) null),
-                                                   length);
+        final PointerShort pointer = (PointerShort) createStack(Short.class,
+                                                                sizeof((Short) null),
+                                                                length);
+        //shortcut to avoid autoboxing
         pointer.write(val);
 
         return pointer;
-    }
-
-    @Nonnull
-    public static Pointer<Short> nref(@Nonnull final short[] val) {
-        final int length = Objects.requireNonNull(val,
-                                                  "Argument val must not be null").length;
-        if (length == 0) {
-            throw new IllegalArgumentException("Cannot allocate zero length array.");
-        }
-
-        final Short[] shorts = new Short[val.length];
-        for (int i = 0; i < shorts.length; i++) {
-            shorts[i] = val[i];
-        }
-
-        return nref(shorts);
     }
 
     /**
@@ -527,35 +488,19 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @throws NullPointerException     thrown if the given val argument is null.
      */
     @Nonnull
-    public static Pointer<Integer> nref(@Nonnull final Integer... val) {
+    public static Pointer<Integer> nref(@Nonnull final int... val) {
         final int length = Objects.requireNonNull(val,
                                                   "Argument val must not be null").length;
         if (length == 0) {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
 
-        final Pointer<Integer> pointer = createStack(Integer.class,
-                                                     sizeof((Integer) null),
-                                                     length);
+        final PointerInt pointer = (PointerInt) createStack(Integer.class,
+                                                            sizeof((Integer) null),
+                                                            length);
         pointer.write(val);
 
         return pointer;
-    }
-
-    @Nonnull
-    public static Pointer<Integer> nref(@Nonnull final int[] val) {
-        final int length = Objects.requireNonNull(val,
-                                                  "Argument val must not be null").length;
-        if (length == 0) {
-            throw new IllegalArgumentException("Cannot allocate zero length array.");
-        }
-
-        final Integer[] ints = new Integer[val.length];
-        for (int i = 0; i < ints.length; i++) {
-            ints[i] = val[i];
-        }
-
-        return nref(ints);
     }
 
     /**
@@ -571,35 +516,19 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @throws NullPointerException     thrown if the given val argument is null.
      */
     @Nonnull
-    public static Pointer<Float> nref(@Nonnull final Float... val) {
+    public static Pointer<Float> nref(@Nonnull final float... val) {
         final int length = Objects.requireNonNull(val,
                                                   "Argument val must not be null").length;
         if (length == 0) {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
 
-        final Pointer<Float> pointer = createStack(Float.class,
-                                                   sizeof((Float) null),
-                                                   length);
+        final PointerFloat pointer = (PointerFloat) createStack(Float.class,
+                                                                sizeof((Float) null),
+                                                                length);
         pointer.write(val);
 
         return pointer;
-    }
-
-    @Nonnull
-    public static Pointer<Float> nref(@Nonnull final float[] val) {
-        final int length = Objects.requireNonNull(val,
-                                                  "Argument val must not be null").length;
-        if (length == 0) {
-            throw new IllegalArgumentException("Cannot allocate zero length array.");
-        }
-
-        final Float[] floats = new Float[val.length];
-        for (int i = 0, floatsLength = floats.length; i < floatsLength; i++) {
-            floats[i] = val[i];
-        }
-
-        return nref(floats);
     }
 
     /**
@@ -615,35 +544,19 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @throws NullPointerException     thrown if the given val argument is null.
      */
     @Nonnull
-    public static Pointer<Long> nref(@Nonnull final Long... val) {
+    public static Pointer<Long> nref(@Nonnull final long... val) {
         final int length = Objects.requireNonNull(val,
                                                   "Argument val must not be null").length;
         if (length == 0) {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
 
-        final Pointer<Long> pointer = createStack(Long.class,
-                                                  sizeof((Long) null),
-                                                  length);
+        final PointerLong pointer = (PointerLong) createStack(Long.class,
+                                                              sizeof((Long) null),
+                                                              length);
         pointer.write(val);
 
         return pointer;
-    }
-
-    @Nonnull
-    public static Pointer<Long> nref(@Nonnull final long[] val) {
-        final int length = Objects.requireNonNull(val,
-                                                  "Argument val must not be null").length;
-        if (length == 0) {
-            throw new IllegalArgumentException("Cannot allocate zero length array.");
-        }
-
-        final Long[] longs = new Long[val.length];
-        for (int i = 0, longsLength = longs.length; i < longsLength; i++) {
-            longs[i] = val[i];
-        }
-
-        return nref(longs);
     }
 
     /**
@@ -659,35 +572,19 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @throws NullPointerException     thrown if the given val argument is null.
      */
     @Nonnull
-    public static Pointer<Double> nref(@Nonnull final Double... val) {
+    public static Pointer<Double> nref(@Nonnull final double... val) {
         final int length = Objects.requireNonNull(val,
                                                   "Argument val must not be null").length;
         if (length == 0) {
             throw new IllegalArgumentException("Cannot allocate zero length array.");
         }
 
-        final Pointer<Double> pointer = createStack(Double.class,
-                                                    sizeof((Double) null),
-                                                    length);
+        final PointerDouble pointer = (PointerDouble) createStack(Double.class,
+                                                                  sizeof((Double) null),
+                                                                  length);
         pointer.write(val);
 
         return pointer;
-    }
-
-    @Nonnull
-    public static Pointer<Double> nref(@Nonnull final double[] val) {
-        final int length = Objects.requireNonNull(val,
-                                                  "Argument val must not be null").length;
-        if (length == 0) {
-            throw new IllegalArgumentException("Cannot allocate zero length array.");
-        }
-
-        final Double[] doubles = new Double[val.length];
-        for (int i = 0; i < doubles.length; i++) {
-            doubles[i] = val[i];
-        }
-
-        return nref(doubles);
     }
 
     /**

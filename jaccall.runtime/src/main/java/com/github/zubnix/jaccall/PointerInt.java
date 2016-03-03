@@ -44,4 +44,10 @@ final class PointerInt extends Pointer<Integer> {
         buffer.position(index);
         buffer.put(val);
     }
+
+    void write(final int[] val) {
+        final IntBuffer buffer = this.byteBuffer.asIntBuffer();
+        buffer.clear();
+        buffer.put(val);
+    }
 }

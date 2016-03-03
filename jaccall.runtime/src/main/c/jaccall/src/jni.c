@@ -116,11 +116,11 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_NewGlobalRef(JNIEnv *env, jclass claz
 
 /*
  * Class:     com_github_zubnix_jaccall_JNI
- * Method:    toJObject
+ * Method:    toObject
  * Signature: (J)Lcom/github/zubnix/jaccall/JObject;
  */
 JNIEXPORT
-jobject JNICALL Java_com_github_zubnix_jaccall_JNI_toJObject(JNIEnv *env, jclass clazz, jlong jobject_address){
+jobject JNICALL Java_com_github_zubnix_jaccall_JNI_toObject(JNIEnv *env, jclass clazz, jlong jobject_address){
     return (jobject)(intptr_t)jobject_address;
 }
 

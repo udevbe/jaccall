@@ -48,6 +48,4 @@ public final class Size {
     public static int sizeof(@Nullable final Void val) { throw new IllegalArgumentException(); }
 
     public static int sizeof(@Nonnull final StructType structType) { return structType.size; }
-
-    public static int sizeof(@Nullable final JObject val) { return sizeof((Pointer) null); }
 }
