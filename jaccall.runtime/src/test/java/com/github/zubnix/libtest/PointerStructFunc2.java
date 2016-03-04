@@ -6,7 +6,6 @@ import com.github.zubnix.jaccall.PointerFunc;
 
 import javax.annotation.Generated;
 import javax.annotation.Nonnull;
-import java.nio.ByteBuffer;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
 public abstract class PointerStructFunc2 extends PointerFunc<StructFunc2> implements StructFunc2 {
@@ -20,11 +19,9 @@ public abstract class PointerStructFunc2 extends PointerFunc<StructFunc2> implem
                                                       JNI.FFI_TYPE_SINT64,
                                                       JNI.FFI_TYPE_FLOAT);
 
-    PointerStructFunc2(final long address,
-                       final ByteBuffer buffer) {
+    PointerStructFunc2(final long address) {
         super(StructFunc2.class,
-              address,
-              buffer);
+              address);
     }
 
     @Nonnull

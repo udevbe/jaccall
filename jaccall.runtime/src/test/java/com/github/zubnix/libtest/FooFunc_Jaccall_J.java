@@ -7,7 +7,6 @@ import com.github.zubnix.jaccall.Unsigned;
 
 import javax.annotation.Generated;
 import javax.annotation.Nonnull;
-import java.nio.ByteBuffer;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
 final class FooFunc_Jaccall_J extends PointerFooFunc {
@@ -22,8 +21,7 @@ final class FooFunc_Jaccall_J extends PointerFooFunc {
     FooFunc_Jaccall_J(@Nonnull final FooFunc fooFunction) {
         super(JNI.ffi_closure(FFI_CIF,
                               fooFunction,
-                              JNI_METHOD_ID),
-              ByteBuffer.allocate(0));
+                              JNI_METHOD_ID));
         this.fooFunction = fooFunction;
     }
 

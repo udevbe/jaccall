@@ -114,7 +114,8 @@ public abstract class Pointer<T> implements AutoCloseable {
 
         return wrap((Type) Objects.requireNonNull(type,
                                                   "Argument type must not be null."),
-                    JNI.unwrap(byteBuffer));
+                    JNI.unwrap(byteBuffer),
+                    false);
     }
 
     /**
@@ -146,11 +147,13 @@ public abstract class Pointer<T> implements AutoCloseable {
                                       final long address) {
         return wrap((Type) Objects.requireNonNull(type,
                                                   "Argument type must not be null."),
-                    address);
+                    address,
+                    false);
     }
 
     static <U> Pointer<U> wrap(@Nonnull final Type type,
-                               final long address) {
+                               final long address,
+                               final boolean autoFree) {
 
         if (ENABLE_LOG) {
             Logger.getLogger("jaccall")
@@ -194,7 +197,8 @@ public abstract class Pointer<T> implements AutoCloseable {
         }
 
         return (Pointer<U>) pointerFactory.create(type,
-                                                  address);
+                                                  address,
+                                                  autoFree);
     }
 
     /**
@@ -302,7 +306,8 @@ public abstract class Pointer<T> implements AutoCloseable {
                                               final int elementSize,
                                               final int length) {
         return wrap(type,
-                    ByteBuffer.allocateDirect(elementSize * length));
+                    JNI.malloc(elementSize * length),
+                    true);
     }
 
     /**
@@ -341,7 +346,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Get a pointer object that refers to the memory used by the given struct. The memory pointed to can be either
      * heap allocated memory or memory subject to Java's GC, depending on how the given struct was created.
-     * <p>
+     * <p/>
      * A struct created through a call to {@code new} will be subject to Java's GC while a struct
      * dereferenced from a pointer created with {@link #malloc(int)} or {@link #calloc(int, int)} will live on the heap
      * until it is explicitly freed with a call to {@link #close()}.
@@ -358,7 +363,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         return (Pointer<U>) wrap(Objects.requireNonNull(val,
                                                         "Argument val must not be null")
                                         .getClass(),
-                                 val.buffer());
+                                 val.address());
     }
 
     @SafeVarargs
@@ -599,16 +604,20 @@ public abstract class Pointer<T> implements AutoCloseable {
         return pointer;
     }
 
-    public final long address;
+    public final  long    address;
+    private final boolean autoFree;
+
     @Nonnull
-    final        Type type;
-    final        int  typeSize;
+    final Type type;
+    final int  typeSize;
 
     Pointer(@Nonnull final Type type,
             final long address,
+            final boolean autoFree,
             final int typeSize) {
-        this.address = address;
         this.type = type;
+        this.address = address;
+        this.autoFree = autoFree;
         this.typeSize = typeSize;
     }
 
@@ -641,7 +650,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code T value = foo.dref();}
-     * <p>
+     * <p/>
      * C equivalent:<br>
      * {@code T value = *foo}
      *
@@ -653,7 +662,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code T value = foo.dref(i);}
-     * <p>
+     * <p/>
      * C equivalent:<br>
      * {@code T value = foo[i]}
      *
@@ -667,7 +676,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code offsetFoo = foo.offset(i);}
-     * <p>
+     * <p/>
      * C equivalent:<br>
      * {@code offsetFoo = foo+i;}
      *
@@ -680,7 +689,8 @@ public abstract class Pointer<T> implements AutoCloseable {
         final int byteOffset = offset * this.typeSize;
 
         return wrap((Type) this.type,
-                    this.address + byteOffset);
+                    this.address + byteOffset,
+                    false);
     }
 
     /**
@@ -714,7 +724,8 @@ public abstract class Pointer<T> implements AutoCloseable {
                         @Override
                         public Type getOwnerType() { return null; }
                     },
-                    this.address);
+                    this.address,
+                    false);
     }
 
     public abstract void write(@Nonnull final T val);
@@ -753,6 +764,9 @@ public abstract class Pointer<T> implements AutoCloseable {
                   .log(Level.FINE,
                        "Pointer POJO of type=" + this.type + " with address=0x" + String.format("%016X",
                                                                                                 this.address) + " garbage collected.");
+        }
+        if (this.autoFree) {
+            JNI.free(this.address);
         }
     }
 }

@@ -7,7 +7,6 @@ import com.github.zubnix.jaccall.PointerFunc;
 
 import javax.annotation.Generated;
 import javax.annotation.Nonnull;
-import java.nio.ByteBuffer;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
 public abstract class PointerCharFunc extends PointerFunc<CharFunc> implements CharFunc {
@@ -16,11 +15,9 @@ public abstract class PointerCharFunc extends PointerFunc<CharFunc> implements C
                                                       JNI.FFI_TYPE_SINT8);
 
 
-    PointerCharFunc(final long address,
-                    final ByteBuffer buffer) {
+    PointerCharFunc(final long address) {
         super(CharFunc.class,
-              address,
-              buffer);
+              address);
     }
 
     @Nonnull

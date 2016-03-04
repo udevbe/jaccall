@@ -7,9 +7,11 @@ import static com.github.zubnix.jaccall.Size.sizeof;
 
 
 final class PointerDouble extends Pointer<Double> {
-    PointerDouble(final long address) {
+    PointerDouble(final long address,
+                  final boolean autoFree) {
         super(Double.class,
               address,
+              autoFree,
               sizeof((Double) null));
     }
 
@@ -21,7 +23,7 @@ final class PointerDouble extends Pointer<Double> {
     @Nonnull
     @Override
     public Double dref(@Nonnegative final int index) {
-        return JNI.drefDouble(address,
+        return JNI.readDouble(this.address,
                               index);
     }
 
@@ -34,13 +36,13 @@ final class PointerDouble extends Pointer<Double> {
     @Override
     public void writei(@Nonnegative final int index,
                        @Nonnull final Double val) {
-        JNI.writeDouble(address,
+        JNI.writeDouble(this.address,
                         index,
                         val.doubleValue());
     }
 
     void write(final double[] val) {
-        JNI.writeDoubles(address,
+        JNI.writeDoubles(this.address,
                          val);
     }
 }

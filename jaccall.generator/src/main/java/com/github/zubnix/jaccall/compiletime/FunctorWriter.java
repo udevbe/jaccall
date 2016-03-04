@@ -30,7 +30,6 @@ import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.nio.ByteBuffer;
 import java.util.LinkedList;
 
 final class FunctorWriter {
@@ -105,9 +104,7 @@ final class FunctorWriter {
                                                               "type")
                                                 .addParameter(long.class,
                                                               "address")
-                                                .addParameter(ByteBuffer.class,
-                                                              "buffer")
-                                                .addStatement("return new $T(address, buffer)",
+                                                .addStatement("return new $T(address)",
                                                               ClassName.get(packageName,
                                                                             cFunctorName))
                                                 .build();
@@ -187,9 +184,8 @@ final class FunctorWriter {
         final MethodSpec constructor = MethodSpec.constructorBuilder()
                                                  .addParameter(ClassName.get(element),
                                                                "function")
-                                                 .addStatement("super($T.ffi_closure(FFI_CIF, function, JNI_METHOD_ID), $T.allocate(0))",
-                                                               JNI.class,
-                                                               ByteBuffer.class)
+                                                 .addStatement("super($T.ffi_closure(FFI_CIF, function, JNI_METHOD_ID))",
+                                                               JNI.class)
                                                  .addStatement("this.function = function")
                                                  .build();
 
@@ -251,9 +247,7 @@ final class FunctorWriter {
         final MethodSpec constructor = MethodSpec.constructorBuilder()
                                                  .addParameter(long.class,
                                                                "address")
-                                                 .addParameter(ByteBuffer.class,
-                                                               "buffer")
-                                                 .addStatement("super(address, buffer)")
+                                                 .addStatement("super(address)")
                                                  .build();
 
         final TypeMirror                returnType      = executableElement.getReturnType();
@@ -366,9 +360,7 @@ final class FunctorWriter {
         final MethodSpec constructor = MethodSpec.constructorBuilder()
                                                  .addParameter(long.class,
                                                                "address")
-                                                 .addParameter(ByteBuffer.class,
-                                                               "buffer")
-                                                 .addStatement("super($T.class, address, buffer)",
+                                                 .addStatement("super($T.class, address)",
                                                                ClassName.get(element))
                                                  .build();
 

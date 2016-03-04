@@ -5,7 +5,6 @@ import com.github.zubnix.jaccall.PointerFactory;
 
 import javax.annotation.Generated;
 import java.lang.reflect.Type;
-import java.nio.ByteBuffer;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
 public final class UnsignedShortFunc_PointerFactory implements PointerFactory<PointerUnsignedShortFunc> {
@@ -13,8 +12,7 @@ public final class UnsignedShortFunc_PointerFactory implements PointerFactory<Po
     @Override
     public PointerUnsignedShortFunc create(final Type type,
                                            final long address,
-                                           final ByteBuffer buffer) {
-        return new UnsignedShortFunc_Jaccall_C(address,
-                                               buffer);
+                                           final boolean autoFree) {
+        return new UnsignedShortFunc_Jaccall_C(address);
     }
 }

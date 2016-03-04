@@ -7,7 +7,6 @@ import com.github.zubnix.jaccall.PointerFunc;
 
 import javax.annotation.Generated;
 import javax.annotation.Nonnull;
-import java.nio.ByteBuffer;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
 public abstract class PointerUnsignedCharFunc extends PointerFunc<UnsignedCharFunc> implements UnsignedCharFunc {
@@ -15,11 +14,9 @@ public abstract class PointerUnsignedCharFunc extends PointerFunc<UnsignedCharFu
     static final long FFI_CIF = JNI.ffi_callInterface(JNI.FFI_TYPE_UINT8,
                                                       JNI.FFI_TYPE_UINT8);
 
-    PointerUnsignedCharFunc(final long address,
-                            final ByteBuffer buffer) {
+    PointerUnsignedCharFunc(final long address) {
         super(UnsignedCharFunc.class,
-              address,
-              buffer);
+              address);
     }
 
     @Nonnull

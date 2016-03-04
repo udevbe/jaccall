@@ -2,7 +2,6 @@ package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -10,10 +9,10 @@ import static com.github.zubnix.jaccall.Size.sizeof;
 
 final class PointerJObject extends Pointer<Object> {
     public PointerJObject(final long address,
-                          @Nonnull final ByteBuffer byteBuffer) {
+                          final boolean autoFree) {
         super(Object.class,
               address,
-              byteBuffer,
+              autoFree,
               sizeof((Pointer) null));
     }
 

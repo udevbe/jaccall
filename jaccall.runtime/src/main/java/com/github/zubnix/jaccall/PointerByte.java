@@ -7,9 +7,11 @@ import static com.github.zubnix.jaccall.Size.sizeof;
 
 final class PointerByte extends Pointer<Byte> {
 
-    PointerByte(final long address) {
+    PointerByte(final long address,
+                final boolean autoFree) {
         super(Byte.class,
               address,
+              autoFree,
               sizeof((Byte) null));
     }
 
@@ -22,7 +24,7 @@ final class PointerByte extends Pointer<Byte> {
     @Nonnull
     @Override
     public Byte dref(@Nonnegative final int index) {
-        return JNI.drefByte(address,
+        return JNI.readByte(this.address,
                             index);
     }
 
@@ -35,13 +37,13 @@ final class PointerByte extends Pointer<Byte> {
     @Override
     public void writei(@Nonnegative final int index,
                        @Nonnull final Byte val) {
-        JNI.writeByte(address,
+        JNI.writeByte(this.address,
                       index,
                       val.byteValue());
     }
 
     void write(final byte[] val) {
-        JNI.writeBytes(address,
+        JNI.writeBytes(this.address,
                        val);
     }
 }

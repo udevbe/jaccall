@@ -6,7 +6,6 @@ import com.github.zubnix.jaccall.PointerFunc;
 
 import javax.annotation.Generated;
 import javax.annotation.Nonnull;
-import java.nio.ByteBuffer;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
 public abstract class PointerDoubleFunc extends PointerFunc<PointerDoubleFunc> implements DoubleFunc {
@@ -14,11 +13,9 @@ public abstract class PointerDoubleFunc extends PointerFunc<PointerDoubleFunc> i
     static final long FFI_CIF = JNI.ffi_callInterface(JNI.FFI_TYPE_DOUBLE,
                                                       JNI.FFI_TYPE_DOUBLE);
 
-    PointerDoubleFunc(final long address,
-                      final ByteBuffer buffer) {
+    PointerDoubleFunc(final long address) {
         super(PointerDoubleFunc.class,
-              address,
-              buffer);
+              address);
     }
 
     @Nonnull

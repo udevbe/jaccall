@@ -2,18 +2,16 @@ package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.nio.ByteBuffer;
-import java.nio.LongBuffer;
 
 import static com.github.zubnix.jaccall.Size.sizeof;
 
 
 final class PointerLong extends Pointer<Long> {
     PointerLong(final long address,
-                @Nonnull final ByteBuffer byteBuffer) {
+                final boolean autoFree) {
         super(Long.class,
               address,
-              byteBuffer,
+              autoFree,
               sizeof((Long) null));
     }
 
@@ -22,12 +20,11 @@ final class PointerLong extends Pointer<Long> {
         return dref(0);
     }
 
+    @Nonnull
     @Override
     public Long dref(@Nonnegative final int index) {
-        final LongBuffer buffer = this.byteBuffer.asLongBuffer();
-        buffer.rewind();
-        buffer.position(index);
-        return buffer.get();
+        return JNI.readLong(this.address,
+                            index);
     }
 
     @Override
@@ -38,15 +35,13 @@ final class PointerLong extends Pointer<Long> {
 
     public void writei(@Nonnegative final int index,
                        @Nonnull final Long val) {
-        final LongBuffer buffer = this.byteBuffer.asLongBuffer();
-        buffer.clear();
-        buffer.position(index);
-        buffer.put(val);
+        JNI.writeLong(this.address,
+                      index,
+                      val.longValue());
     }
 
     void write(final long[] val) {
-        final LongBuffer buffer = this.byteBuffer.asLongBuffer();
-        buffer.clear();
-        buffer.put(val);
+        JNI.writeLongs(this.address,
+                       val);
     }
 }

@@ -2,8 +2,6 @@ package com.github.zubnix.libtest;
 
 import com.github.zubnix.jaccall.JNI;
 
-import java.nio.ByteBuffer;
-
 final class WriteGlobalVarFunc_Jaccall_C extends PointerWriteGlobalVarFunc {
 
     static {
@@ -14,10 +12,8 @@ final class WriteGlobalVarFunc_Jaccall_C extends PointerWriteGlobalVarFunc {
                         FFI_CIF);
     }
 
-    WriteGlobalVarFunc_Jaccall_C(final long address,
-                                 final ByteBuffer buffer) {
-        super(address,
-              buffer);
+    WriteGlobalVarFunc_Jaccall_C(final long address) {
+        super(address);
     }
 
     @Override

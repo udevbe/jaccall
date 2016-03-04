@@ -6,7 +6,6 @@ import com.github.zubnix.jaccall.PointerFunc;
 
 import javax.annotation.Generated;
 import javax.annotation.Nonnull;
-import java.nio.ByteBuffer;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
 public abstract class PointerUnionFunc extends PointerFunc<UnionFunc> implements UnionFunc {
@@ -16,11 +15,9 @@ public abstract class PointerUnionFunc extends PointerFunc<UnionFunc> implements
                                                       JNI.FFI_TYPE_SINT32,
                                                       JNI.FFI_TYPE_FLOAT);
 
-    PointerUnionFunc(final long address,
-                     final ByteBuffer buffer) {
+    PointerUnionFunc(final long address) {
         super(UnionFunc.class,
-              address,
-              buffer);
+              address);
     }
 
     @Nonnull

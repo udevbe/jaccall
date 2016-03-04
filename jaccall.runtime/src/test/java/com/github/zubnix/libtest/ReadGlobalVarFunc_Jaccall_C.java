@@ -2,8 +2,6 @@ package com.github.zubnix.libtest;
 
 import com.github.zubnix.jaccall.JNI;
 
-import java.nio.ByteBuffer;
-
 final class ReadGlobalVarFunc_Jaccall_C extends PointerReadGlobalVarFunc {
 
     static {
@@ -14,10 +12,8 @@ final class ReadGlobalVarFunc_Jaccall_C extends PointerReadGlobalVarFunc {
                         FFI_CIF);
     }
 
-    ReadGlobalVarFunc_Jaccall_C(final long address,
-                                final ByteBuffer buffer) {
-        super(address,
-              buffer);
+    ReadGlobalVarFunc_Jaccall_C(final long address) {
+        super(address);
     }
 
     @Override

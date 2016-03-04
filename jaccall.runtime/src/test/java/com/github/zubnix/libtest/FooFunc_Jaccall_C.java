@@ -3,7 +3,6 @@ package com.github.zubnix.libtest;
 import com.github.zubnix.jaccall.JNI;
 
 import javax.annotation.Generated;
-import java.nio.ByteBuffer;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
 final class FooFunc_Jaccall_C extends PointerFooFunc {
@@ -16,10 +15,8 @@ final class FooFunc_Jaccall_C extends PointerFooFunc {
                         FFI_CIF);
     }
 
-    FooFunc_Jaccall_C(final long address,
-                      final ByteBuffer buffer) {
-        super(address,
-              buffer);
+    FooFunc_Jaccall_C(final long address) {
+        super(address);
     }
 
     @Override

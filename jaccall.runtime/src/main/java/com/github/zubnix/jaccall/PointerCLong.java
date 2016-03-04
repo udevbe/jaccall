@@ -8,9 +8,11 @@ import static com.github.zubnix.jaccall.Size.sizeof;
 
 final class PointerCLong extends Pointer<CLong> {
 
-    PointerCLong(final long address) {
+    PointerCLong(final long address,
+                 final boolean autoFree) {
         super(CLong.class,
               address,
+              autoFree,
               sizeof((CLong) null));
     }
 
@@ -23,7 +25,7 @@ final class PointerCLong extends Pointer<CLong> {
     @Nonnull
     @Override
     public CLong dref(@Nonnegative final int index) {
-        return new CLong(JNI.drefCLong(address,
+        return new CLong(JNI.readCLong(this.address,
                                        index));
     }
 
@@ -36,7 +38,7 @@ final class PointerCLong extends Pointer<CLong> {
     @Override
     public void writei(@Nonnegative final int index,
                        @Nonnull final CLong val) {
-        JNI.writeCLong(address,
+        JNI.writeCLong(this.address,
                        index,
                        val.longValue());
     }

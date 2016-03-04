@@ -2,17 +2,15 @@ package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.nio.ByteBuffer;
 
 import static com.github.zubnix.jaccall.Size.sizeof;
 
 public abstract class PointerFunc<T> extends Pointer<T> {
     protected PointerFunc(@Nonnull final Class<T> type,
-                          final long address,
-                          final ByteBuffer buffer) {
+                          final long address) {
         super(type,
               address,
-              buffer,
+              false,
               sizeof((Pointer) null));
     }
 

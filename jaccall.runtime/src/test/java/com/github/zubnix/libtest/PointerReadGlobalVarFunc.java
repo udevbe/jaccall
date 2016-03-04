@@ -5,17 +5,14 @@ import com.github.zubnix.jaccall.Pointer;
 import com.github.zubnix.jaccall.PointerFunc;
 
 import javax.annotation.Nonnull;
-import java.nio.ByteBuffer;
 
 public abstract class PointerReadGlobalVarFunc extends PointerFunc<ReadGlobalVarFunc> implements ReadGlobalVarFunc {
 
     static final long FFI_CIF = JNI.ffi_callInterface(JNI.FFI_TYPE_SINT32);
 
-    PointerReadGlobalVarFunc(final long address,
-                             final ByteBuffer buffer) {
+    PointerReadGlobalVarFunc(final long address) {
         super(ReadGlobalVarFunc.class,
-              address,
-              buffer);
+              address);
     }
 
     @Nonnull

@@ -4,9 +4,6 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-import java.nio.LongBuffer;
 
 import static com.github.zubnix.jaccall.Size.sizeof;
 
@@ -14,10 +11,10 @@ import static com.github.zubnix.jaccall.Size.sizeof;
 final class PointerPointer<T> extends Pointer<Pointer<T>> {
     PointerPointer(@Nonnull final Type type,
                    final long address,
-                   @Nonnull final ByteBuffer byteBuffer) {
+                   final boolean autoFree) {
         super(type,
               address,
-              byteBuffer,
+              autoFree,
               sizeof((Pointer) null));
     }
 
@@ -30,22 +27,11 @@ final class PointerPointer<T> extends Pointer<Pointer<T>> {
     @Nonnull
     @Override
     public Pointer<T> dref(@Nonnegative final int index) {
-        final long val;
-        if (this.typeSize == 8) {
-            final LongBuffer buffer = this.byteBuffer.asLongBuffer();
-            buffer.rewind();
-            buffer.position(index);
-            val = buffer.get();
-        }
-        else {
-            final IntBuffer buffer = this.byteBuffer.asIntBuffer();
-            buffer.rewind();
-            buffer.position(index);
-            val = buffer.get();
-        }
+
+        final long val = JNI.readPointer(this.address,
+                                         index);
 
         //handle untyped pointers
-
         final Type genericClass;
         if (this.type instanceof ParameterizedType) {
             genericClass = this.type;
@@ -67,8 +53,7 @@ final class PointerPointer<T> extends Pointer<Pointer<T>> {
 
         return wrap(type,
                     val,
-                    JNI.wrap(val,
-                             Integer.MAX_VALUE));
+                    false);
     }
 
     @Override
@@ -80,20 +65,8 @@ final class PointerPointer<T> extends Pointer<Pointer<T>> {
     @Override
     public void writei(@Nonnegative final int index,
                        @Nonnull final Pointer<T> val) {
-        final long pointerSize = sizeof((Pointer) null);
-        if (pointerSize == 8) {
-            //64-bit
-            final LongBuffer buffer = this.byteBuffer.asLongBuffer();
-            buffer.clear();
-            buffer.position(index);
-            buffer.put(val.address);
-        }
-        else if (pointerSize == 4) {
-            //32-bit
-            final IntBuffer buffer = this.byteBuffer.asIntBuffer();
-            buffer.clear();
-            buffer.position(index);
-            buffer.put((int) val.address);
-        }
+        JNI.writePointer(this.address,
+                         index,
+                         val.address);
     }
 }

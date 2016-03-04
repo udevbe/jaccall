@@ -213,7 +213,101 @@ public final class JNI {
                                           @Nonnegative int argumentSize,/*number of arguments for the method*/
                                           @Nonnull String jniSignature,/*jni method signature*/
                                           long ffiCallInterface/*ffi call interface*/);
+
     /*
      * <- linker
+     */
+
+    /*
+     * raw io ->
+     */
+    public static native byte readByte(final long address,
+                                       final int index);
+
+    public static native void writeByte(final long address,
+                                        final int index,
+                                        final byte b);
+
+    public static native void writeBytes(final long address,
+                                         final byte[] val);
+
+    public static native long readCLong(final long address,
+                                        final int index);
+
+    public static native void writeCLong(final long address,
+                                         final int index,
+                                         final long l);
+
+    public static native double readDouble(final long address,
+                                           final int index);
+
+    public static native void writeDouble(final long address,
+                                          final int index,
+                                          final double v);
+
+    public static native void writeDoubles(final long address,
+                                           final double[] val);
+
+    public static native float readFloat(final long address,
+                                         final int index);
+
+    public static native void writeFloat(final long address,
+                                         final int index,
+                                         final float v);
+
+    public static native void writeFloats(final long address,
+                                          final float[] val);
+
+    public static native int readInt(final long address,
+                                     final int index);
+
+    public static native void writeInt(final long address,
+                                       final int index,
+                                       final int i);
+
+    public static native void writeInts(final long address,
+                                        final int[] val);
+
+    public static native long readLong(final long address,
+                                       final int index);
+
+    public static native void writeLong(final long address,
+                                        final int index,
+                                        final long val);
+
+    public static native void writeLongs(final long address,
+                                         final long[] val);
+
+    public static native long readPointer(final long address,
+                                          final int index);
+
+    public static native void writePointer(final long address,
+                                           final int index,
+                                           final long address1);
+
+    public static native short readShort(final long address,
+                                         final int index);
+
+    public static native void writeShort(final long address,
+                                         final int index,
+                                         final short i);
+
+    public static native void writeShorts(final long address,
+                                          final short[] val);
+
+    public static native String readString(final long address,
+                                           final int index);
+
+    public static native void writeString(final long address,
+                                          final int index,
+                                          final String val);
+
+    public static native void writeStruct(final long targetAddress,
+                                          final long sourceAddress,
+                                          final int size);
+
+
+    /*
+     * <- raw io
      */
 }

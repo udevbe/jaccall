@@ -2,17 +2,15 @@ package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.nio.ByteBuffer;
-import java.nio.ShortBuffer;
 
 import static com.github.zubnix.jaccall.Size.sizeof;
 
 final class PointerShort extends Pointer<Short> {
     PointerShort(final long address,
-                 @Nonnull final ByteBuffer byteBuffer) {
+                 final boolean autoFree) {
         super(Short.class,
               address,
-              byteBuffer,
+              autoFree,
               sizeof((Short) null));
     }
 
@@ -25,10 +23,8 @@ final class PointerShort extends Pointer<Short> {
     @Nonnull
     @Override
     public Short dref(@Nonnegative final int index) {
-        final ShortBuffer buffer = this.byteBuffer.asShortBuffer();
-        buffer.rewind();
-        buffer.position(index);
-        return buffer.get();
+        return JNI.readShort(this.address,
+                             index);
     }
 
     @Override
@@ -40,15 +36,13 @@ final class PointerShort extends Pointer<Short> {
     @Override
     public void writei(@Nonnegative final int index,
                        @Nonnull final Short val) {
-        final ShortBuffer buffer = this.byteBuffer.asShortBuffer();
-        buffer.clear();
-        buffer.position(index);
-        buffer.put(val);
+        JNI.writeShort(this.address,
+                       index,
+                       val.shortValue());
     }
 
     void write(final short[] val) {
-        final ShortBuffer buffer = this.byteBuffer.asShortBuffer();
-        buffer.clear();
-        buffer.put(val);
+        JNI.writeShorts(this.address,
+                        val);
     }
 }

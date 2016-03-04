@@ -7,7 +7,6 @@ import com.github.zubnix.jaccall.PointerFunc;
 
 import javax.annotation.Generated;
 import javax.annotation.Nonnull;
-import java.nio.ByteBuffer;
 
 @Generated("com.github.zubnix.jaccall.compiletime.functor.FunctionPointerGenerator")
 public abstract class PointerUnsignedLongFunc extends PointerFunc<UnsignedLongFunc> implements UnsignedLongFunc {
@@ -15,11 +14,9 @@ public abstract class PointerUnsignedLongFunc extends PointerFunc<UnsignedLongFu
     static final long FFI_CIF = JNI.ffi_callInterface(JNI.FFI_TYPE_ULONG,
                                                       JNI.FFI_TYPE_ULONG);
 
-    PointerUnsignedLongFunc(final long address,
-                            final ByteBuffer buffer) {
+    PointerUnsignedLongFunc(final long address) {
         super(UnsignedLongFunc.class,
-              address,
-              buffer);
+              address);
     }
 
     @Nonnull

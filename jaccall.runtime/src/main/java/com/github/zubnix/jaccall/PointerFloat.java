@@ -2,15 +2,15 @@ package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 
 import static com.github.zubnix.jaccall.Size.sizeof;
 
 final class PointerFloat extends Pointer<Float> {
-    PointerFloat(final long address) {
+    PointerFloat(final long address,
+                 final boolean autoFree) {
         super(Float.class,
               address,
+              autoFree,
               sizeof((Float) null));
     }
 
@@ -19,12 +19,11 @@ final class PointerFloat extends Pointer<Float> {
         return dref(0);
     }
 
+    @Nonnull
     @Override
     public Float dref(@Nonnegative final int index) {
-        final FloatBuffer buffer = this.byteBuffer.asFloatBuffer();
-        buffer.rewind();
-        buffer.position(index);
-        return buffer.get();
+        return JNI.readFloat(this.address,
+                             index);
     }
 
     @Override
@@ -36,15 +35,13 @@ final class PointerFloat extends Pointer<Float> {
     @Override
     public void writei(@Nonnegative final int index,
                        @Nonnull final Float val) {
-        final FloatBuffer buffer = this.byteBuffer.asFloatBuffer();
-        buffer.clear();
-        buffer.position(index);
-        buffer.put(val);
+        JNI.writeFloat(this.address,
+                       index,
+                       val.floatValue());
     }
 
     void write(final float[] val) {
-        final FloatBuffer buffer = this.byteBuffer.asFloatBuffer();
-        buffer.clear();
-        buffer.put(val);
+        JNI.writeFloats(this.address,
+                        val);
     }
 }

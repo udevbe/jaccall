@@ -2,14 +2,13 @@ package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.nio.ByteBuffer;
 
 final class PointerVoid extends Pointer<Void> {
     PointerVoid(final long address,
-                final ByteBuffer byteBuffer) {
+                final boolean autoFree) {
         super(Void.class,
               address,
-              byteBuffer,
+              autoFree,
               1);
     }
 

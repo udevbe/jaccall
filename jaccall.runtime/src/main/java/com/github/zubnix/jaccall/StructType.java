@@ -3,173 +3,144 @@ package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
-import static java.nio.ByteBuffer.allocateDirect;
 
 public abstract class StructType {
 
     final int size;
-
-    private ByteBuffer buffer;
+    private long    address  = 0L;
+    private boolean autoFree = false;
 
     protected StructType(@Nonnegative final int size) {
         this.size = size;
     }
 
-    @Nonnull
-    final ByteBuffer buffer() {
-        if (this.buffer == null) {
-            buffer(allocateDirect(this.size));
+    final long address() {
+        if (this.address == 0L) {
+            this.autoFree = true;
+            address(JNI.malloc(this.size));
         }
-        return this.buffer;
+        return this.address;
     }
 
-    final void buffer(@Nonnull final ByteBuffer buffer) {
-        buffer.rewind();
-        buffer.clear();
-        buffer.order(ByteOrder.nativeOrder());
-        this.buffer = buffer;
+    final void address(final long address) {
+        this.address = address;
     }
 
     //Byte
     protected final byte readByte(@Nonnegative final int offset) {
-        return buffer().get(offset);
+        return JNI.readByte(address() + offset,
+                            0);
     }
 
     protected final void writeByte(@Nonnegative final int offset,
                                    final byte value) {
-        buffer().put(offset,
-                     value);
+        JNI.writeByte(address() + offset,
+                      0,
+                      value);
     }
 
     //Short
     protected final short readShort(@Nonnegative final int offset) {
-        return buffer().getShort(offset);
+        return JNI.readShort(address() + offset,
+                             0);
     }
 
     protected final void writeShort(@Nonnegative final int offset,
                                     final short value) {
-        buffer().putShort(offset,
-                          value);
+        JNI.writeShort(address() + offset,
+                       0,
+                       value);
     }
 
     //Integer
     protected final int readInteger(@Nonnegative final int offset) {
-        return buffer().getInt(offset);
+        return JNI.readInt(address() + offset,
+                           0);
     }
 
     protected final void writeInteger(@Nonnegative final int offset,
                                       final int value) {
-        buffer().putInt(offset,
-                        value);
+        JNI.writeInt(address() + offset,
+                     0,
+                     value);
     }
 
     //c long
     @Nonnull
     protected final CLong readCLong(@Nonnegative final int offset) {
-        final long size = Size.sizeof((CLong) null);
-        final long value;
-
-        if (size == 8) {
-            value = buffer().getLong(offset);
-        }
-        else {
-            value = buffer().getInt(offset);
-        }
-
-        return new CLong(value);
+        return new CLong(JNI.readCLong(address() + offset,
+                                       0));
     }
 
     protected final void writeCLong(@Nonnegative final int offset,
                                     @Nonnull final CLong value) {
-        final long size = Size.sizeof((CLong) null);
-
-        if (size == 8) {
-            buffer().putLong(offset,
-                             value.longValue());
-        }
-        else {
-            buffer().putInt(offset,
-                            value.intValue());
-        }
+        JNI.writeCLong(address() + offset,
+                       0,
+                       value.longValue());
     }
 
     //long long
     protected final long readLong(@Nonnegative final int offset) {
-        return buffer().getLong(offset);
+        return JNI.readLong(address() + offset,
+                            0);
     }
 
     protected final void writeLong(@Nonnegative final int offset,
                                    final long value) {
-        buffer().putLong(offset,
-                         value);
+        JNI.writeLong(address() + offset,
+                      0,
+                      value);
     }
 
     //float
     protected final float readFloat(@Nonnegative final int offset) {
-        return buffer().getFloat(offset);
+        return JNI.readFloat(address() + offset,
+                             0);
     }
 
     protected final void writeFloat(@Nonnegative final int offset,
                                     final float value) {
-        buffer().putFloat(offset,
-                          value);
+        JNI.writeFloat(address() + offset,
+                       0,
+                       value);
     }
 
     //double
     protected final double readDouble(@Nonnegative final int offset) {
-        return buffer().getDouble(offset);
+        return JNI.readDouble(address() + offset,
+                              0);
     }
 
     protected final void writeDouble(@Nonnegative final int offset,
                                      final double value) {
-        buffer().putDouble(offset,
-                           value);
+        JNI.writeDouble(address() + offset,
+                        0,
+                        value);
     }
 
     //pointer
     @Nonnull
     protected final <T> Pointer<T> readPointer(@Nonnegative final int offset,
                                                @Nonnull final Class<T> type) {
-        final long size = Size.sizeof((Pointer) null);
-        final long address;
-
-        if (size == 8) {
-            address = buffer().getLong(offset);
-        }
-        else {
-            address = buffer().getInt(offset);
-        }
-
-        return Pointer.wrap(address)
+        return Pointer.wrap(JNI.readPointer(address() + offset,
+                                            0))
                       .castp(type);
     }
 
     protected final void writePointer(@Nonnegative final int offset,
                                       @Nonnull final Pointer<?> pointer) {
-        final long size = Size.sizeof((Pointer) null);
-
-        if (size == 8) {
-            buffer().putLong(offset,
-                             pointer.address);
-        }
-        else {
-            buffer().putInt(offset,
-                            (int) pointer.address);
-        }
+        JNI.writePointer(address() + offset,
+                         0,
+                         pointer.address);
     }
 
     //struct type
     @Nonnull
     protected final <T extends StructType> T readStructType(@Nonnegative final int offset,
                                                             @Nonnull final Class<T> structTypeClass) {
-        buffer().position(offset);
-        final ByteBuffer structTypeBuffer = buffer().slice();
         try {
             final T structType = structTypeClass.newInstance();
-            structType.buffer(structTypeBuffer);
+            structType.address(address() + offset);
             return structType;
         }
         catch (InstantiationException | IllegalAccessException e) {
@@ -179,19 +150,24 @@ public abstract class StructType {
 
     protected final void writeStructType(@Nonnegative final int offset,
                                          @Nonnull final StructType structType) {
-        structType.buffer()
-                  .rewind();
-        buffer().position(offset);
-        buffer().put(structType.buffer());
+        JNI.writeStruct(address() + offset,
+                        structType.address,
+                        structType.size);
     }
 
     //array
     @Nonnull
     protected final <T> Pointer<T> readArray(@Nonnegative final int offset,
                                              @Nonnull final Class<T> arrayType) {
-        return Pointer.wrap(Byte.class,
-                            buffer())
-                      .offset(offset)
-                      .castp(arrayType);
+        return Pointer.wrap(arrayType,
+                            address() + offset);
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        if (this.autoFree) {
+            JNI.free(this.address);
+        }
     }
 }
