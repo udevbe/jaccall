@@ -104,6 +104,8 @@ final class FunctorWriter {
                                                               "type")
                                                 .addParameter(long.class,
                                                               "address")
+                                                .addParameter(boolean.class,
+                                                              "autoFree")
                                                 .addStatement("return new $T(address)",
                                                               ClassName.get(packageName,
                                                                             cFunctorName))

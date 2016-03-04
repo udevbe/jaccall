@@ -57,7 +57,6 @@ public class FunctorWriterTest {
                                                                        "package com.github.zubnix.libtest;\n" +
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
-                                                                       "import java.nio.ByteBuffer;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
                                                                        "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
@@ -67,7 +66,7 @@ public class FunctorWriterTest {
                                                                        "  }\n" +
                                                                        "\n" +
                                                                        "  CharFunc_Jaccall_C(long address) {\n" +
-                                                                       "    super(address, buffer);\n" +
+                                                                       "    super(address);\n" +
                                                                        "  }\n" +
                                                                        "\n" +
                                                                        "  @Override\n" +
@@ -81,7 +80,6 @@ public class FunctorWriterTest {
                                                                        "package com.github.zubnix.libtest;\n" +
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.JNI;\n" +
-                                                                       "import java.nio.ByteBuffer;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
                                                                        "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
@@ -105,13 +103,12 @@ public class FunctorWriterTest {
                                                                        "\n" +
                                                                        "import com.github.zubnix.jaccall.PointerFactory;\n" +
                                                                        "import java.lang.reflect.Type;\n" +
-                                                                       "import java.nio.ByteBuffer;\n" +
                                                                        "import javax.annotation.Generated;\n" +
                                                                        "\n" +
                                                                        "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "public final class CharFunc_PointerFactory implements PointerFactory<PointerCharFunc> {\n" +
                                                                        "  @Override\n" +
-                                                                       "  public PointerCharFunc create(Type type, long address) {\n" +
+                                                                       "  public PointerCharFunc create(Type type, long address, boolean autoFree) {\n" +
                                                                        "    return new CharFunc_Jaccall_C(address);\n" +
                                                                        "  }\n" +
                                                                        "}"));

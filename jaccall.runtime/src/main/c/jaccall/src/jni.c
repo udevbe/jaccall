@@ -947,3 +947,306 @@ jint
 JNICALL Java_com_github_zubnix_jaccall_JNI_doubleAlignment(JNIEnv *env, jclass clazz){
     return offset_of_double;
 }
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    readByte
+ * Signature: (JI)B
+ */
+JNIEXPORT
+jbyte
+JNICALL Java_com_github_zubnix_jaccall_JNI_readByte(JNIEnv *env, jclass clazz, jlong address, jint index){
+    return (jbyte)((char*)(intptr_t)address)[(int)index];
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeByte
+ * Signature: (JIB)V
+ */
+JNIEXPORT
+void
+JNICALL Java_com_github_zubnix_jaccall_JNI_writeByte(JNIEnv *env, jclass clazz, jlong address, jint index, jbyte value){
+    ((char*)(intptr_t)address)[(int)index] = (char)value;
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeBytes
+ * Signature: (J[B)V
+ */
+JNIEXPORT
+void
+JNICALL Java_com_github_zubnix_jaccall_JNI_writeBytes(JNIEnv *env, jclass clazz, jlong address, jbyteArray value){
+   //TODO check for NULL array in case of oom
+   void* array = (*env)->GetPrimitiveArrayCritical(env, value, 0);
+   jsize length = (*env)->GetArrayLength(env, value);
+   memcpy((void*)(intptr_t)address, array, ((size_t)length)*sizeof(jbyte));
+   (*env)->ReleasePrimitiveArrayCritical(env, value, array, 0);
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    readCLong
+ * Signature: (JI)J
+ */
+JNIEXPORT
+jlong
+JNICALL Java_com_github_zubnix_jaccall_JNI_readCLong(JNIEnv *env, jclass clazz, jlong address, jint index){
+    return (jlong)((long*)(intptr_t)address)[(int)index];
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeCLong
+ * Signature: (JIJ)V
+ */
+JNIEXPORT
+void
+JNICALL Java_com_github_zubnix_jaccall_JNI_writeCLong(JNIEnv *env, jclass clazz, jlong address, jint index, jlong value){
+    ((long*)(intptr_t)address)[(int)index] = (long)value;
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    readDouble
+ * Signature: (JI)D
+ */
+JNIEXPORT
+jdouble
+JNICALL Java_com_github_zubnix_jaccall_JNI_readDouble(JNIEnv *env, jclass clazz, jlong address, jint index){
+    return (jdouble)((double*)(intptr_t)address)[(int)index];
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeDouble
+ * Signature: (JID)V
+ */
+JNIEXPORT
+void
+JNICALL Java_com_github_zubnix_jaccall_JNI_writeDouble(JNIEnv *env, jclass clazz, jlong address, jint index, jdouble value){
+    ((double*)(intptr_t)address)[(int)index] = (double)value;
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeDoubles
+ * Signature: (J[D)V
+ */
+JNIEXPORT
+void
+JNICALL Java_com_github_zubnix_jaccall_JNI_writeDoubles(JNIEnv *env, jclass clazz, jlong address, jdoubleArray value){
+    //TODO check for NULL array in case of oom
+    void* array = (*env)->GetPrimitiveArrayCritical(env, value, 0);
+    jsize length = (*env)->GetArrayLength(env, value);
+    memcpy((void*)(intptr_t)address, array, ((size_t)length)*sizeof(jdouble));
+    (*env)->ReleasePrimitiveArrayCritical(env, value, array, 0);
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    readFloat
+ * Signature: (JI)F
+ */
+JNIEXPORT
+jfloat
+JNICALL Java_com_github_zubnix_jaccall_JNI_readFloat(JNIEnv *env, jclass clazz, jlong address, jint index){
+    return (jfloat)((float*)(intptr_t)address)[(int)index];
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeFloat
+ * Signature: (JIF)V
+ */
+JNIEXPORT
+void
+JNICALL Java_com_github_zubnix_jaccall_JNI_writeFloat(JNIEnv *env, jclass clazz, jlong address, jint index, jfloat value){
+    ((float*)(intptr_t)address)[(int)index] = (float)value;
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeFloats
+ * Signature: (J[F)V
+ */
+JNIEXPORT
+void
+JNICALL Java_com_github_zubnix_jaccall_JNI_writeFloats(JNIEnv *env, jclass clazz, jlong address, jfloatArray value){
+    //TODO check for NULL array in case of oom
+    void* array = (*env)->GetPrimitiveArrayCritical(env, value, 0);
+    jsize length = (*env)->GetArrayLength(env, value);
+    memcpy((void*)(intptr_t)address, array, ((size_t)length)*sizeof(jfloat));
+    (*env)->ReleasePrimitiveArrayCritical(env, value, array, 0);
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    readInt
+ * Signature: (JI)I
+ */
+JNIEXPORT
+jint
+JNICALL Java_com_github_zubnix_jaccall_JNI_readInt(JNIEnv *env, jclass clazz, jlong address, jint index){
+    return (jint)((int*)(intptr_t)address)[(int)index];
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeInt
+ * Signature: (JII)V
+ */
+JNIEXPORT
+void
+JNICALL Java_com_github_zubnix_jaccall_JNI_writeInt(JNIEnv *env, jclass clazz, jlong address, jint index, jint value){
+    ((int*)(intptr_t)address)[(int)index] = (int)value;
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeInts
+ * Signature: (J[I)V
+ */
+JNIEXPORT
+void
+JNICALL Java_com_github_zubnix_jaccall_JNI_writeInts(JNIEnv *env, jclass clazz, jlong address, jintArray value){
+    //TODO check for NULL array in case of oom
+    void* array = (*env)->GetPrimitiveArrayCritical(env, value, 0);
+    jsize length = (*env)->GetArrayLength(env, value);
+    memcpy((void*)(intptr_t)address, array, ((size_t)length)*sizeof(jint));
+    (*env)->ReleasePrimitiveArrayCritical(env, value, array, 0);
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    readLong
+ * Signature: (JI)J
+ */
+JNIEXPORT
+jlong
+JNICALL Java_com_github_zubnix_jaccall_JNI_readLong(JNIEnv *env, jclass clazz, jlong address, jint index){
+    return (jlong)((long long*)(intptr_t)address)[(int)index];
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeLong
+ * Signature: (JIJ)V
+ */
+JNIEXPORT
+void
+JNICALL Java_com_github_zubnix_jaccall_JNI_writeLong(JNIEnv *env, jclass clazz, jlong address, jint index, jlong value){
+    ((long long*)(intptr_t)address)[(int)index] = (long)value;
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeLongs
+ * Signature: (J[J)V
+ */
+JNIEXPORT
+void
+JNICALL Java_com_github_zubnix_jaccall_JNI_writeLongs(JNIEnv *env, jclass clazz, jlong address, jlongArray value){
+    //TODO check for NULL array in case of oom
+    void* array = (*env)->GetPrimitiveArrayCritical(env, value, 0);
+    jsize length = (*env)->GetArrayLength(env, value);
+    memcpy((void*)(intptr_t)address, array, ((size_t)length)*sizeof(jlong));
+    (*env)->ReleasePrimitiveArrayCritical(env, value, array, 0);
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    readPointer
+ * Signature: (JI)J
+ */
+JNIEXPORT
+jlong
+JNICALL Java_com_github_zubnix_jaccall_JNI_readPointer(JNIEnv *env, jclass clazz, jlong address, jint index){
+    return (jlong)(intptr_t)((void**)(intptr_t)address)[(int)index];
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writePointer
+ * Signature: (JIJ)V
+ */
+JNIEXPORT
+void
+JNICALL Java_com_github_zubnix_jaccall_JNI_writePointer(JNIEnv *env, jclass clazz, jlong address, jint index, jlong value){
+    ((void**)(intptr_t)address)[(int)index] = (void*)(intptr_t)value;
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    readShort
+ * Signature: (JI)S
+ */
+JNIEXPORT
+jshort
+JNICALL Java_com_github_zubnix_jaccall_JNI_readShort(JNIEnv *env, jclass clazz, jlong address, jint index){
+    return (jshort)((short*)(intptr_t)address)[(int)index];
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeShort
+ * Signature: (JIS)V
+ */
+JNIEXPORT
+void
+JNICALL Java_com_github_zubnix_jaccall_JNI_writeShort(JNIEnv *env, jclass clazz, jlong address, jint index, jshort value){
+    ((short*)(intptr_t)address)[(int)index] = (short)value;
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeShorts
+ * Signature: (J[S)V
+ */
+JNIEXPORT
+void
+JNICALL Java_com_github_zubnix_jaccall_JNI_writeShorts(JNIEnv *env, jclass clazz, jlong address, jshortArray value){
+    //TODO check for NULL array in case of oom
+    void* array = (*env)->GetPrimitiveArrayCritical(env, value, 0);
+    jsize length = (*env)->GetArrayLength(env, value);
+    memcpy((void*)(intptr_t)address, array, ((size_t)length)*sizeof(jshort));
+    (*env)->ReleasePrimitiveArrayCritical(env, value, array, 0);
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    readString
+ * Signature: (JI)Ljava/lang/String{   }
+ */
+JNIEXPORT
+jstring
+JNICALL Java_com_github_zubnix_jaccall_JNI_readString(JNIEnv *env, jclass clazz, jlong address, jint index){
+    return (*env)->NewStringUTF(env, (const char *)(intptr_t)address);
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeString
+ * Signature: (JILjava/lang/String{   })V
+ */
+JNIEXPORT
+void
+JNICALL Java_com_github_zubnix_jaccall_JNI_writeString(JNIEnv *env, jclass clazz, jlong address, jint index, jstring value){
+    //TODO check for NULL array in case of oom
+    const char *array = (*env)->GetStringUTFChars(env, value, 0);
+    jsize length = (*env)->GetStringUTFLength(env, value);
+    memcpy(((void*)(intptr_t)address)+index, (void*) array, (size_t)length+1);
+    (*env)->ReleaseStringUTFChars(env, value, array);
+}
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeStruct
+ * Signature: (JJI)V
+ */
+JNIEXPORT
+void
+JNICALL Java_com_github_zubnix_jaccall_JNI_writeStruct(JNIEnv *env, jclass clazz, jlong target_address, jlong src_address, jint size){
+    memcpy((void*)(intptr_t)target_address, (void*) src_address, (size_t)size);
+}

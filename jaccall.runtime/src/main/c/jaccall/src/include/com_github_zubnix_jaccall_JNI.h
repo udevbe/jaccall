@@ -335,6 +335,206 @@ JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_link
 JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_linkFuncPtr
   (JNIEnv *, jclass, jclass, jstring, jint, jstring, jlong);
 
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    readByte
+ * Signature: (JI)B
+ */
+JNIEXPORT jbyte JNICALL Java_com_github_zubnix_jaccall_JNI_readByte
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeByte
+ * Signature: (JIB)V
+ */
+JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_writeByte
+  (JNIEnv *, jclass, jlong, jint, jbyte);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeBytes
+ * Signature: (J[B)V
+ */
+JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_writeBytes
+  (JNIEnv *, jclass, jlong, jbyteArray);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    readCLong
+ * Signature: (JI)J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_readCLong
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeCLong
+ * Signature: (JIJ)V
+ */
+JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_writeCLong
+  (JNIEnv *, jclass, jlong, jint, jlong);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    readDouble
+ * Signature: (JI)D
+ */
+JNIEXPORT jdouble JNICALL Java_com_github_zubnix_jaccall_JNI_readDouble
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeDouble
+ * Signature: (JID)V
+ */
+JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_writeDouble
+  (JNIEnv *, jclass, jlong, jint, jdouble);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeDoubles
+ * Signature: (J[D)V
+ */
+JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_writeDoubles
+  (JNIEnv *, jclass, jlong, jdoubleArray);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    readFloat
+ * Signature: (JI)F
+ */
+JNIEXPORT jfloat JNICALL Java_com_github_zubnix_jaccall_JNI_readFloat
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeFloat
+ * Signature: (JIF)V
+ */
+JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_writeFloat
+  (JNIEnv *, jclass, jlong, jint, jfloat);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeFloats
+ * Signature: (J[F)V
+ */
+JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_writeFloats
+  (JNIEnv *, jclass, jlong, jfloatArray);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    readInt
+ * Signature: (JI)I
+ */
+JNIEXPORT jint JNICALL Java_com_github_zubnix_jaccall_JNI_readInt
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeInt
+ * Signature: (JII)V
+ */
+JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_writeInt
+  (JNIEnv *, jclass, jlong, jint, jint);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeInts
+ * Signature: (J[I)V
+ */
+JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_writeInts
+  (JNIEnv *, jclass, jlong, jintArray);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    readLong
+ * Signature: (JI)J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_readLong
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeLong
+ * Signature: (JIJ)V
+ */
+JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_writeLong
+  (JNIEnv *, jclass, jlong, jint, jlong);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeLongs
+ * Signature: (J[J)V
+ */
+JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_writeLongs
+  (JNIEnv *, jclass, jlong, jlongArray);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    readPointer
+ * Signature: (JI)J
+ */
+JNIEXPORT jlong JNICALL Java_com_github_zubnix_jaccall_JNI_readPointer
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writePointer
+ * Signature: (JIJ)V
+ */
+JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_writePointer
+  (JNIEnv *, jclass, jlong, jint, jlong);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    readShort
+ * Signature: (JI)S
+ */
+JNIEXPORT jshort JNICALL Java_com_github_zubnix_jaccall_JNI_readShort
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeShort
+ * Signature: (JIS)V
+ */
+JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_writeShort
+  (JNIEnv *, jclass, jlong, jint, jshort);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeShorts
+ * Signature: (J[S)V
+ */
+JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_writeShorts
+  (JNIEnv *, jclass, jlong, jshortArray);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    readString
+ * Signature: (JI)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_github_zubnix_jaccall_JNI_readString
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeString
+ * Signature: (JILjava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_writeString
+  (JNIEnv *, jclass, jlong, jint, jstring);
+
+/*
+ * Class:     com_github_zubnix_jaccall_JNI
+ * Method:    writeStruct
+ * Signature: (JJI)V
+ */
+JNIEXPORT void JNICALL Java_com_github_zubnix_jaccall_JNI_writeStruct
+  (JNIEnv *, jclass, jlong, jlong, jint);
+
 #ifdef __cplusplus
 }
 #endif
