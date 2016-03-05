@@ -1137,7 +1137,7 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_readLong(JNIEnv *env, jclass clazz, j
 JNIEXPORT
 void
 JNICALL Java_com_github_zubnix_jaccall_JNI_writeLong(JNIEnv *env, jclass clazz, jlong address, jint index, jlong value){
-    ((long long*)(intptr_t)address)[(int)index] = (long)value;
+    ((long long*)(intptr_t)address)[(int)index] = (long long)value;
 }
 
 /*
@@ -1248,5 +1248,5 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_writeString(JNIEnv *env, jclass clazz
 JNIEXPORT
 void
 JNICALL Java_com_github_zubnix_jaccall_JNI_writeStruct(JNIEnv *env, jclass clazz, jlong target_address, jlong src_address, jint size){
-    memcpy((void*)(intptr_t)target_address, (void*) src_address, (size_t)size);
+    memcpy((void*)(intptr_t)target_address, (void*)(intptr_t) src_address, (size_t)size);
 }
