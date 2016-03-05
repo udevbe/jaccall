@@ -254,7 +254,7 @@ JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execDoubleTest(JNIEnv *env, j
 JNIEXPORT
 jlong
 JNICALL Java_com_github_zubnix_jaccall_JNITestUtil_execPointerTest(JNIEnv *env, jclass clazz, jlong func_ptr, jlong value){
-    return (jlong)(intptr_t)((void*(*)(void*))(intptr_t)func_ptr)((void*)value);
+    return (jlong)(intptr_t)((void*(*)(void*))(intptr_t)func_ptr)((void*)(intptr_t)value);
 }
 
 /*
