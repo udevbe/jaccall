@@ -38,7 +38,7 @@ final class PointerDouble extends Pointer<Double> {
                        @Nonnull final Double val) {
         JNI.writeDouble(this.address,
                         index,
-                        val.doubleValue());
+                        val);
     }
 
     void write(final double[] val) {

@@ -37,7 +37,7 @@ final class PointerLong extends Pointer<Long> {
                        @Nonnull final Long val) {
         JNI.writeLong(this.address,
                       index,
-                      val.longValue());
+                      val);
     }
 
     void write(final long[] val) {

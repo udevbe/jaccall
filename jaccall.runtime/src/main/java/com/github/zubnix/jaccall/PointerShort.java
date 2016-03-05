@@ -38,7 +38,7 @@ final class PointerShort extends Pointer<Short> {
                        @Nonnull final Short val) {
         JNI.writeShort(this.address,
                        index,
-                       val.shortValue());
+                       val);
     }
 
     void write(final short[] val) {

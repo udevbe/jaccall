@@ -39,7 +39,7 @@ final class PointerByte extends Pointer<Byte> {
                        @Nonnull final Byte val) {
         JNI.writeByte(this.address,
                       index,
-                      val.byteValue());
+                      val);
     }
 
     void write(final byte[] val) {

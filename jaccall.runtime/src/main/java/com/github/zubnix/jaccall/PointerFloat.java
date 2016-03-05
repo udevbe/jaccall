@@ -37,7 +37,7 @@ final class PointerFloat extends Pointer<Float> {
                        @Nonnull final Float val) {
         JNI.writeFloat(this.address,
                        index,
-                       val.floatValue());
+                       val);
     }
 
     void write(final float[] val) {

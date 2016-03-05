@@ -38,7 +38,7 @@ final class PointerInt extends Pointer<Integer> {
                        @Nonnull final Integer val) {
         JNI.writeInt(this.address,
                      index,
-                     val.intValue());
+                     val);
     }
 
     void write(final int[] val) {
