@@ -127,7 +127,7 @@ jobject JNICALL Java_com_github_zubnix_jaccall_JNI_toObject(JNIEnv *env, jclass 
 JNIEXPORT
 void
 JNICALL Java_com_github_zubnix_jaccall_JNI_DeleteGlobalRef(JNIEnv *env, jclass clazz, jlong object){
-    (*env)->DeleteGlobalRef(env, (jobject)object);
+    (*env)->DeleteGlobalRef(env, (jobject)(intptr_t)object);
 }
 
 JNIEXPORT
@@ -146,7 +146,7 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_GetMethodID(JNIEnv *env, jclass clazz
     (*env)->ReleaseStringUTFChars(env, jniMethodName, methodName);
     (*env)->ReleaseStringUTFChars(env, jniSignature, signature);
 
-    return (jlong) mid;
+    return (jlong)(intptr_t) mid;
 }
 
 JNIEXPORT
@@ -783,7 +783,7 @@ java_func_ptr_handler(ffi_cif *jni_cif, void *ret, void **jargs, void *user_data
     for(; i < nargs; i++){
         //TODO cast to the correct *native* pointer type or we risk reading too much data when dereferencing(?).
         if(jni_cif->arg_types[i]->type == FFI_TYPE_STRUCT){
-            arguments[i].j = (jlong)jargs[i];
+            arguments[i].j = (jlong)(intptr_t)jargs[i];
         } else {
             arguments[i] = *((jvalue*)jargs[i]);
         }
@@ -843,7 +843,7 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1closure(JNIEnv *env, jclass claz
     if (closure) {
         struct java_call_data *java_call = malloc(sizeof(struct java_call_data));
         java_call->object = (*env)->NewGlobalRef(env, object);
-        java_call->mid = (jmethodID) methodId;
+        java_call->mid = (jmethodID)(intptr_t) methodId;
 
         ffi_status status = ffi_prep_closure_loc(closure, target_cif, &java_func_ptr_handler, java_call, target_func);
         if (status != FFI_OK) {
