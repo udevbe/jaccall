@@ -19,7 +19,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     static final boolean ENABLE_LOG;
 
     static {
-        ENABLE_LOG = Boolean.parseBoolean(System.getProperty("jaccall.debug")) | Logger.getLogger("jaccall")
+        ENABLE_LOG = Boolean.parseBoolean(System.getProperty("JACCALL_DEBUG")) | Logger.getLogger("jaccall")
                                                                                        .isLoggable(Level.FINE);
     }
 
