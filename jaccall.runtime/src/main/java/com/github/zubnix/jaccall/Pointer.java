@@ -16,8 +16,12 @@ import static com.github.zubnix.jaccall.Size.sizeof;
 
 public abstract class Pointer<T> implements AutoCloseable {
 
-    static final boolean ENABLE_LOG = Logger.getLogger("jaccall")
-                                            .isLoggable(Level.FINE);
+    static final boolean ENABLE_LOG;
+
+    static {
+        ENABLE_LOG = Boolean.parseBoolean(System.getProperty("jaccall.debug")) | Logger.getLogger("jaccall")
+                                                                                       .isLoggable(Level.FINE);
+    }
 
     protected static final Map<Class, PointerFactory<?>> POINTER_FACTORIES = new HashMap<>(32);
 
@@ -346,7 +350,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Get a pointer object that refers to the memory used by the given struct. The memory pointed to can be either
      * heap allocated memory or memory subject to Java's GC, depending on how the given struct was created.
-     * <p/>
+     * <p>
      * A struct created through a call to {@code new} will be subject to Java's GC while a struct
      * dereferenced from a pointer created with {@link #malloc(int)} or {@link #calloc(int, int)} will live on the heap
      * until it is explicitly freed with a call to {@link #close()}.
@@ -650,7 +654,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code T value = foo.dref();}
-     * <p/>
+     * <p>
      * C equivalent:<br>
      * {@code T value = *foo}
      *
@@ -662,7 +666,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code T value = foo.dref(i);}
-     * <p/>
+     * <p>
      * C equivalent:<br>
      * {@code T value = foo[i]}
      *
@@ -676,7 +680,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     /**
      * Java:<br>
      * {@code offsetFoo = foo.offset(i);}
-     * <p/>
+     * <p>
      * C equivalent:<br>
      * {@code offsetFoo = foo+i;}
      *
