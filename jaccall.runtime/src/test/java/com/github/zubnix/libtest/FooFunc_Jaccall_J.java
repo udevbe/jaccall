@@ -33,10 +33,4 @@ final class FooFunc_Jaccall_J extends PointerFooFunc {
                                   arg1,
                                   arg2);
     }
-
-    @Override
-    public void close() {
-        JNI.ffi_closure_free(this.address);
-        //JNI.DeleteGlobalRef(this.fooFunction);
-    }
 }
