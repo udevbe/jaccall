@@ -345,7 +345,7 @@ void jni_call_handler_arg_by_value(ffi_cif *cif, void *ret, void **jargs, void *
         }
     }
 
-    memset(ret, 0, call_data->cif->rtype->size);
+    memset(ret, 0, cif->rtype->size);
     ffi_call(call_data->cif, FFI_FN(call_data->symaddr), ret, args);
 }
 
@@ -359,7 +359,7 @@ void jni_call_handler_no_by_value(ffi_cif *cif, void *ret, void **jargs, void *u
 
     void **args = (call_data->cif->nargs ? jargs + 2 : NULL);
 
-    memset(ret, 0, call_data->cif->rtype->size);
+    memset(ret, 0, cif->rtype->size);
     ffi_call(call_data->cif, FFI_FN(call_data->symaddr), ret, args);
 }
 
