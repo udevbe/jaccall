@@ -9,6 +9,8 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,12 +18,18 @@ import static com.github.zubnix.jaccall.Size.sizeof;
 
 public abstract class Pointer<T> implements AutoCloseable {
 
-    static final boolean ENABLE_LOG;
-
     static {
-        ENABLE_LOG = Boolean.parseBoolean(System.getProperty("JACCALL_DEBUG")) | Logger.getLogger("jaccall")
-                                                                                       .isLoggable(Level.FINE);
+        if (Boolean.parseBoolean(System.getProperty("JACCALL_DEBUG"))) {
+            final Handler consoleHandler = new ConsoleHandler();
+            consoleHandler.setLevel(Level.FINE);
+            final Logger jaccallLogger = Logger.getLogger("jaccall");
+            jaccallLogger.setLevel(Level.FINE);
+            jaccallLogger.addHandler(consoleHandler);
+        }
     }
+
+    static final boolean ENABLE_LOG = Logger.getLogger("jaccall")
+                                            .isLoggable(Level.FINE);
 
     protected static final Map<Class, PointerFactory<?>> POINTER_FACTORIES = new HashMap<>(32);
 
