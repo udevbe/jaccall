@@ -550,8 +550,8 @@ public class FunctorTest {
         testStruct.field3(field3);
 
         //when
-        try (Pointer<TestStruct> tst = testStructPointer;
-             Pointer<Integer> intp = Pointer.nref(44)) {
+        Pointer<Integer> intp = Pointer.nref(44);
+        try (Pointer<TestStruct> tst = testStructPointer) {
 
             final byte newField0 = 'a';
             final short newField1 = 22;
@@ -659,8 +659,8 @@ public class FunctorTest {
         });
 
         //when
-        try (Pointer<TestStruct> tst = ref(new TestStruct());
-             Pointer<Integer> intp = Pointer.nref(44)) {
+        Pointer<Integer> intp = Pointer.nref(44);
+        try (Pointer<TestStruct> tst = ref(new TestStruct())) {
 
             final byte field0 = 'a';
             final short field1 = 22;
@@ -1089,8 +1089,8 @@ public class FunctorTest {
         testStruct.field3(field3);
 
         //when
-        try (Pointer<TestStruct> tst = testStructPointer;
-             Pointer<Integer> intp = Pointer.nref(44)) {
+        Pointer<Integer> intp = Pointer.nref(44);
+        try (Pointer<TestStruct> tst = testStructPointer) {
 
             final byte newField0 = 'a';
             final short newField1 = 22;
@@ -1150,8 +1150,8 @@ public class FunctorTest {
                                                              pointer);
 
         //when
-        try (Pointer<TestStruct> tst = ref(new TestStruct());
-             Pointer<Integer> intp = Pointer.nref(44)) {
+        Pointer<Integer> intp = Pointer.nref(44);
+        try (Pointer<TestStruct> tst = ref(new TestStruct())) {
 
             final byte field0 = 'a';
             final short field1 = 22;
