@@ -3,6 +3,8 @@ package com.github.zubnix.jaccall;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class StructType {
 
@@ -167,6 +169,12 @@ public abstract class StructType {
     protected void finalize() throws Throwable {
         super.finalize();
         if (this.autoFree) {
+            if (Pointer.ENABLE_LOG) {
+                Logger.getLogger("jaccall")
+                      .log(Level.FINE,
+                           "Call to free for StructType of type=" + getClass() + " with address=0x" + String.format("%016X",
+                                                                                                                    this.address));
+            }
             JNI.free(this.address);
         }
     }

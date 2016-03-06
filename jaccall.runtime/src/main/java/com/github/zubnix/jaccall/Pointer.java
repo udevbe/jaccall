@@ -653,8 +653,8 @@ public abstract class Pointer<T> implements AutoCloseable {
         if (ENABLE_LOG) {
             Logger.getLogger("jaccall")
                   .log(Level.FINE,
-                       "Explicit call to free for Pointer POJO of type=" + this.type + " with address=0x" + String.format("%016X",
-                                                                                                                          this.address));
+                       "Call to free for Pointer POJO of type=" + this.type + " with address=0x" + String.format("%016X",
+                                                                                                                 this.address));
         }
         JNI.free(this.address);
     }
@@ -778,7 +778,7 @@ public abstract class Pointer<T> implements AutoCloseable {
                                                                                                 this.address) + " garbage collected.");
         }
         if (this.autoFree) {
-            JNI.free(this.address);
+            close();
         }
     }
 }
