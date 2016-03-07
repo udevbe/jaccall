@@ -223,7 +223,8 @@ public class LinkerTest {
     @Test
     public void testStructReturnByReferencePassByValue() {
         //given
-        final Pointer<TestStruct> tst  = Pointer.ref(new TestStruct());
+        final TestStruct          testStruct2 = new TestStruct();
+        final Pointer<TestStruct> tst  = Pointer.ref(testStruct2);
         final Pointer<Integer>    intp = nref(44);
 
         final byte  field0   = 'a';
