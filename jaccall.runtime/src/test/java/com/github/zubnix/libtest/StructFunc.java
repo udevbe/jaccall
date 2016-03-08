@@ -6,9 +6,6 @@ import com.github.zubnix.jaccall.Lng;
 import com.github.zubnix.jaccall.Ptr;
 import com.github.zubnix.jaccall.Unsigned;
 
-/**
- * Created by zubzub on 2/19/16.
- */
 @Functor
 public interface StructFunc {
     @ByVal(TestStruct.class)

@@ -2,14 +2,15 @@ package com.github.zubnix.libtest;
 
 
 import com.github.zubnix.jaccall.JNI;
-import com.github.zubnix.jaccall.LinkSymbols;
+import com.github.zubnix.jaccall.Symbols;
 
 import javax.annotation.Generated;
 
 @Generated("com.github.zubnix.jaccall.compiletime.LinkerGenerator")
-public final class Testing_Jaccall_LinkSymbols extends LinkSymbols {
-    public Testing_Jaccall_LinkSymbols() {
-        super(new String[]{"charTest",
+public final class Testing_Symbols extends Symbols {
+    public Testing_Symbols() {
+        super(Testing.class,
+              new String[]{"charTest",
                            "unsignedCharTest",
                            "shortTest",
                            "unsignedShortTest",

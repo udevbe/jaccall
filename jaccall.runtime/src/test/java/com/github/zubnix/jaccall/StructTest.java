@@ -4,7 +4,7 @@ package com.github.zubnix.jaccall;
 import com.github.zubnix.libtest.FieldsTestStruct;
 import com.github.zubnix.libtest.TestStructEmbedded;
 import com.github.zubnix.libtest.Testing;
-import com.github.zubnix.libtest.Testing_Jaccall_LinkSymbols;
+import com.github.zubnix.libtest.Testing_Symbols;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -53,9 +53,7 @@ public class StructTest {
 
     @BeforeClass
     public static void beforeClass() {
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
+        new Testing_Symbols().link(libFilePath());
     }
 
     @Test
