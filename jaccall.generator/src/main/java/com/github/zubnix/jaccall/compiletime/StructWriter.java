@@ -149,10 +149,21 @@ final class StructWriter {
                                                  .build();
             offsetFields.add(fieldSpec);
 
-            if (i != 0) {
-                ffiTypeCodeBuilder.add(", ");
+            final int cardinality = fieldDefinition.getCardinality();
+            if (cardinality == 1) {
+                if (i != 0) {
+                    ffiTypeCodeBuilder.add(", ");
+                }
+                ffiTypeCodeBuilder.add(fieldDefinition.getFfiTypeCode());
             }
-            ffiTypeCodeBuilder.add(fieldDefinition.getFfiTypeCode());
+            else {
+                for (int j = 0; j < cardinality; j++) {
+                    if (i != 0 || j != 0) {
+                        ffiTypeCodeBuilder.add(", ");
+                    }
+                    ffiTypeCodeBuilder.add(fieldDefinition.getFfiTypeCode());
+                }
+            }
 
             accessors.addAll(fieldDefinition.getAccessorsCode());
         }
