@@ -18,7 +18,7 @@ import com.github.zubnix.libtest.StructFunc2;
 import com.github.zubnix.libtest.TestStruct;
 import com.github.zubnix.libtest.TestUnion;
 import com.github.zubnix.libtest.Testing;
-import com.github.zubnix.libtest.Testing_Jaccall_LinkSymbols;
+import com.github.zubnix.libtest.Testing_Symbols;
 import com.github.zubnix.libtest.UnionFunc;
 import com.github.zubnix.libtest.UnionFunc2;
 import com.github.zubnix.libtest.UnsignedCharFunc;
@@ -95,9 +95,8 @@ public class FunctorTest {
 
     @BeforeClass
     public static void beforeClass() {
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
+        new Testing_Symbols().link(libFilePath());
+
     }
 
     @Test

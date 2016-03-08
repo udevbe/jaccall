@@ -5,7 +5,7 @@ import com.github.zubnix.libtest.ReadGlobalVarFunc;
 import com.github.zubnix.libtest.TestStruct;
 import com.github.zubnix.libtest.TestUnion;
 import com.github.zubnix.libtest.Testing;
-import com.github.zubnix.libtest.Testing_Jaccall_LinkSymbols;
+import com.github.zubnix.libtest.Testing_Symbols;
 import com.github.zubnix.libtest.WriteGlobalVarFunc;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -21,7 +21,7 @@ import static com.github.zubnix.jaccall.Pointer.wrap;
 import static com.github.zubnix.jaccall.Size.sizeof;
 import static com.google.common.truth.Truth.assertThat;
 
-public class LinkerTest {
+public class SymbolsTest {
 
     private static final String LIB_PREFIX  = "lib";
     private static final String LIB_NAME    = "testing";
@@ -59,9 +59,7 @@ public class LinkerTest {
 
     @BeforeClass
     public static void beforeClass() {
-        Linker.link(libFilePath(),
-                    Testing.class,
-                    new Testing_Jaccall_LinkSymbols());
+        new Testing_Symbols().link(libFilePath());
     }
 
     @Test
@@ -224,8 +222,8 @@ public class LinkerTest {
     public void testStructReturnByReferencePassByValue() {
         //given
         final TestStruct          testStruct2 = new TestStruct();
-        final Pointer<TestStruct> tst  = Pointer.ref(testStruct2);
-        final Pointer<Integer>    intp = nref(44);
+        final Pointer<TestStruct> tst         = Pointer.ref(testStruct2);
+        final Pointer<Integer>    intp        = nref(44);
 
         final byte  field0   = 'a';
         final short field1   = 22;

@@ -65,7 +65,7 @@ public class JaccallGenerator extends AbstractProcessor {
 
         for (final TypeElement typeElement : typeElements) {
             if (!new CheckWellFormedLib(this.messager).hasErrors(typeElement)) {
-                new LinkSymbolsWriter(this.messager,
+                new SymbolsWriter(this.messager,
                                       this.filer).process(typeElement);
             }
         }

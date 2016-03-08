@@ -2,10 +2,11 @@ package com.github.zubnix.jaccall.compiletime;
 
 
 import com.github.zubnix.jaccall.JNI;
-import com.github.zubnix.jaccall.LinkSymbols;
 import com.github.zubnix.jaccall.Symbol;
+import com.github.zubnix.jaccall.Symbols;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ArrayTypeName;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -25,13 +26,13 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-final class LinkSymbolsWriter {
+final class SymbolsWriter {
 
     private final Messager messager;
     private final Filer    filer;
 
-    public LinkSymbolsWriter(final Messager messager,
-                             final Filer filer) {
+    public SymbolsWriter(final Messager messager,
+                         final Filer filer) {
         this.messager = messager;
         this.filer = filer;
     }
@@ -66,7 +67,7 @@ final class LinkSymbolsWriter {
                                   (byte) methodParser.parseArgSize(executableElement));
 
                 boolean isSymobl = false;
-                for (AnnotationMirror annotationMirror : executableElement.getAnnotationMirrors()) {
+                for (final AnnotationMirror annotationMirror : executableElement.getAnnotationMirrors()) {
                     isSymobl = annotationMirror.getAnnotationType()
                                                .asElement()
                                                .getSimpleName()
@@ -100,10 +101,12 @@ final class LinkSymbolsWriter {
 
         final MethodSpec constructor = MethodSpec.constructorBuilder()
                                                  .addModifiers(Modifier.PUBLIC)
-                                                 .addStatement("super(new $T{ /*method name*/\n $L\n },\n" +
+                                                 .addStatement("super($T.class,\n" +
+                                                               "new $T{ /*method name*/\n $L\n },\n" +
                                                                "new $T{ /*number of arguments*/\n $L\n },\n" +
                                                                "new $T{ /*FFI call interface*/\n $L\n },\n" +
                                                                "new $T{ /*JNI method signature*/\n $L\n })",
+                                                               ClassName.get(typeElement),
                                                                ArrayTypeName.of(String.class),
                                                                methodNamesArray.build(),
                                                                ArrayTypeName.of(byte.class),
@@ -119,11 +122,11 @@ final class LinkSymbolsWriter {
                                                                        "$S",
                                                                        JaccallGenerator.class.getName())
                                                             .build();
-        final TypeSpec typeSpec = TypeSpec.classBuilder(typeElement.getSimpleName() + "_Jaccall_LinkSymbols")
+        final TypeSpec typeSpec = TypeSpec.classBuilder(typeElement.getSimpleName() + "_Symbols")
                                           .addAnnotation(annotationSpec)
                                           .addModifiers(Modifier.PUBLIC)
                                           .addModifiers(Modifier.FINAL)
-                                          .superclass(LinkSymbols.class)
+                                          .superclass(Symbols.class)
                                           .addMethod(constructor)
                                           .build();
 
@@ -138,7 +141,7 @@ final class LinkSymbolsWriter {
             }
             catch (final IOException e) {
                 this.messager.printMessage(Diagnostic.Kind.ERROR,
-                                           "Could not write linksymbols source file: \n" + javaFile.toString(),
+                                           "Could not write symbols source file: \n" + javaFile.toString(),
                                            typeElement);
                 e.printStackTrace();
             }
