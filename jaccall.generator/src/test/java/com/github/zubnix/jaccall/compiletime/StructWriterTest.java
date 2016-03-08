@@ -908,7 +908,7 @@ public class StructWriterTest {
                                                                        "\n" +
                                                                        "@Generated(\"com.github.zubnix.jaccall.compiletime.JaccallGenerator\")\n" +
                                                                        "abstract class FieldsTestStruct_Jaccall_StructType extends StructType {\n" +
-                                                                       "  public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_SINT8, JNI.FFI_TYPE_SINT16, JNI.FFI_TYPE_SINT32, JNI.FFI_TYPE_SLONG, JNI.FFI_TYPE_SINT64, JNI.FFI_TYPE_FLOAT, JNI.FFI_TYPE_DOUBLE, JNI.FFI_TYPE_POINTER, JNI.FFI_TYPE_POINTER, JNI.FFI_TYPE_POINTER, JNI.FFI_TYPE_POINTER, TestStructEmbedded.FFI_TYPE, TestStructEmbedded.FFI_TYPE);\n" +
+                                                                       "  public static final long FFI_TYPE = JNI.ffi_type_struct(JNI.FFI_TYPE_SINT8, JNI.FFI_TYPE_SINT16, JNI.FFI_TYPE_SINT32, JNI.FFI_TYPE_SLONG, JNI.FFI_TYPE_SINT64, JNI.FFI_TYPE_FLOAT, JNI.FFI_TYPE_DOUBLE, JNI.FFI_TYPE_POINTER, JNI.FFI_TYPE_POINTER, JNI.FFI_TYPE_POINTER, JNI.FFI_TYPE_POINTER, TestStructEmbedded.FFI_TYPE, TestStructEmbedded.FFI_TYPE, TestStructEmbedded.FFI_TYPE, TestStructEmbedded.FFI_TYPE);\n" +
                                                                        "\n" +
                                                                        "  public static final int SIZE = JNI.ffi_type_struct_size(FFI_TYPE);\n" +
                                                                        "\n" +
