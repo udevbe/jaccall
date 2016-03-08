@@ -7,8 +7,8 @@ struct test_embedded {
 
 struct test {
     char field0;
-    short field1;
-    int field2[3];
+    unsigned short field1;
+    unsigned int field2[3];
     int *field3;
     struct test_embedded field4;
 };

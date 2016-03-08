@@ -161,7 +161,7 @@ funcptr noArgsFuncPtrTest(void) {
 
 char function(struct test* testStructByRef, unsigned int arg1, struct test testStructByVal){
         testStructByRef->field2[0] = arg1;
-        testStructByRef->field2[1] = testStructByVal.field1;
+        testStructByRef->field2[1] = (unsigned int) testStructByVal.field1;
         testStructByRef->field3 = testStructByVal.field3;
 
         return testStructByVal.field0;
