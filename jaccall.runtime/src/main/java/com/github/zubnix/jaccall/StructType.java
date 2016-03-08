@@ -124,9 +124,9 @@ public abstract class StructType {
     @Nonnull
     protected final <T> Pointer<T> readPointer(@Nonnegative final int offset,
                                                @Nonnull final Class<T> type) {
-        return Pointer.wrap(JNI.readPointer(address() + offset,
-                                            0))
-                      .castp(type);
+        return Pointer.wrap(type,
+                            JNI.readPointer(address() + offset,
+                                            0));
     }
 
     protected final void writePointer(@Nonnegative final int offset,
@@ -153,7 +153,7 @@ public abstract class StructType {
     protected final void writeStructType(@Nonnegative final int offset,
                                          @Nonnull final StructType structType) {
         JNI.writeStruct(address() + offset,
-                        structType.address,
+                        structType.address(),
                         structType.size);
     }
 
