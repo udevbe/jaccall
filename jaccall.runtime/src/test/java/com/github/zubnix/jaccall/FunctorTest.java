@@ -106,10 +106,10 @@ public class FunctorTest {
         final Pointer<FooFunc> pointerTestFunc = wrap(FooFunc.class,
                                                       funcPtrAddr);
 
-        try (final Pointer<TestStruct> arg0 = malloc(sizeof(TestStruct.SIZE))
-                .castp(TestStruct.class);
-             final Pointer<TestStruct> arg2 = malloc(sizeof(TestStruct.SIZE))
-                     .castp(TestStruct.class);
+        try (final Pointer<TestStruct> arg0 = malloc(TestStruct.SIZE,
+                                                     TestStruct.class);
+             final Pointer<TestStruct> arg2 = malloc(TestStruct.SIZE,
+                                                     TestStruct.class);
              final Pointer<Integer> field3 = malloc(sizeof((Integer) null))
                      .castp(Integer.class)) {
 
@@ -154,8 +154,10 @@ public class FunctorTest {
                     }
                 });
 
-        try (final Pointer<TestStruct> arg0 = malloc(sizeof(TestStruct.SIZE)).castp(TestStruct.class);
-             final Pointer<TestStruct> arg2 = malloc(sizeof(TestStruct.SIZE)).castp(TestStruct.class);
+        try (final Pointer<TestStruct> arg0 = malloc(TestStruct.SIZE,
+                                                     TestStruct.class);
+             final Pointer<TestStruct> arg2 = malloc(TestStruct.SIZE,
+                                                     TestStruct.class);
              final Pointer<Integer> field3 = malloc(sizeof((Integer) null),
                                                     Integer.class)) {
 
@@ -528,8 +530,9 @@ public class FunctorTest {
             }
         });
 
-        final Pointer<TestStruct> testStructPointer = malloc(TestStruct.SIZE).castp(TestStruct.class);
-        final TestStruct          testStruct        = testStructPointer.dref();
+        final Pointer<TestStruct> testStructPointer = malloc(TestStruct.SIZE,
+                                                             TestStruct.class);
+        final TestStruct testStruct = testStructPointer.dref();
 
         final byte             field0 = 10;
         final short            field1 = 20;
