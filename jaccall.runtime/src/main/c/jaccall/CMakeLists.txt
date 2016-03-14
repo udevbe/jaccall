@@ -24,4 +24,4 @@ add_custom_command(
 # generate libjaccall
 include_directories(${JAVA_INCLUDE_PATH} ${JAVA_INCLUDE_PATH2} ${LIBFFI_INCLUDE_DIR} ${LIBDL_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/src/include)
 add_library(jaccall MODULE jni_header src/jni.c)
-target_link_libraries(jaccall ${JNI_LIBRARIES} ${LIBFFI_LIBRARIES} ${LIBDL_LIBRARIES})
+target_link_libraries(jaccall ${LIBFFI_LIBRARIES} ${LIBDL_LIBRARIES})
