@@ -7,7 +7,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 find_package(Java REQUIRED)
 find_package(JNI REQUIRED)
-find_package(LibDL REQUIRED)
 find_package(LibFFI REQUIRED)
 
 include(UseJava)
@@ -22,6 +21,6 @@ add_custom_command(
 )
 
 # generate libjaccall
-include_directories(${JAVA_INCLUDE_PATH} ${JAVA_INCLUDE_PATH2} ${LIBFFI_INCLUDE_DIR} ${LIBDL_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/src/include)
+include_directories(${JAVA_INCLUDE_PATH} ${JAVA_INCLUDE_PATH2} ${LIBFFI_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/src/include)
 add_library(jaccall MODULE jni_header src/jni.c)
-target_link_libraries(jaccall ${LIBFFI_LIBRARIES} ${LIBDL_LIBRARIES})
+target_link_libraries(jaccall ${LIBFFI_LIBRARIES})
