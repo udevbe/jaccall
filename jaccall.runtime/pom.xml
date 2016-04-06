@@ -129,7 +129,7 @@
                                 <resource>
                                     <directory>${basedir}/src/main/c/jaccall/build/</directory>
                                     <includes>
-                                        <include>libjaccall.so</include>
+                                        <include>**/libjaccall.so</include>
                                     </includes>
                                 </resource>
                             </resources>
