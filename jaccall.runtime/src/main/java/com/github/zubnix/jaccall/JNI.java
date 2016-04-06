@@ -16,8 +16,10 @@ public final class JNI {
     private static final String LIB_POSTFIX = ".so";
 
     static {
+        String arch = System.getProperty("os.arch");
+
         final InputStream libStream = JNI.class.getClassLoader()
-                                               .getResourceAsStream(LIB_PREFIX + LIB_NAME + LIB_POSTFIX);
+                                               .getResourceAsStream(arch+"/"+LIB_PREFIX + LIB_NAME + LIB_POSTFIX);
         try {
             final File tempFile = File.createTempFile(LIB_NAME,
                                                       null);

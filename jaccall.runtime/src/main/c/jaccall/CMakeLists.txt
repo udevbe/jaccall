@@ -15,8 +15,8 @@ include(UseJava)
 add_custom_command(
         OUTPUT jni_header
         COMMAND ${Java_JAVAH_EXECUTABLE} -v
-        -cp "../../../../../target/classes/"
-        -d "../src/include"
+        -cp "../../../../../../target/classes/"
+        -d "../../src/include"
         -jni com.github.zubnix.jaccall.JNI
 )
 
