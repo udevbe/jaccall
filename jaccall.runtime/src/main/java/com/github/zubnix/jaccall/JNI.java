@@ -8,28 +8,45 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 public final class JNI {
 
-    private static final String LIB_PREFIX  = "lib";
-    private static final String LIB_NAME    = "jaccall";
-    private static final String LIB_POSTFIX = ".so";
+    //TODO add android
+    private static final String[] ARCHS = {"linux-aarch64",
+                                           "linux-armv7hf",
+                                           "linux-armv7sf",
+                                           "linux-armv6hf",
+                                           "linux-x86_64",
+                                           "linux-i686"};
+    private static final String   LIB   = "libjaccall.so";
 
     static {
-        String arch = System.getProperty("os.arch");
+        boolean libLoaded = false;
+        for (String arch : ARCHS) {
+            try {
+                final InputStream libStream = JNI.class.getClassLoader().getResourceAsStream(arch+"/"+LIB);
+                if(libStream == null){
+                    //lib not found
+                    continue;
+                }
 
-        final InputStream libStream = JNI.class.getClassLoader()
-                                               .getResourceAsStream(arch+"/"+LIB_PREFIX + LIB_NAME + LIB_POSTFIX);
-        try {
-            final File tempFile = File.createTempFile(LIB_NAME,
-                                                      null);
-            tempFile.deleteOnExit();
-            unpack(libStream,
-                   tempFile);
-            System.load(tempFile.getAbsolutePath());
+                final File tempFile = File.createTempFile(LIB,
+                                                          null);
+                tempFile.deleteOnExit();
+                unpack(libStream,
+                        tempFile);
+                System.load(tempFile.getAbsolutePath());
+                libLoaded = true;
+                break;
+            }
+            catch (final Exception e) {
+                //silently retry
+            }
         }
-        catch (final IOException e) {
-            throw new Error(e);
+
+        if(!libLoaded){
+            throw new Error("Failed to load any of the libs for ARCHS: "+ Arrays.toString(ARCHS));
         }
     }
 
