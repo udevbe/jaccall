@@ -25,8 +25,9 @@ public final class JNI {
         boolean libLoaded = false;
         for (String arch : ARCHS) {
             try {
-                final InputStream libStream = JNI.class.getClassLoader().getResourceAsStream(arch+"/"+LIB);
-                if(libStream == null){
+                final InputStream libStream = JNI.class.getClassLoader()
+                                                       .getResourceAsStream(arch + "/" + LIB);
+                if (libStream == null) {
                     //lib not found
                     continue;
                 }
@@ -35,18 +36,21 @@ public final class JNI {
                                                           null);
                 tempFile.deleteOnExit();
                 unpack(libStream,
-                        tempFile);
+                       tempFile);
                 System.load(tempFile.getAbsolutePath());
                 libLoaded = true;
                 break;
             }
-            catch (final Exception e) {
-                //silently retry
+            catch (final LinkageError e) {
+                //Lib was probably of the wrong arch, we silently try another one.
+            }
+            catch (IOException e) {
+                throw new Error(e);
             }
         }
 
-        if(!libLoaded){
-            throw new Error("Failed to load any of the libs for ARCHS: "+ Arrays.toString(ARCHS));
+        if (!libLoaded) {
+            throw new Error("Failed to load any of the libs for ARCHS: " + Arrays.toString(ARCHS));
         }
     }
 
