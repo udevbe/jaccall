@@ -58,12 +58,6 @@
                 <configuration>
                     <forkCount>5</forkCount>
                     <reuseForks>false</reuseForks>
-                    <properties>
-                        <property>
-                            <name>listener</name>
-                            <value>com.github.zubnix.jaccall.TestConsoleLogger</value>
-                        </property>
-                    </properties>
                 </configuration>
             </plugin>
             <plugin>
