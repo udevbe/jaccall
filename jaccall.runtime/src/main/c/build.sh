@@ -19,11 +19,8 @@ build_for_arch() {
     ARCH=$1
     BUILD_DIR="build/${ARCH}";
 
-    pushd $BUILD_DIR;
-    #TODO use docker to cross compile library based on arch & os
-    cmake ../..;
-    make;
-    popd;
+    docker run -t zubnix/jni-cross-compilers:$ARCH | bash -s -- "cmake -H. -Bbuild/$ARCH/";
+    docker run -t zubnix/jni-cross-compilers:$ARCH | bash -s -- "make -C build/$ARCH/";
 }
 
 cross_compile_all() {
