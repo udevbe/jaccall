@@ -4,12 +4,15 @@ set -e;
 BUILD_ROOT="src/main/c/jaccall/build";
 DOCKER_IMAGE="zubnix/jni-cross-compilers";
 #ARCHS match docker tags of "zubnix/jni-cross-compilers" images
+#TODO add android support
 ARCHS=("linux-aarch64" "linux-armv7hf" "linux-armv7sf" "linux-armv6hf" "linux-x86_64" "linux-i686");
 
-#TODO add android support
+NORMAL=$(tput sgr0)
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
 
 prep_build_for_arch() {
-    ARCH=$1
+    ARCH=$1;
     BUILD_DIR="${BUILD_ROOT}/${ARCH}";
 
     rm -rf ${BUILD_DIR};
@@ -17,15 +20,18 @@ prep_build_for_arch() {
 }
 
 build_for_arch() {
-    ARCH=$1
+    ARCH=$1;
     BUILD_DIR="${BUILD_ROOT}/${ARCH}";
 
-    USER_IDS="-e BUILDER_UID=$( id -u ) -e BUILDER_GID=$( id -g )"
-    docker run --rm -v $PWD:/build ${USER_IDS} ${DOCKER_IMAGE}:${ARCH} "cmake" "-DCMAKE_TOOLCHAIN_FILE=\$CMAKE_TOOLCHAIN_FILE" "-H${BUILD_ROOT}/.." "-B${BUILD_DIR}"
-    docker run --rm -v $PWD:/build ${USER_IDS} ${DOCKER_IMAGE}:${ARCH} "make" "-C" "${BUILD_DIR}"
+    USER_IDS="-e BUILDER_UID=$( id -u ) -e BUILDER_GID=$( id -g )";
+
+    printf "${GREEN} Cross compiling for ARCH=%s in BUILD_DIR=%s\n${NORMAL}" ${ARCH} ${BUILD_DIR}
+    docker run --rm -v $PWD:/build ${USER_IDS} ${DOCKER_IMAGE}:${ARCH} "cmake" "-DCMAKE_TOOLCHAIN_FILE=\$CMAKE_TOOLCHAIN_FILE" "-H${BUILD_ROOT}/.." "-B${BUILD_DIR}";
+    docker run --rm -v $PWD:/build ${USER_IDS} ${DOCKER_IMAGE}:${ARCH} "make" "-C" "${BUILD_DIR}";
 }
 
 cross_compile_all() {
+    printf "${RED} Cross compilation enabled for ARCH=%s\n${NORMAL}" ${ARCHS[*]}
     for ARCH in "${ARCHS[@]}"
     do
         prep_build_for_arch "${ARCH}";
@@ -38,9 +44,11 @@ native_compile() {
     command -v cmake >/dev/null 2>&1 || { echo >&2 "cmake is required but it's not installed.  Aborting."; exit 1; }
 
     ARCH="native";
+    printf "${RED} Native compilation enabled\n${NORMAL}"
     prep_build_for_arch "${ARCH}";
 
     BUILD_DIR="${BUILD_ROOT}/${ARCH}";
+    printf "${GREEN} Native compilation for ARCH=%s in BUILD_DIR=%s\n${NORMAL}" ${ARCH} ${BUILD_DIR}
     pushd ${BUILD_DIR};
         cmake ../..;
         make;
