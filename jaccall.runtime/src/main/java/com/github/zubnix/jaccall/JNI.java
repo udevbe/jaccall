@@ -9,8 +9,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
 
 public final class JNI {
+
+    private static final Logger LOGGER = Logger.getLogger("jaccall");
+
 
     //TODO add android
     private static final String[] ARCHS = {"linux-aarch64",
@@ -23,6 +29,10 @@ public final class JNI {
 
     static {
         boolean libLoaded = false;
+        String loadedArch = "";
+
+        Map<String,LinkageError> failures = new HashMap<>();
+
         for (String arch : ARCHS) {
             try {
                 final InputStream libStream = JNI.class.getClassLoader()
@@ -39,10 +49,12 @@ public final class JNI {
                        tempFile);
                 System.load(tempFile.getAbsolutePath());
                 libLoaded = true;
+                loadedArch = arch;
                 break;
             }
             catch (final LinkageError e) {
-                //Lib was probably of the wrong arch, we silently try another one.
+                LOGGER.info(String.format("Loading lib for arch %s failed. Trying next arch.",arch));
+                failures.put(arch,e);
             }
             catch (IOException e) {
                 throw new Error(e);
@@ -50,7 +62,14 @@ public final class JNI {
         }
 
         if (!libLoaded) {
+            for (Map.Entry<String, LinkageError> errorEntry : failures.entrySet()) {
+                System.err.println("Could not load lib for arch "+errorEntry.getKey());
+                errorEntry.getValue().printStackTrace();
+            }
+
             throw new Error("Failed to load any of the libs for ARCHS: " + Arrays.toString(ARCHS));
+        } else {
+            LOGGER.info(String.format("Successfully loaded lib for arch %s.",loadedArch));
         }
     }
 
