@@ -19,7 +19,7 @@ import static com.github.zubnix.jaccall.Size.sizeof;
 public abstract class Pointer<T> implements AutoCloseable {
 
     static {
-        if (Boolean.parseBoolean(System.getenv("JACCALL_DEBUG"))) {
+        if (ConfigVariables.JACCALL_DEBUG) {
             final Handler consoleHandler = new ConsoleHandler();
             consoleHandler.setLevel(Level.FINE);
             final Logger jaccallLogger = Logger.getLogger("jaccall");
