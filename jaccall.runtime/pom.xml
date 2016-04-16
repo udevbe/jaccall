@@ -58,12 +58,6 @@
                 <configuration>
                     <forkCount>5</forkCount>
                     <reuseForks>false</reuseForks>
-                    <properties>
-                        <property>
-                            <name>listener</name>
-                            <value>com.github.zubnix.jaccall.TestConsoleLogger</value>
-                        </property>
-                    </properties>
                 </configuration>
             </plugin>
             <plugin>
@@ -92,8 +86,8 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <workingDirectory>${basedir}/src/main/c</workingDirectory>
-                            <executable>${basedir}/src/main/c/build.sh</executable>
+                            <workingDirectory>${basedir}</workingDirectory>
+                            <executable>${basedir}/build.sh</executable>
                         </configuration>
                     </execution>
 
@@ -129,7 +123,7 @@
                                 <resource>
                                     <directory>${basedir}/src/main/c/jaccall/build/</directory>
                                     <includes>
-                                        <include>libjaccall.so</include>
+                                        <include>**/libjaccall.so</include>
                                     </includes>
                                 </resource>
                             </resources>
