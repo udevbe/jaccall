@@ -13,7 +13,55 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
+    <profiles>
+        <profile>
+            <id>linux-aarch64</id>
+            <properties>
+                <jaccall.arch>linux-aarch64</jaccall.arch>
+            </properties>
+        </profile>
+        <profile>
+            <id>linux-armv7hf</id>
+            <properties>
+                <jaccall.arch>linux-armv7hf</jaccall.arch>
+            </properties>
+        </profile>
+        <profile>
+            <id>linux-armv7sf</id>
+            <properties>
+                <jaccall.arch>linux-armv7sf</jaccall.arch>
+            </properties>
+        </profile>
+        <profile>
+            <id>linux-armv6hf</id>
+            <properties>
+                <jaccall.arch>linux-armv6hf</jaccall.arch>
+            </properties>
+        </profile>
+        <profile>
+            <id>linux-x86_64</id>
+            <properties>
+                <jaccall.arch>linux-x86_64</jaccall.arch>
+            </properties>
+        </profile>
+        <profile>
+            <id>linux-i686</id>
+            <properties>
+                <jaccall.arch>linux-i686</jaccall.arch>
+            </properties>
+        </profile>
+        <profile>
+            <id>all</id>
+            <properties>
+                <jaccall.arch>all</jaccall.arch>
+            </properties>
+        </profile>
+    </profiles>
+
     <properties>
+        <!-- native compilation -->
+        <jaccall.arch></jaccall.arch>
+
         <!-- dependencies -->
         <jsr305.version>3.0.0</jsr305.version>
 
@@ -88,6 +136,7 @@
                         <configuration>
                             <workingDirectory>${basedir}</workingDirectory>
                             <executable>${basedir}/build.sh</executable>
+                            <arguments>${jaccall.arch}</arguments>
                         </configuration>
                     </execution>
 
