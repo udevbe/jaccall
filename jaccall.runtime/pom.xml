@@ -136,7 +136,9 @@
                         <configuration>
                             <workingDirectory>${basedir}</workingDirectory>
                             <executable>${basedir}/build.sh</executable>
-                            <arguments>${jaccall.arch}</arguments>
+                            <arguments>
+			    	<argument>${jaccall.arch}</argument>
+			    </arguments>
                         </configuration>
                     </execution>
 
