@@ -9,6 +9,7 @@ ARCHS=("linux-aarch64" "linux-armv7hf" "linux-armv7sf" "linux-armv6hf" "linux-x8
 
 
 NORMAL=$(tput sgr0);
+RED=$(tput setaf 1);
 GREEN=$(tput setaf 2);
 MAGENTA=$(tput setaf 5);
 BOLD=$(tput bold);
@@ -27,7 +28,7 @@ build_for_arch() {
 
     USER_IDS="-e BUILDER_UID=$( id -u ) -e BUILDER_GID=$( id -g )";
 
-    printf "${GREEN} Cross compiling for ARCH=%s in BUILD_DIR=%s\n${NORMAL}" ${ARCH} ${BUILD_DIR}
+    printf "${GREEN}*** Cross compiling for ${BOLD}%s${NORMAL}\n" ${ARCH}
     docker run --rm -v $PWD:/build ${USER_IDS} ${DOCKER_IMAGE}:${ARCH} "cmake" "-DCMAKE_TOOLCHAIN_FILE=\$CMAKE_TOOLCHAIN_FILE" "-H${BUILD_ROOT}/.." "-B${BUILD_DIR}";
     docker run --rm -v $PWD:/build ${USER_IDS} ${DOCKER_IMAGE}:${ARCH} "make" "-C" "${BUILD_DIR}";
 }
@@ -41,7 +42,7 @@ cross_compile_all() {
 }
 
 cross_compile() {
-    command -v docker >/dev/null 2>&1 || { echo "Need docker for cross compilation. exiting." ; exit 1; }
+    command -v docker >/dev/null 2>&1 || { printf "${BOLD}${RED}*** Need docker for cross compilation. Exiting.${NORMAL}\n"; exit 1; }
 
     ARCH=$1;
 
@@ -55,13 +56,12 @@ cross_compile() {
 
 native_compile() {
     #if cmake is not installed, bail out.
-    command -v cmake >/dev/null 2>&1 || { echo >&2 "cmake is required but it's not installed.  Aborting."; exit 1; }
+    command -v cmake >/dev/null 2>&1 || { echo >&2 printf "${BOLD}${RED}*** Need cmake for native compilation. Exiting.${NORMAL}\n"; exit 1; }
 
     ARCH="native";
     prep_build_for_arch "${ARCH}";
 
     BUILD_DIR="${BUILD_ROOT}/${ARCH}";
-    printf "${GREEN} Native compilation in BUILD_DIR=%s\n${NORMAL}" ${BUILD_DIR}
     pushd ${BUILD_DIR};
         cmake ../..;
         make;
@@ -70,10 +70,10 @@ native_compile() {
 
 main() {
     if [ -z "$1" ]; then
-        printf "${BOLD}${MAGENTA} Native compilation enabled\n${NORMAL}"
+        printf "${BOLD}${MAGENTA}*** Native compilation enabled.${NORMAL}\n";
         native_compile;
     else
-        printf "${BOLD}${MAGENTA} Cross compilation enabled\n${NORMAL}"
+        printf "${BOLD}${MAGENTA}*** Cross compilation enabled.${NORMAL}\n";
         cross_compile "$1";
     fi;
 
