@@ -23,7 +23,9 @@ public final class JNI {
             "linux-armv7sf",
             "linux-armv6hf",
             "linux-x86_64",
-            "linux-i686"};
+            "linux-i686",
+            //last resort
+            "native"};
     private static final String LIB = "libjaccall.so";
 
     static {
@@ -73,7 +75,7 @@ public final class JNI {
                     .getResourceAsStream(arch + "/" + LIB);
             if (libStream == null) {
                 //lib not found
-                return;
+                throw new LinkageError(String.format("Lib for arch %s not found.", arch));
             }
 
             final File tempFile = File.createTempFile(LIB,
