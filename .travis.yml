@@ -7,4 +7,4 @@ language: java
 before_install:
   - sudo apt-get -y install libffi-dev
 install:
-    - mvn package -Pall
+    - mvn package
