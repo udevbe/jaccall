@@ -7,7 +7,7 @@ Status:
 - No release
 - In development 
 - Feature complete [ Linker API, Pointer API, Struct API, Function Pointer API ]
-- [![Build Status](https://travis-ci.org/Zubnix/jaccall.svg?branch=master)](https://travis-ci.org/Zubnix/jaccall)
+- [![Build Status](https://travis-ci.org/udevbe/jaccall.svg?branch=master)](https://travis-ci.org/udevbe/jaccall)
 
 Jaccall's does not try to be Java, but instead tries to make C accessible in Java.
  - What you allocate, you must free yourself. watch out for memory leaks!
