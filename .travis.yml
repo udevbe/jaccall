@@ -2,8 +2,9 @@ notifications:
   email: false
 
 sudo: required
+dist: trusty
 language: java
 before_install:
   - sudo apt-get install libffi-dev
 install:
-    - mvn package
+    - mvn package -Pall
