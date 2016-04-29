@@ -20,7 +20,7 @@ add_custom_command(
         COMMAND ${Java_JAVAH_EXECUTABLE} -v
         -cp "../../../../../target/test-classes/"
         -d "../src"
-        -jni com.github.zubnix.jaccall.JNITestUtil
+        -jni org.freedesktop.jaccall.JNITestUtil
 )
 
 # generate jnitestutil

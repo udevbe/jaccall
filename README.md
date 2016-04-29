@@ -182,7 +182,7 @@ The generated linker data for this mapping:
 `SomeHeader_Jaccall_LinkSymbols.java`
 ```Java
 ...
-@Generated("com.github.zubnix.jaccall.compiletime.LinkerGenerator")
+@Generated("org.freedesktop.jaccall.compiletime.LinkerGenerator")
 public final class SomeHeader_Jaccall_LinkSymbols extends LinkSymbols {
     public SomeHeader_Jaccall_LinkSymbols() {
         super(new String[]{"do_something"},
@@ -224,8 +224,8 @@ Using Jaccall this translates to
 ```Java
 //(Optional) Define a static import of the Pointer and Size classes 
 //to avoid prefixing all static method calls.
-import static com.github.zubnix.jaccall.Pointer.*
-import static com.github.zubnix.jaccall.Size.*
+import static Pointer.*
+import static Size.*
 ...
 //Calculate the size of Java type `Integer` wich corresponds to a C int.
 int int_size = sizeof((Integer)null);
@@ -261,7 +261,7 @@ int* int_p = &some_int;
 Using Jaccall `nref` this translates to
 ```Java
 //(Optional) Define a static import of the Pointer class to avoid prefixing all static method calls.
-import static com.github.zubnix.jaccall.Pointer.*
+import static Pointer.*
 ...
 //define an integer
 int some_int = 5;
@@ -274,8 +274,8 @@ Pointer<Integer> int_p = nref(some_int);
 Using Jaccall `malloc` this translates to
 ```Java
 //(Optional) Define a static import of the Pointer class to avoid prefixing all static method calls.
-import static com.github.zubnix.jaccall.Pointer.*
-import static com.github.zubnix.jaccall.Size.*
+import static Pointer.*
+import static Size.*
 ...
 //define an integer
 int some_int = 5;
@@ -316,8 +316,8 @@ free(int_p);
 
 The equivalent Java code:
 ```Java
-import static com.github.zubnix.jaccall.Pointer.*
-import static com.github.zubnix.jaccall.Size.*
+import static Pointer.*
+import static Size.*
 ...
 int int_size = sizeof((Integer)null);
 Pointer<Void> void_p = malloc(int_size);
@@ -339,8 +339,8 @@ There are 3 different cast operations that can be performed on a pointer object.
 
 Starting from our basic example
 ```Java
-import static com.github.zubnix.jaccall.Pointer.*
-import static com.github.zubnix.jaccall.Size.*
+import static Pointer.*
+import static Size.*
 ...
 int int_size = sizeof((Integer)null);
 Pointer<Void> void_p = malloc(int_size);
@@ -382,7 +382,7 @@ Pointer<Pointer<Pointer<Byte>>> byte_ppp = byte_pp.castpp();
 ```
 We can rewrite the above example more briefly
 ```Java
-import static com.github.zubnix.jaccall.Pointer.*
+import static Pointer.*
 ...
 long some_native_address = ...;
 //wrap in a pointer-to-pointer-to-char pointer
@@ -395,8 +395,8 @@ Up until now we've worked with single element pointers. Because a C array can be
 
 We reiterate our previous read/write example, only this time we allocate space for multiple integers.
 ```Java
-import static com.github.zubnix.jaccall.Pointer.*;
-import static com.github.zubnix.jaccall.Size.*;
+import static Pointer.*;
+import static Size.*;
 ...
 int int_size = sizeof((Integer)null);
 //allocate space for 3 integers
@@ -423,7 +423,7 @@ int_p.close();
 
 We can also use `Pointer.nref(...)` to allocate an array.
 ```Java
-import static com.github.zubnix.jaccall.Pointer.*;
+import static Pointer.*;
 ...
 //nref uses a vararg parameter, so we can use it with both arrays and classic function arguments
 Pointer<Integer> int_p_varargs = nref(1,2,3,4,5);
@@ -489,10 +489,10 @@ struct test {
 Mapping this struct in Java using Jaccall
 ```Java
 ...
-import static com.github.zubnix.jaccall.CType.CHAR;
-import static com.github.zubnix.jaccall.CType.INT;
-import static com.github.zubnix.jaccall.CType.POINTER;
-import static com.github.zubnix.jaccall.CType.UNSIGNED_SHORT;
+import static CType.CHAR;
+import static CType.INT;
+import static CType.POINTER;
+import static CType.UNSIGNED_SHORT;
 ...
 @Struct(value = {
     @Field(type = CHAR,
@@ -523,8 +523,8 @@ union test {
 In Java this becomes
 ```Java
 ...
-import static com.github.zubnix.jaccall.CType.CHAR;
-import static com.github.zubnix.jaccall.CType.INT;
+import static CType.CHAR;
+import static CType.INT;
 ...
 @Struct(value = {
     union = true,

@@ -6,7 +6,7 @@
 #include <ffi.h>
 #include <assert.h>
 
-#include "com_github_zubnix_jaccall_JNI.h"
+#include "org_freedesktop_jaccall_JNI.h"
 
 static JavaVM *jvm;
 
@@ -98,41 +98,41 @@ void throwError( JNIEnv *env, char *message, ...)
 
 JNIEXPORT
 jobject
-JNICALL Java_com_github_zubnix_jaccall_JNI_wrap(JNIEnv *env, jclass clazz, jlong address, jlong size) {
+JNICALL Java_org_freedesktop_jaccall_JNI_wrap(JNIEnv *env, jclass clazz, jlong address, jlong size) {
     return (*env)->NewDirectByteBuffer(env, (void *) (intptr_t) address, (size_t) size);
 }
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_unwrap(JNIEnv *env, jclass clazz, jobject byteBuffer) {
+JNICALL Java_org_freedesktop_jaccall_JNI_unwrap(JNIEnv *env, jclass clazz, jobject byteBuffer) {
     return (jlong) (intptr_t) (*env)->GetDirectBufferAddress(env, byteBuffer);
 }
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_NewGlobalRef(JNIEnv *env, jclass clazz, jobject object){
+JNICALL Java_org_freedesktop_jaccall_JNI_NewGlobalRef(JNIEnv *env, jclass clazz, jobject object){
     return (jlong) (intptr_t) (*env)->NewGlobalRef(env, object);
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    toObject
  * Signature: (J)Lcom/github/zubnix/jaccall/JObject;
  */
 JNIEXPORT
-jobject JNICALL Java_com_github_zubnix_jaccall_JNI_toObject(JNIEnv *env, jclass clazz, jlong jobject_address){
+jobject JNICALL Java_org_freedesktop_jaccall_JNI_toObject(JNIEnv *env, jclass clazz, jlong jobject_address){
     return (jobject)(intptr_t)jobject_address;
 }
 
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_DeleteGlobalRef(JNIEnv *env, jclass clazz, jlong object){
+JNICALL Java_org_freedesktop_jaccall_JNI_DeleteGlobalRef(JNIEnv *env, jclass clazz, jlong object){
     (*env)->DeleteGlobalRef(env, (jobject)(intptr_t)object);
 }
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_GetMethodID(JNIEnv *env, jclass clazz, jclass target,
+JNICALL Java_org_freedesktop_jaccall_JNI_GetMethodID(JNIEnv *env, jclass clazz, jclass target,
                                                         jstring jniMethodName, jstring jniSignature){
     const char *methodName = (*env)->GetStringUTFChars(env, jniMethodName, 0);
     const char *signature = (*env)->GetStringUTFChars(env, jniSignature, 0);
@@ -151,31 +151,31 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_GetMethodID(JNIEnv *env, jclass clazz
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_malloc(JNIEnv *env, jclass clazz, jint size) {
+JNICALL Java_org_freedesktop_jaccall_JNI_malloc(JNIEnv *env, jclass clazz, jint size) {
     return (jlong) (intptr_t) malloc((size_t) size);
 }
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_calloc(JNIEnv *env, jclass clazz, jint nmemb, jint size) {
+JNICALL Java_org_freedesktop_jaccall_JNI_calloc(JNIEnv *env, jclass clazz, jint nmemb, jint size) {
     return (jlong) (intptr_t) calloc((size_t) nmemb, (size_t) size);
 }
 
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_free(JNIEnv *env, jclass clazz, jlong address) {
+JNICALL Java_org_freedesktop_jaccall_JNI_free(JNIEnv *env, jclass clazz, jlong address) {
     free((void *) (intptr_t) address);
 }
 
 JNIEXPORT
 jint
-JNICALL Java_com_github_zubnix_jaccall_JNI_sizeOfPointer(JNIEnv *env, jclass clazz) {
+JNICALL Java_org_freedesktop_jaccall_JNI_sizeOfPointer(JNIEnv *env, jclass clazz) {
     return (jint) sizeof(void *);
 }
 
 JNIEXPORT
 jint
-JNICALL Java_com_github_zubnix_jaccall_JNI_sizeOfCLong(JNIEnv *env, jclass clazz) {
+JNICALL Java_org_freedesktop_jaccall_JNI_sizeOfCLong(JNIEnv *env, jclass clazz) {
     return (jint) sizeof(long);
 }
 
@@ -442,7 +442,7 @@ void create_closure(JNIEnv *env,
 
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env, jclass clazz, jstring library,
+JNICALL Java_org_freedesktop_jaccall_JNI_link(JNIEnv *env, jclass clazz, jstring library,
                                                 jclass headerClazz, jobjectArray symbols,
                                                 jbyteArray argumentSizes,
                                                 jobjectArray jniSignatures,
@@ -480,101 +480,101 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_link(JNIEnv *env, jclass clazz, jstri
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1void(JNIEnv *env, jclass clazz) {
+JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1type_1void(JNIEnv *env, jclass clazz) {
     return (jlong) (intptr_t) &ffi_type_void;
 }
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1sint8(JNIEnv *env, jclass clazz) {
+JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1type_1sint8(JNIEnv *env, jclass clazz) {
     return (jlong) (intptr_t) &ffi_type_sint8;
 }
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1uint8(JNIEnv *env, jclass clazz) {
+JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1type_1uint8(JNIEnv *env, jclass clazz) {
     return (jlong) (intptr_t) &ffi_type_uint8;
 }
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1sint16(JNIEnv *env, jclass clazz) {
+JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1type_1sint16(JNIEnv *env, jclass clazz) {
     return (jlong) (intptr_t) &ffi_type_sint16;
 
 }
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1uint16(JNIEnv *env, jclass clazz) {
+JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1type_1uint16(JNIEnv *env, jclass clazz) {
     return (jlong) (intptr_t) &ffi_type_uint16;
 
 }
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1sint32(JNIEnv *env, jclass clazz) {
+JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1type_1sint32(JNIEnv *env, jclass clazz) {
     return (jlong) (intptr_t) &ffi_type_sint32;
 
 }
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1uint32(JNIEnv *env, jclass clazz) {
+JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1type_1uint32(JNIEnv *env, jclass clazz) {
     return (jlong) (intptr_t) &ffi_type_uint32;
 
 }
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1slong(JNIEnv *env, jclass clazz) {
+JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1type_1slong(JNIEnv *env, jclass clazz) {
     return (jlong) (intptr_t) &ffi_type_slong;
 
 }
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1ulong(JNIEnv *env, jclass clazz) {
+JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1type_1ulong(JNIEnv *env, jclass clazz) {
     return (jlong) (intptr_t) &ffi_type_ulong;
 
 }
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1sint64(JNIEnv *env, jclass clazz) {
+JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1type_1sint64(JNIEnv *env, jclass clazz) {
     return (jlong) (intptr_t) &ffi_type_sint64;
 
 }
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1uint64(JNIEnv *env, jclass clazz) {
+JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1type_1uint64(JNIEnv *env, jclass clazz) {
     return (jlong) (intptr_t) &ffi_type_uint64;
 
 }
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1float(JNIEnv *env, jclass clazz) {
+JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1type_1float(JNIEnv *env, jclass clazz) {
     return (jlong) (intptr_t) &ffi_type_float;
 
 }
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1double(JNIEnv *env, jclass clazz) {
+JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1type_1double(JNIEnv *env, jclass clazz) {
     return (jlong) (intptr_t) &ffi_type_double;
 
 }
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1pointer(JNIEnv *env, jclass clazz) {
+JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1type_1pointer(JNIEnv *env, jclass clazz) {
     return (jlong) (intptr_t) &ffi_type_pointer;
 }
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1struct(JNIEnv *env, jclass clazz,
+JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1type_1struct(JNIEnv *env, jclass clazz,
                                                              jlongArray ffi_types) {
     ffi_type *struct_description = malloc(sizeof(ffi_type));
     jlong *struct_ctypes = (*env)->GetLongArrayElements(env, ffi_types, 0);
@@ -603,7 +603,7 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1struct(JNIEnv *env, jclass
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1union(JNIEnv *env, jclass clazz,
+JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1type_1union(JNIEnv *env, jclass clazz,
                                                             jlongArray ffi_types) {
     //TODO use calloc
     ffi_type *struct_description = malloc(sizeof(ffi_type));
@@ -641,7 +641,7 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1union(JNIEnv *env, jclass 
 
 JNIEXPORT
 jint
-JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1struct_1size(JNIEnv *env, jclass clazz,
+JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1type_1struct_1size(JNIEnv *env, jclass clazz,
                                                                    jlong ffi_struct_type) {
     ffi_type *struct_description = (ffi_type *) (intptr_t) ffi_struct_type;
     return (jint) struct_description->size;
@@ -649,7 +649,7 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1type_1struct_1size(JNIEnv *env, 
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1callInterface(JNIEnv *env, jclass clazz,
+JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1callInterface(JNIEnv *env, jclass clazz,
                                                               jlong ffi_return_type,
                                                               jlongArray ffi_types) {
     jlong *struct_ctypes = (*env)->GetLongArrayElements(env, ffi_types, 0);
@@ -740,7 +740,7 @@ void create_func_ptr_closure(JNIEnv *env,
 
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_linkFuncPtr(JNIEnv *env, jclass clazz, jclass wrapper, jstring symbol,
+JNICALL Java_org_freedesktop_jaccall_JNI_linkFuncPtr(JNIEnv *env, jclass clazz, jclass wrapper, jstring symbol,
                                                        jint argSize, jstring jniSignature, jlong cif) {
     const char *symstr = (*env)->GetStringUTFChars(env, symbol, 0);
     const char *jni_sig = (*env)->GetStringUTFChars(env, jniSignature, 0);
@@ -835,7 +835,7 @@ java_func_ptr_handler(ffi_cif *jni_cif, void *ret, void **jargs, void *user_data
 
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1closure(JNIEnv *env, jclass clazz, jlong cif, jobject object, jlong methodId) {
+JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1closure(JNIEnv *env, jclass clazz, jlong cif, jobject object, jlong methodId) {
     ffi_cif *target_cif = (ffi_cif*)(intptr_t)cif;
 
     void *target_func;
@@ -861,123 +861,123 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1closure(JNIEnv *env, jclass claz
 
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_ffi_1closure_1free(JNIEnv *env, jclass clazz, jlong closure) {
+JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1closure_1free(JNIEnv *env, jclass clazz, jlong closure) {
     ffi_closure_free((void *) (intptr_t) closure);
 }
 
 JNIEXPORT
 jint
-JNICALL Java_com_github_zubnix_jaccall_JNI_charAlignment(JNIEnv *env, jclass clazz){
+JNICALL Java_org_freedesktop_jaccall_JNI_charAlignment(JNIEnv *env, jclass clazz){
     return offset_of_char;
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    shortAlignment
  * Signature: ()I
  */
 JNIEXPORT
 jint
-JNICALL Java_com_github_zubnix_jaccall_JNI_shortAlignment(JNIEnv *env, jclass clazz){
+JNICALL Java_org_freedesktop_jaccall_JNI_shortAlignment(JNIEnv *env, jclass clazz){
     return offset_of_short;
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    intAlignment
  * Signature: ()I
  */
 JNIEXPORT
 jint
-JNICALL Java_com_github_zubnix_jaccall_JNI_intAlignment(JNIEnv *env, jclass clazz){
+JNICALL Java_org_freedesktop_jaccall_JNI_intAlignment(JNIEnv *env, jclass clazz){
     return offset_of_int;
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    longAlignment
  * Signature: ()I
  */
 JNIEXPORT
 jint
-JNICALL Java_com_github_zubnix_jaccall_JNI_longAlignment(JNIEnv *env, jclass clazz){
+JNICALL Java_org_freedesktop_jaccall_JNI_longAlignment(JNIEnv *env, jclass clazz){
     return offset_of_long;
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    longLongAlignment
  * Signature: ()I
  */
 JNIEXPORT
 jint
-JNICALL Java_com_github_zubnix_jaccall_JNI_longLongAlignment(JNIEnv *env, jclass clazz){
+JNICALL Java_org_freedesktop_jaccall_JNI_longLongAlignment(JNIEnv *env, jclass clazz){
     return offset_of_long_long;
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    pointerAlignment
  * Signature: ()I
  */
 JNIEXPORT
 jint
-JNICALL Java_com_github_zubnix_jaccall_JNI_pointerAlignment(JNIEnv *env, jclass clazz){
+JNICALL Java_org_freedesktop_jaccall_JNI_pointerAlignment(JNIEnv *env, jclass clazz){
     return offset_of_pointer;
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    floatAlignment
  * Signature: ()I
  */
 JNIEXPORT
 jint
-JNICALL Java_com_github_zubnix_jaccall_JNI_floatAlignment(JNIEnv *env, jclass clazz){
+JNICALL Java_org_freedesktop_jaccall_JNI_floatAlignment(JNIEnv *env, jclass clazz){
     return offset_of_float;
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    doubleAlignment
  * Signature: ()I
  */
 JNIEXPORT
 jint
-JNICALL Java_com_github_zubnix_jaccall_JNI_doubleAlignment(JNIEnv *env, jclass clazz){
+JNICALL Java_org_freedesktop_jaccall_JNI_doubleAlignment(JNIEnv *env, jclass clazz){
     return offset_of_double;
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    readByte
  * Signature: (JI)B
  */
 JNIEXPORT
 jbyte
-JNICALL Java_com_github_zubnix_jaccall_JNI_readByte(JNIEnv *env, jclass clazz, jlong address, jint index){
+JNICALL Java_org_freedesktop_jaccall_JNI_readByte(JNIEnv *env, jclass clazz, jlong address, jint index){
     return (jbyte)((char*)(intptr_t)address)[(int)index];
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    writeByte
  * Signature: (JIB)V
  */
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_writeByte(JNIEnv *env, jclass clazz, jlong address, jint index, jbyte value){
+JNICALL Java_org_freedesktop_jaccall_JNI_writeByte(JNIEnv *env, jclass clazz, jlong address, jint index, jbyte value){
     ((char*)(intptr_t)address)[(int)index] = (char)value;
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    writeBytes
  * Signature: (J[B)V
  */
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_writeBytes(JNIEnv *env, jclass clazz, jlong address, jbyteArray value){
+JNICALL Java_org_freedesktop_jaccall_JNI_writeBytes(JNIEnv *env, jclass clazz, jlong address, jbyteArray value){
    //TODO check for NULL array in case of oom
    void* array = (*env)->GetPrimitiveArrayCritical(env, value, 0);
    jsize length = (*env)->GetArrayLength(env, value);
@@ -986,57 +986,57 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_writeBytes(JNIEnv *env, jclass clazz,
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    readCLong
  * Signature: (JI)J
  */
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_readCLong(JNIEnv *env, jclass clazz, jlong address, jint index){
+JNICALL Java_org_freedesktop_jaccall_JNI_readCLong(JNIEnv *env, jclass clazz, jlong address, jint index){
     return (jlong)((long*)(intptr_t)address)[(int)index];
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    writeCLong
  * Signature: (JIJ)V
  */
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_writeCLong(JNIEnv *env, jclass clazz, jlong address, jint index, jlong value){
+JNICALL Java_org_freedesktop_jaccall_JNI_writeCLong(JNIEnv *env, jclass clazz, jlong address, jint index, jlong value){
     ((long*)(intptr_t)address)[(int)index] = (long)value;
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    readDouble
  * Signature: (JI)D
  */
 JNIEXPORT
 jdouble
-JNICALL Java_com_github_zubnix_jaccall_JNI_readDouble(JNIEnv *env, jclass clazz, jlong address, jint index){
+JNICALL Java_org_freedesktop_jaccall_JNI_readDouble(JNIEnv *env, jclass clazz, jlong address, jint index){
     return (jdouble)((double*)(intptr_t)address)[(int)index];
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    writeDouble
  * Signature: (JID)V
  */
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_writeDouble(JNIEnv *env, jclass clazz, jlong address, jint index, jdouble value){
+JNICALL Java_org_freedesktop_jaccall_JNI_writeDouble(JNIEnv *env, jclass clazz, jlong address, jint index, jdouble value){
     ((double*)(intptr_t)address)[(int)index] = (double)value;
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    writeDoubles
  * Signature: (J[D)V
  */
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_writeDoubles(JNIEnv *env, jclass clazz, jlong address, jdoubleArray value){
+JNICALL Java_org_freedesktop_jaccall_JNI_writeDoubles(JNIEnv *env, jclass clazz, jlong address, jdoubleArray value){
     //TODO check for NULL array in case of oom
     void* array = (*env)->GetPrimitiveArrayCritical(env, value, 0);
     jsize length = (*env)->GetArrayLength(env, value);
@@ -1045,35 +1045,35 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_writeDoubles(JNIEnv *env, jclass claz
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    readFloat
  * Signature: (JI)F
  */
 JNIEXPORT
 jfloat
-JNICALL Java_com_github_zubnix_jaccall_JNI_readFloat(JNIEnv *env, jclass clazz, jlong address, jint index){
+JNICALL Java_org_freedesktop_jaccall_JNI_readFloat(JNIEnv *env, jclass clazz, jlong address, jint index){
     return (jfloat)((float*)(intptr_t)address)[(int)index];
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    writeFloat
  * Signature: (JIF)V
  */
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_writeFloat(JNIEnv *env, jclass clazz, jlong address, jint index, jfloat value){
+JNICALL Java_org_freedesktop_jaccall_JNI_writeFloat(JNIEnv *env, jclass clazz, jlong address, jint index, jfloat value){
     ((float*)(intptr_t)address)[(int)index] = (float)value;
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    writeFloats
  * Signature: (J[F)V
  */
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_writeFloats(JNIEnv *env, jclass clazz, jlong address, jfloatArray value){
+JNICALL Java_org_freedesktop_jaccall_JNI_writeFloats(JNIEnv *env, jclass clazz, jlong address, jfloatArray value){
     //TODO check for NULL array in case of oom
     void* array = (*env)->GetPrimitiveArrayCritical(env, value, 0);
     jsize length = (*env)->GetArrayLength(env, value);
@@ -1082,35 +1082,35 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_writeFloats(JNIEnv *env, jclass clazz
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    readInt
  * Signature: (JI)I
  */
 JNIEXPORT
 jint
-JNICALL Java_com_github_zubnix_jaccall_JNI_readInt(JNIEnv *env, jclass clazz, jlong address, jint index){
+JNICALL Java_org_freedesktop_jaccall_JNI_readInt(JNIEnv *env, jclass clazz, jlong address, jint index){
     return (jint)((int*)(intptr_t)address)[(int)index];
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    writeInt
  * Signature: (JII)V
  */
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_writeInt(JNIEnv *env, jclass clazz, jlong address, jint index, jint value){
+JNICALL Java_org_freedesktop_jaccall_JNI_writeInt(JNIEnv *env, jclass clazz, jlong address, jint index, jint value){
     ((int*)(intptr_t)address)[(int)index] = (int)value;
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    writeInts
  * Signature: (J[I)V
  */
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_writeInts(JNIEnv *env, jclass clazz, jlong address, jintArray value){
+JNICALL Java_org_freedesktop_jaccall_JNI_writeInts(JNIEnv *env, jclass clazz, jlong address, jintArray value){
     //TODO check for NULL array in case of oom
     void* array = (*env)->GetPrimitiveArrayCritical(env, value, 0);
     jsize length = (*env)->GetArrayLength(env, value);
@@ -1119,35 +1119,35 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_writeInts(JNIEnv *env, jclass clazz, 
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    readLong
  * Signature: (JI)J
  */
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_readLong(JNIEnv *env, jclass clazz, jlong address, jint index){
+JNICALL Java_org_freedesktop_jaccall_JNI_readLong(JNIEnv *env, jclass clazz, jlong address, jint index){
     return (jlong)((long long*)(intptr_t)address)[(int)index];
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    writeLong
  * Signature: (JIJ)V
  */
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_writeLong(JNIEnv *env, jclass clazz, jlong address, jint index, jlong value){
+JNICALL Java_org_freedesktop_jaccall_JNI_writeLong(JNIEnv *env, jclass clazz, jlong address, jint index, jlong value){
     ((long long*)(intptr_t)address)[(int)index] = (long long)value;
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    writeLongs
  * Signature: (J[J)V
  */
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_writeLongs(JNIEnv *env, jclass clazz, jlong address, jlongArray value){
+JNICALL Java_org_freedesktop_jaccall_JNI_writeLongs(JNIEnv *env, jclass clazz, jlong address, jlongArray value){
     //TODO check for NULL array in case of oom
     void* array = (*env)->GetPrimitiveArrayCritical(env, value, 0);
     jsize length = (*env)->GetArrayLength(env, value);
@@ -1156,57 +1156,57 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_writeLongs(JNIEnv *env, jclass clazz,
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    readPointer
  * Signature: (JI)J
  */
 JNIEXPORT
 jlong
-JNICALL Java_com_github_zubnix_jaccall_JNI_readPointer(JNIEnv *env, jclass clazz, jlong address, jint index){
+JNICALL Java_org_freedesktop_jaccall_JNI_readPointer(JNIEnv *env, jclass clazz, jlong address, jint index){
     return (jlong)(intptr_t)((void**)(intptr_t)address)[(int)index];
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    writePointer
  * Signature: (JIJ)V
  */
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_writePointer(JNIEnv *env, jclass clazz, jlong address, jint index, jlong value){
+JNICALL Java_org_freedesktop_jaccall_JNI_writePointer(JNIEnv *env, jclass clazz, jlong address, jint index, jlong value){
     ((void**)(intptr_t)address)[(int)index] = (void*)(intptr_t)value;
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    readShort
  * Signature: (JI)S
  */
 JNIEXPORT
 jshort
-JNICALL Java_com_github_zubnix_jaccall_JNI_readShort(JNIEnv *env, jclass clazz, jlong address, jint index){
+JNICALL Java_org_freedesktop_jaccall_JNI_readShort(JNIEnv *env, jclass clazz, jlong address, jint index){
     return (jshort)((short*)(intptr_t)address)[(int)index];
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    writeShort
  * Signature: (JIS)V
  */
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_writeShort(JNIEnv *env, jclass clazz, jlong address, jint index, jshort value){
+JNICALL Java_org_freedesktop_jaccall_JNI_writeShort(JNIEnv *env, jclass clazz, jlong address, jint index, jshort value){
     ((short*)(intptr_t)address)[(int)index] = (short)value;
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    writeShorts
  * Signature: (J[S)V
  */
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_writeShorts(JNIEnv *env, jclass clazz, jlong address, jshortArray value){
+JNICALL Java_org_freedesktop_jaccall_JNI_writeShorts(JNIEnv *env, jclass clazz, jlong address, jshortArray value){
     //TODO check for NULL array in case of oom
     void* array = (*env)->GetPrimitiveArrayCritical(env, value, 0);
     jsize length = (*env)->GetArrayLength(env, value);
@@ -1215,24 +1215,24 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_writeShorts(JNIEnv *env, jclass clazz
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    readString
  * Signature: (JI)Ljava/lang/String{   }
  */
 JNIEXPORT
 jstring
-JNICALL Java_com_github_zubnix_jaccall_JNI_readString(JNIEnv *env, jclass clazz, jlong address, jint index){
+JNICALL Java_org_freedesktop_jaccall_JNI_readString(JNIEnv *env, jclass clazz, jlong address, jint index){
     return (*env)->NewStringUTF(env, (const char *)(intptr_t)address);
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    writeString
  * Signature: (JILjava/lang/String{   })V
  */
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_writeString(JNIEnv *env, jclass clazz, jlong address, jint index, jstring value){
+JNICALL Java_org_freedesktop_jaccall_JNI_writeString(JNIEnv *env, jclass clazz, jlong address, jint index, jstring value){
     //TODO check for NULL array in case of oom
     const char *array = (*env)->GetStringUTFChars(env, value, 0);
     jsize length = (*env)->GetStringUTFLength(env, value);
@@ -1241,12 +1241,12 @@ JNICALL Java_com_github_zubnix_jaccall_JNI_writeString(JNIEnv *env, jclass clazz
 }
 
 /*
- * Class:     com_github_zubnix_jaccall_JNI
+ * Class:     org_freedesktop_jaccall_JNI
  * Method:    writeStruct
  * Signature: (JJI)V
  */
 JNIEXPORT
 void
-JNICALL Java_com_github_zubnix_jaccall_JNI_writeStruct(JNIEnv *env, jclass clazz, jlong target_address, jlong src_address, jint size){
+JNICALL Java_org_freedesktop_jaccall_JNI_writeStruct(JNIEnv *env, jclass clazz, jlong target_address, jlong src_address, jint size){
     memcpy((void*)(intptr_t)target_address, (void*)(intptr_t) src_address, (size_t)size);
 }
