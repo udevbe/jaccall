@@ -4,8 +4,8 @@ Intro
 Jaccall makes C libraries accessible from Java without the need to write any native code. It is project similar to JNA or BridJ.
 
 Status: 
-- No release
-- In development 
+- available on maven central - 1.0.0
+- In development
 - Feature complete [ Linker API, Pointer API, Struct API, Function Pointer API ]
 - [![Build Status](https://travis-ci.org/udevbe/jaccall.svg?branch=master)](https://travis-ci.org/udevbe/jaccall)
 
