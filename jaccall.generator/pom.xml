@@ -29,7 +29,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.zubnix</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>jaccall.runtime</artifactId>
             <version>${project.version}</version>
         </dependency>
