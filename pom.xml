@@ -7,8 +7,8 @@
     <name>Java C call library parent</name>
 
     <modules>
-        <module>jaccall.generator</module>
         <module>jaccall.runtime</module>
+        <module>jaccall.generator</module>
     </modules>
 
     <developers>
