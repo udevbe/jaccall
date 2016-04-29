@@ -8,7 +8,7 @@
     <name>Java C call library generator</name>
 
     <parent>
-        <groupId>com.github.zubnix</groupId>
+        <groupId>org.freedesktop</groupId>
         <artifactId>jaccall</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
