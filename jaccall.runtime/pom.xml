@@ -9,7 +9,7 @@
     <parent>
         <artifactId>jaccall</artifactId>
         <groupId>org.freedesktop</groupId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.1</version>
     </parent>
 
     <profiles>

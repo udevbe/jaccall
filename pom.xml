@@ -3,13 +3,16 @@
     <groupId>org.freedesktop</groupId>
     <artifactId>jaccall</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <name>Java C call library parent</name>
 
     <modules>
         <module>jaccall.runtime</module>
         <module>jaccall.generator</module>
     </modules>
+
+    <description>Jaccall makes C libraries accessible from Java without the need to write any native code.</description>
+    <url>https://github.com/udevbe/jaccall</url>
 
     <developers>
         <developer>
