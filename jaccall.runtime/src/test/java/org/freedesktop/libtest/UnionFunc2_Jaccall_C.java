@@ -1,0 +1,34 @@
+package org.freedesktop.libtest;
+
+
+import org.freedesktop.jaccall.JNI;
+
+import javax.annotation.Generated;
+
+@Generated("org.freedesktop.jaccall.compiletime.functor.FunctionPointerGenerator")
+final class UnionFunc2_Jaccall_C extends PointerUnionFunc2 {
+
+    static {
+        JNI.linkFuncPtr(UnionFunc2_Jaccall_C.class,
+                        "_$",
+                        3,
+                        "(JJI)J",
+                        FFI_CIF);
+    }
+
+    UnionFunc2_Jaccall_C(final long address) {
+        super(address);
+    }
+
+    @Override
+    public long $(long tst,
+                  int field0) {
+        return _$(this.address,
+                  tst,
+                  field0);
+    }
+
+    private static native long _$(long address,
+                                  long tst,
+                                  int field0);
+}

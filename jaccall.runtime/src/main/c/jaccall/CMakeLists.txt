@@ -20,7 +20,7 @@ add_custom_command(
         COMMAND ${Java_JAVAH_EXECUTABLE} -v
         -cp "../../../../../../target/classes/"
         -d "../../src/include"
-        -jni com.github.zubnix.jaccall.JNI
+        -jni org.freedesktop.jaccall.JNI
 )
 
 # generate libjaccall
