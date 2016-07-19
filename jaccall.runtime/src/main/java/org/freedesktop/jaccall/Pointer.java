@@ -214,6 +214,83 @@ public abstract class Pointer<T> implements AutoCloseable {
     }
 
     /**
+     * Reallocate size bytes and returns a pointer to
+     * the reallocated memory. The contents will be unchanged in the range
+     * from the start of the region up to the minimum of the old and new sizes.
+     * If the new size is larger than the old size, the added memory will not be
+     * initialized. The added memory is not initialized.
+     * The memory is reallocated on the heap and not subject to Java's GC.
+     *
+     * @param pointer the pointer to use as base address.
+     * @param size    The new size in bytes. Must be a positive number.
+     *
+     * @return a new untyped pointer object that will use the newly allocated memory.
+     *
+     * @throws IllegalArgumentException Thrown if size argument is a negative number.
+     */
+    public static Pointer<Void> realloc(@Nonnull Pointer<?> pointer,
+                                        @Nonnegative final int size) {
+        Objects.requireNonNull(pointer,
+                               "Argument pointer must not be null.");
+        if (size < 0) {
+            throw new IllegalArgumentException("Given size argument is not a positive number.");
+        }
+
+        final long address = JNI.realloc(pointer.address,
+                                         size);
+
+        if (ENABLE_LOG) {
+            Logger.getLogger("jaccall")
+                  .log(Level.FINE,
+                       "Heap re-allocated memory at address=0x" + String.format("%016X",
+                                                                                address));
+        }
+
+        return wrap(address);
+    }
+
+    /**
+     * Reallocate size bytes and returns a pointer to
+     * the reallocated memory. The contents will be unchanged in the range
+     * from the start of the region up to the minimum of the old and new sizes.
+     * If the new size is larger than the old size, the added memory will not be
+     * initialized. The added memory is not initialized.
+     * The memory is reallocated on the heap and not subject to Java's GC.
+     *
+     * @param pointer the pointer to use as base address.
+     * @param size    The size in bytes. Must be a positive number.
+     * @param type    the type of the pointer of the reallocated memory.
+     *
+     * @return a new untyped pointer object that will use the newly allocated memory.
+     *
+     * @throws IllegalArgumentException Thrown if size argument is a negative number.
+     */
+    public static <U> Pointer<U> realloc(@Nonnull Pointer<?> pointer,
+                                         @Nonnegative final int size,
+                                         @Nonnull final Class<U> type) {
+        Objects.requireNonNull(pointer,
+                               "Argument pointer must not be null.");
+        if (size < 0) {
+            throw new IllegalArgumentException("Given size argument is not a positive number.");
+        }
+        Objects.requireNonNull(type,
+                               "Argument type must not be null.");
+
+        final long address = JNI.realloc(pointer.address,
+                                         size);
+
+        if (ENABLE_LOG) {
+            Logger.getLogger("jaccall")
+                  .log(Level.FINE,
+                       "Heap re-allocated memory at address=0x" + String.format("%016X",
+                                                                                address));
+        }
+
+        return wrap(type,
+                    address);
+    }
+
+    /**
      * Allocate size bytes and returns a pointer to
      * the allocated memory.  The memory is not initialized.
      * The memory is allocated on the heap and not subject to Java's GC.
@@ -609,7 +686,7 @@ public abstract class Pointer<T> implements AutoCloseable {
     public static Pointer<String> nref(@Nonnull final String val) {
         final Pointer<String> pointer = createStack(String.class,
                                                     Size.sizeof(Objects.requireNonNull(val,
-                                                                                  "Argument val must not be null")),
+                                                                                       "Argument val must not be null")),
                                                     1);
         pointer.write(val);
 

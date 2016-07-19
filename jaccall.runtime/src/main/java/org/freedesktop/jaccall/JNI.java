@@ -130,6 +130,9 @@ public final class JNI {
     /*
      * std ->
      */
+    public static native long realloc(long address,
+                                      @Nonnegative int size);
+
     public static native long malloc(@Nonnegative int size);
 
     public static native long calloc(@Nonnegative int nmemb,
