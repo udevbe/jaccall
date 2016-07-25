@@ -140,6 +140,7 @@ JNICALL Java_org_freedesktop_jaccall_JNI_GetMethodID(JNIEnv *env, jclass clazz, 
     jmethodID mid = (*env)->GetMethodID(env, target, methodName, signature);
     if(mid == NULL) {
         throwError(env, "Could not find method id for %s with signature %s",methodName, signature);
+        return 0;
     }
 
     (*env)->ReleaseStringUTFChars(env, jniMethodName, methodName);
@@ -192,6 +193,7 @@ find_libaddr(JNIEnv *env, jstring library) {
     void *lib_addr = dlopen(lib_str, RTLD_NOW | RTLD_GLOBAL);
     if (!lib_addr) {
         throwError(env, "dlopen error: %s\n", dlerror());
+        return 0;
     }
     (*env)->ReleaseStringUTFChars(env, library, lib_str);
 
@@ -246,6 +248,7 @@ void prep_jni_cif(JNIEnv *env, ffi_cif *jni_cif, const char *jni_sig, jbyte arg_
                 continue;
             default:
                 throwError(env,  "unsupported JNI argument: %c\n", jni_sig_char);
+                return;
         }
 
         assert(type);
@@ -263,6 +266,7 @@ void prep_jni_cif(JNIEnv *env, ffi_cif *jni_cif, const char *jni_sig, jbyte arg_
     ffi_status status = ffi_prep_cif(jni_cif, FFI_DEFAULT_ABI, (unsigned int) arg_size + 2, return_type, args);
     if (status != FFI_OK) {
         throwError(env, "ffi_prep_cif failed: %d\n", status);
+        return;
     }
 }
 
@@ -367,7 +371,7 @@ void jni_call_handler_no_by_value(ffi_cif *cif, void *ret, void **jargs, void *u
 
 static
 inline
-void create_closure(JNIEnv *env,
+int create_closure(JNIEnv *env,
                     const char *symstr,
                     void *symaddr,
                     const char *jni_sig,
@@ -431,12 +435,15 @@ void create_closure(JNIEnv *env,
             jniMethods_i->signature = (char *) jni_sig;
             jniMethods_i->fnPtr = jni_func;
 
+            return 0;
         } else {
             throwError(env, "ffi_prep_closure_loc failed: %d\n", status);
+            return -1;
         }
     }
     else {
         throwError(env, "ffi_closure_alloc failed: %s\n", symstr);
+        return -1;
     }
 }
 
@@ -447,7 +454,12 @@ JNICALL Java_org_freedesktop_jaccall_JNI_link(JNIEnv *env, jclass clazz, jstring
                                                 jbyteArray argumentSizes,
                                                 jobjectArray jniSignatures,
                                                 jlongArray ffiCallInterfaces) {
+    int ret;
     void *libaddr = find_libaddr(env, library);
+    if(!libaddr){
+        return;
+    }
+
     jbyte *argSizes = (*env)->GetByteArrayElements(env, argumentSizes, 0);
     jlong *ffi_cifs = (*env)->GetLongArrayElements(env, ffiCallInterfaces, 0);
     int symbolsCount = (*env)->GetArrayLength(env, symbols);
@@ -463,6 +475,7 @@ JNICALL Java_org_freedesktop_jaccall_JNI_link(JNIEnv *env, jclass clazz, jstring
         char *err = dlerror();
         if (err) {
             throwError(env, "dlsym failed: %s\n", err);
+            return;
         }
 
         jstring jniSignature = (jstring) (*env)->GetObjectArrayElement(env, jniSignatures, i);
@@ -471,7 +484,10 @@ JNICALL Java_org_freedesktop_jaccall_JNI_link(JNIEnv *env, jclass clazz, jstring
         ffi_cif *cif = (ffi_cif *) (intptr_t) ffi_cifs[i];
         JNINativeMethod *jniMethods_i = &jniMethods[i];
 
-        create_closure(env, symstr, symaddr, jni_sig, argSize, cif, jniMethods_i);
+        ret = create_closure(env, symstr, symaddr, jni_sig, argSize, cif, jniMethods_i);
+        if(ret == -1){
+            return;
+        }
     }
 
     (*env)->RegisterNatives(env, headerClazz, jniMethods, symbolsCount);
@@ -594,6 +610,7 @@ JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1type_1struct(JNIEnv *env, jclass c
     ffi_cif cif;
     if (ffi_prep_cif(&cif, FFI_DEFAULT_ABI, 0, struct_description, NULL) != FFI_OK) {
        throwError(env, "ffi_type struct failed.\n");
+       return 0;
     }
 
     return (jlong) (intptr_t) struct_description;
@@ -663,6 +680,7 @@ JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1callInterface(JNIEnv *env, jclass 
     ffi_cif *cif = malloc(sizeof(ffi_cif));
     if (ffi_prep_cif(cif, FFI_DEFAULT_ABI, (unsigned int) nro_args, (ffi_type *) (intptr_t) ffi_return_type, args) != FFI_OK) {
         throwError(env, "ffi_prep_cif failed.\n");
+        return 0;
     }
 
     return (jlong) (intptr_t) cif;
@@ -704,7 +722,7 @@ void func_ptr_handler(ffi_cif *jni_cif, void *ret, void **jargs, void *user_data
 
 static
 inline
-void create_func_ptr_closure(JNIEnv *env,
+int create_func_ptr_closure(JNIEnv *env,
                              const char *symstr,
                              const char *jni_sig,
                              jint argSize,
@@ -723,13 +741,15 @@ void create_func_ptr_closure(JNIEnv *env,
             jniMethods->name = (char *) symstr;
             jniMethods->signature = (char *) jni_sig;
             jniMethods->fnPtr = jni_func;
-
+            return 0;
         } else {
             throwError(env, "ffi_prep_closure_loc failed: %d\n", status);
+            return -1;
         }
     }
     else {
         throwError(env, "ffi_closure_alloc failed: %s\n", symstr);
+        return -1;
     }
 }
 
@@ -741,7 +761,10 @@ JNICALL Java_org_freedesktop_jaccall_JNI_linkFuncPtr(JNIEnv *env, jclass clazz, 
     const char *jni_sig = (*env)->GetStringUTFChars(env, jniSignature, 0);
     JNINativeMethod *jniMethods = malloc(sizeof(JNINativeMethod));
 
-    create_func_ptr_closure(env, symstr, jni_sig, argSize, (ffi_cif *) (intptr_t) cif, jniMethods);
+    int ret = create_func_ptr_closure(env, symstr, jni_sig, argSize, (ffi_cif *) (intptr_t) cif, jniMethods);
+    if(ret == -1){
+        return;
+    }
 
     (*env)->RegisterNatives(env, wrapper, jniMethods, 1);
 }
@@ -764,9 +787,11 @@ java_func_ptr_handler(ffi_cif *jni_cif, void *ret, void **jargs, void *user_data
     if (getEnvStat == JNI_EDETACHED) {
         if ((*jvm)->AttachCurrentThread(jvm, (void **) &env, NULL) != 0) {
                 throwError(env, "Failed to attach java thread in native context.");
+                return;
         }
     } else if (getEnvStat == JNI_EVERSION) {
         throwError(env, "GetEnv: version not supported.");
+        return;
     }
 
     //TODO (optional speed improvement) analyse cif in advance and check for struct types, so we can avoid this loop if not needed
@@ -841,10 +866,12 @@ JNICALL Java_org_freedesktop_jaccall_JNI_ffi_1closure(JNIEnv *env, jclass clazz,
         ffi_status status = ffi_prep_closure_loc(closure, target_cif, &java_func_ptr_handler, java_call, target_func);
         if (status != FFI_OK) {
             throwError(env, "ffi_prep_closure_loc failed: %d\n", status);
+            return 0;
         }
     }
     else {
        throwError(env, "ffi_closure_alloc failed\n");
+       return 0;
     }
 
     return (jlong)(intptr_t)target_func;
