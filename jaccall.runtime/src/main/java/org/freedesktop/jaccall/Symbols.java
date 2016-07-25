@@ -45,11 +45,14 @@ public class Symbols {
     private String nativeLibraryPath() {
         final Lib    libAnnotation = this.javaLibrary.getAnnotation(Lib.class);
         final String libName       = libAnnotation.value();
+        final int    version       = libAnnotation.version();
 
         final String osLibName;
         switch (OS_NAME) {
             case OS_LINUX: {
-                osLibName = "lib" + libName + ".so";
+                osLibName = String.format("lib%s.so.%d",
+                                          libName,
+                                          version);
                 break;
             }
             case OS_MAC: {
