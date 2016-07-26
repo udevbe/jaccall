@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>jaccall.runtime</artifactId>
@@ -59,18 +60,18 @@
 
     <properties>
         <!-- native compilation -->
-        <jaccall.arch />
+        <jaccall.arch/>
 
         <!-- dependencies -->
-        <jsr305.version>3.0.0</jsr305.version>
+        <jsr305.version>3.0.1</jsr305.version>
 
         <!-- test dependencies -->
         <junit.version>4.12</junit.version>
-        <truth.version>0.27</truth.version>
+        <truth.version>0.28</truth.version>
 
         <!-- plugins -->
-        <maven-compiler-plugin.version>3.5</maven-compiler-plugin.version>
-        <exec-maven-plugin.version>1.4.0</exec-maven-plugin.version>
+        <exec-maven-plugin.version>1.5.0</exec-maven-plugin.version>
+        <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
     </properties>
 
     <dependencies>
@@ -101,7 +102,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.17</version>
+                <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <forkCount>5</forkCount>
                     <reuseForks>false</reuseForks>
@@ -136,8 +137,8 @@
                             <workingDirectory>${basedir}</workingDirectory>
                             <executable>${basedir}/build.sh</executable>
                             <arguments>
-			    	<argument>${jaccall.arch}</argument>
-			    </arguments>
+                                <argument>${jaccall.arch}</argument>
+                            </arguments>
                         </configuration>
                     </execution>
 

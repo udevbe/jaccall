@@ -14,17 +14,14 @@
 
     <properties>
         <!-- dependencies -->
-        <auto-common.version>0.4</auto-common.version>
+        <auto-common.version>0.6</auto-common.version>
         <auto-service.version>1.0-rc2</auto-service.version>
-        <javapoet.version>1.4.0</javapoet.version>
-        <guava.version>18.0</guava.version>
+        <javapoet.version>1.7.0</javapoet.version>
+        <guava.version>19.0</guava.version>
 
         <!-- test -->
-        <compile-testing.version>0.6</compile-testing.version>
-        <junit.version>4.11</junit.version>
-
-        <!-- plugins -->
-        <maven-compiler-plugin.version>3.5</maven-compiler-plugin.version>
+        <compile-testing.version>0.9</compile-testing.version>
+        <junit.version>4.12</junit.version>
     </properties>
 
     <dependencies>
