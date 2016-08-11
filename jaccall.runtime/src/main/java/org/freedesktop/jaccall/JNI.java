@@ -1,6 +1,8 @@
 package org.freedesktop.jaccall;
 
 
+import sun.misc.Unsafe;
+
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -19,32 +21,38 @@ public final class JNI {
 
     //TODO add android
     private static final String[] ARCHS = {"linux-aarch64",
-            "linux-armv7hf",
-            "linux-armv7sf",
-            "linux-armv6hf",
-            "linux-x86_64",
-            "linux-i686",
-            //last resort
-            "native"};
-    private static final String LIB = "libjaccall.so";
+                                           "linux-armv7hf",
+                                           "linux-armv7sf",
+                                           "linux-armv6hf",
+                                           "linux-x86_64",
+                                           "linux-i686",
+                                           //last resort
+                                           "native"};
+    private static final String   LIB   = "libjaccall.so";
+
+    private static Unsafe UNSAFE;
 
     static {
         //there is no real good or correct way to determine the userland+os+architecture in Java :(
         if (ConfigVariables.JACCALL_ARCH == null) {
-            LOGGER.info(String.format("Jaccall might not work correctly, arch not specified by JACCALL_ARCH environment variable, please specify it. Supported values are: %s", Arrays.toString(ARCHS)));
+            LOGGER.info(String.format("Jaccall might not work correctly, arch not specified by JACCALL_ARCH environment variable, please specify it. Supported values are: %s",
+                                      Arrays.toString(ARCHS)));
 
             Map<String, LinkageError> failures = new HashMap<>();
 
-            boolean libLoaded = false;
-            String loadedArch = "";
+            boolean libLoaded  = false;
+            String  loadedArch = "";
 
             for (String arch : ARCHS) {
 
                 try {
                     loadLibrary(arch);
-                } catch (LinkageError e) {
-                    LOGGER.info(String.format("Loading lib for arch %s failed. Trying next arch.", arch));
-                    failures.put(arch, e);
+                }
+                catch (LinkageError e) {
+                    LOGGER.info(String.format("Loading lib for arch %s failed. Trying next arch.",
+                                              arch));
+                    failures.put(arch,
+                                 e);
                     continue;
                 }
 
@@ -56,48 +64,63 @@ public final class JNI {
             if (!libLoaded) {
                 for (Map.Entry<String, LinkageError> errorEntry : failures.entrySet()) {
                     System.err.println("Could not load lib for arch " + errorEntry.getKey());
-                    errorEntry.getValue().printStackTrace();
+                    errorEntry.getValue()
+                              .printStackTrace();
                 }
 
                 throw new Error("Failed to load any of the libs for ARCHS: " + Arrays.toString(ARCHS));
-            } else {
-                LOGGER.info(String.format("Successfully loaded lib for arch %s.", loadedArch));
+            }
+            else {
+                LOGGER.info(String.format("Successfully loaded lib for arch %s.",
+                                          loadedArch));
             }
 
-        } else {
+        }
+        else {
             loadLibrary(ConfigVariables.JACCALL_ARCH);
+        }
+
+        try {
+            java.lang.reflect.Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
+            theUnsafe.setAccessible(true);
+            UNSAFE = (Unsafe) theUnsafe.get(null);
+        }
+        catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new Error(e);
         }
     }
 
     private static void loadLibrary(String arch) throws LinkageError {
         try {
             final InputStream libStream = JNI.class.getClassLoader()
-                    .getResourceAsStream(arch + "/" + LIB);
+                                                   .getResourceAsStream(arch + "/" + LIB);
             if (libStream == null) {
                 //lib not found
-                throw new LinkageError(String.format("Lib for arch %s not found.", arch));
+                throw new LinkageError(String.format("Lib for arch %s not found.",
+                                                     arch));
             }
 
             final File tempFile = File.createTempFile(LIB,
-                    null);
+                                                      null);
             tempFile.deleteOnExit();
             unpack(libStream,
-                    tempFile);
+                   tempFile);
             System.load(tempFile.getAbsolutePath());
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new Error(e);
         }
     }
 
     private static void unpack(final InputStream libStream,
                                final File tempFile) throws IOException {
-        final FileOutputStream fos = new FileOutputStream(tempFile);
-        final byte[] buffer = new byte[4096];
-        int read;
+        final FileOutputStream fos    = new FileOutputStream(tempFile);
+        final byte[]           buffer = new byte[4096];
+        int                    read;
         while ((read = libStream.read(buffer)) != -1) {
             fos.write(buffer,
-                    0,
-                    read);
+                      0,
+                      read);
         }
         fos.close();
         libStream.close();
@@ -130,19 +153,39 @@ public final class JNI {
     /*
      * std ->
      */
-    public static native long realloc(long address,
-                                      @Nonnegative int size);
+    public static long realloc(long address,
+                               @Nonnegative long size) {
+        return UNSAFE.reallocateMemory(address,
+                                       size);
+    }
 
-    public static native long malloc(@Nonnegative int size);
+    public static long malloc(@Nonnegative long size) {
+        return UNSAFE.allocateMemory(size);
+    }
 
-    public static native long calloc(@Nonnegative int nmemb,
-                                     @Nonnegative int size);
+    public static long calloc(@Nonnegative int nmemb,
+                              @Nonnegative int size) {
+        final int  totalSize = nmemb * size;
+        final long malloc    = malloc(totalSize);
+        UNSAFE.setMemory(malloc,
+                         totalSize,
+                         (byte) 0);
+        return malloc;
+    }
 
-    public static native void free(long address);
+    public static void free(long address) {
+        UNSAFE.freeMemory(address);
+    }
 
-    public static native int sizeOfPointer();
+    public static int sizeOfPointer() {
+        return UNSAFE.addressSize();
+    }
 
-    public static native int sizeOfCLong();
+    public static int sizeOfCLong() {
+        //TODO is this always the same?
+        return sizeOfPointer();
+    }
+
 
     public static final int CHAR_ALIGNMENT = JNI.charAlignment();
 
@@ -282,79 +325,149 @@ public final class JNI {
     /*
      * raw io ->
      */
-    public static native byte readByte(final long address,
-                                       final int index);
+    public static byte readByte(final long address,
+                                final int index) {
+        return UNSAFE.getByte(address + index);
+    }
 
-    public static native void writeByte(final long address,
-                                        final int index,
-                                        final byte b);
+    public static void writeByte(final long address,
+                                 final int index,
+                                 final byte b) {
+        UNSAFE.putByte(address + index,
+                       b);
+    }
 
-    public static native void writeBytes(final long address,
-                                         final byte[] val);
+    public static void writeBytes(final long address,
+                                  final byte[] val) {
+        for (int i = 0; i < val.length; i++) {
+            UNSAFE.putByte(address + i,
+                           val[i]);
+        }
+    }
 
-    public static native long readCLong(final long address,
-                                        final int index);
+    public static long readCLong(final long address,
+                                 final int index) {
+        return UNSAFE.getAddress(address + (index * sizeOfPointer()));
+    }
 
-    public static native void writeCLong(final long address,
-                                         final int index,
-                                         final long l);
+    public static void writeCLong(final long address,
+                                  final int index,
+                                  final long l) {
+        UNSAFE.putAddress(address + (index * sizeOfPointer()),
+                          l);
+    }
 
-    public static native double readDouble(final long address,
-                                           final int index);
+    public static double readDouble(final long address,
+                                    final int index) {
+        return UNSAFE.getDouble(address + index * 8);
+    }
 
-    public static native void writeDouble(final long address,
-                                          final int index,
-                                          final double v);
+    public static void writeDouble(final long address,
+                                   final int index,
+                                   final double v) {
+        UNSAFE.putDouble(address + index * 8,
+                         v);
+    }
 
-    public static native void writeDoubles(final long address,
-                                           final double[] val);
+    public static void writeDoubles(final long address,
+                                    final double[] val) {
+        for (int i = 0; i < val.length; i++) {
+            writeDouble(address,
+                        i,
+                        val[i]);
+        }
+    }
 
-    public static native float readFloat(final long address,
-                                         final int index);
+    public static void writeFloat(final long address,
+                                  final int index,
+                                  final float v) {
+        UNSAFE.putFloat(address + index * 4,
+                        v);
+    }
 
-    public static native void writeFloat(final long address,
-                                         final int index,
-                                         final float v);
+    public static void writeFloats(final long address,
+                                   final float[] val) {
+        for (int i = 0; i < val.length; i++) {
+            writeFloat(address,
+                       i,
+                       val[i]);
+        }
+    }
 
-    public static native void writeFloats(final long address,
-                                          final float[] val);
+    public static int readInt(final long address,
+                              final int index) {
+        return UNSAFE.getInt(address + index * 4);
+    }
 
-    public static native int readInt(final long address,
-                                     final int index);
+    public static void writeInt(final long address,
+                                final int index,
+                                final int i) {
+        UNSAFE.putInt(address + index * 4,
+                      i);
+    }
 
-    public static native void writeInt(final long address,
-                                       final int index,
-                                       final int i);
+    public static void writeInts(final long address,
+                                 final int[] val) {
+        for (int i = 0; i < val.length; i++) {
+            writeInt(address,
+                     i,
+                     val[i]);
+        }
+    }
 
-    public static native void writeInts(final long address,
-                                        final int[] val);
+    public static long readLong(final long address,
+                                final int index) {
+        return UNSAFE.getLong(address + index * 8);
+    }
 
-    public static native long readLong(final long address,
-                                       final int index);
+    public static void writeLong(final long address,
+                                 final int index,
+                                 final long val) {
+        UNSAFE.putLong(address + index * 8,
+                       val);
+    }
 
-    public static native void writeLong(final long address,
-                                        final int index,
-                                        final long val);
+    public static void writeLongs(final long address,
+                                  final long[] val) {
+        for (int i = 0; i < val.length; i++) {
+            writeLong(address,
+                      i,
+                      val[i]);
+        }
+    }
 
-    public static native void writeLongs(final long address,
-                                         final long[] val);
+    public static long readPointer(final long address,
+                                   final int index) {
+        return UNSAFE.getAddress(address + index * Size.sizeof((Pointer) null));
+    }
 
-    public static native long readPointer(final long address,
-                                          final int index);
+    public static void writePointer(final long address,
+                                    final int index,
+                                    final long address1) {
+        UNSAFE.putAddress(address + index * Size.sizeof((Pointer) null),
+                          address1);
+    }
 
-    public static native void writePointer(final long address,
-                                           final int index,
-                                           final long address1);
+    public static short readShort(final long address,
+                                  final int index) {
+        return UNSAFE.getShort(address + index * 2);
+    }
 
-    public static native short readShort(final long address,
-                                         final int index);
+    public static void writeShort(final long address,
+                                  final int index,
+                                  final short i) {
+        UNSAFE.putShort(address + index * 2,
+                        i);
+    }
 
-    public static native void writeShort(final long address,
-                                         final int index,
-                                         final short i);
-
-    public static native void writeShorts(final long address,
-                                          final short[] val);
+    public static void writeShorts(final long address,
+                                   final short[] val) {
+        for (int i = 0; i < val.length; i++) {
+            writeShort(address,
+                       i,
+                       val[i]);
+        }
+    }
 
     public static native String readString(final long address,
                                            final int index);
@@ -363,11 +476,18 @@ public final class JNI {
                                           final int index,
                                           final String val);
 
-    public static native void writeStruct(final long targetAddress,
-                                          final long sourceAddress,
-                                          final int size);
+    public static void writeStruct(final long targetAddress,
+                                   final long sourceAddress,
+                                   final int size) {
+        UNSAFE.copyMemory(sourceAddress,
+                          targetAddress,
+                          size);
+    }
 
-
+    public static float readFloat(final long address,
+                                  final int index) {
+        return UNSAFE.getFloat(address + index * 4);
+    }
     /*
      * <- raw io
      */
