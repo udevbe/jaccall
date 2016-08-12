@@ -9,6 +9,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,7 +34,34 @@ public final class JNI {
                                            "native"};
     private static final String   LIB   = "libjaccall.so";
 
-    private static Unsafe UNSAFE;
+    private static Unsafe         UNSAFE;
+    private static Constructor<?> DIRECT_BB_CONST;
+    private static Field          DIRECT_BB_ADR_FLD;
+
+
+    private static void initConsts() {
+        //get instance of Unsafe
+        try {
+            java.lang.reflect.Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
+            theUnsafe.setAccessible(true);
+            UNSAFE = (Unsafe) theUnsafe.get(null);
+
+            final Class<?> directBbCls = JNI.class.getClassLoader()
+                                                  .loadClass("java.nio.DirectByteBuffer");
+
+            //get hidden constructors
+            DIRECT_BB_CONST = directBbCls.getDeclaredConstructor(long.class,
+                                                                 int.class);
+            DIRECT_BB_CONST.setAccessible(true);
+
+
+            DIRECT_BB_ADR_FLD = Buffer.class.getDeclaredField("address");
+            DIRECT_BB_ADR_FLD.setAccessible(true);
+        }
+        catch (NoSuchMethodException | ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
+            throw new Error(e);
+        }
+    }
 
     static {
         //there is no real good or correct way to determine the userland+os+architecture in Java :(
@@ -80,14 +111,7 @@ public final class JNI {
             loadLibrary(ConfigVariables.JACCALL_ARCH);
         }
 
-        try {
-            java.lang.reflect.Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
-            theUnsafe.setAccessible(true);
-            UNSAFE = (Unsafe) theUnsafe.get(null);
-        }
-        catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new Error(e);
-        }
+        initConsts();
     }
 
     private static void loadLibrary(String arch) throws LinkageError {
@@ -132,10 +156,25 @@ public final class JNI {
     /*
      * JNI ->
      */
-    public static native ByteBuffer wrap(long address,
-                                         @Nonnegative long size);
+    public static ByteBuffer wrap(long address,
+                                  @Nonnegative long size) {
+        try {
+            return (ByteBuffer) DIRECT_BB_CONST.newInstance(address,
+                                                            size);
+        }
+        catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new Error(e);
+        }
+    }
 
-    public static native long unwrap(@Nonnull ByteBuffer byteBuffer);
+    public static long unwrap(@Nonnull ByteBuffer byteBuffer) {
+        try {
+            return (long) DIRECT_BB_ADR_FLD.get(byteBuffer);
+        }
+        catch (IllegalAccessException e) {
+            throw new Error(e);
+        }
+    }
 
     public static native long NewGlobalRef(@Nonnull final Object object);
 

@@ -97,18 +97,6 @@ void throwError( JNIEnv *env, char *message, ...)
 }
 
 JNIEXPORT
-jobject
-JNICALL Java_org_freedesktop_jaccall_JNI_wrap(JNIEnv *env, jclass clazz, jlong address, jlong size) {
-    return (*env)->NewDirectByteBuffer(env, (void *) (intptr_t) address, (size_t) size);
-}
-
-JNIEXPORT
-jlong
-JNICALL Java_org_freedesktop_jaccall_JNI_unwrap(JNIEnv *env, jclass clazz, jobject byteBuffer) {
-    return (jlong) (intptr_t) (*env)->GetDirectBufferAddress(env, byteBuffer);
-}
-
-JNIEXPORT
 jlong
 JNICALL Java_org_freedesktop_jaccall_JNI_NewGlobalRef(JNIEnv *env, jclass clazz, jobject object){
     return (jlong) (intptr_t) (*env)->NewGlobalRef(env, object);
