@@ -1,13 +1,5 @@
 package org.freedesktop.jaccall.compiletime;
 
-import org.freedesktop.jaccall.CLong;
-import org.freedesktop.jaccall.CType;
-import org.freedesktop.jaccall.JNI;
-import org.freedesktop.jaccall.Pointer;
-import org.freedesktop.jaccall.Size;
-import org.freedesktop.jaccall.Struct;
-import org.freedesktop.jaccall.StructType;
-import org.freedesktop.jaccall.Types;
 import com.google.common.primitives.Primitives;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
@@ -18,6 +10,14 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import org.freedesktop.jaccall.CLong;
+import org.freedesktop.jaccall.CType;
+import org.freedesktop.jaccall.JNI;
+import org.freedesktop.jaccall.Pointer;
+import org.freedesktop.jaccall.Size;
+import org.freedesktop.jaccall.Struct;
+import org.freedesktop.jaccall.StructType;
+import org.freedesktop.jaccall.Types;
 
 import javax.annotation.Generated;
 import javax.annotation.processing.Filer;
@@ -254,11 +254,17 @@ final class StructWriter {
                     case "cardinality":
                         cardinality = annotationValue.accept(GET_INT,
                                                              null);
-                        if (cardinality < 1) {
+                        if (cardinality < 0) {
                             this.messager.printMessage(Diagnostic.Kind.ERROR,
-                                                       "Cardinality of struct field must be at least 1.",
+                                                       "Cardinality of struct field must be at least 0.",
                                                        fieldAttribute.getKey());
                         }
+                        else if (cardinality == 0 && (i + 1 != fieldAnnotations.size())) {
+                            this.messager.printMessage(Diagnostic.Kind.ERROR,
+                                                       "Cardinality of struct field with value 0 (flex array) must be the last member of a struct.",
+                                                       fieldAttribute.getKey());
+                        }
+
                         break;
                     case "pointerDepth":
                         pointerDepth = annotationValue.accept(GET_INT,
@@ -704,7 +710,7 @@ final class StructWriter {
 
         final List<MethodSpec> accessors = new LinkedList<>();
 
-        if (cardinality > 1) {
+        if (cardinality > 1 || cardinality == 0) {
             if (Pointer.class.isAssignableFrom(javaType)) {
                 //array defines an implicit extra pointer depth
                 pointerDepth++;
