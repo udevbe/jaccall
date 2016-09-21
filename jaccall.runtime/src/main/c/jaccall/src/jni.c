@@ -104,8 +104,8 @@ JNICALL Java_org_freedesktop_jaccall_JNI_wrap(JNIEnv *env, jclass clazz, jlong a
 
 JNIEXPORT
 jlong
-JNICALL Java_org_freedesktop_jaccall_JNI_unwrap(JNIEnv *env, jclass clazz, jobject byteBuffer) {
-    return (jlong) (intptr_t) (*env)->GetDirectBufferAddress(env, byteBuffer);
+JNICALL Java_org_freedesktop_jaccall_JNI_unwrap(JNIEnv *env, jclass clazz, jobject buffer) {
+    return (jlong) (intptr_t) (*env)->GetDirectBufferAddress(env, buffer);
 }
 
 JNIEXPORT

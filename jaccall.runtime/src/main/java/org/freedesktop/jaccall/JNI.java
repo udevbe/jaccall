@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,32 +20,36 @@ public final class JNI {
 
     //TODO add android
     private static final String[] ARCHS = {"linux-aarch64",
-            "linux-armv7hf",
-            "linux-armv7sf",
-            "linux-armv6hf",
-            "linux-x86_64",
-            "linux-i686",
-            //last resort
-            "native"};
-    private static final String LIB = "libjaccall.so";
+                                           "linux-armv7hf",
+                                           "linux-armv7sf",
+                                           "linux-armv6hf",
+                                           "linux-x86_64",
+                                           "linux-i686",
+                                           //last resort
+                                           "native"};
+    private static final String   LIB   = "libjaccall.so";
 
     static {
         //there is no real good or correct way to determine the userland+os+architecture in Java :(
         if (ConfigVariables.JACCALL_ARCH == null) {
-            LOGGER.info(String.format("Jaccall might not work correctly, arch not specified by JACCALL_ARCH environment variable, please specify it. Supported values are: %s", Arrays.toString(ARCHS)));
+            LOGGER.info(String.format("Jaccall might not work correctly, arch not specified by JACCALL_ARCH environment variable, please specify it. Supported values are: %s",
+                                      Arrays.toString(ARCHS)));
 
             Map<String, LinkageError> failures = new HashMap<>();
 
-            boolean libLoaded = false;
-            String loadedArch = "";
+            boolean libLoaded  = false;
+            String  loadedArch = "";
 
             for (String arch : ARCHS) {
 
                 try {
                     loadLibrary(arch);
-                } catch (LinkageError e) {
-                    LOGGER.info(String.format("Loading lib for arch %s failed. Trying next arch.", arch));
-                    failures.put(arch, e);
+                }
+                catch (LinkageError e) {
+                    LOGGER.info(String.format("Loading lib for arch %s failed. Trying next arch.",
+                                              arch));
+                    failures.put(arch,
+                                 e);
                     continue;
                 }
 
@@ -56,15 +61,19 @@ public final class JNI {
             if (!libLoaded) {
                 for (Map.Entry<String, LinkageError> errorEntry : failures.entrySet()) {
                     System.err.println("Could not load lib for arch " + errorEntry.getKey());
-                    errorEntry.getValue().printStackTrace();
+                    errorEntry.getValue()
+                              .printStackTrace();
                 }
 
                 throw new Error("Failed to load any of the libs for ARCHS: " + Arrays.toString(ARCHS));
-            } else {
-                LOGGER.info(String.format("Successfully loaded lib for arch %s.", loadedArch));
+            }
+            else {
+                LOGGER.info(String.format("Successfully loaded lib for arch %s.",
+                                          loadedArch));
             }
 
-        } else {
+        }
+        else {
             loadLibrary(ConfigVariables.JACCALL_ARCH);
         }
     }
@@ -72,32 +81,34 @@ public final class JNI {
     private static void loadLibrary(String arch) throws LinkageError {
         try {
             final InputStream libStream = JNI.class.getClassLoader()
-                    .getResourceAsStream(arch + "/" + LIB);
+                                                   .getResourceAsStream(arch + "/" + LIB);
             if (libStream == null) {
                 //lib not found
-                throw new LinkageError(String.format("Lib for arch %s not found.", arch));
+                throw new LinkageError(String.format("Lib for arch %s not found.",
+                                                     arch));
             }
 
             final File tempFile = File.createTempFile(LIB,
-                    null);
+                                                      null);
             tempFile.deleteOnExit();
             unpack(libStream,
-                    tempFile);
+                   tempFile);
             System.load(tempFile.getAbsolutePath());
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new Error(e);
         }
     }
 
     private static void unpack(final InputStream libStream,
                                final File tempFile) throws IOException {
-        final FileOutputStream fos = new FileOutputStream(tempFile);
-        final byte[] buffer = new byte[4096];
-        int read;
+        final FileOutputStream fos    = new FileOutputStream(tempFile);
+        final byte[]           buffer = new byte[4096];
+        int                    read;
         while ((read = libStream.read(buffer)) != -1) {
             fos.write(buffer,
-                    0,
-                    read);
+                      0,
+                      read);
         }
         fos.close();
         libStream.close();
@@ -112,7 +123,7 @@ public final class JNI {
     public static native ByteBuffer wrap(long address,
                                          @Nonnegative long size);
 
-    public static native long unwrap(@Nonnull ByteBuffer byteBuffer);
+    public static native long unwrap(@Nonnull Buffer byteBuffer);
 
     public static native long NewGlobalRef(@Nonnull final Object object);
 
