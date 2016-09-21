@@ -167,7 +167,7 @@ public final class JNI {
         }
     }
 
-    public static long unwrap(@Nonnull ByteBuffer byteBuffer) {
+    public static long unwrap(@Nonnull Buffer byteBuffer) {
         try {
             return (long) DIRECT_BB_ADR_FLD.get(byteBuffer);
         }
