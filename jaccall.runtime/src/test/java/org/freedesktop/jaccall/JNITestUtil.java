@@ -8,13 +8,10 @@ import java.io.InputStream;
 
 public class JNITestUtil {
 
-    private static final String LIB_PREFIX  = "lib";
     private static final String LIB_NAME    = "jnitestutil";
-    private static final String LIB_POSTFIX = ".so";
 
     static {
-        final InputStream libStream = JNI.class.getClassLoader()
-                                               .getResourceAsStream(LIB_PREFIX + LIB_NAME + LIB_POSTFIX);
+        final InputStream libStream = JNITestUtil.class.getResourceAsStream("/libjnitestutil.so");
         try {
             final File tempFile = File.createTempFile(LIB_NAME,
                                                       null);
