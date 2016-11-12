@@ -17,13 +17,10 @@ import static com.google.common.truth.Truth.assertThat;
 
 public class StructTest {
 
-    private static final String LIB_PREFIX  = "lib";
     private static final String LIB_NAME    = "testing";
-    private static final String LIB_POSTFIX = ".so";
 
     private static String libFilePath() {
-        final InputStream libStream = JNI.class.getClassLoader()
-                                               .getResourceAsStream(LIB_PREFIX + LIB_NAME + LIB_POSTFIX);
+        final InputStream libStream = StructTest.class.getResourceAsStream("/libtesting.so");
         try {
             final File tempFile = File.createTempFile(LIB_NAME,
                                                       null);

@@ -59,13 +59,10 @@ import static com.google.common.truth.Truth.assertThat;
 
 public class FunctorTest {
 
-    private static final String LIB_PREFIX  = "lib";
-    private static final String LIB_NAME    = "testing";
-    private static final String LIB_POSTFIX = ".so";
+    private static final String LIB_NAME = "testing";
 
     private static String libFilePath() {
-        final InputStream libStream = JNI.class.getClassLoader()
-                                               .getResourceAsStream(LIB_PREFIX + LIB_NAME + LIB_POSTFIX);
+        final InputStream libStream = FunctorTest.class.getResourceAsStream("/libtesting.so");
         try {
             final File tempFile = File.createTempFile(LIB_NAME,
                                                       null);
@@ -104,14 +101,14 @@ public class FunctorTest {
         //given
         final long funcPtrAddr = new Testing().getFunctionPointerTest();
         final Pointer<FooFunc> pointerTestFunc = Pointer.wrap(FooFunc.class,
-                                                      funcPtrAddr);
+                                                              funcPtrAddr);
 
         try (final Pointer<TestStruct> arg0 = Pointer.malloc(TestStruct.SIZE,
-                                                     TestStruct.class);
+                                                             TestStruct.class);
              final Pointer<TestStruct> arg2 = Pointer.malloc(TestStruct.SIZE,
-                                                     TestStruct.class);
+                                                             TestStruct.class);
              final Pointer<Integer> field3 = Pointer.malloc(Size.sizeof((Integer) null))
-                     .castp(Integer.class)) {
+                                                    .castp(Integer.class)) {
 
             arg2.dref()
                 .field0((byte) 123);
@@ -129,13 +126,16 @@ public class FunctorTest {
             //then
             assertThat(result).isEqualTo((byte) 123);
             Truth.assertThat(arg0.dref()
-                           .field2()
-                           .dref(0)).isEqualTo(567);
+                                 .field2()
+                                 .dref(0))
+                 .isEqualTo(567);
             Truth.assertThat(arg0.dref()
-                           .field2()
-                           .dref(1)).isEqualTo(345);
+                                 .field2()
+                                 .dref(1))
+                 .isEqualTo(345);
             Truth.assertThat(arg0.dref()
-                           .field3().address).isEqualTo(field3.address);
+                                 .field3().address)
+                 .isEqualTo(field3.address);
         }
     }
 
@@ -155,11 +155,11 @@ public class FunctorTest {
                 });
 
         try (final Pointer<TestStruct> arg0 = Pointer.malloc(TestStruct.SIZE,
-                                                     TestStruct.class);
+                                                             TestStruct.class);
              final Pointer<TestStruct> arg2 = Pointer.malloc(TestStruct.SIZE,
-                                                     TestStruct.class);
+                                                             TestStruct.class);
              final Pointer<Integer> field3 = Pointer.malloc(Size.sizeof((Integer) null),
-                                                    Integer.class)) {
+                                                            Integer.class)) {
 
             arg2.dref()
                 .field0((byte) 123);
@@ -177,13 +177,16 @@ public class FunctorTest {
             //then
             assertThat(result).isEqualTo((byte) 123);
             Truth.assertThat(arg0.dref()
-                           .field2()
-                           .dref(0)).isEqualTo(567);
+                                 .field2()
+                                 .dref(0))
+                 .isEqualTo(567);
             Truth.assertThat(arg0.dref()
-                           .field2()
-                           .dref(1)).isEqualTo(345);
+                                 .field2()
+                                 .dref(1))
+                 .isEqualTo(345);
             Truth.assertThat(arg0.dref()
-                           .field3().address).isEqualTo(field3.address);
+                                 .field3().address)
+                 .isEqualTo(field3.address);
         }
     }
 
@@ -192,9 +195,10 @@ public class FunctorTest {
                          @ByVal(TestStruct.class) final long arg2) {
 
         final Pointer<TestStruct> testStructByRef = Pointer.wrap(TestStruct.class,
-                                                         arg0);
+                                                                 arg0);
         final TestStruct testStructByVal = Pointer.wrap(TestStruct.class,
-                                                arg2).dref();
+                                                        arg2)
+                                                  .dref();
 
         testStructByRef.dref()
                        .field2()
@@ -531,7 +535,7 @@ public class FunctorTest {
         });
 
         final Pointer<TestStruct> testStructPointer = Pointer.malloc(TestStruct.SIZE,
-                                                             TestStruct.class);
+                                                                     TestStruct.class);
         final TestStruct testStruct = testStructPointer.dref();
 
         final byte             field0 = 10;
@@ -555,50 +559,58 @@ public class FunctorTest {
         final Pointer<Integer> intp = Pointer.nref(44);
         try (Pointer<TestStruct> tst = testStructPointer) {
 
-            final byte newField0 = 'a';
-            final short newField1 = 22;
-            final int newField2_0 = 123;
-            final int newField2_1 = 456;
-            final int newField2_2 = 789;
+            final byte  newField0   = 'a';
+            final short newField1   = 22;
+            final int   newField2_0 = 123;
+            final int   newField2_1 = 456;
+            final int   newField2_2 = 789;
 
             final Pointer<Integer> newField2 = Pointer.nref(newField2_0,
                                                             newField2_1,
                                                             newField2_2);
 
-            final Pointer<Integer> newField3 = intp;
-            final long embedded_field0 = 1234567890L;
-            final float embedded_field1 = 9876543.21F;
+            final Pointer<Integer> newField3       = intp;
+            final long             embedded_field0 = 1234567890L;
+            final float            embedded_field1 = 9876543.21F;
 
             final Pointer<TestStruct> testStructByValue = Pointer.wrap(TestStruct.class,
-                                                               JNITestUtil.execStructTest(pointerStructFunc.address,
-                                                                                          tst.address,
-                                                                                          newField0,
-                                                                                          newField1,
-                                                                                          newField2.address,
-                                                                                          newField3.address,
-                                                                                          embedded_field0,
-                                                                                          embedded_field1));
+                                                                       JNITestUtil.execStructTest(pointerStructFunc.address,
+                                                                                                  tst.address,
+                                                                                                  newField0,
+                                                                                                  newField1,
+                                                                                                  newField2.address,
+                                                                                                  newField3.address,
+                                                                                                  embedded_field0,
+                                                                                                  embedded_field1));
             //then
             final TestStruct testStruct1 = testStructByValue.dref();
             assertThat(testStruct1.field0()).isEqualTo(newField0);
             assertThat(testStruct1.field1()).isEqualTo(newField1);
             Truth.assertThat(testStruct1.field2()
-                                  .dref(0)).isEqualTo(newField2_0);
+                                        .dref(0))
+                 .isEqualTo(newField2_0);
             Truth.assertThat(testStruct1.field2()
-                                  .dref(1)).isEqualTo(newField2_1);
+                                        .dref(1))
+                 .isEqualTo(newField2_1);
             Truth.assertThat(testStruct1.field2()
-                                  .dref(2)).isEqualTo(newField2_2);
-            Truth.assertThat(testStruct1.field3()).isEqualTo(newField3);
+                                        .dref(2))
+                 .isEqualTo(newField2_2);
+            Truth.assertThat(testStruct1.field3())
+                 .isEqualTo(newField3);
 
             assertThat(testStruct.field0()).isEqualTo(newField0);
             assertThat(testStruct.field1()).isEqualTo(newField1);
             Truth.assertThat(testStruct.field2()
-                                 .dref(0)).isEqualTo(newField2_0);
+                                       .dref(0))
+                 .isEqualTo(newField2_0);
             Truth.assertThat(testStruct.field2()
-                                 .dref(1)).isEqualTo(newField2_1);
+                                       .dref(1))
+                 .isEqualTo(newField2_1);
             Truth.assertThat(testStruct.field2()
-                                 .dref(2)).isEqualTo(newField2_2);
-            Truth.assertThat(testStruct.field3()).isEqualTo(newField3);
+                                       .dref(2))
+                 .isEqualTo(newField2_2);
+            Truth.assertThat(testStruct.field3())
+                 .isEqualTo(newField3);
 
             testStructByValue.close();
         }
@@ -681,36 +693,44 @@ public class FunctorTest {
         final float            embedded_field1 = 9876543.21F;
 
         final Pointer<TestStruct> testStruct = Pointer.wrap(TestStruct.class,
-                                                    JNITestUtil.execStructTest2(pointerStructFunc2.address,
-                                                                                tst.address,
-                                                                                field0,
-                                                                                field1,
-                                                                                field2.address,
-                                                                                field3.address,
-                                                                                embedded_field0,
-                                                                                embedded_field1));
+                                                            JNITestUtil.execStructTest2(pointerStructFunc2.address,
+                                                                                        tst.address,
+                                                                                        field0,
+                                                                                        field1,
+                                                                                        field2.address,
+                                                                                        field3.address,
+                                                                                        embedded_field0,
+                                                                                        embedded_field1));
 
         //then
         final TestStruct testStruct1 = testStruct.dref();
         assertThat(testStruct1.field0()).isEqualTo(field0);
         assertThat(testStruct1.field1()).isEqualTo(field1);
         Truth.assertThat(testStruct1.field2()
-                              .dref(0)).isEqualTo(field2_0);
+                                    .dref(0))
+             .isEqualTo(field2_0);
         Truth.assertThat(testStruct1.field2()
-                              .dref(1)).isEqualTo(field2_1);
+                                    .dref(1))
+             .isEqualTo(field2_1);
         Truth.assertThat(testStruct1.field2()
-                              .dref(2)).isEqualTo(field2_2);
-        Truth.assertThat(testStruct1.field3()).isEqualTo(field3);
+                                    .dref(2))
+             .isEqualTo(field2_2);
+        Truth.assertThat(testStruct1.field3())
+             .isEqualTo(field3);
 
         assertThat(testStruct1.field0()).isEqualTo(field0);
         assertThat(testStruct1.field1()).isEqualTo(field1);
         Truth.assertThat(testStruct1.field2()
-                              .dref(0)).isEqualTo(field2_0);
+                                    .dref(0))
+             .isEqualTo(field2_0);
         Truth.assertThat(testStruct1.field2()
-                              .dref(1)).isEqualTo(field2_1);
+                                    .dref(1))
+             .isEqualTo(field2_1);
         Truth.assertThat(testStruct1.field2()
-                              .dref(2)).isEqualTo(field2_2);
-        Truth.assertThat(testStruct1.field3()).isEqualTo(field3);
+                                    .dref(2))
+             .isEqualTo(field2_2);
+        Truth.assertThat(testStruct1.field3())
+             .isEqualTo(field3);
         assertThat(testStruct1.field4()
                               .field0()).isEqualTo(embedded_field0);
         assertThat(testStruct1.field4()
@@ -769,17 +789,17 @@ public class FunctorTest {
         });
 
         final Pointer<TestUnion> testUnionPointer = Pointer.malloc(TestUnion.SIZE,
-                                                           TestUnion.class);
+                                                                   TestUnion.class);
         final int   field0 = 123456789;
         final float field1 = 9876.54F;
 
         //when
         try (Pointer<TestUnion> tst = testUnionPointer) {
             final Pointer<TestUnion> unionPointer = Pointer.wrap(TestUnion.class,
-                                                         JNITestUtil.execUnionTest(pointerUnionFunc.address,
-                                                                                   tst.address,
-                                                                                   field0,
-                                                                                   field1));
+                                                                 JNITestUtil.execUnionTest(pointerUnionFunc.address,
+                                                                                           tst.address,
+                                                                                           field0,
+                                                                                           field1));
 
             //then
             assertThat(tst.dref()
@@ -793,8 +813,9 @@ public class FunctorTest {
                           final int field0,
                           final float field1) {
         Pointer.wrap(TestUnion.class,
-             tst).dref()
-                 .field0(field0);
+                     tst)
+               .dref()
+               .field0(field0);
 
         final TestUnion someTest = new TestUnion();
         someTest.field1(field1);
@@ -817,15 +838,15 @@ public class FunctorTest {
 
 
         final Pointer<TestUnion> testUnionPointer = Pointer.malloc(TestUnion.SIZE,
-                                                           TestUnion.class);
+                                                                   TestUnion.class);
         final int field0 = 123456789;
 
         //when
         try (Pointer<TestUnion> tst = testUnionPointer) {
             final Pointer<TestUnion> unionPointer = Pointer.wrap(TestUnion.class,
-                                                         JNITestUtil.execUnionTest2(pointerUnionFunc.address,
-                                                                                    tst.address,
-                                                                                    field0));
+                                                                 JNITestUtil.execUnionTest2(pointerUnionFunc.address,
+                                                                                            tst.address,
+                                                                                            field0));
 
             //then
             assertThat(Float.floatToIntBits(unionPointer.dref()
@@ -837,11 +858,12 @@ public class FunctorTest {
     public long unionTest2(final long tstPointer,
                            final int field0) {
         final TestUnion tst = Pointer.wrap(TestUnion.class,
-                                   tstPointer).dref();
+                                           tstPointer)
+                                     .dref();
         tst.field0(field0);
 
         final Pointer<TestUnion> someTest = Pointer.malloc(TestUnion.SIZE,
-                                                   TestUnion.class);
+                                                           TestUnion.class);
         someTest.dref()
                 .field1(tst.field1());
         return someTest.address;
@@ -852,7 +874,7 @@ public class FunctorTest {
         //given
         final long pointer = new Testing().charTestFunctionPointer();
         final Pointer<CharFunc> pointerCharFunc = Pointer.wrap(CharFunc.class,
-                                                       pointer);
+                                                               pointer);
 
         final byte value = 123;
 
@@ -869,7 +891,7 @@ public class FunctorTest {
         //given
         final long pointer = new Testing().unsignedCharTestFunctionPointer();
         final Pointer<UnsignedCharFunc> pointerUnsignedCharFunc = Pointer.wrap(UnsignedCharFunc.class,
-                                                                       pointer);
+                                                                               pointer);
 
         final byte value = 123;
 
@@ -886,7 +908,7 @@ public class FunctorTest {
         //given
         final long pointer = new Testing().shortTestFunctionPointer();
         final Pointer<ShortFunc> pointerShortFunc = Pointer.wrap(ShortFunc.class,
-                                                         pointer);
+                                                                 pointer);
 
         final short value = 32536;
 
@@ -903,7 +925,7 @@ public class FunctorTest {
         //given
         final long pointer = new Testing().unsignedShortTestFunctionPointer();
         final Pointer<UnsignedShortFunc> pointerUnsignedShortFunc = Pointer.wrap(UnsignedShortFunc.class,
-                                                                         pointer);
+                                                                                 pointer);
 
         final short value = 32536;
 
@@ -920,7 +942,7 @@ public class FunctorTest {
         //given
         final long pointer = new Testing().intTestFunctionPointer();
         final Pointer<IntFunc> pointerIntFunc = Pointer.wrap(IntFunc.class,
-                                                     pointer);
+                                                             pointer);
 
         final int value = 32536987;
 
@@ -937,7 +959,7 @@ public class FunctorTest {
         //given
         final long pointer = new Testing().unsignedIntTestFunctionPointer();
         final Pointer<UnsignedIntFunc> pointerUnsignedIntFunc = Pointer.wrap(UnsignedIntFunc.class,
-                                                                     pointer);
+                                                                             pointer);
 
         final int value = 32536987;
 
@@ -954,7 +976,7 @@ public class FunctorTest {
         //given
         final long pointer = new Testing().longTestFunctionPointer();
         final Pointer<LongFunc> pointerLongFunc = Pointer.wrap(LongFunc.class,
-                                                       pointer);
+                                                               pointer);
 
         final int value = 32536456;
 
@@ -971,7 +993,7 @@ public class FunctorTest {
         //given
         final long pointer = new Testing().unsignedLongTestFunctionPointer();
         final Pointer<UnsignedLongFunc> pointerUnsignedLongFunc = Pointer.wrap(UnsignedLongFunc.class,
-                                                                       pointer);
+                                                                               pointer);
 
         final int value = 32536456;
 
@@ -989,7 +1011,7 @@ public class FunctorTest {
         //given
         final long pointer = new Testing().longLongTestFunctionPointer();
         final Pointer<LongLongFunc> pointerLongLongFunc = Pointer.wrap(LongLongFunc.class,
-                                                               pointer);
+                                                                       pointer);
 
         final long value = 325364567789456L;
 
@@ -1006,7 +1028,7 @@ public class FunctorTest {
         //given
         final long pointer = new Testing().unsignedLongLongTestFunctionPointer();
         final Pointer<UnsignedLongLongFunc> pointerUnsignedLongLongFunc = Pointer.wrap(UnsignedLongLongFunc.class,
-                                                                               pointer);
+                                                                                       pointer);
 
         final long value = 325364567789456L;
 
@@ -1023,7 +1045,7 @@ public class FunctorTest {
         //given
         final long pointer = new Testing().floatTestFunctionPointer();
         final Pointer<FloatFunc> pointerFloatFunc = Pointer.wrap(FloatFunc.class,
-                                                         pointer);
+                                                                 pointer);
 
         final float value = 32536456.123456F;
 
@@ -1040,7 +1062,7 @@ public class FunctorTest {
         //given
         final long pointer = new Testing().doubleTestFunctionPointer();
         final Pointer<DoubleFunc> pointerDoubleFunc = Pointer.wrap(DoubleFunc.class,
-                                                           pointer);
+                                                                   pointer);
 
         final double value = 32536456159753.12345615975D;
 
@@ -1057,7 +1079,7 @@ public class FunctorTest {
         //given
         final long pointer = new Testing().pointerTestFunctionPointer();
         final Pointer<PointerFunc> pointerPointerFunc = Pointer.wrap(PointerFunc.class,
-                                                             pointer);
+                                                                     pointer);
 
         final int value = 32536456;
 
@@ -1074,10 +1096,10 @@ public class FunctorTest {
         //given
         final long pointer = Testing.structTestFunctionPointer();
         final Pointer<StructFunc> pointerStructFunc = Pointer.wrap(StructFunc.class,
-                                                           pointer);
+                                                                   pointer);
 
         final Pointer<TestStruct> testStructPointer = Pointer.malloc(TestStruct.SIZE,
-                                                             TestStruct.class);
+                                                                     TestStruct.class);
         final TestStruct testStruct = testStructPointer.dref();
 
         final byte             field0 = 10;
@@ -1101,51 +1123,59 @@ public class FunctorTest {
         final Pointer<Integer> intp = Pointer.nref(44);
         try (Pointer<TestStruct> tst = testStructPointer) {
 
-            final byte newField0 = 'a';
-            final short newField1 = 22;
-            final int newField2_0 = 123;
-            final int newField2_1 = 456;
-            final int newField2_2 = 789;
+            final byte  newField0   = 'a';
+            final short newField1   = 22;
+            final int   newField2_0 = 123;
+            final int   newField2_1 = 456;
+            final int   newField2_2 = 789;
 
             final Pointer<Integer> newField2 = Pointer.nref(newField2_0,
                                                             newField2_1,
                                                             newField2_2);
 
-            final Pointer<Integer> newField3 = intp;
-            final long embedded_field0 = 1234567890L;
-            final float embedded_field1 = 9876543.21F;
+            final Pointer<Integer> newField3       = intp;
+            final long             embedded_field0 = 1234567890L;
+            final float            embedded_field1 = 9876543.21F;
 
             final Pointer<TestStruct> testStructByValue = Pointer.wrap(TestStruct.class,
-                                                               pointerStructFunc.dref()
-                                                                                .$(tst.address,
-                                                                                   newField0,
-                                                                                   newField1,
-                                                                                   newField2.address,
-                                                                                   newField3.address,
-                                                                                   embedded_field0,
-                                                                                   embedded_field1));
+                                                                       pointerStructFunc.dref()
+                                                                                        .$(tst.address,
+                                                                                           newField0,
+                                                                                           newField1,
+                                                                                           newField2.address,
+                                                                                           newField3.address,
+                                                                                           embedded_field0,
+                                                                                           embedded_field1));
 
             //then
             final TestStruct testStruct1 = testStructByValue.dref();
             assertThat(testStruct1.field0()).isEqualTo(newField0);
             assertThat(testStruct1.field1()).isEqualTo(newField1);
             Truth.assertThat(testStruct1.field2()
-                                  .dref(0)).isEqualTo(newField2_0);
+                                        .dref(0))
+                 .isEqualTo(newField2_0);
             Truth.assertThat(testStruct1.field2()
-                                  .dref(1)).isEqualTo(newField2_1);
+                                        .dref(1))
+                 .isEqualTo(newField2_1);
             Truth.assertThat(testStruct1.field2()
-                                  .dref(2)).isEqualTo(newField2_2);
-            Truth.assertThat(testStruct1.field3()).isEqualTo(newField3);
+                                        .dref(2))
+                 .isEqualTo(newField2_2);
+            Truth.assertThat(testStruct1.field3())
+                 .isEqualTo(newField3);
 
             assertThat(testStruct.field0()).isEqualTo(newField0);
             assertThat(testStruct.field1()).isEqualTo(newField1);
             Truth.assertThat(testStruct.field2()
-                                 .dref(0)).isEqualTo(newField2_0);
+                                       .dref(0))
+                 .isEqualTo(newField2_0);
             Truth.assertThat(testStruct.field2()
-                                 .dref(1)).isEqualTo(newField2_1);
+                                       .dref(1))
+                 .isEqualTo(newField2_1);
             Truth.assertThat(testStruct.field2()
-                                 .dref(2)).isEqualTo(newField2_2);
-            Truth.assertThat(testStruct.field3()).isEqualTo(newField3);
+                                       .dref(2))
+                 .isEqualTo(newField2_2);
+            Truth.assertThat(testStruct.field3())
+                 .isEqualTo(newField3);
 
             testStructByValue.close();
         }
@@ -1156,7 +1186,7 @@ public class FunctorTest {
         //given
         final long pointer = Testing.structTest2FunctionPointer();
         final Pointer<StructFunc2> pointerStructFunc2 = Pointer.wrap(StructFunc2.class,
-                                                             pointer);
+                                                                     pointer);
 
         //when
         final Pointer<Integer>    intp        = Pointer.nref(44);
@@ -1178,36 +1208,44 @@ public class FunctorTest {
         final float            embedded_field1 = 9876543.21F;
 
         final Pointer<TestStruct> testStruct = Pointer.wrap(TestStruct.class,
-                                                    pointerStructFunc2.dref()
-                                                                      .$(tst.address,
-                                                                         field0,
-                                                                         field1,
-                                                                         field2.address,
-                                                                         field3.address,
-                                                                         embedded_field0,
-                                                                         embedded_field1));
+                                                            pointerStructFunc2.dref()
+                                                                              .$(tst.address,
+                                                                                 field0,
+                                                                                 field1,
+                                                                                 field2.address,
+                                                                                 field3.address,
+                                                                                 embedded_field0,
+                                                                                 embedded_field1));
 
         //then
         final TestStruct testStruct1 = testStruct.dref();
         assertThat(testStruct1.field0()).isEqualTo(field0);
         assertThat(testStruct1.field1()).isEqualTo(field1);
         Truth.assertThat(testStruct1.field2()
-                              .dref(0)).isEqualTo(field2_0);
+                                    .dref(0))
+             .isEqualTo(field2_0);
         Truth.assertThat(testStruct1.field2()
-                              .dref(1)).isEqualTo(field2_1);
+                                    .dref(1))
+             .isEqualTo(field2_1);
         Truth.assertThat(testStruct1.field2()
-                              .dref(2)).isEqualTo(field2_2);
-        Truth.assertThat(testStruct1.field3()).isEqualTo(field3);
+                                    .dref(2))
+             .isEqualTo(field2_2);
+        Truth.assertThat(testStruct1.field3())
+             .isEqualTo(field3);
 
         assertThat(testStruct1.field0()).isEqualTo(field0);
         assertThat(testStruct1.field1()).isEqualTo(field1);
         Truth.assertThat(testStruct1.field2()
-                              .dref(0)).isEqualTo(field2_0);
+                                    .dref(0))
+             .isEqualTo(field2_0);
         Truth.assertThat(testStruct1.field2()
-                              .dref(1)).isEqualTo(field2_1);
+                                    .dref(1))
+             .isEqualTo(field2_1);
         Truth.assertThat(testStruct1.field2()
-                              .dref(2)).isEqualTo(field2_2);
-        Truth.assertThat(testStruct1.field3()).isEqualTo(field3);
+                                    .dref(2))
+             .isEqualTo(field2_2);
+        Truth.assertThat(testStruct1.field3())
+             .isEqualTo(field3);
         assertThat(testStruct1.field4()
                               .field0()).isEqualTo(embedded_field0);
         assertThat(testStruct1.field4()
@@ -1221,19 +1259,20 @@ public class FunctorTest {
         //given
         final long pointer = Testing.unionTestFunctionPointer();
         final Pointer<UnionFunc> pointerUnionFunc = Pointer.wrap(UnionFunc.class,
-                                                         pointer);
+                                                                 pointer);
 
-        final Pointer<TestUnion> testUnionPointer = Pointer.malloc(TestUnion.SIZE).castp(TestUnion.class);
+        final Pointer<TestUnion> testUnionPointer = Pointer.malloc(TestUnion.SIZE)
+                                                           .castp(TestUnion.class);
         final int                field0           = 123456789;
         final float              field1           = 9876.54F;
 
         //when
         try (Pointer<TestUnion> tst = testUnionPointer) {
             final Pointer<TestUnion> unionPointer = Pointer.wrap(TestUnion.class,
-                                                         pointerUnionFunc.dref()
-                                                                         .$(tst.address,
-                                                                            field0,
-                                                                            field1));
+                                                                 pointerUnionFunc.dref()
+                                                                                 .$(tst.address,
+                                                                                    field0,
+                                                                                    field1));
 
             //then
             assertThat(tst.dref()
@@ -1248,18 +1287,18 @@ public class FunctorTest {
         //given
         final long pointer = Testing.unionTest2FunctionPointer();
         final Pointer<UnionFunc2> pointerUnionFunc2 = Pointer.wrap(UnionFunc2.class,
-                                                           pointer);
+                                                                   pointer);
 
         final Pointer<TestUnion> testUnionPointer = Pointer.malloc(TestUnion.SIZE,
-                                                           TestUnion.class);
+                                                                   TestUnion.class);
         final int field0 = 123456789;
 
         //when
         try (Pointer<TestUnion> tst = testUnionPointer) {
             final Pointer<TestUnion> unionPointer = Pointer.wrap(TestUnion.class,
-                                                         pointerUnionFunc2.dref()
-                                                                          .$(tst.address,
-                                                                             field0));
+                                                                 pointerUnionFunc2.dref()
+                                                                                  .$(tst.address,
+                                                                                     field0));
             //then
             assertThat(Float.floatToIntBits(unionPointer.dref()
                                                         .field1())).isEqualTo(field0);
