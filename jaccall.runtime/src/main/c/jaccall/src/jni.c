@@ -98,7 +98,7 @@ void throwError( JNIEnv *env, char *message, ...)
 
 JNIEXPORT
 jobject
-JNICALL Java_org_freedesktop_jaccall_JNI_wrap(JNIEnv *env, jclass clazz, jlong address, jlong size) {
+JNICALL Java_org_freedesktop_jaccall_JNI_wrap(JNIEnv *env, jclass clazz, jlong address, jint size) {
     return (*env)->NewDirectByteBuffer(env, (void *) (intptr_t) address, (size_t) size);
 }
 
