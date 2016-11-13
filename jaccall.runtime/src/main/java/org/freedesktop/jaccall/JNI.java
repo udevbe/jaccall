@@ -157,7 +157,7 @@ public final class JNI {
      * JNI ->
      */
     public static ByteBuffer wrap(long address,
-                                  @Nonnegative long size) {
+                                  @Nonnegative int size) {
         try {
             return (ByteBuffer) DIRECT_BB_CONST.newInstance(address,
                                                             size);
