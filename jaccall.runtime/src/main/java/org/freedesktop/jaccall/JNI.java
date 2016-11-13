@@ -121,7 +121,7 @@ public final class JNI {
      * JNI ->
      */
     public static native ByteBuffer wrap(long address,
-                                         @Nonnegative long size);
+                                         @Nonnegative int size);
 
     public static native long unwrap(@Nonnull Buffer byteBuffer);
 
