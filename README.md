@@ -19,7 +19,7 @@ Design goals:
  - Simple runtime API.
  - No config files.
  - C only.
- - Support for Win/Lin/Mac/Android - x86, x86_64, armsf, armhf.
+ - Support for Linux: aarch64, armv7hf, armv7sf, armv6hf, x86_64, i686.
  - Support for all common use cases: unions, callbacks, pointer-to-pointer, ...
  
 #### Comparison with other libraries
