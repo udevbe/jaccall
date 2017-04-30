@@ -218,7 +218,7 @@ final class StructWriter {
             }
             catch (final IOException e) {
                 this.messager.printMessage(Diagnostic.Kind.ERROR,
-                                           "Could not write struct type source file: \n" + javaFile.toString(),
+                                           "Could not set struct type source file: \n" + javaFile.toString(),
                                            element);
                 e.printStackTrace();
             }
@@ -542,33 +542,33 @@ final class StructWriter {
                                                   Modifier.FINAL)
                                     .returns(ParameterizedTypeName.get(ClassName.get(Pointer.class),
                                                                        structTypeName))
-                                    .addStatement("return readArray(OFFSET_$L, $T.class)",
+                                    .addStatement("return getArray(OFFSET_$L, $T.class)",
                                                   i,
                                                   structTypeName)
                                     .build());
         }
         else {
-            final MethodSpec read = MethodSpec.methodBuilder(fieldName)
-                                              .addModifiers(Modifier.PUBLIC,
-                                                            Modifier.FINAL)
-                                              .returns(structTypeName)
-                                              .addStatement("return readStructType(OFFSET_$L, $T.class)",
-                                                            i,
-                                                            structTypeName)
-                                              .build();
+            final MethodSpec get = MethodSpec.methodBuilder(fieldName)
+                                             .addModifiers(Modifier.PUBLIC,
+                                                           Modifier.FINAL)
+                                             .returns(structTypeName)
+                                             .addStatement("return getStructType(OFFSET_$L, $T.class)",
+                                                           i,
+                                                           structTypeName)
+                                             .build();
 
-            final MethodSpec write = MethodSpec.methodBuilder(fieldName)
-                                               .addModifiers(Modifier.PUBLIC,
-                                                             Modifier.FINAL)
-                                               .addParameter(structTypeName,
-                                                             fieldName,
-                                                             Modifier.FINAL)
-                                               .addStatement("writeStructType(OFFSET_$L, $N)",
-                                                             i,
-                                                             fieldName)
-                                               .build();
-            accessors.add(read);
-            accessors.add(write);
+            final MethodSpec set = MethodSpec.methodBuilder(fieldName)
+                                             .addModifiers(Modifier.PUBLIC,
+                                                           Modifier.FINAL)
+                                             .addParameter(structTypeName,
+                                                           fieldName,
+                                                           Modifier.FINAL)
+                                             .addStatement("setStructType(OFFSET_$L, $N)",
+                                                           i,
+                                                           fieldName)
+                                             .build();
+            accessors.add(get);
+            accessors.add(set);
         }
 
         fieldDefinitions.add(new FieldDefinition(ffiTypeCode,
@@ -723,7 +723,7 @@ final class StructWriter {
                 ParameterizedTypeName pointerType = ParameterizedTypeName.get(ClassName.get(Pointer.class),
                                                                               dataTypeName);
 
-                String statement = "return readArray(OFFSET_$L, $T.class)";
+                String statement = "return getArray(OFFSET_$L, $T.class)";
                 for (int j = 0; j < pointerDepth; j++) {
                     pointerType = ParameterizedTypeName.get(ClassName.get(Pointer.class),
                                                             pointerType);
@@ -745,7 +745,7 @@ final class StructWriter {
                                                       Modifier.FINAL)
                                         .returns(ParameterizedTypeName.get(Pointer.class,
                                                                            javaType))
-                                        .addStatement("return readArray(OFFSET_$L, $T.class)",
+                                        .addStatement("return getArray(OFFSET_$L, $T.class)",
                                                       i,
                                                       javaType)
                                         .build());
@@ -760,14 +760,14 @@ final class StructWriter {
             ParameterizedTypeName pointerType = ParameterizedTypeName.get(ClassName.get(Pointer.class),
                                                                           dataTypeName);
 
-            String statement = "return readPointer(OFFSET_$L, $T.class)";
+            String statement = "return getPointer(OFFSET_$L, $T.class)";
             for (int j = 0; j < pointerDepth; j++) {
                 pointerType = ParameterizedTypeName.get(ClassName.get(Pointer.class),
                                                         pointerType);
                 statement += ".castpp()";
             }
 
-            //read
+            //get
             accessors.add(MethodSpec.methodBuilder(fieldName)
                                     .addModifiers(Modifier.PUBLIC,
                                                   Modifier.FINAL)
@@ -776,7 +776,7 @@ final class StructWriter {
                                                   i,
                                                   dataTypeName)
                                     .build());
-            //write
+            //set
             accessors.add(MethodSpec.methodBuilder(fieldName)
                                     .addModifiers(Modifier.PUBLIC,
                                                   Modifier.FINAL)
@@ -787,22 +787,22 @@ final class StructWriter {
                                                            .build()
                                                            .toString(),
                                                   Modifier.FINAL)
-                                    .addStatement("writePointer(OFFSET_$L, $N)",
+                                    .addStatement("setPointer(OFFSET_$L, $N)",
                                                   i,
                                                   fieldName)
                                     .build());
         }
         else {
-            //read
+            //get
             accessors.add(MethodSpec.methodBuilder(fieldName)
                                     .addModifiers(Modifier.PUBLIC,
                                                   Modifier.FINAL)
                                     .returns(Primitives.unwrap(javaType))
-                                    .addStatement("return read$L(OFFSET_$L)",
+                                    .addStatement("return get$L(OFFSET_$L)",
                                                   javaType.getSimpleName(),
                                                   i)
                                     .build());
-            //write
+            //set
             accessors.add(MethodSpec.methodBuilder(fieldName)
                                     .addModifiers(Modifier.PUBLIC,
                                                   Modifier.FINAL)
@@ -813,7 +813,7 @@ final class StructWriter {
                                                            .build()
                                                            .toString(),
                                                   Modifier.FINAL)
-                                    .addStatement("write$L(OFFSET_$L, $N)",
+                                    .addStatement("set$L(OFFSET_$L, $N)",
                                                   javaType.getSimpleName(),
                                                   i,
                                                   fieldName)

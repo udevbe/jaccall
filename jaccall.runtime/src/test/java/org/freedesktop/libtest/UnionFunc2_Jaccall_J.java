@@ -8,7 +8,7 @@ import javax.annotation.Generated;
 final class UnionFunc2_Jaccall_J extends PointerUnionFunc2 {
 
     private static final long JNI_METHOD_ID = JNI.GetMethodID(UnionFunc2.class,
-                                                              "$",
+                                                              "invoke",
                                                               "(JI)J");
     private final UnionFunc2 function;
 
@@ -21,9 +21,9 @@ final class UnionFunc2_Jaccall_J extends PointerUnionFunc2 {
 
 
     @Override
-    public long $(long tst,
+    public long invoke(long tst,
                   int field0) {
-        return this.function.$(tst,
+        return this.function.invoke(tst,
                                field0);
     }
 }

@@ -1,10 +1,6 @@
 package org.freedesktop.jaccall.compiletime;
 
 
-import org.freedesktop.jaccall.JNI;
-import org.freedesktop.jaccall.Pointer;
-import org.freedesktop.jaccall.PointerFactory;
-import org.freedesktop.jaccall.PointerFunc;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -15,6 +11,10 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import org.freedesktop.jaccall.JNI;
+import org.freedesktop.jaccall.Pointer;
+import org.freedesktop.jaccall.PointerFactory;
+import org.freedesktop.jaccall.PointerFunc;
 
 import javax.annotation.Generated;
 import javax.annotation.processing.Filer;
@@ -130,7 +130,7 @@ final class FunctorWriter {
         }
         catch (final IOException e) {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
-                                       "Could not write linksymbols source file: \n" + javaFile.toString(),
+                                       "Could not set linksymbols source file: \n" + javaFile.toString(),
                                        element);
             e.printStackTrace();
         }
@@ -171,10 +171,10 @@ final class FunctorWriter {
         final CodeBlock $Statement = CodeBlock.builder()
                                               .add(returnType.getKind()
                                                              .equals(TypeKind.VOID) ? "" : "return ")
-                                              .add("this.function.$$($L)",
+                                              .add("this.function.invoke($L)",
                                                    parameterNames)
                                               .build();
-        final MethodSpec $ = MethodSpec.methodBuilder("$")
+        final MethodSpec $ = MethodSpec.methodBuilder("invoke")
                                        .addModifiers(Modifier.PUBLIC)
                                        .addAnnotation(Override.class)
                                        .returns(ClassName.get(returnType))
@@ -199,7 +199,7 @@ final class FunctorWriter {
                                                .initializer("$T.GetMethodID($T.class, $S, $S)",
                                                             JNI.class,
                                                             ClassName.get(element),
-                                                            "$",
+                                                            "invoke",
                                                             new MethodParser(this.messager).parseJniSignature(executableElement))
                                                .build();
 
@@ -226,7 +226,7 @@ final class FunctorWriter {
         }
         catch (final IOException e) {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
-                                       "Could not write linksymbols source file: \n" + javaFile.toString(),
+                                       "Could not set linksymbols source file: \n" + javaFile.toString(),
                                        element);
             e.printStackTrace();
         }
@@ -274,10 +274,10 @@ final class FunctorWriter {
         final CodeBlock $Statement = CodeBlock.builder()
                                               .add(returnType.getKind()
                                                              .equals(TypeKind.VOID) ? "" : "return ")
-                                              .add("_$$(this.address, $L)",
+                                              .add("_invoke(this.address, $L)",
                                                    parameterNames)
                                               .build();
-        final MethodSpec $ = MethodSpec.methodBuilder("$")
+        final MethodSpec $ = MethodSpec.methodBuilder("invoke")
                                        .addModifiers(Modifier.PUBLIC)
                                        .addAnnotation(Override.class)
                                        .returns(ClassName.get(returnType))
@@ -286,24 +286,24 @@ final class FunctorWriter {
                                                      $Statement)
                                        .build();
 
-        final LinkedList<ParameterSpec> _$ParameterSpecs = new LinkedList<>($ParameterSpecs);
-        _$ParameterSpecs.addFirst(ParameterSpec.builder(long.class,
-                                                        "address")
-                                               .build());
-        final MethodSpec _$ = MethodSpec.methodBuilder("_$")
-                                        .addModifiers(Modifier.PRIVATE,
-                                                      Modifier.STATIC,
-                                                      Modifier.NATIVE)
-                                        .returns(ClassName.get(returnType))
-                                        .addParameters(_$ParameterSpecs)
-                                        .build();
+        final LinkedList<ParameterSpec> _InvokeParameterSpecs = new LinkedList<>($ParameterSpecs);
+        _InvokeParameterSpecs.addFirst(ParameterSpec.builder(long.class,
+                                                             "address")
+                                                    .build());
+        final MethodSpec _invoke = MethodSpec.methodBuilder("_invoke")
+                                             .addModifiers(Modifier.PRIVATE,
+                                                           Modifier.STATIC,
+                                                           Modifier.NATIVE)
+                                             .returns(ClassName.get(returnType))
+                                             .addParameters(_InvokeParameterSpecs)
+                                             .build();
 
         final CodeBlock staticBlock = CodeBlock.builder()
                                                .addStatement("$T.linkFuncPtr($T.class,  $S, $L, $S, FFI_CIF)",
                                                              JNI.class,
                                                              ClassName.get(packageName,
                                                                            cFunctorName),
-                                                             "_$",
+                                                             "_invoke",
                                                              parameters.size() + 1,
                                                              new MethodParser(this.messager).parseJniSignature(executableElement)
                                                                                             .replace("(",
@@ -318,7 +318,7 @@ final class FunctorWriter {
                                                                     factoryName))
                                           .addMethod(constructor)
                                           .addMethod($)
-                                          .addMethod(_$)
+                                          .addMethod(_invoke)
                                           .build();
 
         final JavaFile javaFile = JavaFile.builder(packageName,
@@ -330,7 +330,7 @@ final class FunctorWriter {
         }
         catch (final IOException e) {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
-                                       "Could not write linksymbols source file: \n" + javaFile.toString(),
+                                       "Could not set linksymbols source file: \n" + javaFile.toString(),
                                        element);
             e.printStackTrace();
         }
@@ -406,7 +406,7 @@ final class FunctorWriter {
         }
         catch (final IOException e) {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
-                                       "Could not write linksymbols source file: \n" + javaFile.toString(),
+                                       "Could not set linksymbols source file: \n" + javaFile.toString(),
                                        element);
             e.printStackTrace();
         }

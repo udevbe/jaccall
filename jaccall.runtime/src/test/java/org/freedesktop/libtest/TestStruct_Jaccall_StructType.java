@@ -39,45 +39,45 @@ abstract class TestStruct_Jaccall_StructType extends StructType {
     }
 
     public final byte field0() {
-        return readByte(OFFSET_0);
+        return getByte(OFFSET_0);
     }
 
     public final void field0(final byte field0) {
-        writeByte(OFFSET_0,
+        setByte(OFFSET_0,
                   field0);
     }
 
     public final short field1() {
-        return readShort(OFFSET_1);
+        return getShort(OFFSET_1);
     }
 
     public final void field1(final short field1) {
-        writeShort(OFFSET_1,
+        setShort(OFFSET_1,
                    field1);
     }
 
     public final Pointer<Integer> field2() {
-        return readArray(OFFSET_2,
+        return getArray(OFFSET_2,
                          Integer.class);
     }
 
     public final Pointer<Integer> field3() {
-        return readPointer(OFFSET_3,
+        return getPointer(OFFSET_3,
                            Integer.class);
     }
 
     public final void field3(final Pointer<Integer> field3) {
-        writePointer(OFFSET_3,
+        setPointer(OFFSET_3,
                      field3);
     }
 
     public final TestStructEmbedded field4() {
-        return readStructType(OFFSET_4,
+        return getStructType(OFFSET_4,
                               TestStructEmbedded.class);
     }
 
     public final void field4(final TestStructEmbedded field4) {
-        writeStructType(OFFSET_4,
+        setStructType(OFFSET_4,
                         field4);
     }
 }

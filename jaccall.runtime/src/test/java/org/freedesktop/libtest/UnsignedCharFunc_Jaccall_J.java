@@ -8,7 +8,7 @@ import javax.annotation.Generated;
 final class UnsignedCharFunc_Jaccall_J extends PointerUnsignedCharFunc {
 
     private static final long JNI_METHOD_ID = JNI.GetMethodID(UnsignedCharFunc.class,
-                                                              "$",
+                                                              "invoke",
                                                               "(B)B");
     private final UnsignedCharFunc function;
 
@@ -21,7 +21,7 @@ final class UnsignedCharFunc_Jaccall_J extends PointerUnsignedCharFunc {
 
 
     @Override
-    public byte $(final byte value) {
-        return this.function.$(value);
+    public byte invoke(final byte value) {
+        return this.function.invoke(value);
     }
 }

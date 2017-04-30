@@ -9,5 +9,5 @@ import org.freedesktop.jaccall.Lng;
 @Functor
 public interface LongLongFunc {
     @Lng
-    long $(@Lng long value);
+    long invoke(@Lng long value);
 }

@@ -10,7 +10,7 @@ final class CharFunc_Jaccall_C extends PointerCharFunc {
 
     static {
         JNI.linkFuncPtr(CharFunc_Jaccall_C.class,
-                        "_$",
+                        "_invoke",
                         2,
                         "(JB)B",
                         FFI_CIF);
@@ -21,11 +21,11 @@ final class CharFunc_Jaccall_C extends PointerCharFunc {
     }
 
     @Override
-    public byte $(final byte value) {
-        return _$(this.address,
+    public byte invoke(final byte value) {
+        return _invoke(this.address,
                   value);
     }
 
-    private static native byte _$(final long address,
+    private static native byte _invoke(final long address,
                                   final byte value);
 }

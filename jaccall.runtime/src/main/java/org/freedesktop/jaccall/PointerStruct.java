@@ -4,8 +4,6 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 
-import static org.freedesktop.jaccall.Size.sizeof;
-
 final class PointerStruct extends Pointer<StructType> {
 
     private final Class<? extends StructType> structClass;
@@ -22,13 +20,13 @@ final class PointerStruct extends Pointer<StructType> {
 
     @Nonnull
     @Override
-    public StructType dref() {
-        return dref(0);
+    public StructType get() {
+        return get(0);
     }
 
     @Nonnull
     @Override
-    public StructType dref(@Nonnegative final int index) {
+    public StructType get(@Nonnegative final int index) {
         try {
             final StructType structType = this.structClass.newInstance();
             structType.address(this.address + (index * this.typeSize));
@@ -39,17 +37,17 @@ final class PointerStruct extends Pointer<StructType> {
         }
     }
 
-    public void write(@Nonnull final StructType val) {
-        writei(0,
-               val);
+    public void set(@Nonnull final StructType val) {
+        set(0,
+            val);
     }
 
     @Override
-    public void writei(@Nonnegative final int index,
-                       @Nonnull final StructType val) {
+    public void set(@Nonnegative final int index,
+                    @Nonnull final StructType val) {
         final int offset = index * this.typeSize;
-        JNI.writeStruct(this.address + offset,
-                        val.address(),
-                        this.typeSize);
+        JNI.setStruct(this.address + offset,
+                      val.address(),
+                      this.typeSize);
     }
 }

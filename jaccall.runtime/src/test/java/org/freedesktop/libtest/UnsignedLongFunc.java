@@ -8,5 +8,5 @@ import org.freedesktop.jaccall.Unsigned;
  */
 @Functor
 public interface UnsignedLongFunc {
-    long $(@Unsigned long value);
+    long invoke(@Unsigned long value);
 }

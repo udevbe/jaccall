@@ -4,5 +4,5 @@ import org.freedesktop.jaccall.Functor;
 
 @Functor
 public interface WriteGlobalVarFunc {
-    void $(int var);
+    void invoke(int var);
 }

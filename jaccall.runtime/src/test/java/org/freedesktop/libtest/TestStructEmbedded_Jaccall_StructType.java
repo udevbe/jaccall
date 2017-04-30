@@ -26,20 +26,20 @@ abstract class TestStructEmbedded_Jaccall_StructType extends StructType {
     }
 
     public final long field0() {
-        return readLong(OFFSET_0);
+        return getLong(OFFSET_0);
     }
 
     public final void field0(final long field0) {
-        writeLong(OFFSET_0,
+        setLong(OFFSET_0,
                   field0);
     }
 
     public final float field1() {
-        return readFloat(OFFSET_1);
+        return getFloat(OFFSET_1);
     }
 
     public final void field1(final float field1) {
-        writeFloat(OFFSET_1,
+        setFloat(OFFSET_1,
                    field1);
     }
 }

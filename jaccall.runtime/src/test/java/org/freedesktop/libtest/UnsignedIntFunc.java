@@ -10,5 +10,5 @@ import org.freedesktop.jaccall.Unsigned;
 public interface UnsignedIntFunc {
 
     @Unsigned
-    int $(@Unsigned int value);
+    int invoke(@Unsigned int value);
 }

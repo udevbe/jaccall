@@ -18,28 +18,28 @@ final class PointerCLong extends Pointer<CLong> {
 
     @Nonnull
     @Override
-    public CLong dref() {
-        return dref(0);
+    public CLong get() {
+        return get(0);
     }
 
     @Nonnull
     @Override
-    public CLong dref(@Nonnegative final int index) {
-        return new CLong(JNI.readCLong(this.address,
-                                       index));
+    public CLong get(@Nonnegative final int index) {
+        return new CLong(JNI.getCLong(this.address,
+                                      index));
     }
 
     @Override
-    public void write(@Nonnull final CLong val) {
-        writei(0,
-               val);
+    public void set(@Nonnull final CLong val) {
+        set(0,
+            val);
     }
 
     @Override
-    public void writei(@Nonnegative final int index,
-                       @Nonnull final CLong val) {
-        JNI.writeCLong(this.address,
-                       index,
-                       val.longValue());
+    public void set(@Nonnegative final int index,
+                    @Nonnull final CLong val) {
+        JNI.setCLong(this.address,
+                     index,
+                     val.longValue());
     }
 }

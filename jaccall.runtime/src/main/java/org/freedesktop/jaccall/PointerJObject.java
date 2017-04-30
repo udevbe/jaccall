@@ -5,8 +5,6 @@ import javax.annotation.Nonnull;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.freedesktop.jaccall.Size.sizeof;
-
 final class PointerJObject extends Pointer<Object> {
     public PointerJObject(final long address,
                           final boolean autoFree) {
@@ -18,24 +16,24 @@ final class PointerJObject extends Pointer<Object> {
 
     @Nonnull
     @Override
-    public Object dref() {
+    public Object get() {
         return JNI.toObject(this.address);
     }
 
     @Nonnull
     @Override
-    public Object dref(@Nonnegative final int index) {
+    public Object get(@Nonnegative final int index) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void write(@Nonnull final Object val) {
+    public void set(@Nonnull final Object val) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void writei(@Nonnegative final int index,
-                       @Nonnull final Object val) {
+    public void set(@Nonnegative final int index,
+                    @Nonnull final Object val) {
         throw new UnsupportedOperationException();
     }
 

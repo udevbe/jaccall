@@ -8,7 +8,7 @@ import org.freedesktop.jaccall.Unsigned;
 @Functor
 public interface FooFunc {
 
-    byte $(@Ptr long arg0,
+    byte invoke(@Ptr long arg0,
            @Unsigned int arg1,
            @ByVal(TestStruct.class) long arg2);
 }

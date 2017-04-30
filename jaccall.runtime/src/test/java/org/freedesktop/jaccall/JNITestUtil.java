@@ -8,7 +8,7 @@ import java.io.InputStream;
 
 public class JNITestUtil {
 
-    private static final String LIB_NAME    = "jnitestutil";
+    private static final String LIB_NAME = "jnitestutil";
 
     static {
         final InputStream libStream = JNITestUtil.class.getResourceAsStream("/libjnitestutil.so");
@@ -47,15 +47,15 @@ public class JNITestUtil {
 
     public static native long pointerOfPointer(long pointer);
 
-    public static native long readCLong(final long address);
+    public static native long getCLong(final long address);
 
-    public static native byte readByte(final long address);
+    public static native byte getByte(final long address);
 
-    public static native float readFloat(final long address);
+    public static native float getFloat(final long address);
 
-    public static native float readDouble(final long address);
+    public static native float getDouble(final long address);
 
-    public static native long readPointer(final long address);
+    public static native long getPointer(final long address);
 
     public static native byte execCharTest(long functionPointer,
                                            byte value);

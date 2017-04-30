@@ -10,7 +10,7 @@ final class ShortFunc_Jaccall_C extends PointerShortFunc {
 
     static {
         JNI.linkFuncPtr(ShortFunc_Jaccall_C.class,
-                        "_$",
+                        "_invoke",
                         2,
                         "(JS)S",
                         FFI_CIF);
@@ -21,11 +21,11 @@ final class ShortFunc_Jaccall_C extends PointerShortFunc {
     }
 
     @Override
-    public short $(final short value) {
-        return _$(this.address,
+    public short invoke(final short value) {
+        return _invoke(this.address,
                   value);
     }
 
-    private static native short _$(final long address,
+    private static native short _invoke(final long address,
                                    final short value);
 }

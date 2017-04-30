@@ -3,8 +3,8 @@ package org.freedesktop.jaccall;
 import org.freedesktop.libtest.TestStructFunctionPointer;
 import org.junit.Test;
 
-import static org.freedesktop.jaccall.Pointer.wrap;
 import static com.google.common.truth.Truth.assertThat;
+import static org.freedesktop.jaccall.Pointer.wrap;
 
 public class StructFunctorTest {
 
@@ -18,26 +18,26 @@ public class StructFunctorTest {
 
         //when
         //function pointers are called in java
-        final long field0Result = structFpPointer.dref()
+        final long field0Result = structFpPointer.get()
                                                  .field0()
-                                                 .dref()
-                                                 .$(123456);
-        final long field10Result = structFpPointer.dref()
+                                                 .get()
+                                                 .invoke(123456);
+        final long field10Result = structFpPointer.get()
                                                   .field1()
-                                                  .dref(0)
-                                                  .dref()
-                                                  .$(123456);
-        final long field11Result = structFpPointer.dref()
+                                                  .get(0)
+                                                  .get()
+                                                  .invoke(123456);
+        final long field11Result = structFpPointer.get()
                                                   .field1()
-                                                  .dref(1)
-                                                  .dref()
-                                                  .$(123456);
+                                                  .get(1)
+                                                  .get()
+                                                  .invoke(123456);
 
-        final long field12Result = structFpPointer.dref()
+        final long field12Result = structFpPointer.get()
                                                   .field1()
-                                                  .dref(2)
-                                                  .dref()
-                                                  .$(123456);
+                                                  .get(2)
+                                                  .get()
+                                                  .invoke(123456);
 
 
         //then

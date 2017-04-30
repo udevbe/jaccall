@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 final class FooFunc_Jaccall_J extends PointerFooFunc {
 
     private static final long JNI_METHOD_ID = JNI.GetMethodID(FooFunc.class,
-                                                              "$",
+                                                              "invoke",
                                                               "(JIJ)B");
 
     @Nonnull
@@ -26,10 +26,10 @@ final class FooFunc_Jaccall_J extends PointerFooFunc {
     }
 
     @Override
-    public byte $(@Ptr final long arg0,
+    public byte invoke(@Ptr final long arg0,
                   @Unsigned final int arg1,
                   @ByVal(TestStruct.class) final long arg2) {
-        return this.fooFunction.$(arg0,
+        return this.fooFunction.invoke(arg0,
                                   arg1,
                                   arg2);
     }

@@ -9,5 +9,5 @@ import org.freedesktop.jaccall.Unsigned;
 @Functor
 public interface UnsignedCharFunc {
     @Unsigned
-    byte $(@Unsigned byte value);
+    byte invoke(@Unsigned byte value);
 }

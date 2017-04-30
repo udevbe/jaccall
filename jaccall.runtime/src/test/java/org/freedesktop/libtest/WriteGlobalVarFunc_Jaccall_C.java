@@ -6,7 +6,7 @@ final class WriteGlobalVarFunc_Jaccall_C extends PointerWriteGlobalVarFunc {
 
     static {
         JNI.linkFuncPtr(WriteGlobalVarFunc_Jaccall_C.class,
-                        "_$",
+                        "_invoke",
                         2,
                         "(JI)V",
                         FFI_CIF);
@@ -17,11 +17,11 @@ final class WriteGlobalVarFunc_Jaccall_C extends PointerWriteGlobalVarFunc {
     }
 
     @Override
-    public void $(final int var) {
-        _$(this.address,
+    public void invoke(final int var) {
+        _invoke(this.address,
            var);
     }
 
-    private static native void _$(final long address,
+    private static native void _invoke(final long address,
                                   int var);
 }

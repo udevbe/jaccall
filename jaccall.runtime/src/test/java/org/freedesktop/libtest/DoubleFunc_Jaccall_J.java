@@ -8,7 +8,7 @@ import javax.annotation.Generated;
 final class DoubleFunc_Jaccall_J extends PointerDoubleFunc {
 
     private static final long JNI_METHOD_ID = JNI.GetMethodID(DoubleFunc.class,
-                                                              "$",
+                                                              "invoke",
                                                               "(D)D");
     private final DoubleFunc function;
 
@@ -21,7 +21,7 @@ final class DoubleFunc_Jaccall_J extends PointerDoubleFunc {
 
 
     @Override
-    public double $(final double value) {
-        return this.function.$(value);
+    public double invoke(final double value) {
+        return this.function.invoke(value);
     }
 }

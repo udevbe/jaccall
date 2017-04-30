@@ -8,7 +8,7 @@ import javax.annotation.Generated;
 final class CharFunc_Jaccall_J extends PointerCharFunc {
 
     private static final long JNI_METHOD_ID = JNI.GetMethodID(CharFunc.class,
-                                                              "$",
+                                                              "invoke",
                                                               "(B)B");
 
     private final CharFunc function;
@@ -21,7 +21,7 @@ final class CharFunc_Jaccall_J extends PointerCharFunc {
     }
 
     @Override
-    public byte $(final byte value) {
-        return this.function.$(value);
+    public byte invoke(final byte value) {
+        return this.function.invoke(value);
     }
 }

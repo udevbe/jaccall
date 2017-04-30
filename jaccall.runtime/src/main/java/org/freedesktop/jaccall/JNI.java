@@ -364,167 +364,167 @@ public final class JNI {
     /*
      * raw io ->
      */
-    public static byte readByte(final long address,
-                                final int index) {
+    public static byte getByte(final long address,
+                               final int index) {
         return UNSAFE.getByte(address + index);
     }
 
-    public static void writeByte(final long address,
-                                 final int index,
-                                 final byte b) {
+    public static void setByte(final long address,
+                               final int index,
+                               final byte b) {
         UNSAFE.putByte(address + index,
                        b);
     }
 
-    public static void writeBytes(final long address,
-                                  final byte[] val) {
+    public static void setBytes(final long address,
+                                final byte[] val) {
         for (int i = 0; i < val.length; i++) {
             UNSAFE.putByte(address + i,
                            val[i]);
         }
     }
 
-    public static long readCLong(final long address,
-                                 final int index) {
+    public static long getCLong(final long address,
+                                final int index) {
         return UNSAFE.getAddress(address + (index * sizeOfPointer()));
     }
 
-    public static void writeCLong(final long address,
-                                  final int index,
-                                  final long l) {
+    public static void setCLong(final long address,
+                                final int index,
+                                final long l) {
         UNSAFE.putAddress(address + (index * sizeOfPointer()),
                           l);
     }
 
-    public static double readDouble(final long address,
-                                    final int index) {
+    public static double getDouble(final long address,
+                                   final int index) {
         return UNSAFE.getDouble(address + index * 8);
     }
 
-    public static void writeDouble(final long address,
-                                   final int index,
-                                   final double v) {
+    public static void setDouble(final long address,
+                                 final int index,
+                                 final double v) {
         UNSAFE.putDouble(address + index * 8,
                          v);
     }
 
-    public static void writeDoubles(final long address,
-                                    final double[] val) {
+    public static void setDoubles(final long address,
+                                  final double[] val) {
         for (int i = 0; i < val.length; i++) {
-            writeDouble(address,
-                        i,
-                        val[i]);
-        }
-    }
-
-    public static void writeFloat(final long address,
-                                  final int index,
-                                  final float v) {
-        UNSAFE.putFloat(address + index * 4,
-                        v);
-    }
-
-    public static void writeFloats(final long address,
-                                   final float[] val) {
-        for (int i = 0; i < val.length; i++) {
-            writeFloat(address,
-                       i,
-                       val[i]);
-        }
-    }
-
-    public static int readInt(final long address,
-                              final int index) {
-        return UNSAFE.getInt(address + index * 4);
-    }
-
-    public static void writeInt(final long address,
-                                final int index,
-                                final int i) {
-        UNSAFE.putInt(address + index * 4,
-                      i);
-    }
-
-    public static void writeInts(final long address,
-                                 final int[] val) {
-        for (int i = 0; i < val.length; i++) {
-            writeInt(address,
-                     i,
-                     val[i]);
-        }
-    }
-
-    public static long readLong(final long address,
-                                final int index) {
-        return UNSAFE.getLong(address + index * 8);
-    }
-
-    public static void writeLong(final long address,
-                                 final int index,
-                                 final long val) {
-        UNSAFE.putLong(address + index * 8,
-                       val);
-    }
-
-    public static void writeLongs(final long address,
-                                  final long[] val) {
-        for (int i = 0; i < val.length; i++) {
-            writeLong(address,
+            setDouble(address,
                       i,
                       val[i]);
         }
     }
 
-    public static long readPointer(final long address,
-                                   final int index) {
+    public static void setFloat(final long address,
+                                final int index,
+                                final float v) {
+        UNSAFE.putFloat(address + index * 4,
+                        v);
+    }
+
+    public static void setFloats(final long address,
+                                 final float[] val) {
+        for (int i = 0; i < val.length; i++) {
+            setFloat(address,
+                     i,
+                     val[i]);
+        }
+    }
+
+    public static int getInt(final long address,
+                             final int index) {
+        return UNSAFE.getInt(address + index * 4);
+    }
+
+    public static void setInt(final long address,
+                              final int index,
+                              final int i) {
+        UNSAFE.putInt(address + index * 4,
+                      i);
+    }
+
+    public static void setInts(final long address,
+                               final int[] val) {
+        for (int i = 0; i < val.length; i++) {
+            setInt(address,
+                   i,
+                   val[i]);
+        }
+    }
+
+    public static long getLong(final long address,
+                               final int index) {
+        return UNSAFE.getLong(address + index * 8);
+    }
+
+    public static void setLong(final long address,
+                               final int index,
+                               final long val) {
+        UNSAFE.putLong(address + index * 8,
+                       val);
+    }
+
+    public static void setLongs(final long address,
+                                final long[] val) {
+        for (int i = 0; i < val.length; i++) {
+            setLong(address,
+                    i,
+                    val[i]);
+        }
+    }
+
+    public static long getPointer(final long address,
+                                  final int index) {
         return UNSAFE.getAddress(address + index * Size.sizeof((Pointer) null));
     }
 
-    public static void writePointer(final long address,
-                                    final int index,
-                                    final long address1) {
+    public static void setPointer(final long address,
+                                  final int index,
+                                  final long address1) {
         UNSAFE.putAddress(address + index * Size.sizeof((Pointer) null),
                           address1);
     }
 
-    public static short readShort(final long address,
-                                  final int index) {
+    public static short getShort(final long address,
+                                 final int index) {
         return UNSAFE.getShort(address + index * 2);
     }
 
-    public static void writeShort(final long address,
-                                  final int index,
-                                  final short i) {
+    public static void setShort(final long address,
+                                final int index,
+                                final short i) {
         UNSAFE.putShort(address + index * 2,
                         i);
     }
 
-    public static void writeShorts(final long address,
-                                   final short[] val) {
+    public static void setShorts(final long address,
+                                 final short[] val) {
         for (int i = 0; i < val.length; i++) {
-            writeShort(address,
-                       i,
-                       val[i]);
+            setShort(address,
+                     i,
+                     val[i]);
         }
     }
 
-    public static native String readString(final long address,
-                                           final int index);
+    public static native String getString(final long address,
+                                          final int index);
 
-    public static native void writeString(final long address,
-                                          final int index,
-                                          final String val);
+    public static native void setString(final long address,
+                                        final int index,
+                                        final String val);
 
-    public static void writeStruct(final long targetAddress,
-                                   final long sourceAddress,
-                                   final int size) {
+    public static void setStruct(final long targetAddress,
+                                 final long sourceAddress,
+                                 final int size) {
         UNSAFE.copyMemory(sourceAddress,
                           targetAddress,
                           size);
     }
 
-    public static float readFloat(final long address,
-                                  final int index) {
+    public static float getFloat(final long address,
+                                 final int index) {
         return UNSAFE.getFloat(address + index * 4);
     }
     /*

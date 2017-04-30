@@ -14,8 +14,6 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.freedesktop.jaccall.Size.sizeof;
-
 public abstract class Pointer<T> implements AutoCloseable {
 
     static {
@@ -420,8 +418,8 @@ public abstract class Pointer<T> implements AutoCloseable {
                                                                     Size.sizeof((CLong) null),
                                                                     length);
         for (int i = 0; i < length; i++) {
-            pointer.writei(i,
-                           val[i]);
+            pointer.set(i,
+                        val[i]);
         }
 
         return pointer;
@@ -468,7 +466,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<U> pointer = (Pointer<U>) createStack(val[0].getClass(),
                                                             Size.sizeof(val[0]),
                                                             length);
-        pointer.write(val);
+        pointer.set(val);
 
         return pointer;
     }
@@ -498,7 +496,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final Pointer<U> pointer = (Pointer<U>) createStack(val[0].getClass(),
                                                             Size.sizeof((Pointer) null),
                                                             length);
-        pointer.write(val);
+        pointer.set(val);
 
         return pointer;
     }
@@ -527,7 +525,7 @@ public abstract class Pointer<T> implements AutoCloseable {
                                                               Size.sizeof((Byte) null),
                                                               length);
         //shortcut to avoid autoboxing
-        pointer.write(val);
+        pointer.set(val);
 
         return pointer;
     }
@@ -556,7 +554,7 @@ public abstract class Pointer<T> implements AutoCloseable {
                                                                 Size.sizeof((Short) null),
                                                                 length);
         //shortcut to avoid autoboxing
-        pointer.write(val);
+        pointer.set(val);
 
         return pointer;
     }
@@ -584,7 +582,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final PointerInt pointer = (PointerInt) createStack(Integer.class,
                                                             Size.sizeof((Integer) null),
                                                             length);
-        pointer.write(val);
+        pointer.set(val);
 
         return pointer;
     }
@@ -612,7 +610,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final PointerFloat pointer = (PointerFloat) createStack(Float.class,
                                                                 Size.sizeof((Float) null),
                                                                 length);
-        pointer.write(val);
+        pointer.set(val);
 
         return pointer;
     }
@@ -640,7 +638,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final PointerLong pointer = (PointerLong) createStack(Long.class,
                                                               Size.sizeof((Long) null),
                                                               length);
-        pointer.write(val);
+        pointer.set(val);
 
         return pointer;
     }
@@ -668,7 +666,7 @@ public abstract class Pointer<T> implements AutoCloseable {
         final PointerDouble pointer = (PointerDouble) createStack(Double.class,
                                                                   Size.sizeof((Double) null),
                                                                   length);
-        pointer.write(val);
+        pointer.set(val);
 
         return pointer;
     }
@@ -688,7 +686,7 @@ public abstract class Pointer<T> implements AutoCloseable {
                                                     Size.sizeof(Objects.requireNonNull(val,
                                                                                        "Argument val must not be null")),
                                                     1);
-        pointer.write(val);
+        pointer.set(val);
 
         return pointer;
     }
@@ -738,7 +736,7 @@ public abstract class Pointer<T> implements AutoCloseable {
 
     /**
      * Java:<br>
-     * {@code T value = foo.dref();}
+     * {@code T value = foo.get();}
      * <p>
      * C equivalent:<br>
      * {@code T value = *foo}
@@ -746,11 +744,11 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @return
      */
     @Nonnull
-    public abstract T dref();
+    public abstract T get();
 
     /**
      * Java:<br>
-     * {@code T value = foo.dref(i);}
+     * {@code T value = foo.get(i);}
      * <p>
      * C equivalent:<br>
      * {@code T value = foo[i]}
@@ -760,22 +758,74 @@ public abstract class Pointer<T> implements AutoCloseable {
      * @return
      */
     @Nonnull
-    public abstract T dref(@Nonnegative final int index);
+    public abstract T get(@Nonnegative final int index);
 
     /**
      * Java:<br>
-     * {@code offsetFoo = foo.offset(i);}
+     * {@code offsetFoo = foo.inc();}
      * <p>
      * C equivalent:<br>
-     * {@code offsetFoo = foo+i;}
+     * {@code offsetFoo = foo++;}
      *
-     * @param offset
+     * @param value
      *
      * @return
      */
     @Nonnull
-    public final Pointer<T> offset(final int offset) {
-        final int byteOffset = offset * this.typeSize;
+    public final Pointer<T> inc() {
+        return plus(1);
+    }
+
+    /**
+     * Java:<br>
+     * {@code offsetFoo = foo.dec();}
+     * <p>
+     * C equivalent:<br>
+     * {@code offsetFoo = foo--;}
+     *
+     * @param value
+     *
+     * @return
+     */
+    @Nonnull
+    public final Pointer<T> dec() {
+        return minus(1);
+    }
+
+    /**
+     * Java:<br>
+     * {@code offsetFoo = foo.plus(i);}
+     * <p>
+     * C equivalent:<br>
+     * {@code offsetFoo = foo+i;}
+     *
+     * @param value
+     *
+     * @return
+     */
+    @Nonnull
+    public final Pointer<T> plus(final int value) {
+        final int byteOffset = value * this.typeSize;
+
+        return wrap((Type) this.type,
+                    this.address + byteOffset,
+                    false);
+    }
+
+    /**
+     * Java:<br>
+     * {@code offsetFoo = foo.minus(i);}
+     * <p>
+     * C equivalent:<br>
+     * {@code offsetFoo = foo-i;}
+     *
+     * @param value
+     *
+     * @return
+     */
+    @Nonnull
+    public final Pointer<T> minus(final int value) {
+        final int byteOffset = -value * this.typeSize;
 
         return wrap((Type) this.type,
                     this.address + byteOffset,
@@ -817,15 +867,15 @@ public abstract class Pointer<T> implements AutoCloseable {
                     false);
     }
 
-    public abstract void write(@Nonnull final T val);
+    public abstract void set(@Nonnull final T val);
 
-    public abstract void writei(@Nonnegative final int index,
-                                @Nonnull final T val);
+    public abstract void set(@Nonnegative final int index,
+                             @Nonnull final T val);
 
-    private void write(final T[] vals) {
+    private void set(final T[] vals) {
         for (int i = 0; i < vals.length; i++) {
-            writei(i,
-                   vals[i]);
+            set(i,
+                vals[i]);
         }
     }
 

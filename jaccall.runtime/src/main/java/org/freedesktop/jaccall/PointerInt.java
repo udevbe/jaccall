@@ -3,8 +3,6 @@ package org.freedesktop.jaccall;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
-import static org.freedesktop.jaccall.Size.sizeof;
-
 
 final class PointerInt extends Pointer<Integer> {
     PointerInt(final long address,
@@ -16,33 +14,33 @@ final class PointerInt extends Pointer<Integer> {
     }
 
     @Override
-    public Integer dref() {
-        return dref(0);
+    public Integer get() {
+        return get(0);
     }
 
     @Nonnull
     @Override
-    public Integer dref(@Nonnegative final int index) {
-        return JNI.readInt(this.address,
-                           index);
+    public Integer get(@Nonnegative final int index) {
+        return JNI.getInt(this.address,
+                          index);
     }
 
     @Override
-    public void write(@Nonnull final Integer val) {
-        writei(0,
-               val);
+    public void set(@Nonnull final Integer val) {
+        set(0,
+            val);
     }
 
     @Override
-    public void writei(@Nonnegative final int index,
-                       @Nonnull final Integer val) {
-        JNI.writeInt(this.address,
-                     index,
-                     val);
+    public void set(@Nonnegative final int index,
+                    @Nonnull final Integer val) {
+        JNI.setInt(this.address,
+                   index,
+                   val);
     }
 
-    void write(final int[] val) {
-        JNI.writeInts(this.address,
-                      val);
+    void set(final int[] val) {
+        JNI.setInts(this.address,
+                    val);
     }
 }

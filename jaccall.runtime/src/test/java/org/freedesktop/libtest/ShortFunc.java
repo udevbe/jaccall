@@ -7,5 +7,5 @@ import org.freedesktop.jaccall.Functor;
  */
 @Functor
 public interface ShortFunc {
-    short $(short value);
+    short invoke(short value);
 }

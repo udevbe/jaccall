@@ -7,5 +7,5 @@ import org.freedesktop.jaccall.Functor;
  */
 @Functor
 public interface FloatFunc {
-    float $(float value);
+    float invoke(float value);
 }

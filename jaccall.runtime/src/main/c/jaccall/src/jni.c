@@ -920,12 +920,12 @@ JNICALL Java_org_freedesktop_jaccall_JNI_doubleAlignment(JNIEnv *env, jclass cla
 
 /*
  * Class:     org_freedesktop_jaccall_JNI
- * Method:    readString
+ * Method:    getString
  * Signature: (JI)Ljava/lang/String{   }
  */
 JNIEXPORT
 jstring
-JNICALL Java_org_freedesktop_jaccall_JNI_readString(JNIEnv *env, jclass clazz, jlong address, jint index){
+JNICALL Java_org_freedesktop_jaccall_JNI_getString(JNIEnv *env, jclass clazz, jlong address, jint index){
     return (*env)->NewStringUTF(env, (const char *)(intptr_t)address);
 }
 
@@ -936,7 +936,7 @@ JNICALL Java_org_freedesktop_jaccall_JNI_readString(JNIEnv *env, jclass clazz, j
  */
 JNIEXPORT
 void
-JNICALL Java_org_freedesktop_jaccall_JNI_writeString(JNIEnv *env, jclass clazz, jlong address, jint index, jstring value){
+JNICALL Java_org_freedesktop_jaccall_JNI_setString(JNIEnv *env, jclass clazz, jlong address, jint index, jstring value){
     //TODO check for NULL array in case of oom
     const char *array = (*env)->GetStringUTFChars(env, value, 0);
     jsize length = (*env)->GetStringUTFLength(env, value);

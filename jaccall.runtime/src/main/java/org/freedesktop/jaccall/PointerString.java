@@ -6,8 +6,6 @@ import javax.annotation.Nonnull;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
 
-import static org.freedesktop.jaccall.Size.sizeof;
-
 final class PointerString extends Pointer<String> {
 
     private static final CharsetEncoder CHARSET_ENCODER = StandardCharsets.US_ASCII.newEncoder();
@@ -21,28 +19,28 @@ final class PointerString extends Pointer<String> {
     }
 
     @Override
-    public String dref() {
-        return dref(0);
+    public String get() {
+        return get(0);
     }
 
     @Nonnull
     @Override
-    public String dref(@Nonnegative final int index) {
-        return JNI.readString(this.address,
-                              index);
+    public String get(@Nonnegative final int index) {
+        return JNI.getString(this.address,
+                             index);
     }
 
     @Override
-    public void write(@Nonnull final String val) {
-        writei(0,
-               val);
+    public void set(@Nonnull final String val) {
+        set(0,
+            val);
     }
 
     @Override
-    public void writei(@Nonnegative final int index,
-                       @Nonnull final String val) {
-        JNI.writeString(this.address,
-                        index,
-                        val);
+    public void set(@Nonnegative final int index,
+                    @Nonnull final String val) {
+        JNI.setString(this.address,
+                      index,
+                      val);
     }
 }

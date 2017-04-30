@@ -10,7 +10,7 @@ import org.freedesktop.jaccall.Ptr;
 @Functor
 public interface UnionFunc {
     @ByVal(TestUnion.class)
-    long $(@Ptr(TestUnion.class) long tst,
+    long invoke(@Ptr(TestUnion.class) long tst,
            int field0,
            float field1);
 }

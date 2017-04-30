@@ -3,8 +3,6 @@ package org.freedesktop.jaccall;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
-import static org.freedesktop.jaccall.Size.sizeof;
-
 public abstract class PointerFunc<T> extends Pointer<T> {
     protected PointerFunc(@Nonnull final Class<T> type,
                           final long address) {
@@ -16,24 +14,24 @@ public abstract class PointerFunc<T> extends Pointer<T> {
 
     @Nonnull
     @Override
-    public final T dref() {
+    public final T get() {
         return (T) this;
     }
 
     @Nonnull
     @Override
-    public final T dref(@Nonnegative final int index) {
+    public final T get(@Nonnegative final int index) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public final void write(@Nonnull final T val) {
+    public final void set(@Nonnull final T val) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public final void writei(@Nonnegative final int index,
-                             @Nonnull final T val) {
+    public final void set(@Nonnegative final int index,
+                          @Nonnull final T val) {
         throw new UnsupportedOperationException();
     }
 }

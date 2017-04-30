@@ -6,7 +6,7 @@ import org.freedesktop.jaccall.JNI;
 final class ReadGlobalVarFunc_Jaccall_J extends PointerReadGlobalVarFunc {
 
     private static final long JNI_METHOD_ID = JNI.GetMethodID(ReadGlobalVarFunc.class,
-                                                              "$",
+                                                              "invoke",
                                                               "()I");
     private final ReadGlobalVarFunc function;
 
@@ -18,7 +18,7 @@ final class ReadGlobalVarFunc_Jaccall_J extends PointerReadGlobalVarFunc {
     }
 
     @Override
-    public int $() {
-        return this.function.$();
+    public int invoke() {
+        return this.function.invoke();
     }
 }

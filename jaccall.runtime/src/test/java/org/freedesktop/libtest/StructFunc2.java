@@ -12,7 +12,7 @@ import org.freedesktop.jaccall.Unsigned;
 @Functor
 public interface StructFunc2 {
     @Ptr(TestStruct.class)
-    long $(@ByVal(TestStruct.class) long tst,
+    long invoke(@ByVal(TestStruct.class) long tst,
            byte field0,
            @Unsigned short field1,
            @Ptr(int.class) long field2,

@@ -10,7 +10,7 @@ final class UnionFunc_Jaccall_C extends PointerUnionFunc {
 
     static {
         JNI.linkFuncPtr(UnionFunc_Jaccall_C.class,
-                        "_$",
+                        "_invoke",
                         4,
                         "(JJIF)J",
                         FFI_CIF);
@@ -21,16 +21,16 @@ final class UnionFunc_Jaccall_C extends PointerUnionFunc {
     }
 
     @Override
-    public long $(long tst,
+    public long invoke(long tst,
                   int field0,
                   float field1) {
-        return _$(this.address,
+        return _invoke(this.address,
                   tst,
                   field0,
                   field1);
     }
 
-    private static native long _$(long address,
+    private static native long _invoke(long address,
                                   long tst,
                                   int field0,
                                   float field1);

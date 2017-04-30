@@ -7,5 +7,5 @@ import org.freedesktop.jaccall.Functor;
  */
 @Functor
 public interface DoubleFunc {
-    double $(double value);
+    double invoke(double value);
 }

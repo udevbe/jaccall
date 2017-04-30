@@ -10,7 +10,7 @@ final class StructFunc_Jaccall_C extends PointerStructFunc {
 
     static {
         JNI.linkFuncPtr(StructFunc_Jaccall_C.class,
-                        "_$",
+                        "_invoke",
                         8,
                         "(JJBSJJJF)J",
                         FFI_CIF);
@@ -21,14 +21,14 @@ final class StructFunc_Jaccall_C extends PointerStructFunc {
     }
 
     @Override
-    public long $(long tst,
+    public long invoke(long tst,
                   byte field0,
                   short field1,
                   long field2,
                   long field3,
                   long embedded_field0,
                   float embedded_field1) {
-        return _$(this.address,
+        return _invoke(this.address,
                   tst,
                   field0,
                   field1,
@@ -38,7 +38,7 @@ final class StructFunc_Jaccall_C extends PointerStructFunc {
                   embedded_field1);
     }
 
-    private static native long _$(final long address,
+    private static native long _invoke(final long address,
                                   long tst,
                                   byte field0,
                                   short field1,

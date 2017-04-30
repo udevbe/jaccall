@@ -8,7 +8,7 @@ import javax.annotation.Generated;
 final class UnsignedShortFunc_Jaccall_J extends PointerUnsignedShortFunc {
 
     private static final long JNI_METHOD_ID = JNI.GetMethodID(UnsignedShortFunc.class,
-                                                              "$",
+                                                              "invoke",
                                                               "(S)S");
     private final UnsignedShortFunc function;
 
@@ -21,7 +21,7 @@ final class UnsignedShortFunc_Jaccall_J extends PointerUnsignedShortFunc {
 
 
     @Override
-    public short $(final short value) {
-        return this.function.$(value);
+    public short invoke(final short value) {
+        return this.function.invoke(value);
     }
 }

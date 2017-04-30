@@ -15,11 +15,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.freedesktop.jaccall.Pointer.malloc;
 import static org.freedesktop.jaccall.Pointer.nref;
 import static org.freedesktop.jaccall.Pointer.wrap;
 import static org.freedesktop.jaccall.Size.sizeof;
-import static com.google.common.truth.Truth.assertThat;
 
 public class SymbolsTest {
 
@@ -247,25 +247,25 @@ public class SymbolsTest {
                                                                         embedded_field1));
 
         //then
-        final TestStruct testStruct1 = testStruct.dref();
+        final TestStruct testStruct1 = testStruct.get();
         assertThat(testStruct1.field0()).isEqualTo(field0);
         assertThat(testStruct1.field1()).isEqualTo(field1);
         assertThat(testStruct1.field2()
-                              .dref(0)).isEqualTo(field2_0);
+                              .get(0)).isEqualTo(field2_0);
         assertThat(testStruct1.field2()
-                              .dref(1)).isEqualTo(field2_1);
+                              .get(1)).isEqualTo(field2_1);
         assertThat(testStruct1.field2()
-                              .dref(2)).isEqualTo(field2_2);
+                              .get(2)).isEqualTo(field2_2);
         assertThat(testStruct1.field3()).isEqualTo(field3);
 
         assertThat(testStruct1.field0()).isEqualTo(field0);
         assertThat(testStruct1.field1()).isEqualTo(field1);
         assertThat(testStruct1.field2()
-                              .dref(0)).isEqualTo(field2_0);
+                              .get(0)).isEqualTo(field2_0);
         assertThat(testStruct1.field2()
-                              .dref(1)).isEqualTo(field2_1);
+                              .get(1)).isEqualTo(field2_1);
         assertThat(testStruct1.field2()
-                              .dref(2)).isEqualTo(field2_2);
+                              .get(2)).isEqualTo(field2_2);
         assertThat(testStruct1.field3()).isEqualTo(field3);
         assertThat(testStruct1.field4()
                               .field0()).isEqualTo(embedded_field0);
@@ -279,7 +279,7 @@ public class SymbolsTest {
     public void testStructReturnByValuePassByReference() {
         //given
         final Pointer<TestStruct> testStructPointer = malloc(TestStruct.SIZE).castp(TestStruct.class);
-        final TestStruct          testStruct        = testStructPointer.dref();
+        final TestStruct          testStruct        = testStructPointer.get();
 
         final byte             field0 = 10;
         final short            field1 = 20;
@@ -288,14 +288,14 @@ public class SymbolsTest {
         testStruct.field0(field0);
         testStruct.field1(field1);
         testStruct.field2()
-                  .writei(1,
-                          1);
+                  .set(1,
+                       1);
         testStruct.field2()
-                  .writei(2,
-                          11);
+                  .set(2,
+                       11);
         testStruct.field2()
-                  .writei(3,
-                          111);
+                  .set(3,
+                       111);
         testStruct.field3(field3);
 
         //when
@@ -326,25 +326,25 @@ public class SymbolsTest {
                                                                               embedded_field1));
 
         //then
-        final TestStruct testStruct1 = testStructByValue.dref();
+        final TestStruct testStruct1 = testStructByValue.get();
         assertThat(testStruct1.field0()).isEqualTo(newField0);
         assertThat(testStruct1.field1()).isEqualTo(newField1);
         assertThat(testStruct1.field2()
-                              .dref(0)).isEqualTo(newField2_0);
+                              .get(0)).isEqualTo(newField2_0);
         assertThat(testStruct1.field2()
-                              .dref(1)).isEqualTo(newField2_1);
+                              .get(1)).isEqualTo(newField2_1);
         assertThat(testStruct1.field2()
-                              .dref(2)).isEqualTo(newField2_2);
+                              .get(2)).isEqualTo(newField2_2);
         assertThat(testStruct1.field3()).isEqualTo(newField3);
 
         assertThat(testStruct.field0()).isEqualTo(newField0);
         assertThat(testStruct.field1()).isEqualTo(newField1);
         assertThat(testStruct.field2()
-                             .dref(0)).isEqualTo(newField2_0);
+                             .get(0)).isEqualTo(newField2_0);
         assertThat(testStruct.field2()
-                             .dref(1)).isEqualTo(newField2_1);
+                             .get(1)).isEqualTo(newField2_1);
         assertThat(testStruct.field2()
-                             .dref(2)).isEqualTo(newField2_2);
+                             .get(2)).isEqualTo(newField2_2);
         assertThat(testStruct.field3()).isEqualTo(newField3);
 
         testStructByValue.close();
@@ -365,9 +365,9 @@ public class SymbolsTest {
                                                                            field1));
 
             //then
-            assertThat(tst.dref()
+            assertThat(tst.get()
                           .field0()).isEqualTo(field0);
-            assertThat(unionPointer.dref()
+            assertThat(unionPointer.get()
                                    .field1()).isEqualTo(field1);
         }
     }
@@ -384,7 +384,7 @@ public class SymbolsTest {
                                                          Testing.unionTest2(tst.address,
                                                                             field0));
 
-            assertThat(Float.floatToIntBits(unionPointer.dref()
+            assertThat(Float.floatToIntBits(unionPointer.get()
                                                         .field1())).isEqualTo(field0);
             unionPointer.close();
         }
@@ -429,12 +429,12 @@ public class SymbolsTest {
                                                                            writeGlobalVarSymbol);
 
         //when
-        writeGlobalVarFuncPointer.dref()
-                                 .$(10);
+        writeGlobalVarFuncPointer.get()
+                                 .invoke(10);
 
         //then
-        assertThat(readGlobalVarFuncPointer.dref()
-                                           .$()).isEqualTo(10);
-        assertThat(globalVar.dref()).isEqualTo(10);
+        assertThat(readGlobalVarFuncPointer.get()
+                                           .invoke()).isEqualTo(10);
+        assertThat(globalVar.get()).isEqualTo(10);
     }
 }

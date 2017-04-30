@@ -1,9 +1,6 @@
 package org.freedesktop.jaccall.compiletime;
 
 
-import org.freedesktop.jaccall.JNI;
-import org.freedesktop.jaccall.Symbol;
-import org.freedesktop.jaccall.Symbols;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
@@ -11,6 +8,9 @@ import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
+import org.freedesktop.jaccall.JNI;
+import org.freedesktop.jaccall.Symbol;
+import org.freedesktop.jaccall.Symbols;
 
 import javax.annotation.Generated;
 import javax.annotation.processing.Filer;
@@ -141,7 +141,7 @@ final class SymbolsWriter {
             }
             catch (final IOException e) {
                 this.messager.printMessage(Diagnostic.Kind.ERROR,
-                                           "Could not write symbols source file: \n" + javaFile.toString(),
+                                           "Could not set symbols source file: \n" + javaFile.toString(),
                                            typeElement);
                 e.printStackTrace();
             }

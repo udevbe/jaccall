@@ -21,17 +21,17 @@ abstract class TestStructFunctionPointer_Jaccall_StructType extends StructType {
     }
 
     public final Pointer<LongFunc> field0() {
-        return readPointer(OFFSET_0,
+        return getPointer(OFFSET_0,
                            LongFunc.class);
     }
 
     public final void field0(final Pointer<LongFunc> field0) {
-        writePointer(OFFSET_0,
+        setPointer(OFFSET_0,
                      field0);
     }
 
     public final Pointer<Pointer<IntFunc>> field1() {
-        return readArray(OFFSET_1,
+        return getArray(OFFSET_1,
                          IntFunc.class).castpp();
     }
 }

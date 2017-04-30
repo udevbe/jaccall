@@ -1,13 +1,13 @@
 package org.freedesktop.jaccall.compiletime;
 
 
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
 import org.freedesktop.jaccall.ByVal;
 import org.freedesktop.jaccall.JNI;
 import org.freedesktop.jaccall.Lng;
 import org.freedesktop.jaccall.Ptr;
 import org.freedesktop.jaccall.Unsigned;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.CodeBlock;
 
 import javax.annotation.processing.Messager;
 import javax.lang.model.element.AnnotationMirror;
@@ -118,8 +118,8 @@ public final class MethodParser {
         Map<? extends ExecutableElement, ? extends AnnotationValue> byVal    = null;
 
         for (final AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
-            final DeclaredType annotationType = annotationMirror.getAnnotationType();
-            final Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = annotationMirror.getElementValues();
+            final DeclaredType                                                annotationType = annotationMirror.getAnnotationType();
+            final Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues  = annotationMirror.getElementValues();
 
             final String simpleName = annotationType.asElement()
                                                     .getSimpleName()
@@ -230,8 +230,8 @@ public final class MethodParser {
                                .getSimpleName()
                                .toString()
                                .equals("value")) {
-                final AnnotationValue value = annotationEntry.getValue();
-                final TypeMirror structClass = (TypeMirror) value.getValue();
+                final AnnotationValue value       = annotationEntry.getValue();
+                final TypeMirror      structClass = (TypeMirror) value.getValue();
 
                 builder.add(parseStructFields(annotationEntry.getKey(),
                                               structClass));

@@ -29,117 +29,117 @@ public abstract class StructType {
     }
 
     //Byte
-    protected final byte readByte(@Nonnegative final int offset) {
-        return JNI.readByte(address() + offset,
-                            0);
-    }
-
-    protected final void writeByte(@Nonnegative final int offset,
-                                   final byte value) {
-        JNI.writeByte(address() + offset,
-                      0,
-                      value);
-    }
-
-    //Short
-    protected final short readShort(@Nonnegative final int offset) {
-        return JNI.readShort(address() + offset,
-                             0);
-    }
-
-    protected final void writeShort(@Nonnegative final int offset,
-                                    final short value) {
-        JNI.writeShort(address() + offset,
-                       0,
-                       value);
-    }
-
-    //Integer
-    protected final int readInteger(@Nonnegative final int offset) {
-        return JNI.readInt(address() + offset,
+    protected final byte getByte(@Nonnegative final int offset) {
+        return JNI.getByte(address() + offset,
                            0);
     }
 
-    protected final void writeInteger(@Nonnegative final int offset,
-                                      final int value) {
-        JNI.writeInt(address() + offset,
+    protected final void setByte(@Nonnegative final int offset,
+                                 final byte value) {
+        JNI.setByte(address() + offset,
+                    0,
+                    value);
+    }
+
+    //Short
+    protected final short getShort(@Nonnegative final int offset) {
+        return JNI.getShort(address() + offset,
+                            0);
+    }
+
+    protected final void setShort(@Nonnegative final int offset,
+                                  final short value) {
+        JNI.setShort(address() + offset,
                      0,
                      value);
     }
 
-    //c long
-    @Nonnull
-    protected final CLong readCLong(@Nonnegative final int offset) {
-        return new CLong(JNI.readCLong(address() + offset,
-                                       0));
+    //Integer
+    protected final int getInteger(@Nonnegative final int offset) {
+        return JNI.getInt(address() + offset,
+                          0);
     }
 
-    protected final void writeCLong(@Nonnegative final int offset,
-                                    @Nonnull final CLong value) {
-        JNI.writeCLong(address() + offset,
-                       0,
-                       value.longValue());
+    protected final void setInteger(@Nonnegative final int offset,
+                                    final int value) {
+        JNI.setInt(address() + offset,
+                   0,
+                   value);
+    }
+
+    //c long
+    @Nonnull
+    protected final CLong getCLong(@Nonnegative final int offset) {
+        return new CLong(JNI.getCLong(address() + offset,
+                                      0));
+    }
+
+    protected final void setCLong(@Nonnegative final int offset,
+                                  @Nonnull final CLong value) {
+        JNI.setCLong(address() + offset,
+                     0,
+                     value.longValue());
     }
 
     //long long
-    protected final long readLong(@Nonnegative final int offset) {
-        return JNI.readLong(address() + offset,
+    protected final long getLong(@Nonnegative final int offset) {
+        return JNI.getLong(address() + offset,
+                           0);
+    }
+
+    protected final void setLong(@Nonnegative final int offset,
+                                 final long value) {
+        JNI.setLong(address() + offset,
+                    0,
+                    value);
+    }
+
+    //float
+    protected final float getFloat(@Nonnegative final int offset) {
+        return JNI.getFloat(address() + offset,
                             0);
     }
 
-    protected final void writeLong(@Nonnegative final int offset,
-                                   final long value) {
-        JNI.writeLong(address() + offset,
+    protected final void setFloat(@Nonnegative final int offset,
+                                  final float value) {
+        JNI.setFloat(address() + offset,
+                     0,
+                     value);
+    }
+
+    //double
+    protected final double getDouble(@Nonnegative final int offset) {
+        return JNI.getDouble(address() + offset,
+                             0);
+    }
+
+    protected final void setDouble(@Nonnegative final int offset,
+                                   final double value) {
+        JNI.setDouble(address() + offset,
                       0,
                       value);
     }
 
-    //float
-    protected final float readFloat(@Nonnegative final int offset) {
-        return JNI.readFloat(address() + offset,
-                             0);
-    }
-
-    protected final void writeFloat(@Nonnegative final int offset,
-                                    final float value) {
-        JNI.writeFloat(address() + offset,
-                       0,
-                       value);
-    }
-
-    //double
-    protected final double readDouble(@Nonnegative final int offset) {
-        return JNI.readDouble(address() + offset,
-                              0);
-    }
-
-    protected final void writeDouble(@Nonnegative final int offset,
-                                     final double value) {
-        JNI.writeDouble(address() + offset,
-                        0,
-                        value);
-    }
-
     //pointer
     @Nonnull
-    protected final <T> Pointer<T> readPointer(@Nonnegative final int offset,
-                                               @Nonnull final Class<T> type) {
+    protected final <T> Pointer<T> getPointer(@Nonnegative final int offset,
+                                              @Nonnull final Class<T> type) {
         return Pointer.wrap(type,
-                            JNI.readPointer(address() + offset,
-                                            0));
+                            JNI.getPointer(address() + offset,
+                                           0));
     }
 
-    protected final void writePointer(@Nonnegative final int offset,
-                                      @Nonnull final Pointer<?> pointer) {
-        JNI.writePointer(address() + offset,
-                         0,
-                         pointer.address);
+    protected final void setPointer(@Nonnegative final int offset,
+                                    @Nonnull final Pointer<?> pointer) {
+        JNI.setPointer(address() + offset,
+                       0,
+                       pointer.address);
     }
 
     //struct type
     @Nonnull
-    protected final <T extends StructType> T readStructType(@Nonnegative final int offset,
-                                                            @Nonnull final Class<T> structTypeClass) {
+    protected final <T extends StructType> T getStructType(@Nonnegative final int offset,
+                                                           @Nonnull final Class<T> structTypeClass) {
         try {
             final T structType = structTypeClass.newInstance();
             structType.address(address() + offset);
@@ -150,17 +150,17 @@ public abstract class StructType {
         }
     }
 
-    protected final void writeStructType(@Nonnegative final int offset,
-                                         @Nonnull final StructType structType) {
-        JNI.writeStruct(address() + offset,
-                        structType.address(),
-                        structType.size);
+    protected final void setStructType(@Nonnegative final int offset,
+                                       @Nonnull final StructType structType) {
+        JNI.setStruct(address() + offset,
+                      structType.address(),
+                      structType.size);
     }
 
     //array
     @Nonnull
-    protected final <T> Pointer<T> readArray(@Nonnegative final int offset,
-                                             @Nonnull final Class<T> arrayType) {
+    protected final <T> Pointer<T> getArray(@Nonnegative final int offset,
+                                            @Nonnull final Class<T> arrayType) {
         return Pointer.wrap(arrayType,
                             address() + offset);
     }

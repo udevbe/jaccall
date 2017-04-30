@@ -8,7 +8,7 @@ import javax.annotation.Generated;
 final class FloatFunc_Jaccall_J extends PointerFloatFunc {
 
     private static final long JNI_METHOD_ID = JNI.GetMethodID(FloatFunc.class,
-                                                              "$",
+                                                              "invoke",
                                                               "(F)F");
     private final FloatFunc function;
 
@@ -20,7 +20,7 @@ final class FloatFunc_Jaccall_J extends PointerFloatFunc {
     }
 
     @Override
-    public float $(final float value) {
-        return this.function.$(value);
+    public float invoke(final float value) {
+        return this.function.invoke(value);
     }
 }

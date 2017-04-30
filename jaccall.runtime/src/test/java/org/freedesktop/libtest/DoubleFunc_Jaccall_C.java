@@ -9,7 +9,7 @@ final class DoubleFunc_Jaccall_C extends PointerDoubleFunc {
 
     static {
         JNI.linkFuncPtr(DoubleFunc_Jaccall_C.class,
-                        "_$",
+                        "_invoke",
                         2,
                         "(JD)D",
                         FFI_CIF);
@@ -20,11 +20,11 @@ final class DoubleFunc_Jaccall_C extends PointerDoubleFunc {
     }
 
     @Override
-    public double $(final double value) {
-        return _$(this.address,
+    public double invoke(final double value) {
+        return _invoke(this.address,
                   value);
     }
 
-    private static native double _$(final long address,
+    private static native double _invoke(final long address,
                                     final double value);
 }

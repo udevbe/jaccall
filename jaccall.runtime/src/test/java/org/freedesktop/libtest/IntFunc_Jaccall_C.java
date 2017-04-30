@@ -9,7 +9,7 @@ final class IntFunc_Jaccall_C extends PointerIntFunc {
 
     static {
         JNI.linkFuncPtr(IntFunc_Jaccall_C.class,
-                        "_$",
+                        "_invoke",
                         2,
                         "(JI)I",
                         FFI_CIF);
@@ -20,11 +20,11 @@ final class IntFunc_Jaccall_C extends PointerIntFunc {
     }
 
     @Override
-    public int $(final int value) {
-        return _$(this.address,
+    public int invoke(final int value) {
+        return _invoke(this.address,
                   value);
     }
 
-    private static native int _$(final long address,
+    private static native int _invoke(final long address,
                                  final int value);
 }

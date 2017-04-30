@@ -7,5 +7,5 @@ import org.freedesktop.jaccall.Functor;
  */
 @Functor
 public interface CharFunc {
-    byte $(byte value);
+    byte invoke(byte value);
 }

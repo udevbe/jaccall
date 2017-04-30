@@ -11,5 +11,5 @@ import org.freedesktop.jaccall.Unsigned;
 public interface UnsignedLongLongFunc {
     @Unsigned
     @Lng
-    long $(@Unsigned @Lng long value);
+    long invoke(@Unsigned @Lng long value);
 }

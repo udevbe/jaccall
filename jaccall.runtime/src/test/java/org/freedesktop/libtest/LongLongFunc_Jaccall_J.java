@@ -8,7 +8,7 @@ import javax.annotation.Generated;
 final class LongLongFunc_Jaccall_J extends PointerLongLongFunc {
 
     private static final long JNI_METHOD_ID = JNI.GetMethodID(LongLongFunc.class,
-                                                              "$",
+                                                              "invoke",
                                                               "(J)J");
     private final LongLongFunc function;
 
@@ -20,7 +20,7 @@ final class LongLongFunc_Jaccall_J extends PointerLongLongFunc {
     }
 
     @Override
-    public long $(final long value) {
-        return this.function.$(value);
+    public long invoke(final long value) {
+        return this.function.invoke(value);
     }
 }

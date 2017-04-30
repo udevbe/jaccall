@@ -7,5 +7,5 @@ import org.freedesktop.jaccall.Functor;
  */
 @Functor
 public interface IntFunc {
-    int $(int value);
+    int invoke(int value);
 }

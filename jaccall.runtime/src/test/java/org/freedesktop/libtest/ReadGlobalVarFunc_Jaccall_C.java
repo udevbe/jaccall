@@ -6,7 +6,7 @@ final class ReadGlobalVarFunc_Jaccall_C extends PointerReadGlobalVarFunc {
 
     static {
         JNI.linkFuncPtr(ReadGlobalVarFunc_Jaccall_C.class,
-                        "_$",
+                        "_invoke",
                         1,
                         "(J)I",
                         FFI_CIF);
@@ -17,9 +17,9 @@ final class ReadGlobalVarFunc_Jaccall_C extends PointerReadGlobalVarFunc {
     }
 
     @Override
-    public int $() {
-        return _$(this.address);
+    public int invoke() {
+        return _invoke(this.address);
     }
 
-    private static native int _$(final long address);
+    private static native int _invoke(final long address);
 }

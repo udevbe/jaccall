@@ -69,9 +69,9 @@ final class CheckWellFormedFunctor {
     private void hasDollarAsName(final ExecutableElement executableElement) {
         if (!executableElement.getSimpleName()
                               .toString()
-                              .equals("$")) {
+                              .equals("invoke")) {
             this.messager.printMessage(Diagnostic.Kind.ERROR,
-                                       "Method name must be '$'.",
+                                       "Method name must be 'invoke'.",
                                        executableElement);
             raiseError();
         }

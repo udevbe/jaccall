@@ -3,8 +3,6 @@ package org.freedesktop.jaccall;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
-import static org.freedesktop.jaccall.Size.sizeof;
-
 final class PointerByte extends Pointer<Byte> {
 
     PointerByte(final long address,
@@ -17,33 +15,33 @@ final class PointerByte extends Pointer<Byte> {
 
     @Nonnull
     @Override
-    public Byte dref() {
-        return dref(0);
+    public Byte get() {
+        return get(0);
     }
 
     @Nonnull
     @Override
-    public Byte dref(@Nonnegative final int index) {
-        return JNI.readByte(this.address,
-                            index);
+    public Byte get(@Nonnegative final int index) {
+        return JNI.getByte(this.address,
+                           index);
     }
 
     @Override
-    public void write(@Nonnull final Byte val) {
-        writei(0,
-               val);
+    public void set(@Nonnull final Byte val) {
+        set(0,
+            val);
     }
 
     @Override
-    public void writei(@Nonnegative final int index,
-                       @Nonnull final Byte val) {
-        JNI.writeByte(this.address,
-                      index,
-                      val);
+    public void set(@Nonnegative final int index,
+                    @Nonnull final Byte val) {
+        JNI.setByte(this.address,
+                    index,
+                    val);
     }
 
-    void write(final byte[] val) {
-        JNI.writeBytes(this.address,
-                       val);
+    void set(final byte[] val) {
+        JNI.setBytes(this.address,
+                     val);
     }
 }

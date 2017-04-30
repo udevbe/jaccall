@@ -6,7 +6,7 @@ import org.freedesktop.jaccall.JNI;
 final class WriteGlobalVarFunc_Jaccall_J extends PointerWriteGlobalVarFunc {
 
     private static final long JNI_METHOD_ID = JNI.GetMethodID(WriteGlobalVarFunc.class,
-                                                              "$",
+                                                              "invoke",
                                                               "()I");
     private final WriteGlobalVarFunc function;
 
@@ -18,7 +18,7 @@ final class WriteGlobalVarFunc_Jaccall_J extends PointerWriteGlobalVarFunc {
     }
 
     @Override
-    public void $(final int var) {
-        this.function.$(var);
+    public void invoke(final int var) {
+        this.function.invoke(var);
     }
 }

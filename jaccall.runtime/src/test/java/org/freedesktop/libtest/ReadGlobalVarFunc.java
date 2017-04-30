@@ -4,5 +4,5 @@ import org.freedesktop.jaccall.Functor;
 
 @Functor
 public interface ReadGlobalVarFunc {
-    int $();
+    int invoke();
 }

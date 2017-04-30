@@ -9,7 +9,7 @@ final class FooFunc_Jaccall_C extends PointerFooFunc {
 
     static {
         JNI.linkFuncPtr(FooFunc_Jaccall_C.class,
-                        "_$",
+                        "_invoke",
                         4,
                         "(JJIJ)B",
                         FFI_CIF);
@@ -20,16 +20,16 @@ final class FooFunc_Jaccall_C extends PointerFooFunc {
     }
 
     @Override
-    public byte $(final long arg0,
+    public byte invoke(final long arg0,
                   final int arg1,
                   final long arg2) {
-        return _$(this.address,
+        return _invoke(this.address,
                   arg0,
                   arg1,
                   arg2);
     }
 
-    private static native byte _$(long address,
+    private static native byte _invoke(long address,
                                   long arg0,
                                   int arg1,
                                   long arg2);

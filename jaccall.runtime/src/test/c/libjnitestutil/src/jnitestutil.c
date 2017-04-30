@@ -61,56 +61,56 @@ JNICALL Java_org_freedesktop_jaccall_JNITestUtil_pointerOfPointer(JNIEnv *env, j
 
 /*
  * Class:     org_freedesktop_jaccall_JNITestUtil
- * Method:    readCLong
+ * Method:    getCLong
  * Signature: (J)J
  */
 JNIEXPORT
 jlong
-JNICALL Java_org_freedesktop_jaccall_JNITestUtil_readCLong(JNIEnv *env, jclass clazz, jlong clong_pointer){
+JNICALL Java_org_freedesktop_jaccall_JNITestUtil_getCLong(JNIEnv *env, jclass clazz, jlong clong_pointer){
     return (jlong)*((long*)(intptr_t)clong_pointer);
 }
 
 /*
  * Class:     org_freedesktop_jaccall_JNITestUtil
- * Method:    readByte
+ * Method:    getByte
  * Signature: (J)B
  */
 JNIEXPORT
 jbyte
-JNICALL Java_org_freedesktop_jaccall_JNITestUtil_readByte(JNIEnv *env, jclass clazz, jlong address){
+JNICALL Java_org_freedesktop_jaccall_JNITestUtil_getByte(JNIEnv *env, jclass clazz, jlong address){
     return (jlong)*((char*)(intptr_t)address);
 }
 
 /*
  * Class:     org_freedesktop_jaccall_JNITestUtil
- * Method:    readFloat
+ * Method:    getFloat
  * Signature: (J)F
  */
 JNIEXPORT
 jfloat
-JNICALL Java_org_freedesktop_jaccall_JNITestUtil_readFloat(JNIEnv *env, jclass clazz, jlong address){
+JNICALL Java_org_freedesktop_jaccall_JNITestUtil_getFloat(JNIEnv *env, jclass clazz, jlong address){
     return (jlong)*((float*)(intptr_t)address);
 }
 
 /*
  * Class:     org_freedesktop_jaccall_JNITestUtil
- * Method:    readDouble
+ * Method:    getDouble
  * Signature: (J)F
  */
 JNIEXPORT
 jfloat
-JNICALL Java_org_freedesktop_jaccall_JNITestUtil_readDouble(JNIEnv *en, jclass clazz, jlong address){
+JNICALL Java_org_freedesktop_jaccall_JNITestUtil_getDouble(JNIEnv *en, jclass clazz, jlong address){
     return (jlong)*((double*)(intptr_t)address);
 }
 
 /*
  * Class:     org_freedesktop_jaccall_JNITestUtil
- * Method:    readPointer
+ * Method:    getPointer
  * Signature: (J)J
  */
 JNIEXPORT
 jlong
-JNICALL Java_org_freedesktop_jaccall_JNITestUtil_readPointer(JNIEnv *env, jclass clazz, jlong address){
+JNICALL Java_org_freedesktop_jaccall_JNITestUtil_getPointer(JNIEnv *env, jclass clazz, jlong address){
     return (jlong)(intptr_t)*((void**)(intptr_t)address);
 }
 

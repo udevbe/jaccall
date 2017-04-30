@@ -66,95 +66,95 @@ abstract class FieldsTestStruct_Jaccall_StructType extends StructType {
     }
 
     public final byte charField() {
-        return readByte(OFFSET_0);
+        return getByte(OFFSET_0);
     }
 
     public final void charField(final byte charField) {
-        writeByte(OFFSET_0,
-                  charField);
+        setByte(OFFSET_0,
+                charField);
     }
 
     public final short shortField() {
-        return readShort(OFFSET_1);
+        return getShort(OFFSET_1);
     }
 
     public final void shortField(final short shortField) {
-        writeShort(OFFSET_1,
-                   shortField);
+        setShort(OFFSET_1,
+                 shortField);
     }
 
     public final int intField() {
-        return readInteger(OFFSET_2);
+        return getInteger(OFFSET_2);
     }
 
     public final void intField(final int intField) {
-        writeInteger(OFFSET_2,
-                     intField);
+        setInteger(OFFSET_2,
+                   intField);
     }
 
     public final CLong longField() {
-        return readCLong(OFFSET_3);
+        return getCLong(OFFSET_3);
     }
 
     public final void longField(final CLong longField) {
-        writeCLong(OFFSET_3,
-                   longField);
+        setCLong(OFFSET_3,
+                 longField);
     }
 
     public final long longLongField() {
-        return readLong(OFFSET_4);
+        return getLong(OFFSET_4);
     }
 
     public final void longLongField(final long longLongField) {
-        writeLong(OFFSET_4,
-                  longLongField);
+        setLong(OFFSET_4,
+                longLongField);
     }
 
     public final float floatField() {
-        return readFloat(OFFSET_5);
+        return getFloat(OFFSET_5);
     }
 
     public final void floatField(final float floatField) {
-        writeFloat(OFFSET_5,
-                   floatField);
+        setFloat(OFFSET_5,
+                 floatField);
     }
 
     public final double doubleField() {
-        return readDouble(OFFSET_6);
+        return getDouble(OFFSET_6);
     }
 
     public final void doubleField(final double doubleField) {
-        writeDouble(OFFSET_6,
-                    doubleField);
+        setDouble(OFFSET_6,
+                  doubleField);
     }
 
     public final Pointer<Void> pointerField() {
-        return readPointer(OFFSET_7,
-                           Void.class);
+        return getPointer(OFFSET_7,
+                          Void.class);
     }
 
     public final void pointerField(final Pointer<Void> pointerField) {
-        writePointer(OFFSET_7,
-                     pointerField);
+        setPointer(OFFSET_7,
+                   pointerField);
     }
 
     public final Pointer<Pointer<Void>> pointerArrayField() {
-        return readArray(OFFSET_8,
-                         Void.class).castpp();
+        return getArray(OFFSET_8,
+                        Void.class).castpp();
     }
 
     public final TestStructEmbedded structField() {
-        return readStructType(OFFSET_9,
-                              TestStructEmbedded.class);
+        return getStructType(OFFSET_9,
+                             TestStructEmbedded.class);
     }
 
     public final void structField(final TestStructEmbedded structField) {
-        writeStructType(OFFSET_9,
-                        structField);
+        setStructType(OFFSET_9,
+                      structField);
     }
 
     public final Pointer<TestStructEmbedded> structArrayField() {
-        return readArray(OFFSET_10,
-                         TestStructEmbedded.class);
+        return getArray(OFFSET_10,
+                        TestStructEmbedded.class);
     }
 }

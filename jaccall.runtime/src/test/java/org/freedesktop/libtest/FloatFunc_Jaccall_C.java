@@ -9,7 +9,7 @@ final class FloatFunc_Jaccall_C extends PointerFloatFunc {
 
     static {
         JNI.linkFuncPtr(FloatFunc_Jaccall_C.class,
-                        "_$",
+                        "_invoke",
                         2,
                         "(JF)F",
                         FFI_CIF);
@@ -20,11 +20,11 @@ final class FloatFunc_Jaccall_C extends PointerFloatFunc {
     }
 
     @Override
-    public float $(final float value) {
-        return _$(this.address,
+    public float invoke(final float value) {
+        return _invoke(this.address,
                   value);
     }
 
-    private static native float _$(final long address,
+    private static native float _invoke(final long address,
                                    final float value);
 }

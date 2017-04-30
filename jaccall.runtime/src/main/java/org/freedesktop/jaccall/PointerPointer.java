@@ -5,8 +5,6 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import static org.freedesktop.jaccall.Size.sizeof;
-
 
 final class PointerPointer<T> extends Pointer<Pointer<T>> {
     PointerPointer(@Nonnull final Type type,
@@ -20,16 +18,16 @@ final class PointerPointer<T> extends Pointer<Pointer<T>> {
 
     @Nonnull
     @Override
-    public Pointer<T> dref() {
-        return dref(0);
+    public Pointer<T> get() {
+        return get(0);
     }
 
     @Nonnull
     @Override
-    public Pointer<T> dref(@Nonnegative final int index) {
+    public Pointer<T> get(@Nonnegative final int index) {
 
-        final long val = JNI.readPointer(this.address,
-                                         index);
+        final long val = JNI.getPointer(this.address,
+                                        index);
 
         //handle untyped pointers
         final Type genericClass;
@@ -57,16 +55,16 @@ final class PointerPointer<T> extends Pointer<Pointer<T>> {
     }
 
     @Override
-    public void write(@Nonnull final Pointer<T> val) {
-        writei(0,
-               val);
+    public void set(@Nonnull final Pointer<T> val) {
+        set(0,
+            val);
     }
 
     @Override
-    public void writei(@Nonnegative final int index,
-                       @Nonnull final Pointer<T> val) {
-        JNI.writePointer(this.address,
-                         index,
-                         val.address);
+    public void set(@Nonnegative final int index,
+                    @Nonnull final Pointer<T> val) {
+        JNI.setPointer(this.address,
+                       index,
+                       val.address);
     }
 }

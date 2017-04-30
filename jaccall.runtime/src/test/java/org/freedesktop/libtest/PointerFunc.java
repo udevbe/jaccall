@@ -9,5 +9,5 @@ import org.freedesktop.jaccall.Ptr;
 @Functor
 public interface PointerFunc {
     @Ptr
-    long $(@Ptr long value);
+    long invoke(@Ptr long value);
 }

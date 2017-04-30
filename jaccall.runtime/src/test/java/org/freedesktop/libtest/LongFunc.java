@@ -7,5 +7,5 @@ import org.freedesktop.jaccall.Functor;
  */
 @Functor
 public interface LongFunc {
-    long $(long value);
+    long invoke(long value);
 }

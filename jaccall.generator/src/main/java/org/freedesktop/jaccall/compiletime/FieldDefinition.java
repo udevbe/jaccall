@@ -16,10 +16,10 @@ class FieldDefinition {
     private final List<MethodSpec> accessorsCode;
 
     FieldDefinition(final CodeBlock ffiTypeCode,
-                           final CodeBlock offsetCode,
-                           final CodeBlock sizeOfCode,
-                           final int cardinality,
-                           final List<MethodSpec> accessorsCode) {
+                    final CodeBlock offsetCode,
+                    final CodeBlock sizeOfCode,
+                    final int cardinality,
+                    final List<MethodSpec> accessorsCode) {
         this.ffiTypeCode = ffiTypeCode;
         this.offsetCode = offsetCode;
         this.sizeOfCode = sizeOfCode;

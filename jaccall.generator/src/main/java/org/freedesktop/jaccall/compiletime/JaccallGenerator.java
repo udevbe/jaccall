@@ -1,16 +1,21 @@
 package org.freedesktop.jaccall.compiletime;
 
+import com.google.auto.service.AutoService;
 import org.freedesktop.jaccall.Functor;
 import org.freedesktop.jaccall.Lib;
 import org.freedesktop.jaccall.Struct;
-import com.google.auto.service.AutoService;
 
-import javax.annotation.processing.*;
+import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Filer;
+import javax.annotation.processing.Messager;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.Processor;
+import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
-import java.util.HashSet;
 import java.util.Set;
 
 @AutoService(Processor.class)
@@ -53,7 +58,7 @@ public class JaccallGenerator extends AbstractProcessor {
         for (final TypeElement typeElement : typeElements) {
             if (!new CheckWellFormedLib(this.messager).hasErrors(typeElement)) {
                 new SymbolsWriter(this.messager,
-                                      this.filer).process(typeElement);
+                                  this.filer).process(typeElement);
             }
         }
     }

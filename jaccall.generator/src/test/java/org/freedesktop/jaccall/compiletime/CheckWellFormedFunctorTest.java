@@ -122,7 +122,7 @@ public class CheckWellFormedFunctorTest {
                                                      .processedWith(new JaccallGenerator());
         //then
         compileTester.failsToCompile()
-                     .withErrorContaining("Method name must be '$'.")
+                     .withErrorContaining("Method name must be 'invoke'.")
                      .in(fileObject);
     }
 
@@ -137,7 +137,7 @@ public class CheckWellFormedFunctorTest {
                                                                           "\n" +
                                                                           "@Functor\n" +
                                                                           "public interface Testing {\n" +
-                                                                          "    Long $(" + // <----
+                                                                          "    Long invoke(" + // <----
                                                                           "           long tst,\n" +
                                                                           "           byte field0,\n" +
                                                                           "           @Unsigned short field1,\n" +

@@ -14,24 +14,24 @@ final class PointerVoid extends Pointer<Void> {
 
     @Nonnull
     @Override
-    public Void dref() {
+    public Void get() {
         throw new IllegalStateException("Can not dereference void pointer.");
     }
 
     @Nonnull
     @Override
-    public Void dref(@Nonnegative final int index) {
+    public Void get(@Nonnegative final int index) {
         throw new IllegalStateException("Can not dereference void pointer.");
     }
 
     @Override
-    public void write(@Nonnull final Void val) {
-        throw new IllegalStateException("Can not write to void pointer.");
+    public void set(@Nonnull final Void val) {
+        throw new IllegalStateException("Can not set to void pointer.");
     }
 
     @Override
-    public void writei(@Nonnegative final int index,
-                       @Nonnull final Void val) {
-        throw new IllegalStateException("Can not write to void pointer.");
+    public void set(@Nonnegative final int index,
+                    @Nonnull final Void val) {
+        throw new IllegalStateException("Can not set to void pointer.");
     }
 }

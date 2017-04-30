@@ -8,7 +8,7 @@ import javax.annotation.Generated;
 final class ShortFunc_Jaccall_J extends PointerShortFunc {
 
     private static final long JNI_METHOD_ID = JNI.GetMethodID(ShortFunc.class,
-                                                              "$",
+                                                              "invoke",
                                                               "(S)S");
     private final ShortFunc function;
 
@@ -21,7 +21,7 @@ final class ShortFunc_Jaccall_J extends PointerShortFunc {
 
 
     @Override
-    public short $(final short value) {
-        return this.function.$(value);
+    public short invoke(final short value) {
+        return this.function.invoke(value);
     }
 }

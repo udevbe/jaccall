@@ -128,32 +128,32 @@ public class StructTest {
         assertThat(fieldsTestStruct.doubleField()).isEqualTo(doubleField);
         assertThat(fieldsTestStruct.pointerField()).isEqualTo(pointerField);
         assertThat(fieldsTestStruct.pointerArrayField()
-                                   .dref(0)).isEqualTo(pointerArrayField.dref(0));
+                                   .get(0)).isEqualTo(pointerArrayField.get(0));
         assertThat(fieldsTestStruct.pointerArrayField()
-                                   .dref(1)).isEqualTo(pointerArrayField.dref(1));
+                                   .get(1)).isEqualTo(pointerArrayField.get(1));
         assertThat(fieldsTestStruct.pointerArrayField()
-                                   .dref(2)).isEqualTo(pointerArrayField.dref(2));
+                                   .get(2)).isEqualTo(pointerArrayField.get(2));
         assertThat(fieldsTestStruct.structField()
                                    .field0()).isEqualTo(structFieldField0);
         assertThat(fieldsTestStruct.structField()
                                    .field1()).isEqualTo(structFieldField1);
         assertThat(fieldsTestStruct.structArrayField()
-                                   .dref(0)
+                                   .get(0)
                                    .field0()).isEqualTo(struct00);
         assertThat(fieldsTestStruct.structArrayField()
-                                   .dref(0)
+                                   .get(0)
                                    .field1()).isEqualTo(struct01);
         assertThat(fieldsTestStruct.structArrayField()
-                                   .dref(1)
+                                   .get(1)
                                    .field0()).isEqualTo(struct10);
         assertThat(fieldsTestStruct.structArrayField()
-                                   .dref(1)
+                                   .get(1)
                                    .field1()).isEqualTo(struct11);
         assertThat(fieldsTestStruct.structArrayField()
-                                   .dref(2)
+                                   .get(2)
                                    .field0()).isEqualTo(struct20);
         assertThat(fieldsTestStruct.structArrayField()
-                                   .dref(2)
+                                   .get(2)
                                    .field1()).isEqualTo(struct21);
     }
 

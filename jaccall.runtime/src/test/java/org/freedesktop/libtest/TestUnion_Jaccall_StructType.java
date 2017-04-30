@@ -17,20 +17,20 @@ abstract class TestUnion_Jaccall_StructType extends StructType {
     }
 
     public final int field0() {
-        return readInteger(0);
+        return getInteger(0);
     }
 
     public final void field0(int field0) {
-        writeInteger(0,
-                     field0);
+        setInteger(0,
+                   field0);
     }
 
     public final float field1() {
-        return readFloat(0);
+        return getFloat(0);
     }
 
     public final void field1(float field1) {
-        writeFloat(0,
-                   field1);
+        setFloat(0,
+                 field1);
     }
 }

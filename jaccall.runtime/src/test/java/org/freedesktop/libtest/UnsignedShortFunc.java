@@ -9,5 +9,5 @@ import org.freedesktop.jaccall.Unsigned;
 @Functor
 public interface UnsignedShortFunc {
     @Unsigned
-    short $(@Unsigned short value);
+    short invoke(@Unsigned short value);
 }

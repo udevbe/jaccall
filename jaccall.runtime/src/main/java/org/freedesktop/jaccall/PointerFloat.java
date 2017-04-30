@@ -15,33 +15,33 @@ final class PointerFloat extends Pointer<Float> {
     }
 
     @Override
-    public Float dref() {
-        return dref(0);
+    public Float get() {
+        return get(0);
     }
 
     @Nonnull
     @Override
-    public Float dref(@Nonnegative final int index) {
-        return JNI.readFloat(this.address,
-                             index);
+    public Float get(@Nonnegative final int index) {
+        return JNI.getFloat(this.address,
+                            index);
     }
 
     @Override
-    public void write(@Nonnull final Float val) {
-        writei(0,
-               val);
+    public void set(@Nonnull final Float val) {
+        set(0,
+            val);
     }
 
     @Override
-    public void writei(@Nonnegative final int index,
-                       @Nonnull final Float val) {
-        JNI.writeFloat(this.address,
-                       index,
-                       val);
+    public void set(@Nonnegative final int index,
+                    @Nonnull final Float val) {
+        JNI.setFloat(this.address,
+                     index,
+                     val);
     }
 
-    void write(final float[] val) {
-        JNI.writeFloats(this.address,
-                        val);
+    void set(final float[] val) {
+        JNI.setFloats(this.address,
+                      val);
     }
 }
