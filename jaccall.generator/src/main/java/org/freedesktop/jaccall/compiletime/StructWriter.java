@@ -198,7 +198,8 @@ final class StructWriter {
 
         final TypeSpec typeSpec = TypeSpec.classBuilder(element.getSimpleName() + "_Jaccall_StructType")
                                           .addAnnotation(annotationSpec)
-                                          .addModifiers(Modifier.ABSTRACT)
+                                          .addModifiers(Modifier.PUBLIC,
+                                                        Modifier.ABSTRACT)
                                           .superclass(StructType.class)
                                           .addField(ffiTypeField)
                                           .addField(sizeField)
@@ -730,7 +731,8 @@ final class StructWriter {
                     statement += ".castpp()";
                 }
 
-                accessors.add(MethodSpec.methodBuilder(fieldName)
+                //getter
+                accessors.add(MethodSpec.methodBuilder(toGetterName(fieldName))
                                         .addModifiers(Modifier.PUBLIC,
                                                       Modifier.FINAL)
                                         .returns(pointerType)
@@ -740,7 +742,8 @@ final class StructWriter {
                                         .build());
             }
             else {
-                accessors.add(MethodSpec.methodBuilder(fieldName)
+                //getter
+                accessors.add(MethodSpec.methodBuilder(toGetterName(fieldName))
                                         .addModifiers(Modifier.PUBLIC,
                                                       Modifier.FINAL)
                                         .returns(ParameterizedTypeName.get(Pointer.class,
@@ -768,7 +771,7 @@ final class StructWriter {
             }
 
             //get
-            accessors.add(MethodSpec.methodBuilder(fieldName)
+            accessors.add(MethodSpec.methodBuilder(toGetterName(fieldName))
                                     .addModifiers(Modifier.PUBLIC,
                                                   Modifier.FINAL)
                                     .returns(pointerType)
@@ -777,7 +780,7 @@ final class StructWriter {
                                                   dataTypeName)
                                     .build());
             //set
-            accessors.add(MethodSpec.methodBuilder(fieldName)
+            accessors.add(MethodSpec.methodBuilder(toSetterName(fieldName))
                                     .addModifiers(Modifier.PUBLIC,
                                                   Modifier.FINAL)
                                     .addParameter(pointerType,
@@ -794,7 +797,7 @@ final class StructWriter {
         }
         else {
             //get
-            accessors.add(MethodSpec.methodBuilder(fieldName)
+            accessors.add(MethodSpec.methodBuilder(toGetterName(fieldName))
                                     .addModifiers(Modifier.PUBLIC,
                                                   Modifier.FINAL)
                                     .returns(Primitives.unwrap(javaType))
@@ -803,7 +806,7 @@ final class StructWriter {
                                                   i)
                                     .build());
             //set
-            accessors.add(MethodSpec.methodBuilder(fieldName)
+            accessors.add(MethodSpec.methodBuilder(toSetterName(fieldName))
                                     .addModifiers(Modifier.PUBLIC,
                                                   Modifier.FINAL)
                                     .addParameter(Primitives.unwrap(javaType),
@@ -825,5 +828,21 @@ final class StructWriter {
                                    sizeOfCode,
                                    cardinality,
                                    accessors);
+    }
+
+    private String firstUpperCase(String original) {
+        return original.substring(0,
+                                  1)
+                       .toUpperCase() + original.substring(1);
+    }
+
+    private String toGetterName(String fieldName) {
+        return String.format("get%s",
+                             firstUpperCase(fieldName));
+    }
+
+    private String toSetterName(String fieldName) {
+        return String.format("set%s",
+                             firstUpperCase(fieldName));
     }
 }

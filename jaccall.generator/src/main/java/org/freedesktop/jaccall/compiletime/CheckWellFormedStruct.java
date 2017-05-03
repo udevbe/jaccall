@@ -41,7 +41,6 @@ final class CheckWellFormedStruct {
         hasDefaultConstructor(typeElement);
         hasNonEmptyStructAnnotation(typeElement);
         doesNotHaveStaticSIZEField(typeElement);
-        extendsGeneratedStructType(typeElement);
         doesNotHaveSameNameFields(typeElement);
 
         return this.error;
@@ -92,41 +91,6 @@ final class CheckWellFormedStruct {
                     }
                 }
             }
-        }
-    }
-
-    private void extendsGeneratedStructType(final TypeElement typeElement) {
-
-        final String typeName = typeElement.getSimpleName()
-                                           .toString();
-        final String expectedSuperTypeName = typeName + "_Jaccall_StructType";
-
-        final Element enclosingElement = typeElement.getEnclosingElement();
-        if (!enclosingElement.getKind()
-                             .equals(ElementKind.PACKAGE)) {
-            return;
-        }
-
-        final PackageElement packageElement = (PackageElement) enclosingElement;
-        final String expectedPackage = packageElement.getQualifiedName()
-                                                     .toString();
-
-        final TypeMirror superclass = typeElement.getSuperclass();
-        if (superclass.getKind()
-                      .equals(TypeKind.NONE)) {
-            return;
-        }
-
-        final DeclaredType declaredType     = (DeclaredType) superclass;
-        final Element      superTypeElement = declaredType.asElement();
-        final String superTypeName = superTypeElement.getSimpleName()
-                                                     .toString();
-
-        if (!superTypeName.equals(expectedSuperTypeName)) {
-            this.messager.printMessage(Diagnostic.Kind.ERROR,
-                                       "@Struct annotation should be placed on type that extends '" + expectedSuperTypeName + "' from the same package'",
-                                       typeElement);
-            raiseError();
         }
     }
 
