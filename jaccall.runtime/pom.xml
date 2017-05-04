@@ -63,15 +63,15 @@
         <jaccall.arch/>
 
         <!-- dependencies -->
-        <jsr305.version>3.0.1</jsr305.version>
+        <jsr305.version>3.0.2</jsr305.version>
 
         <!-- test dependencies -->
         <junit.version>4.12</junit.version>
-        <truth.version>0.28</truth.version>
+        <truth.version>0.32</truth.version>
 
         <!-- plugins -->
-        <exec-maven-plugin.version>1.5.0</exec-maven-plugin.version>
-        <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
+        <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
+        <maven-surefire-plugin.version>2.20</maven-surefire-plugin.version>
     </properties>
 
     <dependencies>
@@ -113,8 +113,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
                     <useIncrementalCompilation>false</useIncrementalCompilation>

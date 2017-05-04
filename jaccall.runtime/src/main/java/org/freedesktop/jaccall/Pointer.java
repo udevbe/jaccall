@@ -3,6 +3,7 @@ package org.freedesktop.jaccall;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.Closeable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
@@ -14,7 +15,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class Pointer<T> implements AutoCloseable {
+public abstract class Pointer<T> implements Closeable {
 
     static {
         if (ConfigVariables.JACCALL_DEBUG) {

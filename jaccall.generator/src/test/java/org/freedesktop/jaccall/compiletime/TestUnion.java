@@ -16,7 +16,7 @@ import static org.freedesktop.jaccall.CType.UNSIGNED_INT;
                 @Field(type = UNSIGNED_INT,
                        name = "field2"),
         })
-public final class TestUnion extends TestUnion_Jaccall_StructType
+public final class TestUnion extends Struct_TestUnion
 {
 
 }

@@ -24,6 +24,5 @@ import static org.freedesktop.jaccall.CType.UNSIGNED_SHORT;
                dataType = TestStructEmbedded.class,
                name = "field4")
 })
-public final class TestStruct extends TestStruct_Jaccall_StructType
-{
+public final class TestStruct extends Struct_TestStruct {
 }

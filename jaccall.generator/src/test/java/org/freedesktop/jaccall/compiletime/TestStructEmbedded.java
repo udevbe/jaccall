@@ -10,6 +10,6 @@ import org.freedesktop.jaccall.Struct;
         @Field(type = CType.FLOAT,
                name = "field1")
 })
-public final class TestStructEmbedded extends TestStructEmbedded_Jaccall_StructType
+public final class TestStructEmbedded extends Struct_TestStructEmbedded
 {
 }

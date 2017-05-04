@@ -196,7 +196,7 @@ final class StructWriter {
                                                                        JaccallGenerator.class.getName())
                                                             .build();
 
-        final TypeSpec typeSpec = TypeSpec.classBuilder(element.getSimpleName() + "_Jaccall_StructType")
+        final TypeSpec typeSpec = TypeSpec.classBuilder("Struct_" + element.getSimpleName())
                                           .addAnnotation(annotationSpec)
                                           .addModifiers(Modifier.PUBLIC,
                                                         Modifier.ABSTRACT)

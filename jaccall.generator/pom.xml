@@ -15,14 +15,17 @@
 
     <properties>
         <!-- dependencies -->
-        <auto-common.version>0.6</auto-common.version>
-        <auto-service.version>1.0-rc2</auto-service.version>
-        <javapoet.version>1.7.0</javapoet.version>
-        <guava.version>19.0</guava.version>
+        <auto-common.version>0.8</auto-common.version>
+        <auto-service.version>1.0-rc3</auto-service.version>
+        <javapoet.version>1.8.0</javapoet.version>
+        <guava.version>21.0</guava.version>
 
         <!-- test -->
-        <compile-testing.version>0.9</compile-testing.version>
+        <compile-testing.version>0.11</compile-testing.version>
         <junit.version>4.12</junit.version>
+
+        <!-- plugins -->
+        <maven-shade-plugin.version>3.0.0</maven-shade-plugin.version>
     </properties>
 
     <dependencies>
@@ -69,8 +72,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
                     <useIncrementalCompilation>false</useIncrementalCompilation>
@@ -79,7 +82,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.3</version>
+                <version>${maven-shade-plugin.version}</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
